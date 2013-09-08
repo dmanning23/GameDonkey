@@ -13,7 +13,7 @@ namespace GameDonkey
 	/// <summary>
 	/// This is an attack action that uses a unattached circle instead of a bone
 	/// </summary>
-	class CCreateHitCircleAction : CCreateAttackAction
+	class CreateHitCircleAction : CreateAttackAction
 	{
 		#region Members
 
@@ -36,9 +36,9 @@ namespace GameDonkey
 
 		#region Methods
 
-		public CCreateHitCircleAction(BaseObject rOwner) : base(rOwner, EActionType.CreateHitCircle)
+		public CreateHitCircleAction(BaseObject rOwner) : base(rOwner, EActionType.CreateHitCircle)
 		{
-			m_HitCircle = new CCircle();
+			m_HitCircle = new Circle();
 			m_StartOffset = Vector2.Zero;
 			m_Velocity = Vector2.Zero;
 		}
@@ -91,8 +91,6 @@ namespace GameDonkey
 
 		#region File IO
 
-#if WINDOWS
-
 		protected override bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
 			//what is in this node?
@@ -136,8 +134,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(CStringUtils.StringFromVector(m_Velocity));
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

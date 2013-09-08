@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace GameDonkey
 {
-	public class CDeactivateAction : IBaseAction
+	public class DeactivateAction : IBaseAction
 	{
 		#region Members
 
@@ -22,7 +22,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CDeactivateAction(BaseObject rOwner) : base(rOwner)
+		public DeactivateAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.Deactivate;
 		}
@@ -51,7 +51,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CDeactivateAction myAction = (CDeactivateAction)rInst;
+			CeactivateAction myAction = (DeactivateAction)rInst;
 			
 			Debug.Assert((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time));
@@ -63,8 +63,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -141,8 +139,6 @@ namespace GameDonkey
 		public override void WriteXML(XmlTextWriter rXMLFile)
 		{
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

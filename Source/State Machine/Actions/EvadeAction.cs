@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace GameDonkey
 {
-	public class CEvadeAction : IBaseAction
+	public class EvadeAction : IBaseAction
 	{
 		#region Members
 
@@ -33,7 +33,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CEvadeAction(BaseObject rOwner) : base(rOwner)
+		public EvadeAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.Evade;
 			m_fTimeDelta = 0.0f;
@@ -57,7 +57,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CEvadeAction myAction = (CEvadeAction)rInst;
+			EvadeAction myAction = (EvadeAction)rInst;
 			return ((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time) &&
 				(m_fTimeDelta == myAction.m_fTimeDelta));
@@ -66,8 +66,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -156,8 +154,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_fTimeDelta.ToString());
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

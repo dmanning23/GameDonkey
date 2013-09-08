@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace GameDonkey
 {
-	public class CPlaySoundAction : IBaseAction
+	public class PlaySoundAction : IBaseAction
 	{
 		#region Members
 
@@ -34,7 +34,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CPlaySoundAction(BaseObject rOwner, IGameDonkey rEngine) : base(rOwner)
+		public PlaySoundAction(BaseObject rOwner, IGameDonkey rEngine) : base(rOwner)
 		{
 			Debug.Assert(null != rEngine);
 			ActionType = EActionType.PlaySound;
@@ -59,7 +59,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CPlaySoundAction myAction = (CPlaySoundAction)rInst;
+			PlaySoundAction myAction = (PlaySoundAction)rInst;
 			
 			Debug.Assert((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time) &&
@@ -73,8 +73,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -161,8 +159,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-#endif
-
 		/// <summary>
 		/// Read from a serialized file
 		/// </summary>
@@ -181,7 +177,6 @@ namespace GameDonkey
 
 			return true;
 		}
-
 
 		#endregion //File IO
 	}

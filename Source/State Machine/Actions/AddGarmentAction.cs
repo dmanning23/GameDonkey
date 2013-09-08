@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Xml;
 using Microsoft.Xna.Framework.Content;
 using AnimationLib;
+using FilenameBuddy;
+using RenderBuddy;
 
 namespace GameDonkey
 {
@@ -77,8 +79,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -188,8 +188,6 @@ namespace GameDonkey
 			}
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

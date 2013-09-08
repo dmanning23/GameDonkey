@@ -363,7 +363,7 @@ namespace GameDonkey
 		/// <param name="rAttack">my attack to check</param>
 		/// <param name="rOtherGuy">the other guys physics container</param>
 		/// <returns>bool: true if the attack connected, false if there was no connection</returns>
-		private bool CheckBlockedAttack(CCreateAttackAction rAttack, IPhysicsContainer rOtherGuy)
+		private bool CheckBlockedAttack(CreateAttackAction rAttack, IPhysicsContainer rOtherGuy)
 		{
 			Debug.Assert(true == m_bBonesSorted);
 			Debug.Assert(null != rOtherGuy);
@@ -504,7 +504,7 @@ namespace GameDonkey
 		/// <param name="rAttack">my attack to check</param>
 		/// <param name="rOtherGuy">the other guys physics container</param>
 		/// <returns>bool: true if the attack connected, false if there was no connection</returns>
-		private bool CheckAttackCollisions(CCreateAttackAction rAttack, IPhysicsContainer rOtherGuy)
+		private bool CheckAttackCollisions(CreateAttackAction rAttack, IPhysicsContainer rOtherGuy)
 		{
 			Debug.Assert(true == m_bBonesSorted);
 			Debug.Assert(null != rOtherGuy);

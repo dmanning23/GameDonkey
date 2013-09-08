@@ -5,10 +5,11 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
-	public class CAddVelocityAction : IBaseAction
+	public class AddVelocityAction : IBaseAction
 	{
 		#region Members
 
@@ -61,7 +62,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CAddVelocityAction(BaseObject rOwner) : base(rOwner)
+		public AddVelocityAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.AddVelocity;
 			Velocity = new Vector2(0.0f);
@@ -112,9 +113,7 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
-
+		
 		/// <summary>
 		/// Read from an xml file
 		/// </summary>
@@ -175,7 +174,7 @@ namespace GameDonkey
 					}
 					else if (strName == "velocity")
 					{
-						Velocity = CStringUtils.ReadVectorFromString(strValue);
+						Velocity = strValue.ToVector2();
 					}
 					else if (strName == "useObjectDirection")
 					{
@@ -205,8 +204,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_bUseObjectDirection ? "true" : "false");
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

@@ -10,7 +10,7 @@ namespace GameDonkey
 	/// <summary>
 	/// This action makes a character temporarily invulnerable
 	/// </summary>
-	public class CCreateBlockAction : IBaseAction
+	public class CreateBlockAction : IBaseAction
 	{
 		#region Members
 
@@ -36,7 +36,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CCreateBlockAction(BaseObject rOwner)
+		public CreateBlockAction(BaseObject rOwner)
 			: base(rOwner)
 		{
 			ActionType = EActionType.CreateBlock;
@@ -59,7 +59,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CCreateBlockAction myAction = (CCreateBlockAction)rInst;
+			CreateBlockAction myAction = (CreateBlockAction)rInst;
 			return ((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time) &&
 				(m_fTimeDelta == myAction.m_fTimeDelta));
@@ -68,8 +68,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -159,8 +157,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-#endif
-
 		/// <summary>
 		/// Read from a serialized file
 		/// </summary>
@@ -174,7 +170,6 @@ namespace GameDonkey
 
 			return true;
 		}
-
 
 		#endregion //File IO
 	}

@@ -2,7 +2,7 @@
 using GameTimer;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
-#if !NO_NETWORKING
+#if NETWORKING
 using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
@@ -13,7 +13,7 @@ namespace GameDonkey
 	/// <summary>
 	/// This is a container with multiple hierarchical state machines
 	/// </summary>
-	class CPlayerObjectStateContainer : IStateContainer
+	class PlayerObjectStateContainer : IStateContainer
 	{
 		#region Members
 
@@ -61,7 +61,7 @@ namespace GameDonkey
 		/// <summary>
 		/// standard constructor
 		/// </summary>
-		public CPlayerObjectStateContainer()
+		public PlayerObjectStateContainer()
 		{
 			m_StateMachines = new List<CSingleStateContainer>();
 			m_StateMachineChangeTimer = new CountdownTimer();
@@ -427,7 +427,7 @@ namespace GameDonkey
 
 		#region Networking
 
-#if !NO_NETWORKING
+#if NETWORKING
 
 		/// <summary>
 		/// Read this object from a network packet reader.
@@ -467,8 +467,6 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-#if WINDOWS
-
 		public bool ReadSerializedStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine)
 		{
 			//don't call this dude, he'll set his own shit up
@@ -486,8 +484,6 @@ namespace GameDonkey
 			return false;
 		}
 
-#endif
-
 		public void ReadSerializedStateActions(ContentManager rXmlContent,
 			string strResource,
 			BaseObject rOwner,
@@ -499,8 +495,6 @@ namespace GameDonkey
 		#endregion //State Action File IO
 
 		#region State Machine File IO
-
-#if WINDOWS
 
 		public bool ReadStateMachineFile(string strFilename)
 		{
@@ -515,8 +509,6 @@ namespace GameDonkey
 			Debug.Assert(false);
 			return false;
 		}
-
-#endif
 
 		public bool ReadStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
 		{
@@ -535,8 +527,6 @@ namespace GameDonkey
 		#endregion //File IO
 
 		#region Combined File IO
-
-#if WINDOWS
 
 		public bool ReadStateContainer(string strStateMachineFilename,
 			int iMessageOffset,
@@ -568,8 +558,6 @@ namespace GameDonkey
 
 			return true;
 		}
-
-#endif
 
 		public void ReadStateContainer(ContentManager rContent,
 			string strStateMachineResource,

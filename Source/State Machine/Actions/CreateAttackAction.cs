@@ -12,7 +12,7 @@ using CollisionBuddy;
 
 namespace GameDonkey
 {
-	public class CCreateAttackAction : IBaseAction
+	public class CreateAttackAction : IBaseAction
 	{
 		#region Members
 
@@ -105,7 +105,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CCreateAttackAction(BaseObject rOwner)
+		public CreateAttackAction(BaseObject rOwner)
 			: this(rOwner, EActionType.CreateAttack)
 		{
 		}
@@ -115,7 +115,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rOwner">the dude this action belongs to</param>
 		/// <param name="eType">the type of the chlid class</param>
-		public CCreateAttackAction(BaseObject rOwner, EActionType eType)
+		public CreateAttackAction(BaseObject rOwner, EActionType eType)
 			: base(rOwner)
 		{
 			ActionType = eType;
@@ -161,7 +161,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CCreateAttackAction myAction = (CCreateAttackAction)rInst;
+			CreateAttackAction myAction = (CreateAttackAction)rInst;
 
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
@@ -206,7 +206,7 @@ namespace GameDonkey
 			}
 
 			//get the current image
-			CImage rMyImage = m_rAttackBone.GetCurrentImage();
+			Image rMyImage = m_rAttackBone.GetCurrentImage();
 
 			//hit bones and images must have one circle
 			if ((null == rMyImage) || (rMyImage.Circles.Count < 1))
@@ -215,7 +215,7 @@ namespace GameDonkey
 			}
 
 			//get the circle
-			CCircle rMyCircle = rMyImage.Circles[0];
+			Circle rMyCircle = rMyImage.Circles[0];
 			Debug.Assert(null != rMyCircle);
 
 			return rMyCircle;
@@ -242,8 +242,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -390,8 +388,6 @@ namespace GameDonkey
 			}
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

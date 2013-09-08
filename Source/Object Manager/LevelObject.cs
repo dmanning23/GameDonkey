@@ -33,7 +33,7 @@ namespace GameDonkey
 		}
 
 		public override void CollisionResponse(IPhysicsContainer rOtherObject,
-			CCreateAttackAction rAttackAction,
+			CreateAttackAction rAttackAction,
 			Vector2 FirstCollisionPoint,
 			Vector2 SecondCollisionPoint)
 		{

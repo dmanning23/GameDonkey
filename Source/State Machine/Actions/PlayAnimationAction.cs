@@ -8,7 +8,7 @@ using AnimationLib;
 
 namespace GameDonkey
 {
-	public class CPlayAnimationAction : IBaseAction
+	public class PlayAnimationAction : IBaseAction
 	{
 		#region Members
 
@@ -61,7 +61,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CPlayAnimationAction(BaseObject rOwner) : base(rOwner)
+		public PlayAnimationAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.PlayAnimation;
 			m_strAnimationName = "";
@@ -87,7 +87,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CPlayAnimationAction myAction = (CPlayAnimationAction)rInst;
+			PlayAnimationAction myAction = (PlayAnimationAction)rInst;
 
 			Debug.Assert((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time) &&
@@ -105,8 +105,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -214,8 +212,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_ePlaybackMode.ToString());
 			rXMLFile.WriteEndElement();
 		}
-
-#endif 
 
 		/// <summary>
 		/// Read from a serialized file

@@ -920,10 +920,6 @@ namespace GameDonkey
 
 		#region File IO
 
-#if WINDOWS
-
-#endif
-
 		public override bool LoadObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
 		{
 			SPFSettings.PlayerObjectXML myCharXML = rXmlContent.Load<SPFSettings.PlayerObjectXML>(strResource.GetRelPathFileNoExt());

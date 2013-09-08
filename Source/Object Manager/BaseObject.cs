@@ -71,7 +71,7 @@ namespace GameDonkey
 		/// <summary>
 		/// List of this dude's currently active attacks
 		/// </summary>
-		public List<CCreateAttackAction> CurrentAttacks { get; set; }
+		public List<CreateAttackAction> CurrentAttacks { get; set; }
 
 		/// <summary>
 		/// If this dude is in a blocking state, this is a reference to that state
@@ -86,7 +86,7 @@ namespace GameDonkey
 		/// <summary>
 		/// pointer to the current "throw" action (this dude is being thrown)
 		/// </summary>
-		protected CCreateThrowAction m_rCurrentThrow;
+		protected CreateThrowAction m_rCurrentThrow;
 
 		/// <summary>
 		/// evasion timer, if this is running it means there are no push collsions
@@ -122,7 +122,7 @@ namespace GameDonkey
 		/// <summary>
 		/// pointer to the current "character trail" object
 		/// </summary>
-		protected CTrailAction m_rTrailAction;
+		protected TrailAction m_rTrailAction;
 
 		/// <summary>
 		/// The player queue that owns this object
@@ -164,12 +164,12 @@ namespace GameDonkey
 		/// <summary>
 		/// Acceleration to apply to this dude for the current state
 		/// </summary>
-		protected CConstantAccelerationAction m_AccelAction;
+		protected ConstantAccelerationAction m_AccelAction;
 
 		/// <summary>
 		/// Decceleration to apply to this dude for the current state
 		/// </summary>
-		protected CConstantDeccelerationAction m_DeccelAction;
+		protected ConstantDeccelerationAction m_DeccelAction;
 
 		/// <summary>
 		/// The last player to attack this guy.  Used to calculate points when someone dies.
@@ -191,7 +191,7 @@ namespace GameDonkey
 			get { return m_EvasionTimer; }
 		}
 
-		public CCreateThrowAction CurrentThrow
+		public CreateThrowAction CurrentThrow
 		{
 			get { return m_rCurrentThrow; }
 			set { m_rCurrentThrow = value; }
@@ -240,7 +240,7 @@ namespace GameDonkey
 			get { return m_TrailTimer; }
 		}
 
-		public CTrailAction TrailAction
+		public TrailAction TrailAction
 		{
 			get { return m_rTrailAction; }
 			set
@@ -295,7 +295,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Acceleration to apply to this dude for the current state
 		/// </summary>
-		public CConstantAccelerationAction AccelerationAction
+		public ConstantAccelerationAction AccelerationAction
 		{
 			get { return m_AccelAction; }
 			set { m_AccelAction = value; }
@@ -304,7 +304,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Decceleration to apply to this dude for the current state
 		/// </summary>
-		public CConstantDeccelerationAction DeccelerationAction
+		public ConstantDeccelerationAction DeccelerationAction
 		{
 			get { return m_DeccelAction; }
 			set { m_DeccelAction = value; }
@@ -342,7 +342,7 @@ namespace GameDonkey
 			m_eType = eType;
 			m_iGlobalID = BaseObject.g_iIDCounter++;
 			m_iQueueID = iQueueID;
-			CurrentAttacks = new List<CCreateAttackAction>();
+			CurrentAttacks = new List<CreateAttackAction>();
 			CurrentBlocks = new TimedActionList<BlockingStateAction>();
 			m_BlockTimer = new CountdownTimer();
 			m_EvasionTimer = new CountdownTimer();
@@ -548,7 +548,7 @@ namespace GameDonkey
 		/// Add an attack to this dude's list of active attacks
 		/// </summary>
 		/// <param name="rAction">the attack action to perform</param>
-		public void AddAttack(CCreateAttackAction rAction)
+		public void AddAttack(CreateAttackAction rAction)
 		{
 			Debug.Assert(null != CurrentAttacks);
 			CurrentAttacks.Add(rAction);
@@ -558,7 +558,7 @@ namespace GameDonkey
 		/// set the block action of this object
 		/// </summary>
 		/// <param name="rAction">the block action to perform</param>
-		public void AddBlock(CCreateBlockAction rAction)
+		public void AddBlock(CreateBlockAction rAction)
 		{
 			m_BlockTimer.Start(rAction.TimeDelta);
 		}
@@ -668,7 +668,7 @@ namespace GameDonkey
 		#region Collision Responses
 
 		public virtual void CollisionResponse(IPhysicsContainer rOtherObject,
-			CCreateAttackAction rAttackAction,
+			CreateAttackAction rAttackAction,
 			Vector2 FirstCollisionPoint,
 			Vector2 SecondCollisionPoint)
 		{
@@ -708,7 +708,7 @@ namespace GameDonkey
 		}
 
 		public virtual void WeaponCollisionResponse(IPhysicsContainer rOtherObject,
-			CCreateAttackAction rAttackAction,
+			CreateAttackAction rAttackAction,
 			Vector2 FirstCollisionPoint,
 			Vector2 SecondCollisionPoint)
 		{
@@ -745,7 +745,7 @@ namespace GameDonkey
 		/// <param name="FirstCollisionPoint"></param>
 		/// <param name="SecondCollisionPoint"></param>
 		public virtual void BlockResponse(IPhysicsContainer rOtherObject,
-			CCreateAttackAction rAttackAction,
+			CreateAttackAction rAttackAction,
 			BlockingStateAction rOtherDudesAction,
 			Vector2 FirstCollisionPoint,
 			Vector2 SecondCollisionPoint)
@@ -1269,8 +1269,6 @@ namespace GameDonkey
 
 		#region File IO
 
-#if WINDOWS
-
 		public virtual bool LoadObject(Filename strFileName, IGameDonkey rEngine, int iMessageOffset)
 		{
 			//gonna have to do this the HARD way...
@@ -1457,7 +1455,6 @@ namespace GameDonkey
 			return myGarment;
 		}
 
-#endif
 		public virtual bool LoadObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
 		{
 			SPFSettings.BaseObjectXML myCharXML = rXmlContent.Load<SPFSettings.BaseObjectXML>(strResource.GetRelPathFileNoExt());

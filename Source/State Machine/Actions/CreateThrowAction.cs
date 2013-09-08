@@ -11,7 +11,7 @@ using AnimationLib;
 
 namespace GameDonkey
 {
-	public class CCreateThrowAction : CCreateAttackAction
+	public class CreateThrowAction : CreateAttackAction
 	{
 		#region Members
 
@@ -68,7 +68,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CCreateThrowAction(BaseObject rOwner) : base(rOwner, EActionType.CreateThrow)
+		public CreateThrowAction(BaseObject rOwner) : base(rOwner, EActionType.CreateThrow)
 		{
 			m_strThrowMessage = "";
 			m_iThrowMessage = 0;
@@ -99,7 +99,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CCreateThrowAction myAction = (CCreateThrowAction)rInst;
+			CreateThrowAction myAction = (CreateThrowAction)rInst;
 
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(m_strThrowMessage == myAction.m_strThrowMessage);
@@ -113,8 +113,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		protected override bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
@@ -170,8 +168,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_fReleaseTimeDelta.ToString());
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

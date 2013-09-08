@@ -11,7 +11,7 @@ using AnimationLib;
 
 namespace GameDonkey
 {
-	public class CParticleEffectAction : IBaseAction
+	public class ParticleEffectAction : IBaseAction
 	{
 		#region Members
 
@@ -78,7 +78,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CParticleEffectAction(BaseObject rOwner, IGameDonkey rEngine) : base(rOwner)
+		public ParticleEffectAction(BaseObject rOwner, IGameDonkey rEngine) : base(rOwner)
 		{
 			Debug.Assert(null != rEngine);
 			Debug.Assert(null != rEngine.ParticleEngine);
@@ -101,7 +101,7 @@ namespace GameDonkey
 			Debug.Assert(null != m_ParticleEngine);
 			Debug.Assert(!AlreadyRun);
 
-			CEmitter myEmitter = m_ParticleEngine.PlayParticleEffect(m_rTemplate, Direction, Owner.Position, StartOffset, m_rBone, m_rTemplate.ParticleColor, Owner);
+			Emitter myEmitter = m_ParticleEngine.PlayParticleEffect(m_rTemplate, Direction, Owner.Position, StartOffset, m_rBone, m_rTemplate.ParticleColor, Owner);
 			Debug.Assert(null != myEmitter);
 			Owner.Emitters.Add(myEmitter);
 
@@ -110,7 +110,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CParticleEffectAction myAction = (CParticleEffectAction)rInst;
+			ParticleEffectAction myAction = (ParticleEffectAction)rInst;
 
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
@@ -128,8 +128,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -260,8 +258,6 @@ namespace GameDonkey
 			m_rTemplate.WriteXML(rXMLFile, false);
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

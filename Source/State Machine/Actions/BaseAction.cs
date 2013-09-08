@@ -218,8 +218,6 @@ namespace GameDonkey
 
 		#region File IO
 
-#if WINDOWS
-
 		static public bool ReadListActions(BaseObject rOwner,
 			ref List<IBaseAction> outputList,
 			XmlNode rParentNode,
@@ -486,8 +484,6 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rXMLFile"></param>
 		public abstract void WriteXML(XmlTextWriter rXMLFile);
-
-#endif
 
 		static public void ReadListActions(BaseObject rOwner,
 			List<SPFSettings.BaseActionXML> inputList,

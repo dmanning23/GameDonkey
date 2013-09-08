@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameDonkey
 {
-	public class CTrailAction : IBaseAction
+	public class TrailAction : IBaseAction
 	{
 		#region Members
 
@@ -69,7 +69,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CTrailAction(BaseObject rOwner) : base(rOwner)
+		public TrailAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.Trail;
 			m_StartColor = new Color(1.0f, 1.0f, 1.0f);
@@ -103,7 +103,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CTrailAction myAction = (CTrailAction)rInst;
+			TrailAction myAction = (TrailAction)rInst;
 
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
@@ -119,8 +119,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -252,8 +250,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_fTimeDelta.ToString());
 			rXMLFile.WriteEndElement();
 		}
-
-#endif 
 
 		/// <summary>
 		/// Read from a serialized file

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace GameDonkey
 {
-	public class CConstantDeccelerationAction : IBaseAction
+	public class ConstantDeccelerationAction : IBaseAction
 	{
 		#region Members
 
@@ -54,7 +54,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CConstantDeccelerationAction(BaseObject rOwner) : base(rOwner)
+		public ConstantDeccelerationAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.ConstantDecceleration;
 			m_Velocity = new Vector2(0.0f);
@@ -78,7 +78,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CAddVelocityAction myAction = (CAddVelocityAction)rInst;
+			ConstantDeccelerationAction myAction = (ConstantDeccelerationAction)rInst;
 
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
@@ -89,8 +89,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -186,8 +184,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_fMinYVelocity.ToString());
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

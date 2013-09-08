@@ -7,7 +7,7 @@ using FilenameBuddy;
 
 namespace GameDonkey
 {
-	public class CProjectileAction : IBaseAction
+	public class ProjectileAction : IBaseAction
 	{
 		#region Members
 
@@ -99,7 +99,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CProjectileAction(BaseObject rOwner) : base(rOwner)
+		public ProjectileAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.Projectile;
 			m_rProjectile = null;
@@ -180,11 +180,11 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CProjectileAction myAction = (CProjectileAction)rInst;
+			ProjectileAction myAction = (ProjectileAction)rInst;
 
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
-			Debug.Assert(m_strProjectileFileName.Filename == myAction.m_strProjectileFileName.Filename);
+			Debug.Assert(m_strProjectileFileName.File == myAction.m_strProjectileFileName.File);
 			//Debug.Assert(m_StartOffset.X == myAction.m_StartOffset.X);
 			//Debug.Assert(m_StartOffset.Y == myAction.m_StartOffset.Y);
 			Debug.Assert(m_bUseObjectDirection == myAction.m_bUseObjectDirection);
@@ -192,8 +192,6 @@ namespace GameDonkey
 
 			return true;
 		}
-
-#if WINDOWS
 
 		public bool SetFilename(string strBitmapFile, IGameDonkey rEngine)
 		{
@@ -216,13 +214,9 @@ namespace GameDonkey
 			return true;
 		}
 
-#endif
-
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -346,8 +340,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_bUseObjectDirection ? "true" : "false");
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

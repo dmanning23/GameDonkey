@@ -136,8 +136,6 @@ namespace GameDonkey
 			m_listGarments = new List<Filename>();
 		}
 
-#if WINDOWS
-
 		public virtual bool LoadObject(Filename strFileName, IGameDonkey rEngine)
 		{
 			//gonna have to do this the HARD way
@@ -271,8 +269,6 @@ namespace GameDonkey
 			stream.Close();
 			return true;
 		}
-
-#endif
 
 		#endregion //Methods
 	}

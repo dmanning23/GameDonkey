@@ -83,6 +83,7 @@ namespace GameDonkey
 		{
 			return false;
 		}
+
 		public override void WriteXML(XmlTextWriter rXMLFile)
 		{
 			Debug.Assert(false);
