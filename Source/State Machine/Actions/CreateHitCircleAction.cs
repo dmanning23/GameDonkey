@@ -1,0 +1,159 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Xml;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using StateMachineBuddy;
+using CollisionBuddy;
+
+namespace GameDonkey
+{
+	/// <summary>
+	/// This is an attack action that uses a unattached circle instead of a bone
+	/// </summary>
+	class CCreateHitCircleAction : CCreateAttackAction
+	{
+		#region Members
+
+		/// <summary>
+		/// this dudes hit circle that will be floating around
+		/// </summary>
+		protected Circle m_HitCircle;
+
+		/// <summary>
+		/// the offset from the attached bone location to start this circle at
+		/// </summary>
+		protected Vector2 m_StartOffset;
+
+		/// <summary>
+		/// speed and direction of this circle
+		/// </summary>
+		protected Vector2 m_Velocity;
+
+		#endregion //Members
+
+		#region Methods
+
+		public CCreateHitCircleAction(BaseObject rOwner) : base(rOwner, EActionType.CreateHitCircle)
+		{
+			m_HitCircle = new CCircle();
+			m_StartOffset = Vector2.Zero;
+			m_Velocity = Vector2.Zero;
+		}
+
+		/// <summary>
+		/// execute this action (overridden in all child classes)
+		/// </summary>
+		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
+		public override bool Execute()
+		{
+			//set the circle location
+
+			//get the bone location
+			Debug.Assert(null != m_rAttackBone);
+			Vector2 myLocation = m_rAttackBone.AnchorPosition;
+
+			//get the start offset
+			Vector2 myOffset = m_StartOffset;
+			if (Owner.Flip)
+			{
+				myOffset.X *= -1.0f;
+			}
+
+			//set the circle location
+			m_HitCircle.Reset(myLocation - myOffset);
+
+			return base.Execute();
+		}
+
+		public override bool Compare(IBaseAction rInst)
+		{
+			return base.Compare(rInst);
+		}
+
+		public override void Update()
+		{
+			//add the velocity
+			Vector2 myPosition = m_HitCircle.WorldPosition + ((m_Velocity * Owner.Scale) * Owner.CharacterClock.TimeDelta);
+
+			//update the circle location
+			m_HitCircle.Update(myPosition, Owner.Scale);
+		}
+
+		public override Circle GetCircle()
+		{
+			return m_HitCircle;
+		}
+
+		#endregion //Methods
+
+		#region File IO
+
+#if WINDOWS
+
+		protected override bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		{
+			//what is in this node?
+			string strName = childNode.Name;
+			string strValue = childNode.InnerText;
+
+			if (strName == "radius")
+			{
+				//set the radius of that circle
+				m_HitCircle.Radius = Convert.ToSingle(strValue);
+			}
+			else if (strName == "startOffset")
+			{
+				m_StartOffset = CStringUtils.ReadVectorFromString(strValue);
+			}
+			else if (strName == "velocity")
+			{
+				m_Velocity = CStringUtils.ReadVectorFromString(strValue);
+			}
+
+			return base.ReadActionAttribute(childNode, rEngine, rStateMachine);
+		}
+
+		/// <summary>
+		/// overloaded in child classes to write out action specific stuff
+		/// </summary>
+		/// <param name="rXMLFile"></param>
+		public override void WriteXML(XmlTextWriter rXMLFile)
+		{
+			base.WriteXML(rXMLFile);
+
+			rXMLFile.WriteStartElement("radius");
+			rXMLFile.WriteString(m_HitCircle.Radius.ToString());
+			rXMLFile.WriteEndElement();
+
+			rXMLFile.WriteStartElement("startOffset");
+			rXMLFile.WriteString(CStringUtils.StringFromVector(m_StartOffset));
+			rXMLFile.WriteEndElement();
+
+			rXMLFile.WriteStartElement("velocity");
+			rXMLFile.WriteString(CStringUtils.StringFromVector(m_Velocity));
+			rXMLFile.WriteEndElement();
+		}
+
+#endif
+
+		/// <summary>
+		/// Read from a serialized file
+		/// </summary>
+		/// <param name="myAction">the xml item to read the action from</param>
+		public bool ReadSerialized(SPFSettings.CreateHitCircleActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, StateMachine rStateMachine)
+		{
+			Debug.Assert(myAction.type == ActionType.ToString());
+
+			m_HitCircle.Radius = myAction.radius;
+			m_StartOffset = myAction.startOffset;
+			m_Velocity = myAction.velocity;
+
+			return base.ReadSerialized(myAction, rEngine, rXmlContent, rStateMachine);
+		}
+
+		#endregion //File IO
+	}
+}

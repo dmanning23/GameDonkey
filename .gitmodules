@@ -1,0 +1,48 @@
+[submodule "externals/MonoGame"]
+	path = externals/MonoGame
+	url = git@github.com:dmanning23/MonoGame.git
+[submodule "externals/ParticleBuddy"]
+	path = externals/ParticleBuddy
+	url = git@github.com:dmanning23/ParticleBuddy.git
+[submodule "externals/DrawListBuddy"]
+	path = externals/DrawListBuddy
+	url = git@github.com:dmanning23/DrawListBuddy.git
+[submodule "externals/RenderBuddy"]
+	path = externals/RenderBuddy
+	url = git@github.com:dmanning23/RenderBuddy.git
+[submodule "externals/MatrixExtensions"]
+	path = externals/MatrixExtensions
+	url = git@github.com:dmanning23/MatrixExtensions.git
+[submodule "externals/GameTimer"]
+	path = externals/GameTimer
+	url = git@github.com:dmanning23/GameTimer.git
+[submodule "externals/HadoukInput"]
+	path = externals/HadoukInput
+	url = git@github.com:dmanning23/HadoukInput.git
+[submodule "externals/CameraBuddy"]
+	path = externals/CameraBuddy
+	url = git@github.com:dmanning23/CameraBuddy.git
+[submodule "externals/FontBuddy"]
+	path = externals/FontBuddy
+	url = git@github.com:dmanning23/FontBuddy.git
+[submodule "externals/AnimationLib"]
+	path = externals/AnimationLib
+	url = git@bitbucket.org:the_dannobot/animationlib.git
+[submodule "externals/Vector2Extensions"]
+	path = externals/Vector2Extensions
+	url = git@github.com:dmanning23/Vector2Extensions.git
+[submodule "externals/Filename"]
+	path = externals/Filename
+	url = git@github.com:dmanning23/Filename.git
+[submodule "externals/RandomExtensions"]
+	path = externals/RandomExtensions
+	url = git@github.com:dmanning23/RandomExtensions.git
+[submodule "externals/CollisionBuddy"]
+	path = externals/CollisionBuddy
+	url = git@github.com:dmanning23/CollisionBuddy.git
+[submodule "externals/BasicPrimitiveBuddy"]
+	path = externals/BasicPrimitiveBuddy
+	url = git@github.com:dmanning23/BasicPrimitiveBuddy.git
+[submodule "externals/StateMachine"]
+	path = externals/StateMachine
+	url = git@github.com:dmanning23/StateMachine.git

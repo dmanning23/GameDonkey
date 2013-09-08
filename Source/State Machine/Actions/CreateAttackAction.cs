@@ -1,0 +1,421 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Xml;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using StateMachineBuddy;
+using AnimationLib;
+using CollisionBuddy;
+
+namespace GameDonkey
+{
+	public class CCreateAttackAction : IBaseAction
+	{
+		#region Members
+
+		//the name of the bone to use
+		private string m_strBoneName;
+
+		/// <summary>
+		/// The bone this attack uses.  Has to be a weapon bone!
+		/// Starts out as null, and is set at runtime the first time this action is run.
+		/// Since it can be a garment bone, these might not actually be in the model at startup
+		/// </summary>
+		protected Bone m_rAttackBone;
+
+		//the vector to set another object to when this attack connects
+		protected Vector2 m_Direction;
+
+		//the amount of damage to deal when this attack connects
+		private float m_fDamage;
+
+		//the time delta of how long the attack is active
+		private float m_fTimeDelta;
+
+		/// <summary>
+		/// The sound to play if this attack hits.
+		/// This sound is only played if the attack is not blocked
+		/// </summary>
+		private string m_strHitSound;
+
+		/// <summary>
+		/// The time when this attack is done.
+		/// Set at runtime when the attack is activated
+		/// </summary>
+		private float m_fDoneTime;
+
+		/// <summary>
+		/// A list of actions that will be run if this attack connects (sound effects, particle effects, etc)
+		/// This list of actions is played whether the attack is blocked or not.
+		/// </summary>
+		private List<IBaseAction> m_listSuccessActions;
+
+		#endregion //Members
+
+		#region Properties
+
+		public float TimeDelta
+		{
+			get { return m_fTimeDelta; }
+			set { m_fTimeDelta = value; }
+		}
+
+		public float DoneTime
+		{
+			get { return m_fDoneTime; }
+		}
+
+		public string BoneName
+		{
+			get { return m_strBoneName; }
+			set
+			{
+				Debug.Assert(null != Owner);
+				m_strBoneName = value;
+
+				//if the bone name is changed, it means the bone needs to be reset too...
+				m_rAttackBone = null;
+			}
+		}
+
+		public Vector2 Direction
+		{
+			get { return m_Direction; }
+			set { m_Direction = value; }
+		}
+
+		public float Strength
+		{
+			get { return m_fDamage; }
+			set { m_fDamage = value; }
+		}
+
+		public string HitSound
+		{
+			get { return m_strHitSound; }
+		}
+
+		#endregion //Properties
+
+		#region Methods
+
+		/// <summary>
+		/// Standard constructor
+		/// </summary>
+		public CCreateAttackAction(BaseObject rOwner)
+			: this(rOwner, EActionType.CreateAttack)
+		{
+		}
+
+		/// <summary>
+		/// constructor called by child classes
+		/// </summary>
+		/// <param name="rOwner">the dude this action belongs to</param>
+		/// <param name="eType">the type of the chlid class</param>
+		public CCreateAttackAction(BaseObject rOwner, EActionType eType)
+			: base(rOwner)
+		{
+			ActionType = eType;
+			m_strBoneName = "";
+			m_rAttackBone = null;
+			m_Direction = new Vector2(0.0f);
+			m_fDamage = 0.0f;
+			m_fTimeDelta = 0.0f;
+			m_fDoneTime = 0.0f;
+			m_listSuccessActions = new List<IBaseAction>();
+		}
+
+		/// <summary>
+		/// execute this action (overridden in all child classes)
+		/// </summary>
+		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
+		public override bool Execute()
+		{
+			Debug.Assert(null != Owner);
+			Debug.Assert(null != Owner.CharacterClock);
+			Debug.Assert(!AlreadyRun);
+
+			//Check if the bone is set, if not try and find it...
+			if (null == m_rAttackBone)
+			{
+				m_rAttackBone = Owner.Physics.FindWeapon(m_strBoneName);
+			}
+
+			//reset teh success actions
+			for (int i = 0; i < m_listSuccessActions.Count; i++)
+			{
+				m_listSuccessActions[i].AlreadyRun = false;
+			}
+
+			//activate the attack
+			m_fDoneTime = Owner.CharacterClock.CurrentTime + m_fTimeDelta;
+
+			//add this actionto the list of attacks
+			Owner.AddAttack(this);
+
+			return base.Execute();
+		}
+
+		public override bool Compare(IBaseAction rInst)
+		{
+			CCreateAttackAction myAction = (CCreateAttackAction)rInst;
+
+			Debug.Assert(ActionType == myAction.ActionType);
+			Debug.Assert(Time == myAction.Time);
+			Debug.Assert(m_strBoneName == myAction.m_strBoneName);
+			Debug.Assert(m_rAttackBone == myAction.m_rAttackBone);
+			//Debug.Assert(m_Direction.X == myAction.m_Direction.X);
+			//Debug.Assert(m_Direction.Y == myAction.m_Direction.Y);
+			Debug.Assert(m_fDamage == myAction.m_fDamage);
+			Debug.Assert(m_fTimeDelta == myAction.m_fTimeDelta);
+			Debug.Assert(m_fDoneTime == myAction.m_fDoneTime);
+
+			for (int i = 0; i < m_listSuccessActions.Count; i++)
+			{
+				if (!m_listSuccessActions[i].Compare(myAction.m_listSuccessActions[i]))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public virtual void Update()
+		{
+			//nothing to do here, used in child classes
+		}
+
+		public virtual Circle GetCircle()
+		{
+			//return the first circle from this dude's image
+
+			//Check if the bone is set, if not try and find it...
+			if (null == m_rAttackBone)
+			{
+				m_rAttackBone = Owner.Physics.FindWeapon(m_strBoneName);
+			}
+
+			//the bone for this attack is in a garment that isnt being displayed
+			if (null == m_rAttackBone)
+			{
+				return null;
+			}
+
+			//get the current image
+			CImage rMyImage = m_rAttackBone.GetCurrentImage();
+
+			//hit bones and images must have one circle
+			if ((null == rMyImage) || (rMyImage.Circles.Count < 1))
+			{
+				return null;
+			}
+
+			//get the circle
+			CCircle rMyCircle = rMyImage.Circles[0];
+			Debug.Assert(null != rMyCircle);
+
+			return rMyCircle;
+		}
+
+		/// <summary>
+		/// execute all the success actions after this attack lands
+		/// </summary>
+		/// <param name="rCharacterHit">The dude that got nailed by this attack</param>
+		/// <returns>bool: whether or not a state change occurred while this dude was running</returns>
+		public virtual bool ExecuteSuccessActions(BaseObject rCharacterHit)
+		{
+			for (int i = 0; i < m_listSuccessActions.Count; i++)
+			{
+				if (m_listSuccessActions[i].Execute())
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		#endregion //Methods
+
+		#region File IO
+
+#if WINDOWS
+
+		/// <summary>
+		/// Read from an xml file
+		/// </summary>
+		/// <param name="rXMLNode">the xml node to read from</param>
+		/// <returns></returns>
+		public virtual bool ReadSerialized(System.Xml.XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		{
+			//read in xml action
+
+			if ("Item" != rXMLNode.Name)
+			{
+				return false;
+			}
+
+			//should have an attribute Type
+			XmlNamedNodeMap mapAttributes = rXMLNode.Attributes;
+			for (int i = 0; i < mapAttributes.Count; i++)
+			{
+				//will only have the name attribute
+				string strName = mapAttributes.Item(i).Name;
+				string strValue = mapAttributes.Item(i).Value;
+				if ("Type" == strName)
+				{
+					if (ActionType != IBaseAction.XMLTypeToType(strValue))
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			//Read in child nodes
+			if (rXMLNode.HasChildNodes)
+			{
+				for (XmlNode childNode = rXMLNode.FirstChild;
+					null != childNode;
+					childNode = childNode.NextSibling)
+				{
+					if (!ReadActionAttribute(childNode, rEngine, rStateMachine))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		protected virtual bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		{
+			//what is in this node?
+			string strName = childNode.Name;
+			string strValue = childNode.InnerText;
+
+			if (strName == "type")
+			{
+				Debug.Assert(strValue == ActionType.ToString());
+			}
+			else if (strName == "time")
+			{
+				Time = Convert.ToSingle(strValue);
+				if (0.0f > Time)
+				{
+					Debug.Assert(0.0f <= Time);
+					return false;
+				}
+			}
+			else if (strName == "boneName")
+			{
+				BoneName = strValue;
+			}
+			else if (strName == "direction")
+			{
+				m_Direction = CStringUtils.ReadVectorFromString(strValue);
+			}
+			else if (strName == "damage")
+			{
+				m_fDamage = Convert.ToSingle(strValue);
+				if (0.0f > m_fDamage)
+				{
+					Debug.Assert(0.0f <= m_fDamage);
+					return false;
+				}
+			}
+			else if (strName == "timeDelta")
+			{
+				m_fTimeDelta = Convert.ToSingle(strValue);
+				if (0.0f > m_fTimeDelta)
+				{
+					Debug.Assert(0.0f <= m_fTimeDelta);
+					return false;
+				}
+			}
+			else if (strName == "hitSound")
+			{
+				m_strHitSound = strValue;
+			}
+			else if (strName == "successActions")
+			{
+				//Read in all the success actions
+				if (!IBaseAction.ReadListActions(Owner, ref m_listSuccessActions, childNode, rEngine, rStateMachine))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// overloaded in child classes to write out action specific stuff
+		/// </summary>
+		/// <param name="rXMLFile"></param>
+		public override void WriteXML(XmlTextWriter rXMLFile)
+		{
+			rXMLFile.WriteStartElement("boneName");
+			rXMLFile.WriteString(m_strBoneName);
+			rXMLFile.WriteEndElement();
+
+			rXMLFile.WriteStartElement("direction");
+			rXMLFile.WriteString(CStringUtils.StringFromVector(m_Direction));
+			rXMLFile.WriteEndElement();
+
+			rXMLFile.WriteStartElement("damage");
+			rXMLFile.WriteString(m_fDamage.ToString());
+			rXMLFile.WriteEndElement();
+
+			rXMLFile.WriteStartElement("timeDelta");
+			rXMLFile.WriteString(m_fTimeDelta.ToString());
+			rXMLFile.WriteEndElement();
+
+			rXMLFile.WriteStartElement("hitSound");
+			rXMLFile.WriteString(m_strHitSound);
+			rXMLFile.WriteEndElement();
+
+			rXMLFile.WriteStartElement("successActions");
+			for (int i = 0; i < m_listSuccessActions.Count; i++)
+			{
+				m_listSuccessActions[i].WriteXMLFormat(rXMLFile);
+			}
+			rXMLFile.WriteEndElement();
+		}
+
+#endif
+
+		/// <summary>
+		/// Read from a serialized file
+		/// </summary>
+		/// <param name="myAction">the xml item to read the action from</param>
+		public virtual bool ReadSerialized(SPFSettings.CreateAttackActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, StateMachine rStateMachine)
+		{
+			Debug.Assert(myAction.type == ActionType.ToString());
+			ReadSerializedBase(myAction);
+
+			//read in serialized action
+			BoneName = myAction.boneName;
+
+			m_Direction = myAction.direction;
+			m_fDamage = myAction.damage;
+			m_fTimeDelta = myAction.timeDelta;
+			m_strHitSound = myAction.hitSound;
+			//TODO: verify the sound action
+			//Debug.Assert(null != CAudioManager.GetCue(m_strHitSound));
+			IBaseAction.ReadListActions(Owner, myAction.successActions, ref m_listSuccessActions, rEngine, rXmlContent, rStateMachine);
+
+			return true;
+		}
+
+		#endregion //File IO
+	}
+}

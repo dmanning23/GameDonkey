@@ -1,0 +1,212 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Xml;
+using Microsoft.Xna.Framework;
+
+namespace GameDonkey
+{
+	public class CConstantDeccelerationAction : IBaseAction
+	{
+		#region Members
+
+		/// <summary>
+		/// The pixels/second to add to this characters velocity every second.
+		/// should be -x and +y
+		/// </summary>
+		private Vector2 m_Velocity;
+
+		/// <summary>
+		/// The point at which to stop adding y velocity to the character
+		/// should be +y.  Don't care about x, that will always slow down to 0.0
+		/// </summary>
+		private float m_fMinYVelocity;
+
+		#endregion //Members
+
+		#region Properties
+
+		/// <summary>
+		/// The pixels/second to add to this characters velocity every second.
+		/// should be +y and -x
+		/// </summary>
+		public Vector2 Velocity
+		{
+			get { return m_Velocity; }
+			set { m_Velocity = value; }
+		}
+
+		/// <summary>
+		/// The point at which to stop adding y velocity to the character
+		/// should be +y
+		/// </summary>
+		public float MinYVelocity
+		{
+			get { return m_fMinYVelocity; }
+			set { m_fMinYVelocity = value; }
+		}
+
+		#endregion //Properties
+
+		#region Methods
+
+		/// <summary>
+		/// Standard constructor
+		/// </summary>
+		public CConstantDeccelerationAction(BaseObject rOwner) : base(rOwner)
+		{
+			ActionType = EActionType.ConstantDecceleration;
+			m_Velocity = new Vector2(0.0f);
+			m_fMinYVelocity = 0.0f;
+		}
+
+		/// <summary>
+		/// execute this action (overridden in all child classes)
+		/// </summary>
+		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
+		public override bool Execute()
+		{
+			Debug.Assert(null != Owner);
+			Debug.Assert(!AlreadyRun);
+
+			//set the constant accleration variable in the base object
+			Owner.DeccelerationAction = this;
+
+			return base.Execute();
+		}
+
+		public override bool Compare(IBaseAction rInst)
+		{
+			CAddVelocityAction myAction = (CAddVelocityAction)rInst;
+
+			Debug.Assert(ActionType == myAction.ActionType);
+			Debug.Assert(Time == myAction.Time);
+
+			return true;
+		}
+
+		#endregion //Methods
+
+		#region File IO
+
+#if WINDOWS
+
+		/// <summary>
+		/// Read from an xml file
+		/// </summary>
+		/// <param name="rXMLNode">the xml node to read from</param>
+		/// <returns></returns>
+		public bool ReadSerialized(XmlNode rXMLNode, IGameDonkey rEngine)
+		{
+			//read in xml action
+
+			if ("Item" != rXMLNode.Name)
+			{
+				return false;
+			}
+
+			//should have an attribute Type
+			XmlNamedNodeMap mapAttributes = rXMLNode.Attributes;
+			for (int i = 0; i < mapAttributes.Count; i++)
+			{
+				//will only have the name attribute
+				string strName = mapAttributes.Item(i).Name;
+				string strValue = mapAttributes.Item(i).Value;
+				if ("Type" == strName)
+				{
+					if (ActionType != IBaseAction.XMLTypeToType(strValue))
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			//Read in child nodes
+			if (rXMLNode.HasChildNodes)
+			{
+				for (XmlNode childNode = rXMLNode.FirstChild;
+					null != childNode;
+					childNode = childNode.NextSibling)
+				{
+					//what is in this node?
+					string strName = childNode.Name;
+					string strValue = childNode.InnerText;
+
+					if (strName == "type")
+					{
+						Debug.Assert(strValue == ActionType.ToString());
+					}
+					else if (strName == "time")
+					{
+						Time = Convert.ToSingle(strValue);
+						if (0.0f > Time)
+						{
+							Debug.Assert(0.0f <= Time);
+							return false;
+						}
+					}
+					else if (strName == "velocity")
+					{
+						m_Velocity = CStringUtils.ReadVectorFromString(strValue);
+					}
+					else if (strName == "minYVelocity")
+					{
+						m_fMinYVelocity = Convert.ToSingle(strValue);
+					}
+					else
+					{
+						return false;
+					}
+				}
+			}
+
+			Debug.Assert(m_Velocity.Y >= 0.0f);
+			Debug.Assert(m_Velocity.X <= 0.0f);
+			Debug.Assert(m_fMinYVelocity >= 0.0f);
+
+			return true;
+		}
+
+		/// <summary>
+		/// overloaded in child classes to write out action specific stuff
+		/// </summary>
+		/// <param name="rXMLFile"></param>
+		public override void WriteXML(XmlTextWriter rXMLFile)
+		{
+			rXMLFile.WriteStartElement("velocity");
+			rXMLFile.WriteString(CStringUtils.StringFromVector(m_Velocity));
+			rXMLFile.WriteEndElement();
+
+			rXMLFile.WriteStartElement("minYVelocity");
+			rXMLFile.WriteString(m_fMinYVelocity.ToString());
+			rXMLFile.WriteEndElement();
+		}
+
+#endif
+
+		/// <summary>
+		/// Read from a serialized file
+		/// </summary>
+		/// <param name="myAction">the xml item to read the action from</param>
+		public bool ReadSerialized(SPFSettings.ConstantDeccelerationActionXML myAction)
+		{
+			Debug.Assert(myAction.type == ActionType.ToString());
+			m_Velocity = myAction.velocity;
+			m_fMinYVelocity = myAction.minYVelocity;
+			ReadSerializedBase(myAction);
+
+			Debug.Assert(m_Velocity.Y >= 0.0f);
+			Debug.Assert(m_Velocity.X <= 0.0f);
+			Debug.Assert(m_fMinYVelocity >= 0.0f);
+
+			return true;
+		}
+
+		#endregion //File IO
+	}
+}
