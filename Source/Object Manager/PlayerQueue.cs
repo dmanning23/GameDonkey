@@ -161,7 +161,7 @@ namespace GameDonkey
 		{
 			m_listActive = new List<BaseObject>();
 			m_listInactive = new List<BaseObject>();
-			m_listTrailDrawLists = new List<CDrawList>();
+			m_listTrailDrawLists = new List<DrawList>();
 			m_rCharacter = null;
 			m_CharacterClock = new HitPauseClock();
 			m_PlayerColor = PlayerColor;
@@ -525,7 +525,7 @@ namespace GameDonkey
 				if (m_listTrailDrawLists[iDrawlistIndex].Update(m_CharacterClock))
 				{
 					//this drawlist is expired
-					CDrawlistWarehouse.PutItem(m_listTrailDrawLists[iDrawlistIndex]);
+					DrawlistWarehouse.PutItem(m_listTrailDrawLists[iDrawlistIndex]);
 					m_listTrailDrawLists.RemoveAt(iDrawlistIndex);
 				}
 				else
@@ -543,7 +543,7 @@ namespace GameDonkey
 					Debug.Assert(null != m_listActive[i].TrailAction);
 
 					//add a trail right in front of the main dude
-					CDrawList myTrail = CDrawlistWarehouse.GetItem();
+					DrawList myTrail = DrawlistWarehouse.GetItem();
 					Debug.Assert(null != myTrail);
 					myTrail.Set(m_listActive[i].TrailAction.TrailLifeDelta,
 						m_listActive[i].TrailAction.StartColor,
@@ -850,31 +850,31 @@ namespace GameDonkey
 			{
 				case EObjectType.Human:
 				{
-					myCharacter = new CPlayerObject(m_CharacterClock, m_iNextObjectID++);
+					myCharacter = new PlayerObject(m_CharacterClock, m_iNextObjectID++);
 
 					//set as the main character
-					AddCharacterToList((CPlayerObject)myCharacter);
+					AddCharacterToList((PlayerObject)myCharacter);
 				}
 				break;
 				case EObjectType.AI:
 				{
-					CAIObject myDude = new CAIObject(m_CharacterClock, m_iNextObjectID++);
+					AIObject myDude = new AIObject(m_CharacterClock, m_iNextObjectID++);
 					myDude.Difficulty = iDifficulty;
 					myCharacter = myDude;
 
 					//set as the main characters
-					AddCharacterToList((CPlayerObject)myCharacter);
+					AddCharacterToList((PlayerObject)myCharacter);
 				}
 				break;
 				case EObjectType.Projectile:
 				{
 					Debug.Assert(null != m_rCharacter);
-					myCharacter = new CProjectileObject(m_CharacterClock, m_rCharacter, m_iNextObjectID++);
+					myCharacter = new ProjectileObject(m_CharacterClock, m_rCharacter, m_iNextObjectID++);
 				}
 				break;
 				case EObjectType.Level:
 				{
-					myCharacter = new CLevelObject(m_CharacterClock, m_iNextObjectID++);
+					myCharacter = new LevelObject(m_CharacterClock, m_iNextObjectID++);
 				}
 				break;
 				default:

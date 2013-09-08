@@ -21,7 +21,7 @@ namespace GameDonkey
 		///list of state machines
 		///player characters use a different state machine depending on which direction they are going
 		///</summary>
-		private List<CSingleStateContainer> m_StateMachines;
+		private List<SingleStateContainer> m_StateMachines;
 
 		/// <summary>
 		/// The index of the state machine currently being used
@@ -537,7 +537,7 @@ namespace GameDonkey
 			bool bFlyingStateMachine)
 		{
 			//create a new single state container
-			CSingleStateContainer rMyStateContainer = new CSingleStateContainer(new CWeddingStateMachine(bFlyingStateMachine));
+			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine));
 
 			//find a place to store the new state container
 			m_StateMachines.Add(rMyStateContainer);
@@ -569,7 +569,7 @@ namespace GameDonkey
 			bool bFlyingStateMachine)
 		{
 			//create a new single state container
-			CSingleStateContainer rMyStateContainer = new CSingleStateContainer(new CWeddingStateMachine(bFlyingStateMachine));
+			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine));
 
 			//find a place to store the new state container
 			m_StateMachines.Add(rMyStateContainer);

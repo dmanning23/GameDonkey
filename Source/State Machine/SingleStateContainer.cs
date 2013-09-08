@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using GameTimer;
 using Microsoft.Xna.Framework.Content;
-#if !NO_NETWORKING
+#if NETWORKING
 using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
@@ -14,7 +14,7 @@ namespace GameDonkey
 	/// Heads up, this state machine doesn't sign up for all the state change messages...
 	/// It's meant to be used with playerstatecontainer, otherwise use the singlestatecontainer
 	/// </summary>
-	class CSingleStateContainer : IStateContainer
+	class SingleStateContainer : IStateContainer
 	{
 		#region Members
 
@@ -22,7 +22,7 @@ namespace GameDonkey
 
 		public StateMachine StateMachine { get; private set; }
 
-		private CStateActionsList m_listActions;
+		private StateActionsList m_listActions;
 
 		/// <summary>
 		/// This clock times how long the character has been in the current state
@@ -39,7 +39,7 @@ namespace GameDonkey
 		/// contructor
 		/// </summary>
 		/// <param name="myStateMachine">the state machine this dude will use</param>
-		public CSingleStateContainer(StateMachine myStateMachine)
+		public SingleStateContainer(StateMachine myStateMachine)
 		{
 			StateMachine = myStateMachine;
 			m_listActions = new CStateActionsList();
@@ -218,7 +218,7 @@ namespace GameDonkey
 
 		#region Networking
 
-#if !NO_NETWORKING
+#if NETWORKING
 
 		/// <summary>
 		/// Read this object from a network packet reader.
@@ -244,8 +244,6 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-#if WINDOWS
-
 		public bool ReadSerializedStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine)
 		{
 			return m_listActions.ReadSerializedStateActions(strFilename, rOwner, rEngine, StateMachine);
@@ -255,8 +253,6 @@ namespace GameDonkey
 		{
 			return m_listActions.WriteStateActions(strFilename);
 		}
-
-#endif
 
 		public void ReadSerializedStateActions(ContentManager rXmlContent,
 			string strResource,
@@ -271,8 +267,6 @@ namespace GameDonkey
 
 		#region State Machine File IO
 
-#if WINDOWS
-
 		public bool ReadStateMachineFile(string strFilename)
 		{
 			return StateMachine.ReadSerializedFile(strFilename);
@@ -283,8 +277,6 @@ namespace GameDonkey
 			Debug.Assert(null != StateMachine);
 			return StateMachine.AppendSerializedFile(strFilename);
 		}
-
-#endif
 
 		public bool ReadStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
 		{
@@ -301,8 +293,6 @@ namespace GameDonkey
 		#endregion //File IO
 
 		#region Combined File IO
-
-#if WINDOWS
 
 		public bool ReadStateContainer(string strStateMachineFilename,
 			int iMessageOffset,
@@ -342,8 +332,6 @@ namespace GameDonkey
 
 			return true;
 		}
-
-#endif
 
 		public void ReadStateContainer(ContentManager rContent,
 			string strStateMachineResource,

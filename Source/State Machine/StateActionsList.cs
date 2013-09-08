@@ -11,7 +11,7 @@ namespace GameDonkey
 	/// <summary>
 	/// A list of all the state actions for a single state machine.
 	/// </summary>
-	class CStateActionsList
+	class StateActionsList
 	{
 		#region Members
 
@@ -28,7 +28,7 @@ namespace GameDonkey
 		/// <summary>
 		/// standard constructor
 		/// </summary>
-		public CStateActionsList()
+		public StateActionsList()
 		{
 			m_listActions = new List<CStateActions>();
 		}
@@ -96,7 +96,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rInst">the object to compare to</param>
 		/// <returns>bool: whether or not these state containers are exactly the same.</returns>
-		public bool CompareActions(CStateActionsList rInst)
+		public bool CompareActions(StateActionsList rInst)
 		{
 			if (m_listActions.Count != rInst.m_listActions.Count)
 			{
@@ -140,8 +140,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region State Action File IO
-
-#if WINDOWS
 
 		public bool ReadSerializedStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
@@ -251,8 +249,6 @@ namespace GameDonkey
 
 			return true;
 		}
-
-#endif
 
 		public void ReadSerializedStateActions(ContentManager rXmlContent,
 			string strResource,

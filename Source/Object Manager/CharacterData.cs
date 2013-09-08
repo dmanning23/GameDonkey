@@ -141,7 +141,7 @@ namespace GameDonkey
 			//gonna have to do this the HARD way
 
 			//Open the file.
-			FileStream stream = File.Open(strFileName.Filename, FileMode.Open, FileAccess.Read);
+			FileStream stream = File.Open(strFileName.File, FileMode.Open, FileAccess.Read);
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(stream);
 			XmlNode rootNode = xmlDoc.DocumentElement;

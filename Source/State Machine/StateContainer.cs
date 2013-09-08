@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using GameTimer;
 using Microsoft.Xna.Framework.Content;
-#if !NO_NETWORKING
+#if NETWORKING
 using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
@@ -101,7 +101,7 @@ namespace GameDonkey
 
 		#region Networking
 
-#if !NO_NETWORKING
+#if NETWORKING
 
 		/// <summary>
 		/// Read this object from a network packet reader.
@@ -119,13 +119,9 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-#if WINDOWS
-
 		bool ReadSerializedStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine);
 
 		bool WriteStateActions(string strFilename);
-
-#endif
 
 		void ReadSerializedStateActions(ContentManager rXmlContent,
 			string strResource,
@@ -136,13 +132,9 @@ namespace GameDonkey
 
 		#region State Machine File IO
 
-#if WINDOWS
-
 		bool ReadStateMachineFile(string strFilename);
 
 		bool AppendStateMachineFile(string strFilename);
-
-#endif
 
 		bool ReadStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset);
 
@@ -152,8 +144,6 @@ namespace GameDonkey
 
 		#region Combined File IO
 
-#if WINDOWS
-
 		bool ReadStateContainer(string strStateMachineFilename, 
 			int iMessageOffset,
 			string strStateActionsFilename,
@@ -161,8 +151,6 @@ namespace GameDonkey
 			IGameDonkey rEngine,
 			bool bPlayerStateMachine,
 			bool bFlyingStateMachine);
-
-#endif
 
 		void ReadStateContainer(ContentManager rContent, 
 			string strStateMachineResource, 

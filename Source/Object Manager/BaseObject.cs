@@ -1294,7 +1294,7 @@ namespace GameDonkey
 			ref float fHeight)
 		{
 			//Open the file.
-			FileStream stream = File.Open(strFileName.Filename, FileMode.Open, FileAccess.Read);
+			FileStream stream = File.Open(strFileName.File, FileMode.Open, FileAccess.Read);
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(stream);
 			XmlNode rootNode = xmlDoc.DocumentElement;
@@ -1404,12 +1404,12 @@ namespace GameDonkey
 			bool bFlying)
 		{
 			//try to load all that stuff
-			if (!AnimationContainer.ReadSerializedModelFormat(strModelFile.Filename, rEngine.Renderer))
+			if (!AnimationContainer.ReadSerializedModelFormat(strModelFile.File, rEngine.Renderer))
 			{
 				return false;
 			}
 			m_Physics.SortBones(AnimationContainer.Model);
-			if (!AnimationContainer.ReadSerializedAnimationFormat(strAnimationFile.Filename))
+			if (!AnimationContainer.ReadSerializedAnimationFormat(strAnimationFile.File))
 			{
 				return false;
 			}
@@ -1423,9 +1423,9 @@ namespace GameDonkey
 
 			//read in the state container
 			if (!States.ReadStateContainer(
-				strStateMachineFile.Filename,
+				strStateMachineFile.File,
 				iMessageOffset,
-				strStateActionsFile.Filename,
+				strStateActionsFile.File,
 				this,
 				rEngine,
 				bPlayer,

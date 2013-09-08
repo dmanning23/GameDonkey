@@ -8,7 +8,7 @@ using StateMachineBuddy;
 
 namespace GameDonkey
 {
-	public class CSendStateMessageAction : IBaseAction
+	public class SendStateMessageAction : IBaseAction
 	{
 		#region Members
 
@@ -51,7 +51,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public CSendStateMessageAction(BaseObject rOwner) : base(rOwner)
+		public SendStateMessageAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.SendStateMessage;
 
@@ -79,7 +79,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CSendStateMessageAction myAction = (CSendStateMessageAction)rInst;
+			SendStateMessageAction myAction = (SendStateMessageAction)rInst;
 
 			Debug.Assert ((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time) &&
@@ -95,8 +95,6 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-
-#if WINDOWS
 
 		/// <summary>
 		/// Read from an xml file
@@ -185,8 +183,6 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_strMessageName);
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Net;
 #endif
 using RenderBuddy;
 using ParticleBuddy;
+using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -192,13 +193,13 @@ namespace GameDonkey
 			m_LevelObjects = new CLevelObjectQueue();
 			m_listSpawnPoints = new List<Vector2>();
 
-			m_DefaultParticles = new List<CEmitterTemplate>();
+			m_DefaultParticles = new List<EmitterTemplate>();
 			for (EDefaultParticleEffects i = 0; i < EDefaultParticleEffects.NumDefaultParticleEffects; i++)
 			{
-				m_DefaultParticles.Add(new CEmitterTemplate());
+				m_DefaultParticles.Add(new EmitterTemplate());
 			}
 
-			m_Font = new CFontHelper();
+			m_Font = new FontBuddy();
 			m_CharacterClock = new GameClock();
 
 			//debugging stuff
@@ -237,7 +238,7 @@ namespace GameDonkey
 			Renderer.LoadContent(rGraphics);
 
 			//load the background image used for the HUD
-			m_HUDBackground = Renderer.Content().Load<Texture2D>(@"Resources\HUDBackground");
+			m_HUDBackground = Renderer.Content.Load<Texture2D>(@"Resources\HUDBackground");
 
 			//load the hit spark
 			HitSpark.ReadSerializedFile(rXmlContent, @"Resources\Particles\Hit Spark", Renderer);
@@ -262,7 +263,7 @@ namespace GameDonkey
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);
-			m_Font.LoadContent(Renderer.Content());
+			m_Font.LoadContent(Renderer.Content);
 		}
 
 		/// <summary>
@@ -349,7 +350,7 @@ namespace GameDonkey
 			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathNoise));
 
 			//open the background image stuff
-			m_SkyBox = Renderer.Content().Load<Texture2D>(myDude.backgroundTile);
+			m_SkyBox = Renderer.Content.Load<Texture2D>(myDude.backgroundTile);
 			m_SkyColor.R = myDude.backgroundR;
 			m_SkyColor.G = myDude.backgroundG;
 			m_SkyColor.B = myDude.backgroundB;
@@ -1010,7 +1011,7 @@ namespace GameDonkey
 					myColor);
 
 				//draw the players picture
-				SPFLib.CPlayerObject myPlayer = m_listPlayers[i].Character as SPFLib.CPlayerObject;
+				PlayerObject myPlayer = m_listPlayers[i].Character as PlayerObject;
 				if (null != myPlayer &&
 					null != myPlayer.Portrait)
 				{

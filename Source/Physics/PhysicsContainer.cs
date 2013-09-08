@@ -295,7 +295,7 @@ namespace GameDonkey
 			//loop through the bones of the level object
 			foreach (Bone rOtherBone in CollisionBones)
 			{
-				CImage rOtherImage = rOtherBone.GetCurrentImage();
+				Image rOtherImage = rOtherBone.GetCurrentImage();
 				if (null == rOtherImage)
 				{
 					continue;
@@ -410,10 +410,10 @@ namespace GameDonkey
 				while (iMyAttackIndex < Owner.CurrentAttacks.Count)
 				{
 					//get my attack
-					CCreateAttackAction myAttack = Owner.CurrentAttacks[iMyAttackIndex];
+					CreateAttackAction myAttack = Owner.CurrentAttacks[iMyAttackIndex];
 
 					//get my circle
-					CCircle myCircle = myAttack.GetCircle();
+					Circle myCircle = myAttack.GetCircle();
 					if (null == myCircle)
 					{
 						//no collision occured because that attack bone isn't even being displayed
@@ -425,10 +425,10 @@ namespace GameDonkey
 					while (iHisAttackIndex < rOtherGuy.Owner.CurrentAttacks.Count)
 					{
 						//get his attack
-						CCreateAttackAction hisAttack = rOtherGuy.Owner.CurrentAttacks[iHisAttackIndex];
+						CreateAttackAction hisAttack = rOtherGuy.Owner.CurrentAttacks[iHisAttackIndex];
 
 						//get his circle
-						CCircle hisCircle = hisAttack.GetCircle();
+						Circle hisCircle = hisAttack.GetCircle();
 						if (null == hisCircle)
 						{
 							//no collision occured because that attack bone isn't even being displayed
@@ -469,7 +469,7 @@ namespace GameDonkey
 			iMyAttackIndex = 0;
 			while (iMyAttackIndex < Owner.CurrentAttacks.Count)
 			{
-				Debug.Assert(Owner.CurrentAttacks[iMyAttackIndex] is CCreateAttackAction);
+				Debug.Assert(Owner.CurrentAttacks[iMyAttackIndex] is CreateAttackAction);
 				if (CheckAttackCollisions(Owner.CurrentAttacks[iMyAttackIndex], rOtherGuy))
 				{
 					//the attack connected, remove from the list
@@ -485,7 +485,7 @@ namespace GameDonkey
 			iHisAttackIndex = 0;
 			while (iHisAttackIndex < rOtherGuy.Owner.CurrentAttacks.Count)
 			{
-				Debug.Assert(rOtherGuy.Owner.CurrentAttacks[iHisAttackIndex] is CCreateAttackAction);
+				Debug.Assert(rOtherGuy.Owner.CurrentAttacks[iHisAttackIndex] is CreateAttackAction);
 				if (rOtherGuy.CheckAttackCollisions(rOtherGuy.Owner.CurrentAttacks[iHisAttackIndex], this))
 				{
 					//the attack connected, remove from the list
@@ -517,7 +517,7 @@ namespace GameDonkey
 				Debug.Assert(null != rOtherBone);
 
 				//make sure they have images
-				CImage rOtherImage = rOtherBone.GetCurrentImage();
+				Image rOtherImage = rOtherBone.GetCurrentImage();
 				if (null == rOtherImage)
 				{
 					return false;
@@ -530,7 +530,7 @@ namespace GameDonkey
 				}
 
 				//make sure this attack has a circle
-				CCircle myCircle = rAttack.GetCircle();
+				Circle myCircle = rAttack.GetCircle();
 				if (null == myCircle)
 				{
 					//no collision occured because that attack bone isn't even being displayed
@@ -577,7 +577,7 @@ namespace GameDonkey
 			foreach (Bone rBone in CollisionBones)
 			{
 				//get the images we are checking
-				CImage rImage = rBone.GetCurrentImage();
+				Image rImage = rBone.GetCurrentImage();
 				if (null == rImage)
 				{
 					continue;

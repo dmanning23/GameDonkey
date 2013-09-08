@@ -731,7 +731,7 @@ namespace GameDonkey
 					Color.Yellow);
 
 				//play the hit noise
-				CCreateAttackAction rAttackAction = rAttack.Action as CCreateAttackAction;
+				CreateAttackAction rAttackAction = rAttack.Action as CreateAttackAction;
 				Debug.Assert(null != rAttackAction);
 				rEngine.PlaySound(rAttackAction.HitSound);
 			}

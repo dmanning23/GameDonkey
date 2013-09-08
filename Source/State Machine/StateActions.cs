@@ -181,7 +181,7 @@ namespace GameDonkey
 					m_bIsAttack = true;
 
 					//check if this is the end of the startup 
-					CCreateAttackAction rAction = (CCreateAttackAction)m_listActions[i];
+					CreateAttackAction rAction = (CreateAttackAction)m_listActions[i];
 					if (0.0f == m_fActiveTime)
 					{
 						m_fActiveTime = rAction.Time;
@@ -199,7 +199,7 @@ namespace GameDonkey
 					m_bIsAttack = true;
 
 					//check if this is the end of the startup 
-					CProjectileAction rAction = (CProjectileAction)m_listActions[i];
+					ProjectileAction rAction = (ProjectileAction)m_listActions[i];
 					if (0.0f == m_fActiveTime)
 					{
 						m_fActiveTime = rAction.Time;
@@ -250,21 +250,21 @@ namespace GameDonkey
 			switch (eType)
 			{
 				case EActionType.AddGarment: { myAction = new AddGarmentAction(rOwner); } break;
-				case EActionType.AddVelocity: { myAction = new CAddVelocityAction(rOwner); } break;
-				case EActionType.ConstantAcceleration: { myAction = new CConstantAccelerationAction(rOwner); } break;
-				case EActionType.ConstantDecceleration: { myAction = new CConstantDeccelerationAction(rOwner); } break;
-				case EActionType.CreateAttack: { myAction = new CCreateAttackAction(rOwner); } break;
-				case EActionType.CreateBlock: { myAction = new CCreateBlockAction(rOwner); } break;
-				case EActionType.CreateThrow: { myAction = new CCreateThrowAction(rOwner); } break;
-				case EActionType.Deactivate: { myAction = new CDeactivateAction(rOwner); } break;
-				case EActionType.Evade: { myAction = new CEvadeAction(rOwner); } break;
-				case EActionType.ParticleEffect: { myAction = new CParticleEffectAction(rOwner, rEngine); } break;
-				case EActionType.PlayAnimation: { myAction = new CPlayAnimationAction(rOwner); } break;
-				case EActionType.PlaySound: { myAction = new CPlaySoundAction(rOwner, rEngine); } break;
-				case EActionType.Projectile: { myAction = new CProjectileAction(rOwner); } break;
-				case EActionType.SendStateMessage: { myAction = new CSendStateMessageAction(rOwner); } break;
-				case EActionType.SetVelocity: { myAction = new CSetVelocityAction(rOwner); } break;
-				case EActionType.Trail: { myAction = new CTrailAction(rOwner); } break;
+				case EActionType.AddVelocity: { myAction = new AddVelocityAction(rOwner); } break;
+				case EActionType.ConstantAcceleration: { myAction = new ConstantAccelerationAction(rOwner); } break;
+				case EActionType.ConstantDecceleration: { myAction = new ConstantDeccelerationAction(rOwner); } break;
+				case EActionType.CreateAttack: { myAction = new CreateAttackAction(rOwner); } break;
+				case EActionType.CreateBlock: { myAction = new CreateBlockAction(rOwner); } break;
+				case EActionType.CreateThrow: { myAction = new CreateThrowAction(rOwner); } break;
+				case EActionType.Deactivate: { myAction = new DeactivateAction(rOwner); } break;
+				case EActionType.Evade: { myAction = new EvadeAction(rOwner); } break;
+				case EActionType.ParticleEffect: { myAction = new ParticleEffectAction(rOwner, rEngine); } break;
+				case EActionType.PlayAnimation: { myAction = new PlayAnimationAction(rOwner); } break;
+				case EActionType.PlaySound: { myAction = new PlaySoundAction(rOwner, rEngine); } break;
+				case EActionType.Projectile: { myAction = new ProjectileAction(rOwner); } break;
+				case EActionType.SendStateMessage: { myAction = new SendStateMessageAction(rOwner); } break;
+				case EActionType.SetVelocity: { myAction = new SetVelocityAction(rOwner); } break;
+				case EActionType.Trail: { myAction = new TrailAction(rOwner); } break;
 				case EActionType.BlockState: { myAction = new BlockingStateAction(rOwner); } break;
 					
 				default: { Debug.Assert(false); } break;
