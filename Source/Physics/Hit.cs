@@ -17,7 +17,7 @@ namespace GameDonkey
 		NumHits
 	};
 
-	public class CHit
+	public class Hit
 	{
 		#region Members
 
@@ -81,7 +81,7 @@ namespace GameDonkey
 
 		#region Methods
 
-		public CHit()
+		public Hit()
 		{
 			m_Direction = Vector2.Zero;
 			m_fStrength = 0.0f;

@@ -2,7 +2,7 @@
 
 namespace GameDonkey
 {
-	class CLevelObjectPhysicsContainer : IPhysicsContainer
+	class LevelObjectPhysicsContainer : IPhysicsContainer
 	{
 		#region Methods
 
@@ -10,7 +10,7 @@ namespace GameDonkey
 		/// Construct one of these objects!
 		/// </summary>
 		/// <param name="rObject">the level object that owns this dude</param>
-		public CLevelObjectPhysicsContainer(LevelObject rObject) : base(rObject)
+		public LevelObjectPhysicsContainer(LevelObject rObject) : base(rObject)
 		{
 			Debug.Assert(rObject.Type == EObjectType.Level);
 		}

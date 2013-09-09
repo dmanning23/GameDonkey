@@ -150,7 +150,7 @@ namespace GameDonkey
 			//m_fTargetAnimationRotation = 0.0f;
 			States = new PlayerObjectStateContainer();
 			States.StateChangedContainerEvent += this.StateChanged;
-			m_Physics = new CPlayerPhysicsContainer(this);
+			m_Physics = new PlayerPhysicsContainer(this);
 			m_ComboCounter = 0;
 		}
 
@@ -505,7 +505,7 @@ namespace GameDonkey
 			base.HitResponse(rEngine);
 		}
 
-		protected override void RespondToGroundHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToGroundHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			Debug.Assert(null != m_Physics);
 			Debug.Assert(EHitType.GroundHit == rGroundHit.HitType);
@@ -556,7 +556,7 @@ namespace GameDonkey
 			}
 		}
 
-		protected override void RespondToCeilingHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToCeilingHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			Debug.Assert(null != m_Physics);
 			Debug.Assert(EHitType.CeilingHit == rGroundHit.HitType);
@@ -601,7 +601,7 @@ namespace GameDonkey
 			//TODO: make a particle effect & sound for hitting ceiling
 		}
 
-		protected override void RespondToLeftWallHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToLeftWallHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			Debug.Assert(null != m_Physics);
 			Debug.Assert(EHitType.LeftWallHit == rGroundHit.HitType);
@@ -636,7 +636,7 @@ namespace GameDonkey
 			}
 		}
 
-		protected override void RespondToRightWallHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToRightWallHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			Debug.Assert(null != m_Physics);
 			Debug.Assert(EHitType.RightWallHit == rGroundHit.HitType);
@@ -671,7 +671,7 @@ namespace GameDonkey
 			}
 		}
 
-		private void RespondToAttack(CHit rAttack, IGameDonkey rEngine)
+		private void RespondToAttack(Hit rAttack, IGameDonkey rEngine)
 		{
 			Debug.Assert(EHitType.AttackHit == rAttack.HitType);
 			Debug.Assert(null != rAttack);
@@ -740,7 +740,7 @@ namespace GameDonkey
 			Physics.Reset();
 		}
 
-		private Vector2 AttackedVector(CHit rAttack)
+		private Vector2 AttackedVector(Hit rAttack)
 		{
 			Vector2 HitDirection = rAttack.Direction * m_fStrengthMultiplier;
 
@@ -770,7 +770,7 @@ namespace GameDonkey
 		/// I got grabbed by a bad guy
 		/// </summary>
 		/// <param name="rGrab">hit with all the grab info</param>
-		private void RespondToGrab(CHit rGrab)
+		private void RespondToGrab(Hit rGrab)
 		{
 			Debug.Assert(EHitType.AttackHit == rGrab.HitType);
 			Debug.Assert(null != rGrab.Action);
@@ -778,7 +778,7 @@ namespace GameDonkey
 			//TODO: does any grab logic need to be performed?
 		}
 
-		private void RespondToPushHit(CHit rPush)
+		private void RespondToPushHit(Hit rPush)
 		{
 			Debug.Assert(EHitType.PushHit == rPush.HitType);
 
@@ -788,7 +788,7 @@ namespace GameDonkey
 			Position += deltaVect;
 		}
 
-		private void RespondToWeaponHit(CHit rWeaponHit, IGameDonkey rEngine)
+		private void RespondToWeaponHit(Hit rWeaponHit, IGameDonkey rEngine)
 		{
 			Debug.Assert(EHitType.WeaponHit == rWeaponHit.HitType);
 			Debug.Assert(null != rWeaponHit);
@@ -818,7 +818,7 @@ namespace GameDonkey
 					Color.White);
 		}
 
-		private void RespondToBlockedAttack(CHit rAttack, IGameDonkey rEngine)
+		private void RespondToBlockedAttack(Hit rAttack, IGameDonkey rEngine)
 		{
 			//do a block!
 
@@ -961,8 +961,8 @@ namespace GameDonkey
 			//get the character portrait, load it from teh renderer content manager
 			Filename strPortraitFile = new Filename();
 			strPortraitFile.SetRelFilename(myCharXML.portrait);
-			Debug.Assert(null != rEngine.Renderer.Content());
-			m_Portrait = rEngine.Renderer.Content().Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
+			Debug.Assert(null != rEngine.Renderer.Content);
+			m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
 
 			//TODO: grab the deathsound
 			m_strDeathSound = myCharXML.deathSound;

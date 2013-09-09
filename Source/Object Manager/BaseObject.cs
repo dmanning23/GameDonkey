@@ -854,7 +854,7 @@ namespace GameDonkey
 			Physics.Reset();
 		}
 
-		protected virtual void RespondToGroundHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected virtual void RespondToGroundHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			//TODO: override this in projectile and kill the projectile when it hits a wall
 
@@ -875,7 +875,7 @@ namespace GameDonkey
 			}
 		}
 
-		protected virtual void RespondToCeilingHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected virtual void RespondToCeilingHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			//TODO: override this in projectile and kill the projectile when it hits a wall
 
@@ -897,7 +897,7 @@ namespace GameDonkey
 			}
 		}
 
-		protected virtual void RespondToLeftWallHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected virtual void RespondToLeftWallHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			//TODO: override this in projectile and kill the projectile when it hits a wall
 
@@ -919,7 +919,7 @@ namespace GameDonkey
 			}
 		}
 
-		protected virtual void RespondToRightWallHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected virtual void RespondToRightWallHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			//TODO: override this in projectile and kill the projectile when it hits a wall
 

@@ -27,7 +27,7 @@ namespace GameDonkey
 
 		protected override void Init()
 		{
-			m_Physics = new CLevelObjectPhysicsContainer(this);
+			m_Physics = new LevelObjectPhysicsContainer(this);
 			States = new ObjectStateContainer(new StateMachine());
 			States.StateChangedContainerEvent += this.StateChanged;
 		}
@@ -78,7 +78,7 @@ namespace GameDonkey
 			}
 		}
 
-		protected override void RespondToGroundHit(CHit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToGroundHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
 			//should never get here
 			Debug.Assert(false);

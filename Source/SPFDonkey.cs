@@ -236,7 +236,7 @@ namespace GameDonkey
 			//load all the content
 
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			Renderer.LoadContent(rGraphics);
+			Renderer.LoadContent();
 
 			//load the background image used for the HUD
 			m_HUDBackground = Renderer.Content.Load<Texture2D>(@"Resources\HUDBackground");
@@ -732,7 +732,7 @@ namespace GameDonkey
 
 		public override void PlaySound(string strCueName)
 		{
-#if !NO_AUDIO
+#if AUDIO
 			CAudioManager.PlayCue(strCueName);
 #endif
 		}
@@ -818,9 +818,12 @@ namespace GameDonkey
 			//draw the background before the camera is set
 			DrawBackground();
 
+			//Get the camera matrix we are gonna use
+			Renderer.Camera.BeginScene(false);
+			Matrix cameraMatrix = Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
+
 			//draw the level
-			Renderer.BeginScene(); //this sets up the camera
-			Renderer.BeginSpriteBatch(BlendState.AlphaBlend);
+			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
 			m_LevelObjects.Render(Renderer, true);
 #if DEBUG
 			//draw the world boundaries in debug mode?
@@ -841,28 +844,23 @@ namespace GameDonkey
 				}
 			}
 #endif
-			Renderer.EndScene();
+			Renderer.SpriteBatchEnd();
 
 			//draw the hud
-			Matrix translation = Renderer.TranslationMatrix;
-			Renderer.TranslationMatrix = Matrix.Identity;
-			Renderer.BeginSpriteBatch(BlendState.AlphaBlend);
+			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, Resolution.TransformationMatrix());
 			DrawHUD();
-			Renderer.EndScene();
-
-			//reset the matrix for the camera
-			Renderer.TranslationMatrix = translation;
+			Renderer.SpriteBatchEnd();
 
 			//render all the character trails, start another spritebatch
-			Renderer.BeginSpriteBatch(BlendState.NonPremultiplied);
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
 			for (int i = 0; i < m_listPlayers.Count; i++)
 			{
 				m_listPlayers[i].Render(Renderer, false);
 			}
-			Renderer.EndScene();
+			Renderer.SpriteBatchEnd();
 
 			//render all the players
-			Renderer.BeginSpriteBatch(BlendState.AlphaBlend);
+			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
 			for (int i = 0; i < m_listPlayers.Count; i++)
 			{
 				m_listPlayers[i].Render(Renderer, true);
@@ -910,19 +908,18 @@ namespace GameDonkey
 				Renderer.Camera.DrawCameraInfo(Renderer);
 			}
 #endif
-			Renderer.EndScene();
+			Renderer.SpriteBatchEnd();
 
 			//draw all the particles, start another spritebatch for the particles
-			Renderer.BeginSpriteBatch(BlendState.NonPremultiplied);
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
 			ParticleEngine.Render(Renderer);
-			Renderer.EndScene();
+			Renderer.SpriteBatchEnd();
 		}
 
 		protected virtual void DrawBackground()
 		{
 			Debug.Assert(null != m_SkyBox);
-			Renderer.TranslationMatrix = Matrix.Identity;
-			Renderer.BeginSpriteBatch(BlendState.NonPremultiplied);
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, Resolution.TransformationMatrix());
 			if (m_iNumTiles <= 1)
 			{
 				//just cover the whole screen with the skybox
@@ -958,7 +955,7 @@ namespace GameDonkey
 
 				//Draw the bottom row, which is cut off :(
 				Rectangle sourceRect = m_SkyBox.Bounds;
-				tileRect.Height = Renderer.ScreenRect.Height - (iTileSize * iNumRows);
+				tileRect.Height = Resolution.ScreenArea.Height - (iTileSize * iNumRows);
 				sourceRect.Height = ((tileRect.Height * sourceRect.Height) / iTileSize);
 				for (int i = 0; i < m_iNumTiles; i++)
 				{
@@ -966,7 +963,7 @@ namespace GameDonkey
 					tileRect.X += iTileSize;
 				}
 			}
-			Renderer.EndScene();
+			Renderer.SpriteBatchEnd();
 		}
 
 		public override void PlayParticleEffect(

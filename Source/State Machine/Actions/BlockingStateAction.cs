@@ -166,8 +166,6 @@ namespace GameDonkey
 
 		#region File IO
 
-#if WINDOWS
-
 		/// <summary>
 		/// Read from an xml file
 		/// </summary>
@@ -287,8 +285,6 @@ namespace GameDonkey
 			}
 			rXMLFile.WriteEndElement();
 		}
-
-#endif
 
 		/// <summary>
 		/// Read from a serialized file

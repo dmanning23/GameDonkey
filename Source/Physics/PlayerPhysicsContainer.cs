@@ -6,11 +6,11 @@ namespace GameDonkey
 	/// <summary>
 	/// Manages physics for player objects
 	/// </summary>
-	class CPlayerPhysicsContainer : IPhysicsContainer
+	class PlayerPhysicsContainer : IPhysicsContainer
 	{
 		#region Methods
 
-		public CPlayerPhysicsContainer(BaseObject rObject)
+		public PlayerPhysicsContainer(BaseObject rObject)
 			: base(rObject)
 		{
 			Debug.Assert((Owner.Type == EObjectType.Human) || (Owner.Type == EObjectType.AI));

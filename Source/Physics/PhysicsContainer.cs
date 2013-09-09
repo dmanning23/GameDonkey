@@ -19,7 +19,7 @@ namespace GameDonkey
 		/// <summary>
 		/// the list of hits for this dude
 		/// </summary>
-		protected CHit[] m_rgHits;
+		protected Hit[] m_rgHits;
 
 		/// <summary>
 		/// flag for whether the hits are active this frame
@@ -55,7 +55,7 @@ namespace GameDonkey
 			get { return m_Object; }
 		}
 
-		public CHit[] Hits
+		public Hit[] Hits
 		{
 			get { return m_rgHits; }
 		}
@@ -107,10 +107,10 @@ namespace GameDonkey
 			Debug.Assert(null != rObject);
 			m_rgHitFlags = new bool[(int)EHitType.NumHits];
 
-			m_rgHits = new CHit[(int)EHitType.NumHits];
+			m_rgHits = new Hit[(int)EHitType.NumHits];
 			for (int i = 0; i < (int)EHitType.NumHits; i++)
 			{
-				m_rgHits[i] = new CHit();
+				m_rgHits[i] = new Hit();
 			}
 
 			m_listWeaponBones = new List<Bone>();
