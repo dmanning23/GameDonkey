@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Net;
 using RenderBuddy;
 using ParticleBuddy;
 using FilenameBuddy;
+using ResolutionBuddy;
 
 namespace GameDonkey
 {
@@ -438,7 +439,7 @@ namespace GameDonkey
 				m_listPlayers[i].AddToCamera(Renderer.Camera);
 			}
 
-			Renderer.ForceToScreen();
+			Renderer.Camera.ForceToScreen();
 		}
 
 		/// <summary>
@@ -925,15 +926,15 @@ namespace GameDonkey
 			if (m_iNumTiles <= 1)
 			{
 				//just cover the whole screen with the skybox
-				Renderer.SpriteBatch().Draw(m_SkyBox, Renderer.ScreenRect, m_SkyColor);
+				Renderer.SpriteBatch.Draw(m_SkyBox, Resolution.ScreenArea, m_SkyColor);
 			}
 			else
 			{
 				//get the size of each tile
-				int iTileSize = Renderer.ScreenRect.Width / m_iNumTiles;
+				int iTileSize = Resolution.ScreenArea.Width / m_iNumTiles;
 
 				//get the number of rows 
-				int iNumRows = Renderer.ScreenRect.Height / iTileSize;
+				int iNumRows = Resolution.ScreenArea.Height / iTileSize;
 
 				//display all the whole tiles
 				Rectangle tileRect = new Rectangle();
@@ -946,7 +947,7 @@ namespace GameDonkey
 					for (int j = 0; j < m_iNumTiles; j++)
 					{
 						//draw one tile and move to the next column
-						Renderer.SpriteBatch().Draw(m_SkyBox, tileRect, m_SkyColor);
+						Renderer.SpriteBatch.Draw(m_SkyBox, tileRect, m_SkyColor);
 						tileRect.X += iTileSize;
 					}
 
@@ -961,7 +962,7 @@ namespace GameDonkey
 				sourceRect.Height = ((tileRect.Height * sourceRect.Height) / iTileSize);
 				for (int i = 0; i < m_iNumTiles; i++)
 				{
-					Renderer.SpriteBatch().Draw(m_SkyBox, tileRect, sourceRect, m_SkyColor);
+					Renderer.SpriteBatch.Draw(m_SkyBox, tileRect, sourceRect, m_SkyColor);
 					tileRect.X += iTileSize;
 				}
 			}
@@ -980,32 +981,32 @@ namespace GameDonkey
 		protected virtual void DrawHUD()
 		{
 			//um, the width and height of the player pictures
-			float fScreenHeight = Renderer.TitleSafeArea.Height;
-			float fScreenWidth = Renderer.TitleSafeArea.Width;
+			float fScreenHeight = Resolution.TitleSafeArea.Height;
+			float fScreenWidth = Resolution.TitleSafeArea.Width;
 
 			float fHeight = (fScreenHeight * 0.17f); //height of the protrait
-			int iTop = (int)(Renderer.TitleSafeArea.Top * 1.05f); //y position of the top of the portrait
+			int iTop = (int)(Resolution.TitleSafeArea.Top * 1.05f); //y position of the top of the portrait
 			if (0 == iTop)
 			{
 				iTop = (int)(fHeight * 0.1f);
 			}
 			int iBottom = iTop + (int)fHeight;
-			float fCenterWidth = (fScreenWidth * 0.5f) + Renderer.TitleSafeArea.Left;
+			float fCenterWidth = (fScreenWidth * 0.5f) + Resolution.TitleSafeArea.Left;
 
 			//parse through the list of players
 			for (int i = 0; i < m_listPlayers.Count; i++)
 			{
 				//Get the left point
 				int iLeft = (int)(((fScreenWidth / (m_listPlayers.Count + 1)) * (i + 1)) - (fHeight * .5f));
-				iLeft = Renderer.TitleSafeArea.X + iLeft;
+				iLeft = Resolution.TitleSafeArea.X + iLeft;
 
 				//draw that circle background 
 				Color myColor = m_listPlayers[i].Character.PlayerColor;
 				myColor.A = 200;
 
 				Debug.Assert(null != Renderer);
-				Debug.Assert(null != Renderer.SpriteBatch());
-				Renderer.SpriteBatch().Draw(
+				Debug.Assert(null != Renderer.SpriteBatch);
+				Renderer.SpriteBatch.Draw(
 					m_HUDBackground,
 					new Rectangle(iLeft, iTop, (int)fHeight, (int)fHeight),
 					myColor);
@@ -1015,7 +1016,7 @@ namespace GameDonkey
 				if (null != myPlayer &&
 					null != myPlayer.Portrait)
 				{
-					Renderer.SpriteBatch().Draw(
+					Renderer.SpriteBatch.Draw(
 						myPlayer.Portrait,
 						new Rectangle(iLeft, iTop, (int)fHeight, (int)fHeight),
 						Color.White);
@@ -1036,8 +1037,8 @@ namespace GameDonkey
 				{
 					myDamageColor = Color.Red;
 				}
-				m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.15f, Color.DarkGray, Renderer.SpriteBatch());
-				float fCursor = m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.0f, myDamageColor, Renderer.SpriteBatch());
+				m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.15f, Color.DarkGray, Renderer.SpriteBatch);
+				float fCursor = m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.0f, myDamageColor, Renderer.SpriteBatch);
 
 				////draw the player's score
 
@@ -1052,18 +1053,18 @@ namespace GameDonkey
 				//if (m_listPlayers[i].ScoreTimer.RemainingTime() > 0.0f)
 				//{
 				//    ScoreColor = Color.Red;
-				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.8f, ScoreColor, Renderer.SpriteBatch());
+				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.8f, ScoreColor, Renderer.SpriteBatch);
 				//}
 				//else
 				//{
 				//    //just draw regular color
-				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.65f, Color.DarkGray, Renderer.SpriteBatch());
-				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.5f, ScoreColor, Renderer.SpriteBatch());
+				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.65f, Color.DarkGray, Renderer.SpriteBatch);
+				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.5f, ScoreColor, Renderer.SpriteBatch);
 				//}
 
 				//write the players name
 				float fPortraitCenter = (fHeight * 0.5f) + iLeft;
-				m_Font.Write(m_listPlayers[i].PlayerName, new Vector2(fPortraitCenter, iTop), Justify.Center, 0.7f, Color.White, Renderer.SpriteBatch());
+				m_Font.Write(m_listPlayers[i].PlayerName, new Vector2(fPortraitCenter, iTop), Justify.Center, 0.7f, Color.White, Renderer.SpriteBatch);
 			}
 
 			//if the game mode is time, draw the clock
@@ -1084,14 +1085,14 @@ namespace GameDonkey
 					//draw the time
 					float fPositionY = iBottom + (fHeight * 0.4f);
 					string strTime = CStringUtils.TimeToString(m_GameTimer.RemainingTime());
-					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, Renderer.SpriteBatch());
+					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, Renderer.SpriteBatch);
 				}
 			}
 
 			//if someone won, say who
 			if (m_bGameOver)
 			{
-				float fCenterHeight = (fScreenHeight * 0.5f) + Renderer.TitleSafeArea.Top;
+				float fCenterHeight = (fScreenHeight * 0.5f) + Resolution.TitleSafeArea.Top;
 				if (!m_bTie && (null != m_rWinner))
 				{
 					Color myColor = m_rWinner.Character.PlayerColor;
@@ -1103,7 +1104,7 @@ namespace GameDonkey
 						Justify.Center,
 						3.0f,
 						myColor,
-						Renderer.SpriteBatch());
+						Renderer.SpriteBatch);
 				}
 				else
 				{
@@ -1114,7 +1115,7 @@ namespace GameDonkey
 						Justify.Center,
 						3.0f,
 						new Color(0.65f, 0.65f, 0.65f, 0.65f),
-						Renderer.SpriteBatch());
+						Renderer.SpriteBatch);
 				}
 			}
 
@@ -1133,7 +1134,7 @@ namespace GameDonkey
 		/// <param name="position">where to write the text at</param>
 		public void Write(string strText, Vector2 position)
 		{
-			m_Font.Write(strText, position, Justify.Left, 1.0f, Color.White, Renderer.SpriteBatch());
+			m_Font.Write(strText, position, Justify.Left, 1.0f, Color.White, Renderer.SpriteBatch);
 		}
 
 		#endregion //Draw

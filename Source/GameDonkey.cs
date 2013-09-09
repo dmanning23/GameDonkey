@@ -55,7 +55,7 @@ namespace GameDonkey
 				m_WorldBoundaries = value;
 
 				//make the camera rect a little bit smaller so we can see more of the ground
-				Renderer.Camera.World = new Rectangle(m_WorldBoundaries.X, m_WorldBoundaries.Y, m_WorldBoundaries.Width, m_WorldBoundaries.Height + 100);
+				Renderer.Camera.WorldBoundary = new Rectangle(m_WorldBoundaries.X, m_WorldBoundaries.Y, m_WorldBoundaries.Width, m_WorldBoundaries.Height + 100);
 			}
 		}
 

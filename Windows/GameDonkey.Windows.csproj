@@ -237,10 +237,6 @@
       <Project>{1ABFAAEC-29E3-430C-B212-5B15E75E6192}</Project>
       <Name>DrawListBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\CollisionBuddy\Windows\CollisionBuddy.Windows.csproj">
-      <Project>{E032CF52-88BC-4D76-8E93-3798F5EE5CD2}</Project>
-      <Name>CollisionBuddy.Windows</Name>
-    </ProjectReference>
     <ProjectReference Include="..\externals\Filename\Windows\Filename.Windows.csproj">
       <Project>{2A84DFE8-75E0-4774-BAAF-00629ED44405}</Project>
       <Name>Filename.Windows</Name>
@@ -256,6 +252,14 @@
     <ProjectReference Include="..\externals\StateMachine\Windows\StateMachineBuddy.Windows.csproj">
       <Project>{CD66EEB4-8381-41A8-ABED-372DC31646AC}</Project>
       <Name>StateMachineBuddy.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\externals\CollisionBuddy\Windows\CollisionBuddy.Windows.csproj">
+      <Project>{E032CF52-88BC-4D76-8E93-3798F5EE5CD2}</Project>
+      <Name>CollisionBuddy.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\externals\ResolutionBuddy\Windows\ResolutionBuddy.Windows.csproj">
+      <Project>{28342DF0-0089-4A2A-B3D4-6DCD65D6D8E4}</Project>
+      <Name>ResolutionBuddy.Windows</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
