@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using AnimationLib;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -146,7 +147,7 @@ namespace GameDonkey
 			}
 			else if (strName == "releaseDirection")
 			{
-				m_Direction = CStringUtils.ReadVectorFromString(strValue);
+				m_Direction = strValue.ToVector2();
 			}
 			
 			return base.ReadActionAttribute(childNode, rEngine, rStateMachine);

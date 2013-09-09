@@ -10,7 +10,7 @@ namespace GameDonkey
 	/// <summary>
 	/// A list of actions to perform while in one state
 	/// </summary>
-	public class CStateActions
+	public class StateActions
 	{
 		#region Members
 
@@ -65,7 +65,7 @@ namespace GameDonkey
 		/// <summary>
 		/// standard constructor!
 		/// </summary>
-		public CStateActions()
+		public StateActions()
 		{
 			m_listActions = new List<IBaseAction>();
 		}
@@ -129,7 +129,7 @@ namespace GameDonkey
 #endif
 		}
 
-		public bool Compare(CStateActions rInst)
+		public bool Compare(StateActions rInst)
 		{
 			if (m_strStateName != rInst.m_strStateName)
 			{
@@ -301,8 +301,6 @@ namespace GameDonkey
 
 		#region File IO
 
-#if WINDOWS
-
 		public bool ReadSerialized(XmlNode rXMLNode, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
 			if ("Item" != rXMLNode.Name)
@@ -394,8 +392,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement(); //actions
 			rXMLFile.WriteEndElement(); //Item
 		}
-
-#endif
 
 		public void ReadSerialized(SPFSettings.StateActionsXML myActions, BaseObject rOwner, IGameDonkey rEngine, ContentManager rXmlContent, StateMachine rStateMachine)
 		{

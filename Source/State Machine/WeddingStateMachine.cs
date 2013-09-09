@@ -112,11 +112,11 @@ namespace GameDonkey
 
 	#endregion //State Machine Enums
 
-	class CWeddingStateMachine : StateMachine
+	class WeddingStateMachine : StateMachine
 	{
 		#region Members
 
-		public CWeddingStateMachine(bool bFlyingStateMachine)
+		public WeddingStateMachine(bool bFlyingStateMachine)
 			: base()
 		{
 			#region State machine sizes

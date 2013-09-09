@@ -5,11 +5,11 @@ namespace GameDonkey
 	/// <summary>
 	/// physics container specific to projectiles
 	/// </summary>
-	class CProjectilePhysicsContainer : IPhysicsContainer
+	class ProjectilePhysicsContainer : IPhysicsContainer
 	{
 		#region Methods
 
-		public CProjectilePhysicsContainer(ProjectileObject rObject) : base(rObject)
+		public ProjectilePhysicsContainer(ProjectileObject rObject) : base(rObject)
 		{
 			Debug.Assert(rObject.Type == EObjectType.Projectile);
 		}

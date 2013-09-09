@@ -262,7 +262,7 @@ namespace GameDonkey
 				{
 					case EActionType.AddVelocity:
 					{
-						CAddVelocityAction myAction = new CAddVelocityAction(rOwner);
+						AddVelocityAction myAction = new AddVelocityAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -273,7 +273,7 @@ namespace GameDonkey
 					break;
 					case EActionType.ConstantAcceleration:
 					{
-						CConstantAccelerationAction myAction = new CConstantAccelerationAction(rOwner);
+						ConstantAccelerationAction myAction = new ConstantAccelerationAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -284,7 +284,7 @@ namespace GameDonkey
 					break;
 					case EActionType.ConstantDecceleration:
 					{
-						CConstantDeccelerationAction myAction = new CConstantDeccelerationAction(rOwner);
+						ConstantDeccelerationAction myAction = new ConstantDeccelerationAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -295,7 +295,7 @@ namespace GameDonkey
 					break;
 					case EActionType.CreateAttack:
 					{
-						CCreateAttackAction myAction = new CCreateAttackAction(rOwner);
+						CreateAttackAction myAction = new CreateAttackAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine, rStateMachine))
 						{
 							Debug.Assert(false);
@@ -306,7 +306,7 @@ namespace GameDonkey
 					break;
 					case EActionType.CreateBlock:
 					{
-						CCreateBlockAction myAction = new CCreateBlockAction(rOwner);
+						CreateBlockAction myAction = new CreateBlockAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -317,7 +317,7 @@ namespace GameDonkey
 					break;
 					case EActionType.CreateThrow:
 					{
-						CCreateThrowAction myAction = new CCreateThrowAction(rOwner);
+						CreateThrowAction myAction = new CreateThrowAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine, rStateMachine))
 						{
 							Debug.Assert(false);
@@ -328,7 +328,7 @@ namespace GameDonkey
 					break;
 					case EActionType.Deactivate:
 					{
-						CDeactivateAction myAction = new CDeactivateAction(rOwner);
+						DeactivateAction myAction = new DeactivateAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -339,7 +339,7 @@ namespace GameDonkey
 					break;
 					case EActionType.Evade:
 					{
-						CEvadeAction myAction = new CEvadeAction(rOwner);
+						EvadeAction myAction = new EvadeAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -350,7 +350,7 @@ namespace GameDonkey
 					break;
 					case EActionType.ParticleEffect:
 					{
-						CParticleEffectAction myAction = new CParticleEffectAction(rOwner, rEngine);
+						ParticleEffectAction myAction = new ParticleEffectAction(rOwner, rEngine);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -361,7 +361,7 @@ namespace GameDonkey
 					break;
 					case EActionType.PlayAnimation:
 					{
-						CPlayAnimationAction myAction = new CPlayAnimationAction(rOwner);
+						PlayAnimationAction myAction = new PlayAnimationAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -372,7 +372,7 @@ namespace GameDonkey
 					break;
 					case EActionType.PlaySound:
 					{
-						CPlaySoundAction myAction = new CPlaySoundAction(rOwner, rEngine);
+						PlaySoundAction myAction = new PlaySoundAction(rOwner, rEngine);
 						if (!myAction.ReadSerialized(childNode))
 						{
 							Debug.Assert(false);
@@ -383,7 +383,7 @@ namespace GameDonkey
 					break;
 					case EActionType.Projectile:
 					{
-						CProjectileAction myAction = new CProjectileAction(rOwner);
+						ProjectileAction myAction = new ProjectileAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -394,7 +394,7 @@ namespace GameDonkey
 					break;
 					case EActionType.SendStateMessage:
 					{
-						CSendStateMessageAction myAction = new CSendStateMessageAction(rOwner);
+						SendStateMessageAction myAction = new SendStateMessageAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -405,7 +405,7 @@ namespace GameDonkey
 					break;
 					case EActionType.SetVelocity:
 					{
-						CSetVelocityAction myAction = new CSetVelocityAction(rOwner);
+						SetVelocityAction myAction = new SetVelocityAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -416,7 +416,7 @@ namespace GameDonkey
 					break;
 					case EActionType.Trail:
 					{
-						CTrailAction myAction = new CTrailAction(rOwner);
+						TrailAction myAction = new TrailAction(rOwner);
 						if (!myAction.ReadSerialized(childNode, rEngine))
 						{
 							Debug.Assert(false);
@@ -511,7 +511,7 @@ namespace GameDonkey
 				{
 					case EActionType.AddVelocity:
 					{
-						CAddVelocityAction myAction = new CAddVelocityAction(rOwner);
+						AddVelocityAction myAction = new AddVelocityAction(rOwner);
 						SPFSettings.AddVelocityActionXML myActionXML = (SPFSettings.AddVelocityActionXML)inputList[i];
 						if (myAction.ReadSerialized(myActionXML))
 						{
@@ -526,7 +526,7 @@ namespace GameDonkey
 					break;
 					case EActionType.ConstantAcceleration:
 					{
-						CConstantAccelerationAction myAction = new CConstantAccelerationAction(rOwner);
+						ConstantAccelerationAction myAction = new ConstantAccelerationAction(rOwner);
 						SPFSettings.ConstantAccelerationActionXML myActionXML = (SPFSettings.ConstantAccelerationActionXML)inputList[i];
 						if (myAction.ReadSerialized(myActionXML))
 						{
@@ -541,7 +541,7 @@ namespace GameDonkey
 					break;
 					case EActionType.ConstantDecceleration:
 					{
-						CConstantDeccelerationAction myAction = new CConstantDeccelerationAction(rOwner);
+						ConstantDeccelerationAction myAction = new ConstantDeccelerationAction(rOwner);
 						SPFSettings.ConstantDeccelerationActionXML myActionXML = (SPFSettings.ConstantDeccelerationActionXML)inputList[i];
 						if (myAction.ReadSerialized(myActionXML))
 						{
@@ -556,7 +556,7 @@ namespace GameDonkey
 					break;
 					case EActionType.CreateAttack:
 					{
-						CCreateAttackAction myAction = new CCreateAttackAction(rOwner);
+						CreateAttackAction myAction = new CreateAttackAction(rOwner);
 						SPFSettings.CreateAttackActionXML myActionXML = (SPFSettings.CreateAttackActionXML)inputList[i];
 						if (myAction.ReadSerialized(myActionXML, rEngine, rXmlContent, rStateMachine))
 						{
@@ -571,7 +571,7 @@ namespace GameDonkey
 					break;
 					case EActionType.CreateBlock:
 					{
-						CCreateBlockAction myAction = new CCreateBlockAction(rOwner);
+						CreateBlockAction myAction = new CreateBlockAction(rOwner);
 						SPFSettings.CreateBlockActionXML myActionXML = (SPFSettings.CreateBlockActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML))
 						{
@@ -582,7 +582,7 @@ namespace GameDonkey
 					break;
 					case EActionType.CreateThrow:
 					{
-						CCreateThrowAction myAction = new CCreateThrowAction(rOwner);
+						CreateThrowAction myAction = new CreateThrowAction(rOwner);
 						SPFSettings.CreateThrowActionXML myActionXML = (SPFSettings.CreateThrowActionXML)inputList[i];
 						if (myAction.ReadSerialized(myActionXML, rEngine, rXmlContent, rStateMachine))
 						{
@@ -597,7 +597,7 @@ namespace GameDonkey
 					break;
 					case EActionType.Deactivate:
 					{
-						CDeactivateAction myAction = new CDeactivateAction(rOwner);
+						DeactivateAction myAction = new DeactivateAction(rOwner);
 						SPFSettings.DeactivateActionXML myActionXML = (SPFSettings.DeactivateActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML))
 						{
@@ -608,7 +608,7 @@ namespace GameDonkey
 					break;
 					case EActionType.Evade:
 					{
-						CEvadeAction myAction = new CEvadeAction(rOwner);
+						EvadeAction myAction = new EvadeAction(rOwner);
 						SPFSettings.EvadeActionXML myActionXML = (SPFSettings.EvadeActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML))
 						{
@@ -619,7 +619,7 @@ namespace GameDonkey
 					break;
 					case EActionType.ParticleEffect:
 					{
-						CParticleEffectAction myAction = new CParticleEffectAction(rOwner, rEngine);
+						ParticleEffectAction myAction = new ParticleEffectAction(rOwner, rEngine);
 						SPFSettings.ParticleEffectActionXML myActionXML = (SPFSettings.ParticleEffectActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML, rEngine))
 						{
@@ -630,7 +630,7 @@ namespace GameDonkey
 					break;
 					case EActionType.PlayAnimation:
 					{
-						CPlayAnimationAction myAction = new CPlayAnimationAction(rOwner);
+						PlayAnimationAction myAction = new PlayAnimationAction(rOwner);
 						SPFSettings.PlayAnimationActionXML myActionXML = (SPFSettings.PlayAnimationActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML))
 						{
@@ -641,7 +641,7 @@ namespace GameDonkey
 					break;
 					case EActionType.PlaySound:
 					{
-						CPlaySoundAction myAction = new CPlaySoundAction(rOwner, rEngine);
+						PlaySoundAction myAction = new PlaySoundAction(rOwner, rEngine);
 						SPFSettings.PlaySoundActionXML myActionXML = (SPFSettings.PlaySoundActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML))
 						{
@@ -652,7 +652,7 @@ namespace GameDonkey
 					break;
 					case EActionType.Projectile:
 					{
-						CProjectileAction myAction = new CProjectileAction(rOwner);
+						ProjectileAction myAction = new ProjectileAction(rOwner);
 						SPFSettings.ProjectileActionXML myActionXML = (SPFSettings.ProjectileActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML, rEngine, rXmlContent))
 						{
@@ -663,7 +663,7 @@ namespace GameDonkey
 					break;
 					case EActionType.SendStateMessage:
 					{
-						CSendStateMessageAction myAction = new CSendStateMessageAction(rOwner);
+						SendStateMessageAction myAction = new SendStateMessageAction(rOwner);
 						SPFSettings.SendStateMessageActionXML myActionXML = (SPFSettings.SendStateMessageActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML, rStateMachine))
 						{
@@ -674,7 +674,7 @@ namespace GameDonkey
 					break;
 					case EActionType.SetVelocity:
 					{
-						CSetVelocityAction myAction = new CSetVelocityAction(rOwner);
+						SetVelocityAction myAction = new SetVelocityAction(rOwner);
 						SPFSettings.SetVelocityActionXML myActionXML = (SPFSettings.SetVelocityActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML))
 						{
@@ -685,7 +685,7 @@ namespace GameDonkey
 					break;
 					case EActionType.Trail:
 					{
-						CTrailAction myAction = new CTrailAction(rOwner);
+						TrailAction myAction = new TrailAction(rOwner);
 						SPFSettings.TrailActionXML myActionXML = (SPFSettings.TrailActionXML)inputList[i];
 						if (!myAction.ReadSerialized(myActionXML))
 						{

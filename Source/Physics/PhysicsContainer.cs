@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using System;
 using AnimationLib;
+using CollisionBuddy;
 
 namespace GameDonkey
 {
@@ -283,7 +284,7 @@ namespace GameDonkey
 			Debug.Assert(null != rBone);
 
 			//get the image we are checking of this bone
-			CImage rImage = rBone.GetCurrentImage();
+			Image rImage = rBone.GetCurrentImage();
 			if (null == rImage)
 			{
 				return;

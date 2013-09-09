@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using AnimationLib;
 using CollisionBuddy;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -319,7 +320,7 @@ namespace GameDonkey
 			}
 			else if (strName == "direction")
 			{
-				m_Direction = CStringUtils.ReadVectorFromString(strValue);
+				m_Direction = strValue.ToVector2();
 			}
 			else if (strName == "damage")
 			{
@@ -366,7 +367,7 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("direction");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(m_Direction));
+			rXMLFile.WriteString(m_Direction.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("damage");

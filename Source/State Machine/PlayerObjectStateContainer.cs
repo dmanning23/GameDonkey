@@ -63,7 +63,7 @@ namespace GameDonkey
 		/// </summary>
 		public PlayerObjectStateContainer()
 		{
-			m_StateMachines = new List<CSingleStateContainer>();
+			m_StateMachines = new List<SingleStateContainer>();
 			m_StateMachineChangeTimer = new CountdownTimer();
 			_currentStateMachine = 0;
 		}
@@ -400,7 +400,7 @@ namespace GameDonkey
 			return iNumMessages;
 		}
 
-		public CStateActions GetStateActions(int iStateIndex)
+		public StateActions GetStateActions(int iStateIndex)
 		{
 			Debug.Assert(null != m_StateMachines);
 			Debug.Assert(CurrentStateMachine >= 0);

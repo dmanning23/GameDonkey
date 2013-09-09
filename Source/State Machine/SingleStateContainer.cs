@@ -42,7 +42,7 @@ namespace GameDonkey
 		public SingleStateContainer(StateMachine myStateMachine)
 		{
 			StateMachine = myStateMachine;
-			m_listActions = new CStateActionsList();
+			m_listActions = new StateActionsList();
 			m_StateClock = new GameClock();
 
 			//This container only signs up for the reset event
@@ -197,7 +197,7 @@ namespace GameDonkey
 			return StateMachine.NumMessages;
 		}
 
-		public CStateActions GetStateActions(int iStateIndex)
+		public StateActions GetStateActions(int iStateIndex)
 		{
 			Debug.Assert(0 <= iStateIndex);
 			Debug.Assert(iStateIndex < NumStates());
@@ -306,7 +306,7 @@ namespace GameDonkey
 			Debug.Assert(null != StateMachine);
 			if (bPlayerStateMachine)
 			{
-				Debug.Assert(StateMachine is CWeddingStateMachine);
+				Debug.Assert(StateMachine is WeddingStateMachine);
 
 				//load the state machine
 				if (!StateMachine.AppendSerializedFile(strStateMachineFilename))
@@ -346,7 +346,7 @@ namespace GameDonkey
 			Debug.Assert(null != StateMachine);
 			if (bPlayerStateMachine)
 			{
-				Debug.Assert(StateMachine is CWeddingStateMachine);
+				Debug.Assert(StateMachine is WeddingStateMachine);
 
 				//load the state machine
 				StateMachine.AppendSerializedFile(rContent, strStateMachineResource, iMessageOffset);

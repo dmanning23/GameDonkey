@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ParticleBuddy;
 using AnimationLib;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -204,11 +205,11 @@ namespace GameDonkey
 					}
 					else if (strName == "direction")
 					{
-						Direction = CStringUtils.ReadVectorFromString(strValue);
+						Direction = strValue.ToVector2();
 					}
 					else if (strName == "StartOffset")
 					{
-						StartOffset = CStringUtils.ReadVectorFromString(strValue);
+						StartOffset = strValue.ToVector2();
 					}
 					else if (strName == "emitter")
 					{
@@ -247,11 +248,11 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("direction");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(Direction));
+			rXMLFile.WriteString(Direction.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("StartOffset");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(StartOffset));
+			rXMLFile.WriteString(StartOffset.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("emitter");

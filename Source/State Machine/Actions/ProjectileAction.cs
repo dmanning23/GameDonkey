@@ -4,6 +4,8 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using FilenameBuddy;
+using Vector2Extensions;
+using AnimationLib;
 
 namespace GameDonkey
 {
@@ -288,7 +290,7 @@ namespace GameDonkey
 					}
 					else if (strName == "startOffset")
 					{
-						StartOffset = CStringUtils.ReadVectorFromString(strValue);
+						StartOffset = strValue.ToVector2();
 					}
 					else if (strName == "scale")
 					{
@@ -296,7 +298,7 @@ namespace GameDonkey
 					}
 					else if (strName == "velocity")
 					{
-						Velocity = CStringUtils.ReadVectorFromString(strValue);
+						Velocity = strValue.ToVector2();
 					}
 					else if (strName == "useObjectDirection")
 					{
@@ -325,7 +327,7 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("startOffset");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(StartOffset));
+			rXMLFile.WriteString(StartOffset.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("scale");
@@ -333,7 +335,7 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(Velocity));
+			rXMLFile.WriteString(Velocity.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("useObjectDirection");

@@ -93,7 +93,7 @@ namespace GameDonkey
 
 		string CurrentStateText();
 
-		CStateActions GetStateActions(int iStateIndex);
+		StateActions GetStateActions(int iStateIndex);
 
 		GameClock GetStateClock();
 

@@ -100,7 +100,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CAddVelocityAction myAction = (CAddVelocityAction)rInst;
+			AddVelocityAction myAction = (AddVelocityAction)rInst;
 			
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
@@ -197,7 +197,7 @@ namespace GameDonkey
 		public override void WriteXML(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(Velocity));
+			rXMLFile.WriteString(Velocity.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("useObjectDirection");

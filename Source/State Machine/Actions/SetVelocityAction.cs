@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -94,7 +95,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CetVelocityAction myAction = (SetVelocityAction)rInst;
+			SetVelocityAction myAction = (SetVelocityAction)rInst;
 			
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
@@ -168,7 +169,7 @@ namespace GameDonkey
 					}
 					else if (strName == "velocity")
 					{
-						Velocity = CStringUtils.ReadVectorFromString(strValue);
+						Velocity = strValue.ToVector2();
 					}
 					else if (strName == "useObjectDirection")
 					{
@@ -191,7 +192,7 @@ namespace GameDonkey
 		public override void WriteXML(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(Velocity));
+			rXMLFile.WriteString(Velocity.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("useObjectDirection");

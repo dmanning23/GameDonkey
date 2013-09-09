@@ -51,7 +51,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			CeactivateAction myAction = (DeactivateAction)rInst;
+			DeactivateAction myAction = (DeactivateAction)rInst;
 			
 			Debug.Assert((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time));

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -195,11 +196,11 @@ namespace GameDonkey
 					}
 					else if (strName == "velocity")
 					{
-						m_Velocity = CStringUtils.ReadVectorFromString(strValue);
+						m_Velocity = strValue.ToVector2();
 					}
 					else if (strName == "maxVelocity")
 					{
-						m_MaxVelocity = CStringUtils.ReadVectorFromString(strValue);
+						m_MaxVelocity = strValue.ToVector2();
 					}
 					else if (strName == "useObjectDirection")
 					{
@@ -229,11 +230,11 @@ namespace GameDonkey
 		public override void WriteXML(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(m_Velocity));
+			rXMLFile.WriteString(m_Velocity.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("maxVelocity");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(m_MaxVelocity));
+			rXMLFile.WriteString(m_MaxVelocity.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("useObjectDirection");

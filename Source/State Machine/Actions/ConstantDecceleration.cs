@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -150,7 +151,7 @@ namespace GameDonkey
 					}
 					else if (strName == "velocity")
 					{
-						m_Velocity = CStringUtils.ReadVectorFromString(strValue);
+						m_Velocity = strValue.ToVector2();
 					}
 					else if (strName == "minYVelocity")
 					{
@@ -177,7 +178,7 @@ namespace GameDonkey
 		public override void WriteXML(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(m_Velocity));
+			rXMLFile.WriteString(m_Velocity.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("minYVelocity");

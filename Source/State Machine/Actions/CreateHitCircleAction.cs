@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using CollisionBuddy;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -104,11 +105,11 @@ namespace GameDonkey
 			}
 			else if (strName == "startOffset")
 			{
-				m_StartOffset = CStringUtils.ReadVectorFromString(strValue);
+				m_StartOffset = strValue.ToVector2();
 			}
 			else if (strName == "velocity")
 			{
-				m_Velocity = CStringUtils.ReadVectorFromString(strValue);
+				m_Velocity = strValue.ToVector2();
 			}
 
 			return base.ReadActionAttribute(childNode, rEngine, rStateMachine);
@@ -127,11 +128,11 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("startOffset");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(m_StartOffset));
+			rXMLFile.WriteString(m_StartOffset.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(CStringUtils.StringFromVector(m_Velocity));
+			rXMLFile.WriteString(m_Velocity.StringFromVector());
 			rXMLFile.WriteEndElement();
 		}
 

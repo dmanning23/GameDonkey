@@ -15,7 +15,7 @@ namespace GameDonkey
 	{
 		#region Members
 
-		private List<CStateActions> m_listActions;
+		private List<StateActions> m_listActions;
 
 		#endregion //Members
 
@@ -30,7 +30,7 @@ namespace GameDonkey
 		/// </summary>
 		public StateActionsList()
 		{
-			m_listActions = new List<CStateActions>();
+			m_listActions = new List<StateActions>();
 		}
 
 		/// <summary>
@@ -130,7 +130,7 @@ namespace GameDonkey
 			}
 		}
 
-		public CStateActions GetStateActions(int iStateIndex)
+		public StateActions GetStateActions(int iStateIndex)
 		{
 			Debug.Assert(0 <= iStateIndex);
 			Debug.Assert(iStateIndex < m_listActions.Count);
@@ -195,7 +195,7 @@ namespace GameDonkey
 				null != childNode;
 				childNode = childNode.NextSibling)
 			{
-				CStateActions myActions = new CStateActions();
+				StateActions myActions = new StateActions();
 
 				//skip all the comments
 				if ("#comment" == childNode.Name)
@@ -262,7 +262,7 @@ namespace GameDonkey
 			//read in all the states
 			for (int i = 0; i < myContainer.states.Count; i++)
 			{
-				CStateActions myActions = new CStateActions();
+				StateActions myActions = new StateActions();
 				myActions.ReadSerialized(myContainer.states[i], rOwner, rEngine, rXmlContent, rStateMachine);
 				m_listActions.Add(myActions);
 			}
