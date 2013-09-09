@@ -1038,14 +1038,14 @@ namespace GameDonkey
 			{
 				if (null != CurrentBlocks.CurrentActions[i].GetCircle())
 				{
-					CurrentBlocks.CurrentActions[i].GetCircle().Render(rRenderer, Color.Green);
+					CurrentBlocks.CurrentActions[i].GetCircle().Render(rRenderer, Color.Green, rRenderer.SpriteBatch);
 				}
 			}
 		}
 
 		public void RenderPhysics(Renderer rRenderer)
 		{
-			m_AnimationContainer.Model.DrawPhysics(rRenderer, true, Color.White);
+			m_AnimationContainer.Model.DrawPhysics(rRenderer, true, Color.White, rRenderer.Primitive);
 		}
 
 		public void DrawCameraInfo(Renderer rRenderer)
@@ -1054,14 +1054,14 @@ namespace GameDonkey
 			int iHalfHeight = (int)(m_fHeight / 2.0f);
 
 			//add left/right points
-			rRenderer.DrawPoint(new Vector2(Position.X - iHalfHeight, Position.Y), Color.Red);
-			rRenderer.DrawPoint(new Vector2(Position.X + iHalfHeight, Position.Y), Color.Red);
+			rRenderer.Primitive.Point(new Vector2(Position.X - iHalfHeight, Position.Y), Color.Red, rRenderer.SpriteBatch);
+			rRenderer.Primitive.Point(new Vector2(Position.X + iHalfHeight, Position.Y), Color.Red, rRenderer.SpriteBatch);
 
 			//add the bottom point
-			rRenderer.DrawPoint(new Vector2(Position.X, Position.Y + (int)(m_fHeight * 0.55f)), Color.Red);
+			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y + (int)(m_fHeight * 0.55f)), Color.Red, rRenderer.SpriteBatch);
 
 			//add the top
-			rRenderer.DrawPoint(new Vector2(Position.X, Position.Y - (int)(m_fHeight * 0.8f)), Color.Red);
+			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y - (int)(m_fHeight * 0.8f)), Color.Red, rRenderer.SpriteBatch);
 		}
 
 

@@ -829,10 +829,7 @@ namespace GameDonkey
 			//draw the world boundaries in debug mode?
 			if (m_bRenderWorldBoundaries)
 			{
-				Renderer.DrawRectangle(
-					new Vector2(WorldBoundaries.Left, WorldBoundaries.Top),
-					new Vector2(WorldBoundaries.Right, WorldBoundaries.Bottom),
-					0.0f, Color.Red, 1.0f);
+				Renderer.Primitive.Rectangle(WorldBoundaries, Color.Red, Renderer.SpriteBatch);
 			}
 
 			//draw the spawn points for debug mode
@@ -840,7 +837,7 @@ namespace GameDonkey
 			{
 				for (int i = 0; i < m_listSpawnPoints.Count; i++)
 				{
-					Renderer.DrawCircle(m_listSpawnPoints[i], 10, Color.Red);
+					Renderer.Primitive.Circle(m_listSpawnPoints[i], 10, Color.Red, Renderer.SpriteBatch);
 				}
 			}
 #endif
@@ -881,9 +878,10 @@ namespace GameDonkey
 				{
 					for (int j = 0; j < m_listPlayers[i].ActiveObjects.Count; j++)
 					{
-						Renderer.DrawCircle(m_listPlayers[i].Character.Position,
-							(int)(m_listPlayers[i].Character.MinDistance()),
-							Color.White);
+						Renderer.Primitive.Circle(m_listPlayers[i].Character.Position,
+						                          (int)(m_listPlayers[i].Character.MinDistance()), 
+						                          Color.White,
+						                          Renderer.SpriteBatch);
 					}
 				}
 
