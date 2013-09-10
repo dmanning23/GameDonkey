@@ -52,7 +52,7 @@ namespace GameDonkey
 		/// </summary>
 		private CountdownTimer m_StateMachineChangeTimer;
 
-		public event EventHandler<StateChangeEventArgs> StateChangedContainerEvent;
+		public event EventHandler<StateChangeEventArgs> StateChangedEvent;
 
 		#endregion //Members
 
@@ -125,28 +125,28 @@ namespace GameDonkey
 			switch (m_StateMachines[CurrentStateMachine].CurrentState())
 			{
 				case (int)EState.SwitchToGroundStateMachine:
-					{
-						//Try to change state machines if it is safe
-						StateMachineIndex(0, eventArgs);
-					}
-					break;
+				{
+					//Try to change state machines if it is safe
+					StateMachineIndex(0, eventArgs);
+				}
+				break;
 				case (int)EState.SwitchToUpStateMachine:
-					{
-						StateMachineIndex(1, eventArgs);
-					}
-					break;
+				{
+					StateMachineIndex(1, eventArgs);
+				}
+				break;
 				default:
-					{
-						//reset the current single state container
-						m_StateMachines[CurrentStateMachine].StateChange(sender, eventArgs);
+				{
+					//reset the current single state container
+					m_StateMachines[CurrentStateMachine].StateChange(sender, eventArgs);
 
-						//for all other events, fire off the event if anyone is listening
-						if (null != StateChangedContainerEvent)
-						{
-							StateChangedContainerEvent(this, eventArgs);
-						}
+					//for all other events, fire off the event if anyone is listening
+					if (null != StateChangedEvent)
+					{
+						StateChangedEvent(this, eventArgs);
 					}
-					break;
+				}
+				break;
 			}
 		}
 
@@ -179,9 +179,9 @@ namespace GameDonkey
 				m_StateMachines[CurrentStateMachine].StateChange(iIndex, eventArgs);
 
 				//fire off the state changed event if anyone is listening
-				if (null != StateChangedContainerEvent)
+				if (null != StateChangedEvent)
 				{
-					StateChangedContainerEvent(this, eventArgs);
+					StateChangedEvent(this, eventArgs);
 				}
 			}
 			else

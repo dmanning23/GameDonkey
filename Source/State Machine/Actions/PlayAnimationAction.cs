@@ -181,12 +181,7 @@ namespace GameDonkey
 					}
 					else if (strName == "playback")
 					{
-						m_ePlaybackMode = AnimationContainer.StringToPlaybackType(strValue);
-						if (m_ePlaybackMode == EPlayback.NumPlaybackTypes)
-						{
-							Debug.Assert(m_ePlaybackMode != EPlayback.NumPlaybackTypes);
-							return false;
-						}
+						m_ePlaybackMode = (EPlayback)Enum.Parse(typeof(EPlayback), strValue);
 					}
 					else
 					{
@@ -228,12 +223,7 @@ namespace GameDonkey
 			Debug.Assert(m_iAnimationIndex < Owner.AnimationContainer.Animations.Count);
 
 			//read in teh playback style
-			m_ePlaybackMode = AnimationContainer.StringToPlaybackType(myAction.playback);
-			if (m_ePlaybackMode == EPlayback.NumPlaybackTypes)
-			{
-				Debug.Assert(m_ePlaybackMode != EPlayback.NumPlaybackTypes);
-				return false;
-			}
+			m_ePlaybackMode = (EPlayback)Enum.Parse(typeof(EPlayback), myAction.playback);
 
 			return true;
 		}

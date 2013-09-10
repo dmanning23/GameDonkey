@@ -29,7 +29,7 @@ namespace GameDonkey
 		{
 			m_Physics = new LevelObjectPhysicsContainer(this);
 			States = new ObjectStateContainer(new StateMachine());
-			States.StateChangedContainerEvent += this.StateChanged;
+			States.StateChangedEvent += this.StateChanged;
 		}
 
 		public override void CollisionResponse(IPhysicsContainer rOtherObject,

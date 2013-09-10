@@ -18,7 +18,10 @@ namespace GameDonkey
 	{
 		#region Members
 
-		public event EventHandler<StateChangeEventArgs> StateChangedContainerEvent;
+		/// <summary>
+		/// Occurs when the state changes in the state machine.
+		/// </summary>
+		public event EventHandler<StateChangeEventArgs> StateChangedEvent;
 
 		public StateMachine StateMachine { get; private set; }
 
@@ -28,8 +31,6 @@ namespace GameDonkey
 		/// This clock times how long the character has been in the current state
 		/// </summary>
 		protected GameClock m_StateClock;
-
-		public event EventHandler<StateChangeEventArgs> StateChangedEvent;
 
 		#endregion //Members
 
@@ -85,9 +86,9 @@ namespace GameDonkey
 			m_StateClock.TimeDelta = 0.0f;
 
 			//fire off the event if anyone is listening
-			if (null != StateChangedContainerEvent)
+			if (null != StateChangedEvent)
 			{
-				StateChangedContainerEvent(this, eventArgs);
+				StateChangedEvent(this, eventArgs);
 			}
 		}
 

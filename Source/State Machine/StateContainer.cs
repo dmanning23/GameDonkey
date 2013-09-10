@@ -19,7 +19,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Event raised when current state changes
 		/// </summary>
-		event EventHandler<StateChangeEventArgs> StateChangedContainerEvent;
+		event EventHandler<StateChangeEventArgs> StateChangedEvent;
 
 		#endregion //Events
 

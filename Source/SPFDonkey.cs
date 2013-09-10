@@ -970,7 +970,7 @@ namespace GameDonkey
 			Vector2 Position,
 			Color myColor)
 		{
-			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], Velocity, Position, Vector2.Zero, null, myColor, null);
+			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], Velocity, Position, Vector2.Zero, null, myColor, false);
 		}
 
 		protected virtual void DrawHUD()

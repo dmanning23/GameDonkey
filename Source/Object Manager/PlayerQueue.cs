@@ -732,8 +732,6 @@ namespace GameDonkey
 		#endregion //Networking
 
 		#region File IO
-		
-#if  WINDOWS
 
 		public BaseObject LoadObject(Filename strFileName, IGameDonkey rEngine, EObjectType eType, int iDifficulty)
 		{
@@ -743,31 +741,31 @@ namespace GameDonkey
 			{
 				case EObjectType.Human:
 					{
-						myCharacter = new CPlayerObject(m_CharacterClock, m_iNextObjectID++);
+						myCharacter = new PlayerObject(m_CharacterClock, m_iNextObjectID++);
 
 						//set as the main character
-						AddCharacterToList((CPlayerObject)myCharacter);
+						AddCharacterToList((PlayerObject)myCharacter);
 					}
 					break;
 				case EObjectType.AI:
 					{
-						CAIObject myDude = new CAIObject(m_CharacterClock, m_iNextObjectID++);
+						AIObject myDude = new AIObject(m_CharacterClock, m_iNextObjectID++);
 						myDude.Difficulty = iDifficulty;
 						myCharacter = myDude;
 
 						//set as the main characters
-						AddCharacterToList((CPlayerObject)myCharacter);
+						AddCharacterToList((PlayerObject)myCharacter);
 					}
 					break;
 				case EObjectType.Projectile:
 					{
 						Debug.Assert(null != m_rCharacter);
-						myCharacter = new CProjectileObject(m_CharacterClock, m_rCharacter, m_iNextObjectID++);
+						myCharacter = new ProjectileObject(m_CharacterClock, m_rCharacter, m_iNextObjectID++);
 					}
 					break;
 				case EObjectType.Level:
 					{
-						myCharacter = new CLevelObject(m_CharacterClock, m_iNextObjectID++);
+						myCharacter = new LevelObject(m_CharacterClock, m_iNextObjectID++);
 					}
 					break;
 				default:
@@ -838,9 +836,7 @@ namespace GameDonkey
 
 			return myCharacter;
 		}
-
-#endif
-
+		
 		public BaseObject LoadObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, EObjectType eType, int iDifficulty)
 		{
 			//try to load all that stuff

@@ -386,7 +386,7 @@ namespace GameDonkey
 		{
 			m_Physics = new PlayerPhysicsContainer(this);
 			States = new ObjectStateContainer(new StateMachine());
-			States.StateChangedContainerEvent += this.StateChanged;
+			States.StateChangedEvent += this.StateChanged;
 		}
 
 		/// <summary>
@@ -407,10 +407,10 @@ namespace GameDonkey
 			m_AnimationContainer = rHuman.m_AnimationContainer;
 			if (null != States)
 			{
-				States.StateChangedContainerEvent -= this.StateChanged;
+				States.StateChangedEvent -= this.StateChanged;
 			}
 			States = rHuman.States;
-			States.StateChangedContainerEvent += this.StateChanged;
+			States.StateChangedEvent += this.StateChanged;
 			m_Position = rHuman.m_Position;
 			m_bFlip = rHuman.m_bFlip;
 			m_Velocity = rHuman.m_Velocity;

@@ -149,7 +149,7 @@ namespace GameDonkey
 			//SPARROWHAWKS
 			//m_fTargetAnimationRotation = 0.0f;
 			States = new PlayerObjectStateContainer();
-			States.StateChangedContainerEvent += this.StateChanged;
+			States.StateChangedEvent += this.StateChanged;
 			m_Physics = new PlayerPhysicsContainer(this);
 			m_ComboCounter = 0;
 		}
@@ -251,7 +251,7 @@ namespace GameDonkey
 		public override void GetPlayerInput(InputWrapper rController, List<CPlayerQueue> listBadGuys)
 		{
 			//get the thumbstick direction
-			m_ThumbstickDirection = rController.Controller.LeftThumbstickDirection;
+			m_ThumbstickDirection = rController.Controller.Thumbsticks.LeftThumbstickDirection;
 
 			//get the next moov from the input
 			int iNextMoov = rController.GetNextMove();

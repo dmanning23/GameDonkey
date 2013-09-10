@@ -102,7 +102,7 @@ namespace GameDonkey
 			Debug.Assert(null != m_ParticleEngine);
 			Debug.Assert(!AlreadyRun);
 
-			Emitter myEmitter = m_ParticleEngine.PlayParticleEffect(m_rTemplate, Direction, Owner.Position, StartOffset, m_rBone, m_rTemplate.ParticleColor, Owner);
+			Emitter myEmitter = m_ParticleEngine.PlayParticleEffect(m_rTemplate, Direction, Owner.Position, StartOffset, m_rBone.GetPosition, m_rTemplate.ParticleColor, Owner.Flip);
 			Debug.Assert(null != myEmitter);
 			Owner.Emitters.Add(myEmitter);
 
