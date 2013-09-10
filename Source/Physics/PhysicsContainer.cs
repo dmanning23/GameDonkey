@@ -313,7 +313,7 @@ namespace GameDonkey
 					for (int j = 0; j < rOtherImage.Lines.Count; j++)
 					{
 						//Check if there is a regular collision
-						if (rImage.Circles[i].IsColliding(rOtherImage.Lines[j], ref first, ref second))
+						if (CollisionCheck.CircleLineCollision(rImage.Circles[i], rOtherImage.Lines[j], ref first, ref second))
 						{
 							//A collisoin occurred, parse it in the level object
 							rLevelObject.Owner.CollisionResponse(this, null, second, first);
@@ -383,11 +383,13 @@ namespace GameDonkey
 				}
 
 				//check my circle against his circles
-				Vector2 first = Vector2.Zero;
-				Vector2 second = Vector2.Zero;
-				if (rAttack.GetCircle().IsColliding(rOtherBlock.GetCircle(), ref first, ref second))
+
+				if (CollisionCheck.CircleCircleCollision(rAttack.GetCircle(), rOtherBlock.GetCircle()))
 				{
 					//A collisoin occurred, add a collision to this container
+					Vector2 first = Vector2.Zero;
+					Vector2 second = Vector2.Zero;
+					CollisionCheck.ClosestPoints(rAttack.GetCircle(), rOtherBlock.GetCircle(), ref first, ref second);
 					Owner.BlockResponse(rOtherGuy, rAttack, rOtherBlock, first, second);
 					return true;
 				}
@@ -414,7 +416,7 @@ namespace GameDonkey
 					CreateAttackAction myAttack = Owner.CurrentAttacks[iMyAttackIndex];
 
 					//get my circle
-					Circle myCircle = myAttack.GetCircle();
+					PhysicsCircle myCircle = myAttack.GetCircle();
 					if (null == myCircle)
 					{
 						//no collision occured because that attack bone isn't even being displayed
@@ -429,7 +431,7 @@ namespace GameDonkey
 						CreateAttackAction hisAttack = rOtherGuy.Owner.CurrentAttacks[iHisAttackIndex];
 
 						//get his circle
-						Circle hisCircle = hisAttack.GetCircle();
+						PhysicsCircle hisCircle = hisAttack.GetCircle();
 						if (null == hisCircle)
 						{
 							//no collision occured because that attack bone isn't even being displayed
@@ -440,11 +442,14 @@ namespace GameDonkey
 						//do those attacks hit each other?
 
 						//check my circle against his circle
-						Vector2 first = Vector2.Zero;
-						Vector2 second = Vector2.Zero;
-						if (myCircle.IsColliding(hisCircle, ref first, ref second))
+
+						if (CollisionCheck.CircleCircleCollision(myCircle, hisCircle))
 						{
 							//A weapon clash collisoin occurred!
+
+							Vector2 first = Vector2.Zero;
+							Vector2 second = Vector2.Zero;
+							CollisionCheck.ClosestPoints(myCircle, hisCircle, ref first, ref second);
 
 							//add a weapon hit collision to this container
 							Owner.WeaponCollisionResponse(rOtherGuy, myAttack, first, second);
@@ -531,7 +536,7 @@ namespace GameDonkey
 				}
 
 				//make sure this attack has a circle
-				Circle myCircle = rAttack.GetCircle();
+				PhysicsCircle myCircle = rAttack.GetCircle();
 				if (null == myCircle)
 				{
 					//no collision occured because that attack bone isn't even being displayed
@@ -543,9 +548,10 @@ namespace GameDonkey
 				Vector2 second = Vector2.Zero;
 				for (int i = 0; i < rOtherImage.Circles.Count; i++)
 				{
-					if (myCircle.IsColliding(rOtherImage.Circles[i], ref first, ref second))
+					if (CollisionCheck.CircleCircleCollision(myCircle, rOtherImage.Circles[i]))
 					{
 						//A collisoin occurred, add a collision to this container
+						CollisionCheck.ClosestPoints(myCircle, rOtherImage.Circles[i], ref first, ref second);
 						Owner.CollisionResponse(rOtherGuy, rAttack, first, second);
 						return true;
 					}
@@ -593,7 +599,7 @@ namespace GameDonkey
 				for (int i = 0; i < rImage.Circles.Count; i++)
 				{
 					//get the bottom of the polygon
-					float fBottom = rImage.Circles[i].WorldPosition.Y + rImage.Circles[i].Radius;
+					float fBottom = rImage.Circles[i].Pos.Y + rImage.Circles[i].Radius;
 
 					//check for fast ground hits
 					float fFastBottom = fBottom + (VelocityDirection.Y * fVelocityLength);
@@ -614,7 +620,7 @@ namespace GameDonkey
 								fOverlap,
 								EHitType.GroundHit,
 								null,
-								new Vector2(rImage.Circles[i].WorldPosition.X, rWorldBoundaries.Bottom));
+								new Vector2(rImage.Circles[i].Pos.X, rWorldBoundaries.Bottom));
 						}
 					}
 					else
@@ -626,7 +632,7 @@ namespace GameDonkey
 							//a ceiling hit occured
 
 							//get the top of the polygon
-							float fTop = rImage.Circles[i].WorldPosition.Y - rImage.Circles[i].Radius;
+							float fTop = rImage.Circles[i].Pos.Y - rImage.Circles[i].Radius;
 
 							float fOverlap = (fTop - rWorldBoundaries.Top);
 							if (!HitFlags[(int)EHitType.CeilingHit] || (Math.Abs(fOverlap) > Math.Abs(Hits[(int)EHitType.CeilingHit].Strength)))
@@ -640,13 +646,13 @@ namespace GameDonkey
 									fOverlap,
 									EHitType.CeilingHit,
 									null,
-									new Vector2(rImage.Circles[i].WorldPosition.X, rWorldBoundaries.Top));
+									new Vector2(rImage.Circles[i].Pos.X, rWorldBoundaries.Top));
 							}
 						}
 					}
 
 					//get the right edge of the polygon
-					float fRight = rImage.Circles[i].WorldPosition.X + rImage.Circles[i].Radius;
+					float fRight = rImage.Circles[i].Pos.X + rImage.Circles[i].Radius;
 
 					//check for fast right wall hits
 					float fFastRight = fRight + (VelocityDirection.X * fVelocityLength);
@@ -669,7 +675,7 @@ namespace GameDonkey
 								fOverlap,
 								EHitType.RightWallHit,
 								null,
-								new Vector2(rWorldBoundaries.Right, rImage.Circles[i].WorldPosition.Y));
+								new Vector2(rWorldBoundaries.Right, rImage.Circles[i].Pos.Y));
 						}
 					}
 					else
@@ -681,7 +687,7 @@ namespace GameDonkey
 							//a left wall hit occured
 
 							//get the left edge of the polygon
-							float fLeft = rImage.Circles[i].WorldPosition.X - rImage.Circles[i].Radius;
+							float fLeft = rImage.Circles[i].Pos.X - rImage.Circles[i].Radius;
 
 							float fOverlap = (fLeft - rWorldBoundaries.Left);
 							if (!HitFlags[(int)EHitType.LeftWallHit] || (Math.Abs(fOverlap) > Math.Abs(Hits[(int)EHitType.LeftWallHit].Strength)))
@@ -695,7 +701,7 @@ namespace GameDonkey
 									fOverlap,
 									EHitType.LeftWallHit,
 									null,
-									new Vector2(rWorldBoundaries.Left, rImage.Circles[i].WorldPosition.Y));
+									new Vector2(rWorldBoundaries.Left, rImage.Circles[i].Pos.Y));
 							}
 						}
 					}

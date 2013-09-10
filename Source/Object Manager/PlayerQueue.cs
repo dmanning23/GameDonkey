@@ -525,7 +525,6 @@ namespace GameDonkey
 				if (m_listTrailDrawLists[iDrawlistIndex].Update(m_CharacterClock))
 				{
 					//this drawlist is expired
-					DrawlistWarehouse.PutItem(m_listTrailDrawLists[iDrawlistIndex]);
 					m_listTrailDrawLists.RemoveAt(iDrawlistIndex);
 				}
 				else
@@ -543,7 +542,7 @@ namespace GameDonkey
 					Debug.Assert(null != m_listActive[i].TrailAction);
 
 					//add a trail right in front of the main dude
-					DrawList myTrail = DrawlistWarehouse.GetItem();
+					DrawList myTrail = new DrawList();
 					Debug.Assert(null != myTrail);
 					myTrail.Set(m_listActive[i].TrailAction.TrailLifeDelta,
 						m_listActive[i].TrailAction.StartColor,

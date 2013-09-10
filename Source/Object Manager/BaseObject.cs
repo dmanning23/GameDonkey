@@ -1038,14 +1038,14 @@ namespace GameDonkey
 			{
 				if (null != CurrentBlocks.CurrentActions[i].GetCircle())
 				{
-					CurrentBlocks.CurrentActions[i].GetCircle().Render(rRenderer, Color.Green, rRenderer.SpriteBatch);
+					CurrentBlocks.CurrentActions[i].GetCircle().Render(rRenderer, Color.Green);
 				}
 			}
 		}
 
 		public void RenderPhysics(Renderer rRenderer)
 		{
-			m_AnimationContainer.Model.DrawPhysics(rRenderer, true, Color.White, rRenderer.Primitive);
+			m_AnimationContainer.Model.DrawPhysics(rRenderer, true, Color.White);
 		}
 
 		public void DrawCameraInfo(Renderer rRenderer)

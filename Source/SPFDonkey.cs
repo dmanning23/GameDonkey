@@ -236,7 +236,7 @@ namespace GameDonkey
 			//load all the content
 
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			Renderer.LoadContent();
+			Renderer.LoadContent(rGraphics);
 
 			//load the background image used for the HUD
 			m_HUDBackground = Renderer.Content.Load<Texture2D>(@"Resources\HUDBackground");
@@ -264,7 +264,7 @@ namespace GameDonkey
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);
-			m_Font.LoadContent(Renderer.Content);
+			m_Font.LoadContent(Renderer.Content, "ArialBlack24");
 		}
 
 		/// <summary>
@@ -903,7 +903,7 @@ namespace GameDonkey
 					m_listPlayers[i].DrawCameraInfo(Renderer);
 				}
 
-				Renderer.Camera.DrawCameraInfo(Renderer);
+				Renderer.DrawCameraInfo();
 			}
 #endif
 			Renderer.SpriteBatchEnd();
@@ -1079,7 +1079,7 @@ namespace GameDonkey
 
 					//draw the time
 					float fPositionY = iBottom + (fHeight * 0.4f);
-					string strTime = CStringUtils.TimeToString(m_GameTimer.RemainingTime());
+					string strTime = m_GameTimer.ToString();
 					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, Renderer.SpriteBatch);
 				}
 			}

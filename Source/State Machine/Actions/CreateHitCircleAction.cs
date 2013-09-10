@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using CollisionBuddy;
 using Vector2Extensions;
+using AnimationLib;
 
 namespace GameDonkey
 {
@@ -21,7 +22,7 @@ namespace GameDonkey
 		/// <summary>
 		/// this dudes hit circle that will be floating around
 		/// </summary>
-		protected Circle m_HitCircle;
+		protected PhysicsCircle m_HitCircle;
 
 		/// <summary>
 		/// the offset from the attached bone location to start this circle at
@@ -39,7 +40,7 @@ namespace GameDonkey
 
 		public CreateHitCircleAction(BaseObject rOwner) : base(rOwner, EActionType.CreateHitCircle)
 		{
-			m_HitCircle = new Circle();
+			m_HitCircle = new PhysicsCircle();
 			m_StartOffset = Vector2.Zero;
 			m_Velocity = Vector2.Zero;
 		}
@@ -77,13 +78,13 @@ namespace GameDonkey
 		public override void Update()
 		{
 			//add the velocity
-			Vector2 myPosition = m_HitCircle.WorldPosition + ((m_Velocity * Owner.Scale) * Owner.CharacterClock.TimeDelta);
+			Vector2 myPosition = m_HitCircle.Pos + ((m_Velocity * Owner.Scale) * Owner.CharacterClock.TimeDelta);
 
 			//update the circle location
 			m_HitCircle.Update(myPosition, Owner.Scale);
 		}
 
-		public override Circle GetCircle()
+		public override PhysicsCircle GetCircle()
 		{
 			return m_HitCircle;
 		}

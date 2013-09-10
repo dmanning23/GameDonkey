@@ -190,7 +190,7 @@ namespace GameDonkey
 			//nothing to do here, used in child classes
 		}
 
-		public virtual Circle GetCircle()
+		public virtual PhysicsCircle GetCircle()
 		{
 			//return the first circle from this dude's image
 
@@ -216,7 +216,7 @@ namespace GameDonkey
 			}
 
 			//get the circle
-			Circle rMyCircle = rMyImage.Circles[0];
+			PhysicsCircle rMyCircle = rMyImage.Circles[0];
 			Debug.Assert(null != rMyCircle);
 
 			return rMyCircle;
