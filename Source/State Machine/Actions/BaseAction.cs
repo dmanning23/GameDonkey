@@ -9,101 +9,32 @@ using StateMachineBuddy;
 
 namespace GameDonkey
 {
-	public enum EActionType
-	{
-		AddGarment = 0,
-		PlayAnimation,
-		AddVelocity,
-		SetVelocity,
-		ConstantAcceleration,
-		ConstantDecceleration,
-		CreateBlock,
-		Evade,
-		Projectile,
-		PlaySound,
-		Trail,
-		CreateAttack,
-		BlockState,
-		CreateHitCircle,
-		CreateThrow,
-		ParticleEffect,
-		SendStateMessage,
-		Deactivate,
-		NumTypes
-	}
-
-	/// <summary>
-	/// class for sorting actions in a 
-	/// </summary>
-	class ActionSort : IComparer<IBaseAction>
-	{
-		public int Compare(IBaseAction action1, IBaseAction action2)
-		{
-			if (action1.Time != action2.Time)
-			{
-				return action1.Time.CompareTo(action2.Time);
-			}
-			else
-			{
-				return action1.ActionType.CompareTo(action2.ActionType);
-			}
-		}
-	}
-
 	/// <summary>
 	/// The base interface for state machine actions
 	/// </summary>
 	public abstract class IBaseAction
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// the type of this action
 		/// </summary>
-		private EActionType m_eActionType;
-
-		/// <summary>
-		/// the time from the start of the state that this action ocuurs
-		/// </summary>
-		private float m_fTime;
-
-		/// <summary>
-		/// whether or not this action has been run 
-		/// </summary>
-		private bool m_bAlreadyRun;
+		public EActionType ActionType { get; protected set; }
 
 		/// <summary>
 		/// The game object that owns this action
 		/// </summary>
-		private BaseObject m_rOwner;
+		public BaseObject Owner { get; set; }
 
-		#endregion //Members
+		/// <summary>
+		/// whether or not this action has been run 
+		/// </summary>
+		public bool AlreadyRun { get; set; }
 
-		#region Properties
-
-		public EActionType ActionType
-		{
-			get { return m_eActionType; }
-			set { m_eActionType = value; }
-		}
-
-		public BaseObject Owner
-		{
-			get { return m_rOwner; }
-			set { m_rOwner = value; }
-		}
-
-		public bool AlreadyRun
-		{
-			get { return m_bAlreadyRun; }
-			set { m_bAlreadyRun = value; }
-		}
-
-		public float Time
-		{
-			get { return m_fTime; }
-			set { m_fTime = value; }
-		}
+		/// <summary>
+		/// the time from the start of the state that this action ocuurs
+		/// </summary>
+		public float Time { get; protected set; }
 
 		#endregion //Properties
 
@@ -114,10 +45,10 @@ namespace GameDonkey
 		/// </summary>
 		public IBaseAction(BaseObject rOwner)
 		{
-			m_eActionType = EActionType.NumTypes;
-			m_fTime = 0.0f;
-			m_bAlreadyRun = true;
-			m_rOwner = rOwner;
+			ActionType = EActionType.NumTypes;
+			Time = 0.0f;
+			AlreadyRun = true;
+			Owner = rOwner;
 		}
 
 		/// <summary>
@@ -126,90 +57,13 @@ namespace GameDonkey
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public virtual bool Execute()
 		{
-			m_bAlreadyRun = true;
+			AlreadyRun = true;
 			return false;
-		}
-
-		public static EActionType StringToType(string strType)
-		{
-			for (EActionType i = 0; i < EActionType.NumTypes; i++)
-			{
-				if (strType == i.ToString())
-				{
-					return i;
-				}
-			}
-			Debug.Assert(false);
-			return EActionType.NumTypes;
-		}
-
-		public static EActionType TroikaStringToType(string strType)
-		{
-			if (strType == "CreateAttack") { return EActionType.CreateAttack; }
-			else if (strType == "CreateBlock") { return EActionType.CreateBlock; }
-			else if (strType == "CreateThrow") { return EActionType.CreateThrow; }
-			else if (strType == "Deactivate") { return EActionType.Deactivate; }
-			else if (strType == "Evade") { return EActionType.Evade; }
-			else if (strType == "CreateParticleEffect") { return EActionType.ParticleEffect; }
-			else if (strType == "PlayAnimation") { return EActionType.PlayAnimation; }
-			else if (strType == "PlaySound") { return EActionType.PlaySound; }
-			else if (strType == "AddProjectile") { return EActionType.Projectile; }
-			else if (strType == "SendStateMessage") { return EActionType.SendStateMessage; }
-			else if (strType == "AddVelocity") { return EActionType.SetVelocity; }
-			else if (strType == "Trail") { return EActionType.Trail; }
-			else { Debug.Assert(false); return EActionType.NumTypes; }
-		}
-
-		public static EActionType XMLTypeToType(string strXMLType)
-		{
-			if (strXMLType == "SPFSettings.AddVelocityActionXML") { return EActionType.AddVelocity; }
-			else if (strXMLType == "SPFSettings.ConstantAccelerationActionXML") { return EActionType.ConstantAcceleration; }
-			else if (strXMLType == "SPFSettings.ConstantDeccelerationActionXML") { return EActionType.ConstantDecceleration; }
-			else if (strXMLType == "SPFSettings.CreateAttackActionXML") { return EActionType.CreateAttack; }
-			else if (strXMLType == "SPFSettings.CreateBlockActionXML") { return EActionType.CreateBlock; }
-			else if (strXMLType == "SPFSettings.CreateThrowActionXML") { return EActionType.CreateThrow; }
-			else if (strXMLType == "SPFSettings.DeactivateActionXML") { return EActionType.Deactivate; }
-			else if (strXMLType == "SPFSettings.EvadeActionXML") { return EActionType.Evade; }
-			else if (strXMLType == "SPFSettings.ParticleEffectActionXML") { return EActionType.ParticleEffect; }
-			else if (strXMLType == "SPFSettings.PlayAnimationActionXML") { return EActionType.PlayAnimation; }
-			else if (strXMLType == "SPFSettings.PlaySoundActionXML") { return EActionType.PlaySound; }
-			else if (strXMLType == "SPFSettings.ProjectileActionXML") { return EActionType.Projectile; }
-			else if (strXMLType == "SPFSettings.SendStateMessageActionXML") { return EActionType.SendStateMessage; }
-			else if (strXMLType == "SPFSettings.SetVelocityActionXML") { return EActionType.SetVelocity; }
-			else if (strXMLType == "SPFSettings.TrailActionXML") { return EActionType.Trail; }
-			else if (strXMLType == "SPFSettings.AddGarmentActionXML") { return EActionType.AddGarment; }
-			else if (strXMLType == "SPFSettings.BlockingStateActionXML") { return EActionType.BlockState; }
-			else { Debug.Assert(false); return EActionType.NumTypes; }
-		}
-
-		public static string TypeToXMLString(EActionType eType)
-		{
-			switch (eType)
-			{
-				case EActionType.AddVelocity: { return "SPFSettings.AddVelocityActionXML"; }
-				case EActionType.ConstantAcceleration: { return "SPFSettings.ConstantAccelerationActionXML"; }
-				case EActionType.ConstantDecceleration: { return "SPFSettings.ConstantDeccelerationActionXML"; }
-				case EActionType.CreateAttack: { return "SPFSettings.CreateAttackActionXML"; }
-				case EActionType.CreateBlock: { return "SPFSettings.CreateBlockActionXML"; }
-				case EActionType.CreateThrow: { return "SPFSettings.CreateThrowActionXML"; }
-				case EActionType.Deactivate: { return "SPFSettings.DeactivateActionXML"; }
-				case EActionType.Evade: { return "SPFSettings.EvadeActionXML"; }
-				case EActionType.ParticleEffect: { return "SPFSettings.ParticleEffectActionXML"; }
-				case EActionType.PlayAnimation: { return "SPFSettings.PlayAnimationActionXML"; }
-				case EActionType.PlaySound: { return "SPFSettings.PlaySoundActionXML"; }
-				case EActionType.Projectile: { return "SPFSettings.ProjectileActionXML"; }
-				case EActionType.SendStateMessage: { return "SPFSettings.SendStateMessageActionXML"; }
-				case EActionType.SetVelocity: { return "SPFSettings.SetVelocityActionXML"; }
-				case EActionType.Trail: { return "SPFSettings.TrailActionXML"; }
-				case EActionType.AddGarment: { return "SPFSettings.AddGarmentActionXML"; }
-				case EActionType.BlockState: { return "SPFSettings.BlockingStateActionXML"; }
-				default: { Debug.Assert(false); return ""; }
-			}
 		}
 
 		public override string ToString()
 		{
-			return m_fTime.ToString() + ": " + TypeToXMLString(m_eActionType);
+			return Time.ToString() + ": " + StateActionFactory.TypeToXMLString(ActionType);
 		}
 
 		public abstract bool Compare(IBaseAction rInst);
@@ -218,7 +72,14 @@ namespace GameDonkey
 
 		#region File IO
 
-		static public bool ReadListActions(BaseObject rOwner,
+		/// <summary>
+		/// Read from an xml file
+		/// </summary>
+		/// <param name="rXMLNode">the xml node to read from</param>
+		/// <returns></returns>
+		public abstract bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine);
+
+		static public bool ReadXmlListActions(BaseObject rOwner,
 			ref List<IBaseAction> outputList,
 			XmlNode rParentNode,
 			IGameDonkey rEngine,
@@ -249,7 +110,7 @@ namespace GameDonkey
 					string strValue = mapAttributes.Item(i).Value;
 					if ("Type" == strName)
 					{
-						eChildType = IBaseAction.XMLTypeToType(strValue);
+						eChildType = StateActionFactory.XMLTypeToType(strValue);
 					}
 					else
 					{
@@ -258,210 +119,26 @@ namespace GameDonkey
 					}
 				}
 
-				switch (eChildType)
+				IBaseAction myAction = StateActionFactory.CreateStateAction(eChildType, rOwner, rEngine);
+				if (!myAction.ReadXml(childNode, rEngine, rStateMachine))
 				{
-					case EActionType.AddVelocity:
-					{
-						AddVelocityAction myAction = new AddVelocityAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.ConstantAcceleration:
-					{
-						ConstantAccelerationAction myAction = new ConstantAccelerationAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.ConstantDecceleration:
-					{
-						ConstantDeccelerationAction myAction = new ConstantDeccelerationAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.CreateAttack:
-					{
-						CreateAttackAction myAction = new CreateAttackAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine, rStateMachine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.CreateBlock:
-					{
-						CreateBlockAction myAction = new CreateBlockAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.CreateThrow:
-					{
-						CreateThrowAction myAction = new CreateThrowAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine, rStateMachine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.Deactivate:
-					{
-						DeactivateAction myAction = new DeactivateAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.Evade:
-					{
-						EvadeAction myAction = new EvadeAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.ParticleEffect:
-					{
-						ParticleEffectAction myAction = new ParticleEffectAction(rOwner, rEngine);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.PlayAnimation:
-					{
-						PlayAnimationAction myAction = new PlayAnimationAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.PlaySound:
-					{
-						PlaySoundAction myAction = new PlaySoundAction(rOwner, rEngine);
-						if (!myAction.ReadSerialized(childNode))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.Projectile:
-					{
-						ProjectileAction myAction = new ProjectileAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.SendStateMessage:
-					{
-						SendStateMessageAction myAction = new SendStateMessageAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.SetVelocity:
-					{
-						SetVelocityAction myAction = new SetVelocityAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.Trail:
-					{
-						TrailAction myAction = new TrailAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.AddGarment:
-					{
-						AddGarmentAction myAction = new AddGarmentAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					case EActionType.BlockState:
-					{
-						BlockingStateAction myAction = new BlockingStateAction(rOwner);
-						if (!myAction.ReadSerialized(childNode, rEngine, rStateMachine))
-						{
-							Debug.Assert(false);
-							return false;
-						}
-						outputList.Add(myAction);
-					}
-					break;
-					default:
-					{
-						Debug.Assert(false);
-						return false;
-					}
+					Debug.Assert(false);
+					return false;
 				}
+				outputList.Add(myAction);
 			}
 
 			return true;
 		}
 
-		public void WriteXMLFormat(XmlTextWriter rXMLFile)
+		/// <summary>
+		/// overloaded in child classes to write out action specific stuff
+		/// </summary>
+		/// <param name="rXMLFile"></param>
+		public virtual void WriteXml(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("Item");
-			rXMLFile.WriteAttributeString("Type", TypeToXMLString(m_eActionType));
+			rXMLFile.WriteAttributeString("Type", StateActionFactory.TypeToXMLString(ActionType));
 
 			//write out the type
 			rXMLFile.WriteStartElement("type");
@@ -470,22 +147,16 @@ namespace GameDonkey
 
 			//write out the time
 			rXMLFile.WriteStartElement("time");
-			rXMLFile.WriteString(m_fTime.ToString());
+			rXMLFile.WriteString(Time.ToString());
 			rXMLFile.WriteEndElement();
 
 			//write out the action specific crap
-			WriteXML(rXMLFile);
+			WriteXml(rXMLFile);
 
 			rXMLFile.WriteEndElement(); //Item
 		}
 
-		/// <summary>
-		/// overloaded in child classes to write out action specific stuff
-		/// </summary>
-		/// <param name="rXMLFile"></param>
-		public abstract void WriteXML(XmlTextWriter rXMLFile);
-
-		static public void ReadListActions(BaseObject rOwner,
+		static public void ReadSerializedListActions(BaseObject rOwner,
 			List<SPFSettings.BaseActionXML> inputList,
 			ref List<IBaseAction> outputList,
 			IGameDonkey rEngine,
@@ -505,7 +176,7 @@ namespace GameDonkey
 				}
 #endif
 				//what type of action is it?
-				EActionType eType = IBaseAction.StringToType(inputList[i].type);
+				EActionType eType = (EActionType)Enum.Parse(typeof(EActionType), inputList[i].type);
 
 				switch (eType)
 				{
@@ -731,7 +402,7 @@ namespace GameDonkey
 		/// <param name="myAction">the dude to read from</param>
 		public void ReadSerializedBase(SPFSettings.BaseActionXML myAction)
 		{
-			m_fTime = myAction.time;
+			Time = myAction.time;
 		}
 
 		#endregion //File IO

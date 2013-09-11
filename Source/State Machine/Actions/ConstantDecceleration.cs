@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Vector2Extensions;
+using StateMachineBuddy;
 
 namespace GameDonkey
 {
@@ -96,7 +97,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rXMLNode">the xml node to read from</param>
 		/// <returns></returns>
-		public bool ReadSerialized(XmlNode rXMLNode, IGameDonkey rEngine)
+		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
 			//read in xml action
 
@@ -114,7 +115,7 @@ namespace GameDonkey
 				string strValue = mapAttributes.Item(i).Value;
 				if ("Type" == strName)
 				{
-					if (ActionType != IBaseAction.XMLTypeToType(strValue))
+					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
 					{
 						return false;
 					}
@@ -175,7 +176,7 @@ namespace GameDonkey
 		/// overloaded in child classes to write out action specific stuff
 		/// </summary>
 		/// <param name="rXMLFile"></param>
-		public override void WriteXML(XmlTextWriter rXMLFile)
+		public override void WriteXml(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("velocity");
 			rXMLFile.WriteString(m_Velocity.StringFromVector());

@@ -157,9 +157,9 @@ namespace GameDonkey
 		/// overloaded in child classes to write out action specific stuff
 		/// </summary>
 		/// <param name="rXMLFile"></param>
-		public override void WriteXML(XmlTextWriter rXMLFile)
+		public override void WriteXml(XmlTextWriter rXMLFile)
 		{
-			base.WriteXML(rXMLFile);
+			base.WriteXml(rXMLFile);
 
 			rXMLFile.WriteStartElement("throwMessage");
 			rXMLFile.WriteString(m_strThrowMessage);

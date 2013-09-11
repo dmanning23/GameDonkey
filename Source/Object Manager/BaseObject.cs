@@ -1422,7 +1422,7 @@ namespace GameDonkey
 			}
 
 			//read in the state container
-			if (!States.ReadStateContainer(
+			if (!States.ReadXmlStateContainer(
 				strStateMachineFile.File,
 				iMessageOffset,
 				strStateActionsFile.File,
@@ -1496,7 +1496,7 @@ namespace GameDonkey
 			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile.GetRelPathFileNoExt());
 
 			//read in the state container
-			States.ReadStateContainer(rXmlContent,
+			States.ReadSerializedStateContainer(rXmlContent,
 				strStateMachineFile.GetRelPathFileNoExt(),
 				iMessageOffset,
 				strStatesFile.GetRelPathFileNoExt(),

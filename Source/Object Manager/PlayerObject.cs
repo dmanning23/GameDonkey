@@ -973,12 +973,12 @@ namespace GameDonkey
 			//load the ground states
 			Filename strStatesFile = new Filename();
 			strStatesFile.SetRelFilename(myCharXML.GroundStates);
-			States.ReadStateContainer(rXmlContent, @"Resources\wedding state machines\ground state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, false);
+			States.ReadSerializedStateContainer(rXmlContent, @"Resources\wedding state machines\ground state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, false);
 			rXmlContent.Unload();
 
 			//load the up states
 			strStatesFile.SetRelFilename(myCharXML.UpStates);
-			States.ReadStateContainer(rXmlContent, @"Resources\wedding state machines\up state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+			States.ReadSerializedStateContainer(rXmlContent, @"Resources\wedding state machines\up state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
 			rXmlContent.Unload();
 
 			////load the down states

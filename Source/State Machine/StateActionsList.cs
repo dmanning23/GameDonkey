@@ -19,10 +19,6 @@ namespace GameDonkey
 
 		#endregion //Members
 
-		#region Properties
-
-		#endregion //Properties
-
 		#region Methods
 
 		/// <summary>
@@ -141,7 +137,7 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		public bool ReadSerializedStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
+		public bool ReadXmlStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
 			// Open the file.
 			FileStream stream = File.Open(strFilename, FileMode.Open, FileAccess.Read);
@@ -203,7 +199,7 @@ namespace GameDonkey
 					continue;
 				}
 
-				if (!myActions.ReadSerialized(childNode, rOwner, rEngine, rStateMachine))
+				if (!myActions.ReadXml(childNode, rOwner, rEngine, rStateMachine))
 				{
 					Debug.Assert(false);
 					return false;
@@ -216,7 +212,7 @@ namespace GameDonkey
 			return true;
 		}
 
-		public bool WriteStateActions(string strFilename)
+		public bool WriteXml(string strFilename)
 		{
 			//open the file, create it if it doesnt exist yet
 			XmlTextWriter rXMLFile = new XmlTextWriter(strFilename, null);
@@ -235,7 +231,7 @@ namespace GameDonkey
 			rXMLFile.WriteStartElement("states");
 			for (int i = 0; i < m_listActions.Count; i++)
 			{
-				m_listActions[i].WriteXMLFormat(rXMLFile);
+				m_listActions[i].WriteXml(rXMLFile);
 			}
 			rXMLFile.WriteEndElement(); //XnaContent
 			rXMLFile.WriteEndElement(); //Asset

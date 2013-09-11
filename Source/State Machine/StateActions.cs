@@ -246,29 +246,7 @@ namespace GameDonkey
 		public IBaseAction AddNewActionFromType(EActionType eType, BaseObject rOwner, IGameDonkey rEngine)
 		{
 			//get the correct action type
-			IBaseAction myAction = null;
-			switch (eType)
-			{
-				case EActionType.AddGarment: { myAction = new AddGarmentAction(rOwner); } break;
-				case EActionType.AddVelocity: { myAction = new AddVelocityAction(rOwner); } break;
-				case EActionType.ConstantAcceleration: { myAction = new ConstantAccelerationAction(rOwner); } break;
-				case EActionType.ConstantDecceleration: { myAction = new ConstantDeccelerationAction(rOwner); } break;
-				case EActionType.CreateAttack: { myAction = new CreateAttackAction(rOwner); } break;
-				case EActionType.CreateBlock: { myAction = new CreateBlockAction(rOwner); } break;
-				case EActionType.CreateThrow: { myAction = new CreateThrowAction(rOwner); } break;
-				case EActionType.Deactivate: { myAction = new DeactivateAction(rOwner); } break;
-				case EActionType.Evade: { myAction = new EvadeAction(rOwner); } break;
-				case EActionType.ParticleEffect: { myAction = new ParticleEffectAction(rOwner, rEngine); } break;
-				case EActionType.PlayAnimation: { myAction = new PlayAnimationAction(rOwner); } break;
-				case EActionType.PlaySound: { myAction = new PlaySoundAction(rOwner, rEngine); } break;
-				case EActionType.Projectile: { myAction = new ProjectileAction(rOwner); } break;
-				case EActionType.SendStateMessage: { myAction = new SendStateMessageAction(rOwner); } break;
-				case EActionType.SetVelocity: { myAction = new SetVelocityAction(rOwner); } break;
-				case EActionType.Trail: { myAction = new TrailAction(rOwner); } break;
-				case EActionType.BlockState: { myAction = new BlockingStateAction(rOwner); } break;
-					
-				default: { Debug.Assert(false); } break;
-			}
+			IBaseAction myAction = StateActionFactory.CreateStateAction(eType, rOwner, rEngine);
 
 			//save the action
 			Debug.Assert(null != myAction);
@@ -301,7 +279,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		public bool ReadSerialized(XmlNode rXMLNode, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
+		public bool ReadXml(XmlNode rXMLNode, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
 			if ("Item" != rXMLNode.Name)
 			{
@@ -349,7 +327,7 @@ namespace GameDonkey
 					else if (strName == "actions")
 					{
 						//Read in all the success actions
-						if (!IBaseAction.ReadListActions(rOwner, ref m_listActions, childNode, rEngine, rStateMachine))
+						if (!IBaseAction.ReadXmlListActions(rOwner, ref m_listActions, childNode, rEngine, rStateMachine))
 						{
 							Debug.Assert(false);
 							return false;
@@ -371,7 +349,7 @@ namespace GameDonkey
 			return true;
 		}
 
-		public void WriteXMLFormat(XmlTextWriter rXMLFile)
+		public void WriteXml(XmlTextWriter rXMLFile)
 		{
 			//write out all the state actions!!!
 
@@ -387,7 +365,7 @@ namespace GameDonkey
 			rXMLFile.WriteStartElement("actions");
 			for (int i = 0; i < m_listActions .Count; i++)
 			{
-				m_listActions[i].WriteXMLFormat(rXMLFile);
+				m_listActions[i].WriteXml(rXMLFile);
 			}
 			rXMLFile.WriteEndElement(); //actions
 			rXMLFile.WriteEndElement(); //Item
@@ -402,7 +380,7 @@ namespace GameDonkey
 			Debug.Assert(-1 != rStateMachine.GetStateIndexFromText(m_strStateName));
 
 			//set up all the actions
-			IBaseAction.ReadListActions(rOwner, myActions.actions, ref m_listActions, rEngine, rXmlContent, rStateMachine);
+			IBaseAction.ReadSerializedListActions(rOwner, myActions.actions, ref m_listActions, rEngine, rXmlContent, rStateMachine);
 
 			//calculate "active" and "recovery" phases
 			CalculateAttackTime();

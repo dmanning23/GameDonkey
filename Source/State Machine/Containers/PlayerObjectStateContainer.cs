@@ -467,24 +467,24 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		public bool ReadSerializedStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine)
+		public bool ReadXml(string strFilename, BaseObject rOwner, IGameDonkey rEngine)
 		{
 			//don't call this dude, he'll set his own shit up
 			Debug.Assert(false);
 			return false;
 		}
 
-		public bool WriteStateActions(string strFilename)
+		public bool WriteXml(string strFilename)
 		{
 			if (m_StateMachines.Count > 0)
 			{
-				return m_StateMachines[0].WriteStateActions(strFilename);
+				return m_StateMachines[0].WriteXml(strFilename);
 			}
 
 			return false;
 		}
 
-		public void ReadSerializedStateActions(ContentManager rXmlContent,
+		public void ReadSerialized(ContentManager rXmlContent,
 			string strResource,
 			BaseObject rOwner,
 			IGameDonkey rEngine)
@@ -496,28 +496,28 @@ namespace GameDonkey
 
 		#region State Machine File IO
 
-		public bool ReadStateMachineFile(string strFilename)
+		public bool ReadXmlStateMachineFile(string strFilename)
 		{
 			//not implemented
 			Debug.Assert(false);
 			return false;
 		}
 
-		public bool AppendStateMachineFile(string strFilename)
+		public bool AppendXmlStateMachineFile(string strFilename)
 		{
 			//not implemented
 			Debug.Assert(false);
 			return false;
 		}
 
-		public bool ReadStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
+		public bool ReadSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
 		{
 			//not implemented
 			Debug.Assert(false);
 			return false;
 		}
 
-		public bool AppendStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
+		public bool AppendSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
 		{
 			//not implemented
 			Debug.Assert(false);
@@ -528,7 +528,7 @@ namespace GameDonkey
 
 		#region Combined File IO
 
-		public bool ReadStateContainer(string strStateMachineFilename,
+		public bool ReadXmlStateContainer(string strStateMachineFilename,
 			int iMessageOffset,
 			string strStateActionsFilename,
 			BaseObject rOwner,
@@ -544,7 +544,7 @@ namespace GameDonkey
 			Debug.Assert(m_StateMachines.Count < 4);
 
 			//read in the stuff
-			if (!rMyStateContainer.ReadStateContainer(
+			if (!rMyStateContainer.ReadXmlStateContainer(
 				strStateMachineFilename, 
 				iMessageOffset, 
 				strStateActionsFilename, 
@@ -559,7 +559,7 @@ namespace GameDonkey
 			return true;
 		}
 
-		public void ReadStateContainer(ContentManager rContent,
+		public void ReadSerializedStateContainer(ContentManager rContent,
 			string strStateMachineResource,
 			int iMessageOffset,
 			string strStateActionsResource,
@@ -575,7 +575,7 @@ namespace GameDonkey
 			m_StateMachines.Add(rMyStateContainer);
 
 			//read in the stuff
-			rMyStateContainer.ReadStateContainer(rContent, 
+			rMyStateContainer.ReadSerializedStateContainer(rContent, 
 				strStateMachineResource, 
 				iMessageOffset, 
 				strStateActionsResource, 

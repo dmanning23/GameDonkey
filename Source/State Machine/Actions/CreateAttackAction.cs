@@ -249,7 +249,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rXMLNode">the xml node to read from</param>
 		/// <returns></returns>
-		public virtual bool ReadSerialized(System.Xml.XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
 			//read in xml action
 
@@ -267,7 +267,7 @@ namespace GameDonkey
 				string strValue = mapAttributes.Item(i).Value;
 				if ("Type" == strName)
 				{
-					if (ActionType != IBaseAction.XMLTypeToType(strValue))
+					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
 					{
 						return false;
 					}
@@ -347,7 +347,7 @@ namespace GameDonkey
 			else if (strName == "successActions")
 			{
 				//Read in all the success actions
-				if (!IBaseAction.ReadListActions(Owner, ref m_listSuccessActions, childNode, rEngine, rStateMachine))
+				if (!IBaseAction.ReadXmlListActions(Owner, ref m_listSuccessActions, childNode, rEngine, rStateMachine))
 				{
 					return false;
 				}
@@ -360,7 +360,7 @@ namespace GameDonkey
 		/// overloaded in child classes to write out action specific stuff
 		/// </summary>
 		/// <param name="rXMLFile"></param>
-		public override void WriteXML(XmlTextWriter rXMLFile)
+		public override void WriteXml(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("boneName");
 			rXMLFile.WriteString(m_strBoneName);
@@ -385,7 +385,7 @@ namespace GameDonkey
 			rXMLFile.WriteStartElement("successActions");
 			for (int i = 0; i < m_listSuccessActions.Count; i++)
 			{
-				m_listSuccessActions[i].WriteXMLFormat(rXMLFile);
+				m_listSuccessActions[i].WriteXml(rXMLFile);
 			}
 			rXMLFile.WriteEndElement();
 		}
@@ -408,7 +408,7 @@ namespace GameDonkey
 			m_strHitSound = myAction.hitSound;
 			//TODO: verify the sound action
 			//Debug.Assert(null != CAudioManager.GetCue(m_strHitSound));
-			IBaseAction.ReadListActions(Owner, myAction.successActions, ref m_listSuccessActions, rEngine, rXmlContent, rStateMachine);
+			IBaseAction.ReadSerializedListActions(Owner, myAction.successActions, ref m_listSuccessActions, rEngine, rXmlContent, rStateMachine);
 
 			return true;
 		}

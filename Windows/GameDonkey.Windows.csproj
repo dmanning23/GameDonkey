@@ -90,26 +90,29 @@
     <Compile Include="..\Source\Physics\ProjectilePhysicsContainer.cs">
       <Link>Physics\ProjectilePhysicsContainer.cs</Link>
     </Compile>
-    <Compile Include="..\Source\State Machine\ObjectStateContainer.cs">
-      <Link>State Machine\ObjectStateContainer.cs</Link>
+    <Compile Include="..\Source\XML_Objects.cs">
+      <Link>XML_Objects.cs</Link>
     </Compile>
-    <Compile Include="..\Source\State Machine\PlayerObjectStateContainer.cs">
-      <Link>State Machine\PlayerObjectStateContainer.cs</Link>
+    <Compile Include="..\Source\DefaultParticlEffects.cs">
+      <Link>DefaultParticlEffects.cs</Link>
     </Compile>
-    <Compile Include="..\Source\State Machine\SingleStateContainer.cs">
-      <Link>State Machine\SingleStateContainer.cs</Link>
+    <Compile Include="..\Source\GameModes.cs">
+      <Link>GameModes.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\ActionSort.cs">
+      <Link>State Machine\ActionSort.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\ActionType.cs">
+      <Link>State Machine\ActionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\StateActionFactory.cs">
+      <Link>State Machine\StateActionFactory.cs</Link>
     </Compile>
     <Compile Include="..\Source\State Machine\StateActions.cs">
       <Link>State Machine\StateActions.cs</Link>
     </Compile>
     <Compile Include="..\Source\State Machine\StateActionsList.cs">
       <Link>State Machine\StateActionsList.cs</Link>
-    </Compile>
-    <Compile Include="..\Source\State Machine\StateContainer.cs">
-      <Link>State Machine\StateContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Source\State Machine\TimedAction.cs">
-      <Link>State Machine\TimedAction.cs</Link>
     </Compile>
     <Compile Include="..\Source\State Machine\TimedActionList.cs">
       <Link>State Machine\TimedActionList.cs</Link>
@@ -171,21 +174,28 @@
     <Compile Include="..\Source\State Machine\Actions\SetVelocityAction.cs">
       <Link>State Machine\Actions\SetVelocityAction.cs</Link>
     </Compile>
+    <Compile Include="..\Source\State Machine\Actions\TimedAction.cs">
+      <Link>State Machine\Actions\TimedAction.cs</Link>
+    </Compile>
     <Compile Include="..\Source\State Machine\Actions\TrailAction.cs">
       <Link>State Machine\Actions\TrailAction.cs</Link>
     </Compile>
-    <Compile Include="..\Source\XML_Objects.cs">
-      <Link>XML_Objects.cs</Link>
+    <Compile Include="..\Source\State Machine\Containers\ObjectStateContainer.cs">
+      <Link>State Machine\Containers\ObjectStateContainer.cs</Link>
     </Compile>
-    <Compile Include="..\Source\DefaultParticlEffects.cs">
-      <Link>DefaultParticlEffects.cs</Link>
+    <Compile Include="..\Source\State Machine\Containers\PlayerObjectStateContainer.cs">
+      <Link>State Machine\Containers\PlayerObjectStateContainer.cs</Link>
     </Compile>
-    <Compile Include="..\Source\GameModes.cs">
-      <Link>GameModes.cs</Link>
+    <Compile Include="..\Source\State Machine\Containers\SingleStateContainer.cs">
+      <Link>State Machine\Containers\SingleStateContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Containers\StateContainer.cs">
+      <Link>State Machine\Containers\StateContainer.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
+    <Folder Include="State Machine\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

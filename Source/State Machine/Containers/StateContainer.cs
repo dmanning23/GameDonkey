@@ -119,11 +119,11 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		bool ReadSerializedStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine);
+		bool ReadXml(string strFilename, BaseObject rOwner, IGameDonkey rEngine);
 
-		bool WriteStateActions(string strFilename);
+		bool WriteXml(string strFilename);
 
-		void ReadSerializedStateActions(ContentManager rXmlContent,
+		void ReadSerialized(ContentManager rXmlContent,
 			string strResource,
 			BaseObject rOwner,
 			IGameDonkey rEngine);
@@ -132,19 +132,19 @@ namespace GameDonkey
 
 		#region State Machine File IO
 
-		bool ReadStateMachineFile(string strFilename);
+		bool ReadXmlStateMachineFile(string strFilename);
 
-		bool AppendStateMachineFile(string strFilename);
+		bool AppendXmlStateMachineFile(string strFilename);
 
-		bool ReadStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset);
+		bool ReadSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset);
 
-		bool AppendStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset);
+		bool AppendSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset);
 
 		#endregion //File IO
 
 		#region Combined File IO
 
-		bool ReadStateContainer(string strStateMachineFilename, 
+		bool ReadXmlStateContainer(string strStateMachineFilename, 
 			int iMessageOffset,
 			string strStateActionsFilename,
 			BaseObject rOwner,
@@ -152,7 +152,7 @@ namespace GameDonkey
 			bool bPlayerStateMachine,
 			bool bFlyingStateMachine);
 
-		void ReadStateContainer(ContentManager rContent, 
+		void ReadSerializedStateContainer(ContentManager rContent, 
 			string strStateMachineResource, 
 			int iMessageOffset,
 			string strStateActionsResource,

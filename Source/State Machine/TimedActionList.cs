@@ -12,21 +12,12 @@ namespace GameDonkey
 	/// </summary>
 	public class TimedActionList<T> where T : TimedAction
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// A list of all the actions that are currently added to the base object
 		/// </summary>
-		private List<T> m_listCurrentActions;
-
-		#endregion Members
-
-		#region Properties
-
-		public List<T> CurrentActions
-		{
-			get { return m_listCurrentActions; }
-		}
+		public List<T> CurrentActions { get; private set; }
 
 		#endregion //Properties
 
@@ -37,7 +28,7 @@ namespace GameDonkey
 		/// </summary>
 		public TimedActionList()
 		{
-			m_listCurrentActions = new List<T>();
+			CurrentActions = new List<T>();
 		}
 
 		/// <summary>
@@ -54,7 +45,7 @@ namespace GameDonkey
 			rAction.SetDoneTime(rClock);
 
 			//store the action
-			m_listCurrentActions.Add(rAction);
+			CurrentActions.Add(rAction);
 		}
 
 		/// <summary>
@@ -64,7 +55,7 @@ namespace GameDonkey
 		public virtual void Reset()
 		{
 			//remove all the actions
-			m_listCurrentActions.Clear();
+			CurrentActions.Clear();
 		}
 
 		/// <summary>
@@ -77,13 +68,13 @@ namespace GameDonkey
 		{
 			//remove any finished actions from the list
 			int iCurrent = 0;
-			while (iCurrent < m_listCurrentActions.Count)
+			while (iCurrent < CurrentActions.Count)
 			{
 				//checked if this action has expired...
-				if (!m_listCurrentActions[iCurrent].ActiveForWholeState &&
-					(m_listCurrentActions[iCurrent].DoneTime <= rClock.CurrentTime))
+				if (!CurrentActions[iCurrent].ActiveForWholeState &&
+					(CurrentActions[iCurrent].DoneTime <= rClock.CurrentTime))
 				{
-					m_listCurrentActions.RemoveAt(iCurrent);
+					CurrentActions.RemoveAt(iCurrent);
 				}
 				else
 				{

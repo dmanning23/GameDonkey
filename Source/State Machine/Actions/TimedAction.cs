@@ -11,7 +11,7 @@ namespace GameDonkey
 	/// <summary>
 	/// This is like an interface for an action that is timed.
 	/// </summary>
-	public class TimedAction : IBaseAction
+	public abstract class TimedAction : IBaseAction
 	{
 		#region Members
 
@@ -82,11 +82,6 @@ namespace GameDonkey
 		public override bool Compare(IBaseAction rInst)
 		{
 			return false;
-		}
-
-		public override void WriteXML(XmlTextWriter rXMLFile)
-		{
-			Debug.Assert(false);
 		}
 
 		#endregion
