@@ -166,7 +166,7 @@ namespace GameDonkey
 			return true;
 		}
 
-		public bool LoadGarment(Renderer rRenderer, Filename strFilename)
+		public bool LoadGarment(IRenderer rRenderer, Filename strFilename)
 		{
 			m_Garment = Owner.MyGarments.LoadGarment(strFilename, rRenderer);
 			return (m_Garment != null);

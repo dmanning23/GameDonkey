@@ -52,8 +52,8 @@ namespace GameDonkey
 		protected bool m_bRenderWorldBoundaries;
 		protected bool m_bRenderSpawnPoints;
 
-		private Texture2D m_SkyBox;
-		private Texture2D m_HUDBackground;
+		private XNATexture m_SkyBox;
+		private XNATexture m_HUDBackground;
 		private Color m_SkyColor;
 		private int m_iNumTiles;
 
@@ -182,7 +182,7 @@ namespace GameDonkey
 
 		#region Construction
 
-		public CSPFDonkey(Renderer rRenderer)
+		public CSPFDonkey(XNARenderer rRenderer)
 			: base(rRenderer)
 		{
 			Setup();
@@ -239,7 +239,7 @@ namespace GameDonkey
 			Renderer.LoadContent(rGraphics);
 
 			//load the background image used for the HUD
-			m_HUDBackground = Renderer.Content.Load<Texture2D>(@"Resources\HUDBackground");
+			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"Resources\HUDBackground.png");
 
 			//load the hit spark
 			HitSpark.ReadSerializedFile(rXmlContent, @"Resources\Particles\Hit Spark", Renderer);
@@ -351,7 +351,7 @@ namespace GameDonkey
 			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathNoise));
 
 			//open the background image stuff
-			m_SkyBox = Renderer.Content.Load<Texture2D>(myDude.backgroundTile);
+			m_SkyBox = (XNATexture)Renderer.LoadImage(myDude.backgroundTile);
 			m_SkyColor.R = myDude.backgroundR;
 			m_SkyColor.G = myDude.backgroundG;
 			m_SkyColor.B = myDude.backgroundB;
@@ -829,7 +829,7 @@ namespace GameDonkey
 			//draw the world boundaries in debug mode?
 			if (m_bRenderWorldBoundaries)
 			{
-				Renderer.Primitive.Rectangle(WorldBoundaries, Color.Red, Renderer.SpriteBatch);
+				Renderer.Primitive.Rectangle(WorldBoundaries, Color.Red);
 			}
 
 			//draw the spawn points for debug mode
@@ -837,7 +837,7 @@ namespace GameDonkey
 			{
 				for (int i = 0; i < m_listSpawnPoints.Count; i++)
 				{
-					Renderer.Primitive.Circle(m_listSpawnPoints[i], 10, Color.Red, Renderer.SpriteBatch);
+					Renderer.Primitive.Circle(m_listSpawnPoints[i], 10, Color.Red);
 				}
 			}
 #endif
@@ -880,8 +880,7 @@ namespace GameDonkey
 					{
 						Renderer.Primitive.Circle(m_listPlayers[i].Character.Position,
 						                          (int)(m_listPlayers[i].Character.MinDistance()), 
-						                          Color.White,
-						                          Renderer.SpriteBatch);
+						                          Color.White);
 					}
 				}
 
@@ -921,7 +920,7 @@ namespace GameDonkey
 			if (m_iNumTiles <= 1)
 			{
 				//just cover the whole screen with the skybox
-				Renderer.SpriteBatch.Draw(m_SkyBox, Resolution.ScreenArea, m_SkyColor);
+				Renderer.SpriteBatch.Draw(m_SkyBox.Texture, Resolution.ScreenArea, m_SkyColor);
 			}
 			else
 			{
@@ -942,7 +941,7 @@ namespace GameDonkey
 					for (int j = 0; j < m_iNumTiles; j++)
 					{
 						//draw one tile and move to the next column
-						Renderer.SpriteBatch.Draw(m_SkyBox, tileRect, m_SkyColor);
+						Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, m_SkyColor);
 						tileRect.X += iTileSize;
 					}
 
@@ -952,12 +951,12 @@ namespace GameDonkey
 				}
 
 				//Draw the bottom row, which is cut off :(
-				Rectangle sourceRect = m_SkyBox.Bounds;
+				Rectangle sourceRect = m_SkyBox.Texture.Bounds;
 				tileRect.Height = Resolution.ScreenArea.Height - (iTileSize * iNumRows);
 				sourceRect.Height = ((tileRect.Height * sourceRect.Height) / iTileSize);
 				for (int i = 0; i < m_iNumTiles; i++)
 				{
-					Renderer.SpriteBatch.Draw(m_SkyBox, tileRect, sourceRect, m_SkyColor);
+					Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, sourceRect, m_SkyColor);
 					tileRect.X += iTileSize;
 				}
 			}
@@ -1002,7 +1001,7 @@ namespace GameDonkey
 				Debug.Assert(null != Renderer);
 				Debug.Assert(null != Renderer.SpriteBatch);
 				Renderer.SpriteBatch.Draw(
-					m_HUDBackground,
+					m_HUDBackground.Texture,
 					new Rectangle(iLeft, iTop, (int)fHeight, (int)fHeight),
 					myColor);
 

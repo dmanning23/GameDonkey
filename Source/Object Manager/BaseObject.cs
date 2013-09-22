@@ -1019,12 +1019,12 @@ namespace GameDonkey
 			AnimationContainer.Render(m_DrawList, PlayerColor);
 		}
 
-		public void Render(Renderer rRenderer)
+		public void Render(IRenderer rRenderer)
 		{
 			m_DrawList.Render(rRenderer);
 		}
 
-		public void RenderAttacks(Renderer rRenderer)
+		public void RenderAttacks(IRenderer rRenderer)
 		{
 			for (int i = 0; i < CurrentAttacks.Count; i++)
 			{
@@ -1043,25 +1043,25 @@ namespace GameDonkey
 			}
 		}
 
-		public void RenderPhysics(Renderer rRenderer)
+		public void RenderPhysics(IRenderer rRenderer)
 		{
 			m_AnimationContainer.Model.DrawPhysics(rRenderer, true, Color.White);
 		}
 
-		public void DrawCameraInfo(Renderer rRenderer)
+		public void DrawCameraInfo(IRenderer rRenderer)
 		{
 			//get half the height
 			int iHalfHeight = (int)(m_fHeight / 2.0f);
 
 			//add left/right points
-			rRenderer.Primitive.Point(new Vector2(Position.X - iHalfHeight, Position.Y), Color.Red, rRenderer.SpriteBatch);
-			rRenderer.Primitive.Point(new Vector2(Position.X + iHalfHeight, Position.Y), Color.Red, rRenderer.SpriteBatch);
+			rRenderer.Primitive.Point(new Vector2(Position.X - iHalfHeight, Position.Y), Color.Red);
+			rRenderer.Primitive.Point(new Vector2(Position.X + iHalfHeight, Position.Y), Color.Red);
 
 			//add the bottom point
-			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y + (int)(m_fHeight * 0.55f)), Color.Red, rRenderer.SpriteBatch);
+			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y + (int)(m_fHeight * 0.55f)), Color.Red);
 
 			//add the top
-			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y - (int)(m_fHeight * 0.8f)), Color.Red, rRenderer.SpriteBatch);
+			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y - (int)(m_fHeight * 0.8f)), Color.Red);
 		}
 
 
@@ -1404,12 +1404,12 @@ namespace GameDonkey
 			bool bFlying)
 		{
 			//try to load all that stuff
-			if (!AnimationContainer.ReadSerializedModelFormat(strModelFile.File, rEngine.Renderer))
+			if (!AnimationContainer.ReadXMLModelFormat(strModelFile.File, rEngine.Renderer))
 			{
 				return false;
 			}
 			m_Physics.SortBones(AnimationContainer.Model);
-			if (!AnimationContainer.ReadSerializedAnimationFormat(strAnimationFile.File))
+			if (!AnimationContainer.ReadXMLAnimationFormat(strAnimationFile.File))
 			{
 				return false;
 			}
@@ -1443,7 +1443,7 @@ namespace GameDonkey
 		{
 			//load the garment
 			Garment myGarment = new Garment();
-			myGarment.ReadXMLFormat(strGarmentFile, rEngine.Renderer, AnimationContainer.Model);
+			myGarment.ReadXMLFormat(strGarmentFile.File, rEngine.Renderer, AnimationContainer.Model);
 
 			//add the garment to the dude
 			myGarment.AddToModel();
@@ -1512,7 +1512,7 @@ namespace GameDonkey
 		{
 			//load the garment
 			Garment myGarment = new Garment();
-			myGarment.ReadXNAContent(rXmlContent, strGarmentFile.GetRelPathFileNoExt(), rEngine.Renderer, AnimationContainer.Model);
+			myGarment.ReadSerializedFormat(rXmlContent, strGarmentFile.GetRelPathFileNoExt(), rEngine.Renderer, AnimationContainer.Model);
 
 			//add the garment to the dude
 			myGarment.AddToModel();

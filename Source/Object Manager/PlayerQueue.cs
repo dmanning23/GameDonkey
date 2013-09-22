@@ -565,7 +565,7 @@ namespace GameDonkey
 			}
 		}
 
-		public void DrawCameraInfo(Renderer rRenderer)
+		public void DrawCameraInfo(IRenderer rRenderer)
 		{
 			for (int i = 0; i < m_listActive.Count; i++)
 			{
@@ -578,7 +578,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rRenderer">renderer to render to</param>
 		/// <param name="bMain">whether to render the main list or the list of trails</param>
-		public void Render(Renderer rRenderer, bool bMain)
+		public void Render(IRenderer rRenderer, bool bMain)
 		{
 			if (bMain)
 			{
@@ -624,7 +624,7 @@ namespace GameDonkey
 			m_ScoreTimer.Start(3.0f);
 		}
 
-		public void RenderPhysics(Renderer rRenderer)
+		public void RenderPhysics(IRenderer rRenderer)
 		{
 			for (int i = 0; i < m_listActive.Count; i++)
 			{
@@ -632,7 +632,7 @@ namespace GameDonkey
 			}
 		}
 
-		public void RenderAttacks(Renderer rRenderer)
+		public void RenderAttacks(IRenderer rRenderer)
 		{
 			for (int i = 0; i < m_listActive.Count; i++)
 			{

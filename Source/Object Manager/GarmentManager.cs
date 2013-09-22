@@ -171,7 +171,7 @@ namespace GameDonkey
 			return null;
 		}
 
-		public Garment LoadGarment(Filename strGarmentFile, Renderer rRenderer)
+		public Garment LoadGarment(Filename strGarmentFile, IRenderer rRenderer)
 		{
 			//first check if the garment is already loaded
 			Garment myGarment = CheckForXMLGarment(strGarmentFile);
@@ -188,7 +188,7 @@ namespace GameDonkey
 			Debug.Assert(null != myGarment);
 
 			//load the garment
-			if (!myGarment.ReadXMLFormat(strGarmentFile, rRenderer, m_rOwner.AnimationContainer.Model))
+			if (!myGarment.ReadXMLFormat(strGarmentFile.File, rRenderer, m_rOwner.AnimationContainer.Model))
 			{
 				//something bad happened
 				return null;
@@ -219,7 +219,7 @@ namespace GameDonkey
 			return null;
 		}
 
-		public Garment LoadGarment(ContentManager myContent, string strGarmentFile, Renderer rRenderer)
+		public Garment LoadGarment(ContentManager myContent, string strGarmentFile, IRenderer rRenderer)
 		{
 			//setup the filename
 			Filename myFileName = new Filename();
@@ -240,7 +240,7 @@ namespace GameDonkey
 			Debug.Assert(null != myGarment);
 
 			//load the garment
-			if (!myGarment.ReadXNAContent(myContent,  myFileName.GetRelPathFileNoExt(), rRenderer, m_rOwner.AnimationContainer.Model))
+			if (!myGarment.ReadSerializedFormat(myContent,  myFileName.GetRelPathFileNoExt(), rRenderer, m_rOwner.AnimationContainer.Model))
 			{
 				//something bad happened
 				return null;

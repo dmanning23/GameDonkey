@@ -12,7 +12,7 @@ namespace GameDonkey
 	{
 		#region Members
 
-		private Renderer m_Renderer;
+		private XNARenderer m_Renderer;
 
 		private ParticleEngine m_ParticleEngine;
 
@@ -27,7 +27,7 @@ namespace GameDonkey
 
 		#region Properties
 
-		public Renderer Renderer
+		public XNARenderer Renderer
 		{
 			get { return m_Renderer; }
 		}
@@ -63,7 +63,7 @@ namespace GameDonkey
 
 		#region Methods
 
-		public IGameDonkey(Renderer rRenderer)
+		public IGameDonkey(XNARenderer rRenderer)
 		{
 			m_Renderer = rRenderer;
 			m_ParticleEngine = new ParticleEngine();
