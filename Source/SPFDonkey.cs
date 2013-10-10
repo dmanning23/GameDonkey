@@ -16,10 +16,11 @@ using RenderBuddy;
 using ParticleBuddy;
 using FilenameBuddy;
 using ResolutionBuddy;
+using GameTimer;
 
 namespace GameDonkey
 {
-	public class CSPFDonkey : IGameDonkey
+	public class SPFDonkey : IGameDonkey
 	{
 		#region Members
 
@@ -182,7 +183,7 @@ namespace GameDonkey
 
 		#region Construction
 
-		public CSPFDonkey(XNARenderer rRenderer)
+		public SPFDonkey(XNARenderer rRenderer)
 			: base(rRenderer)
 		{
 			Setup();
