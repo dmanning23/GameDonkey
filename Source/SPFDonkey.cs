@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using GameTimer;
 using FontBuddyLib;
 #if NETWORKING
 using Microsoft.Xna.Framework.Net;
@@ -265,7 +264,7 @@ namespace GameDonkey
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);
-			m_Font.LoadContent(Renderer.Content, "ArialBlack24");
+			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
 		}
 
 		/// <summary>
