@@ -1269,7 +1269,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		public virtual bool LoadObject(Filename strFileName, IGameDonkey rEngine, int iMessageOffset)
+		public virtual bool LoadXmlObject(Filename strFileName, IGameDonkey rEngine, int iMessageOffset)
 		{
 			//gonna have to do this the HARD way...
 
@@ -1377,8 +1377,7 @@ namespace GameDonkey
 								garmentNode = garmentNode.NextSibling)
 							{
 								string strGarmentText = garmentNode.InnerText;
-								Filename strGarmentFile = new Filename();
-								strGarmentFile.SetRelFilename(strGarmentText);
+								Filename strGarmentFile = new Filename(strGarmentText);
 								listGarmentFiles.Add(strGarmentFile);
 							}
 						}
@@ -1417,7 +1416,7 @@ namespace GameDonkey
 			//load all the garments, if any
 			foreach (Filename myGarmentFile in listGarmentFiles)
 			{
-				Garment myGarment = LoadGarment(rEngine, myGarmentFile);
+				Garment myGarment = LoadXmlGarment(rEngine, myGarmentFile);
 				Debug.Assert(null != myGarment);
 			}
 
@@ -1439,7 +1438,7 @@ namespace GameDonkey
 			return true;
 		}
 
-		public Garment LoadGarment(IGameDonkey rEngine, Filename strGarmentFile)
+		public Garment LoadXmlGarment(IGameDonkey rEngine, Filename strGarmentFile)
 		{
 			//load the garment
 			Garment myGarment = new Garment();
@@ -1455,7 +1454,7 @@ namespace GameDonkey
 			return myGarment;
 		}
 
-		public virtual bool LoadObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
+		public virtual bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
 		{
 			SPFSettings.BaseObjectXML myCharXML = rXmlContent.Load<SPFSettings.BaseObjectXML>(strResource.GetRelPathFileNoExt());
 			return LoadObject(rXmlContent, myCharXML, rEngine, iMessageOffset);
@@ -1465,15 +1464,10 @@ namespace GameDonkey
 		{
 			Debug.Assert(null != PlayerQueue);
 
-			Filename strModelFile = new Filename();
-			Filename strAnimationFile = new Filename();
-			Filename strStatesFile = new Filename();
-			Filename strStateMachineFile = new Filename();
-
-			strModelFile.SetRelFilename(myCharXML.model);
-			strAnimationFile.SetRelFilename(myCharXML.animations);
-			strStateMachineFile.SetRelFilename(myCharXML.stateMachine);
-			strStatesFile.SetRelFilename(myCharXML.states);
+			Filename strModelFile = new Filename(myCharXML.model);
+			Filename strAnimationFile = new Filename(myCharXML.animations);
+			Filename strStatesFile = new Filename(myCharXML.states);
+			Filename strStateMachineFile = new Filename(myCharXML.stateMachine);
 			m_fHeight = (float)myCharXML.height;
 
 			//load all the garments
@@ -1483,7 +1477,7 @@ namespace GameDonkey
 				Filename strGarmentFile = new Filename();
 				strGarmentFile.SetRelFilename(strGarment);
 
-				LoadGarment(rXmlContent, rEngine, strGarmentFile);
+				LoadSerializedGarment(rXmlContent, rEngine, strGarmentFile);
 			}
 
 			//try to load all that stuff
@@ -1508,7 +1502,7 @@ namespace GameDonkey
 			return true;
 		}
 
-		public Garment LoadGarment(ContentManager rXmlContent, IGameDonkey rEngine, Filename strGarmentFile)
+		public Garment LoadSerializedGarment(ContentManager rXmlContent, IGameDonkey rEngine, Filename strGarmentFile)
 		{
 			//load the garment
 			Garment myGarment = new Garment();

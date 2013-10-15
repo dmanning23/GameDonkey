@@ -188,17 +188,11 @@ namespace GameDonkey
 				}
 			}
 
-			//all the stuff we are gonna need
-			Filename strModelFile = new Filename();
-			Filename strAnimationFile = new Filename();
-			Filename strStatesFile = new Filename();
-			Filename strStateMachineFile = new Filename();
-
 			//set the state machine filenames
-			m_strGroundStateMachineFile.SetRelFilename(@"Resources\wedding state machines\ground state machine.xml");
-			m_strUpStateMachineFile.SetRelFilename(@"Resources\wedding state machines\up state machine.xml");
-			m_strDownStateMachineFile.SetRelFilename(@"Resources\wedding state machines\down state machine.xml");
-			m_strForwardStateMachineFile.SetRelFilename(@"Resources\wedding state machines\forward state machine.xml");
+			m_strGroundStateMachineFile.SetRelFilename(@"wedding state machines\ground state machine.xml");
+			m_strUpStateMachineFile.SetRelFilename(@"wedding state machines\up state machine.xml");
+			m_strDownStateMachineFile.SetRelFilename(@"wedding state machines\down state machine.xml");
+			m_strForwardStateMachineFile.SetRelFilename(@"wedding state machines\forward state machine.xml");
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)
@@ -255,9 +249,7 @@ namespace GameDonkey
 								null != garmentNode;
 								garmentNode = garmentNode.NextSibling)
 							{
-								string strGarmentText = garmentNode.InnerText;
-								Filename strGarmentFile = new Filename();
-								strGarmentFile.SetRelFilename(strGarmentText);
+								Filename strGarmentFile = new Filename(garmentNode.InnerText);
 								m_listGarments.Add(strGarmentFile);
 							}
 						}

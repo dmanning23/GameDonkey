@@ -149,8 +149,7 @@ namespace GameDonkey
 						Debug.Assert(null == m_Garment);
 
 						//load the garment from the garment manager
-						Filename strGarmentFile = new Filename();
-						strGarmentFile.SetRelFilename(strValue);
+						Filename strGarmentFile = new Filename(strValue);
 						if (!LoadGarment(rEngine.Renderer, strGarmentFile))
 						{
 							return false;

@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Net;
 using ParticleBuddy;
 using CameraBuddy;
 using FilenameBuddy;
+using System.IO;
+using System.Xml;
 
 namespace GameDonkey
 {
@@ -920,20 +922,133 @@ namespace GameDonkey
 
 		#region File IO
 
-		public override bool LoadObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
+		public override bool LoadXmlObject(Filename strResource, IGameDonkey rEngine, int iMessageOffset)
+		{
+			//All the filename we are gonna use
+			Filename strModelFile = new Filename();
+			Filename strAnimationFile = new Filename();
+			Filename strStateMachineFile = new Filename();
+
+			//Open the file.
+			FileStream stream = File.Open(strResource.File, FileMode.Open, FileAccess.Read);
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load(stream);
+			XmlNode rootNode = xmlDoc.DocumentElement;
+
+			//make sure it is actually an xml node
+			if (rootNode.NodeType != XmlNodeType.Element)
+			{
+				//should be an xml node!!!
+				return false;
+			}
+
+			//eat up the name of that xml node
+			string strElementName = rootNode.Name;
+			if (("XnaContent" != strElementName) || !rootNode.HasChildNodes)
+			{
+				return false;
+			}
+
+			//next node is "<Asset Type="SPFSettings.PlayerObjectXML">"
+			XmlNode AssetNode = rootNode.FirstChild;
+			if (null == AssetNode)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+			if (!AssetNode.HasChildNodes)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+			if ("Asset" != AssetNode.Name)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+
+			//First node is the model file
+			XmlNode childNode = AssetNode.FirstChild;
+			if (!AnimationContainer.ReadXMLModelFormat(childNode.InnerXml, rEngine.Renderer))
+			{
+				Debug.Assert(false);
+				return false;
+			}
+
+			//next node is the animation file
+			childNode = childNode.NextSibling;
+			if (!AnimationContainer.ReadXMLAnimationFormat(childNode.InnerXml))
+			{
+				Debug.Assert(false);
+				return false;
+			}
+
+			//next node is the garments...
+			childNode = childNode.NextSibling;
+			for (XmlNode garmentNode = childNode.FirstChild;
+				null != garmentNode;
+				garmentNode = garmentNode.NextSibling)
+			{
+				//Load up the garment.
+				Filename strGarmentFile = new Filename(garmentNode.InnerXml);
+				LoadXmlGarment(rEngine, strGarmentFile);
+			}
+
+			//the state machine?
+			childNode = childNode.NextSibling;
+			strStateMachineFile.SetRelFilename(childNode.InnerXml);
+
+			//the states file?
+
+			//get the height of this dude
+			childNode = childNode.NextSibling;
+			m_fHeight = Convert.ToSingle(childNode.InnerXml);
+
+			//get the portrait file
+			childNode = childNode.NextSibling;
+			Filename strPortraitFile = new Filename(childNode.InnerXml);
+			Debug.Assert(null != rEngine.Renderer.Content);
+			m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
+
+			//TODO: grab the deathsound
+			childNode = childNode.NextSibling;
+			m_strDeathSound = childNode.InnerXml;
+			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
+
+			//get the ground states of this dude
+			childNode = childNode.NextSibling;
+			States.ReadXmlStateContainer(@"wedding state machines\ground state machine", iMessageOffset, childNode.InnerXml, this, rEngine, true, false);
+
+			//get teh upstates of this dude
+			childNode = childNode.NextSibling;
+			States.ReadXmlStateContainer(@"wedding state machines\up state machine", iMessageOffset, childNode.InnerXml, this, rEngine, true, true);
+
+			////load the down states
+			//strStatesFile.SetRelFilename(myCharXML.DownStates);
+			//States.ReadStateContainer(rXmlContent, @"state machines\down state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+			//rXmlContent.Unload();
+
+			////load the forward states
+			//strStatesFile.SetRelFilename(myCharXML.ForwardStates);
+			//States.ReadStateContainer(rXmlContent, @"state machines\forward state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+			//rXmlContent.Unload();
+
+			// Close the file.
+			stream.Close();
+			return true;
+		}
+
+
+		public override bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
 		{
 			SPFSettings.PlayerObjectXML myCharXML = rXmlContent.Load<SPFSettings.PlayerObjectXML>(strResource.GetRelPathFileNoExt());
 
 			//load the base object stuff
 			Debug.Assert(null != PlayerQueue);
 
-			Filename strModelFile = new Filename();
-			Filename strAnimationFile = new Filename();
-			Filename strStateMachineFile = new Filename();
-
-			strModelFile.SetRelFilename(myCharXML.model);
-			strAnimationFile.SetRelFilename(myCharXML.animations);
-			strStateMachineFile.SetRelFilename(myCharXML.stateMachine);
+			Filename strModelFile = new Filename(myCharXML.model);
+			Filename strAnimationFile = new Filename(myCharXML.animations);
+			Filename strStateMachineFile = new Filename(myCharXML.stateMachine);
 			m_fHeight = (float)myCharXML.height;
 
 			//try to load the model
@@ -948,10 +1063,8 @@ namespace GameDonkey
 			foreach (string strGarment in myCharXML.garments)
 			{
 				//get the garment filename
-				Filename strGarmentFile = new Filename();
-				strGarmentFile.SetRelFilename(strGarment);
-
-				LoadGarment(rXmlContent, rEngine, strGarmentFile);
+				Filename strGarmentFile = new Filename(strGarment);
+				LoadSerializedGarment(rXmlContent, rEngine, strGarmentFile);
 			}
 
 			//read in the animations
@@ -959,8 +1072,7 @@ namespace GameDonkey
 			rXmlContent.Unload();
 
 			//get the character portrait, load it from teh renderer content manager
-			Filename strPortraitFile = new Filename();
-			strPortraitFile.SetRelFilename(myCharXML.portrait);
+			Filename strPortraitFile = new Filename(myCharXML.portrait);
 			Debug.Assert(null != rEngine.Renderer.Content);
 			m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
 
@@ -971,24 +1083,23 @@ namespace GameDonkey
 			//SPARROWHAWKS
 
 			//load the ground states
-			Filename strStatesFile = new Filename();
-			strStatesFile.SetRelFilename(myCharXML.GroundStates);
-			States.ReadSerializedStateContainer(rXmlContent, @"Resources\wedding state machines\ground state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, false);
+			Filename strStatesFile = new Filename(myCharXML.GroundStates);
+			States.ReadSerializedStateContainer(rXmlContent, @"wedding state machines\ground state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, false);
 			rXmlContent.Unload();
 
 			//load the up states
 			strStatesFile.SetRelFilename(myCharXML.UpStates);
-			States.ReadSerializedStateContainer(rXmlContent, @"Resources\wedding state machines\up state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+			States.ReadSerializedStateContainer(rXmlContent, @"wedding state machines\up state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
 			rXmlContent.Unload();
 
 			////load the down states
 			//strStatesFile.SetRelFilename(myCharXML.DownStates);
-			//States.ReadStateContainer(rXmlContent, @"Resources\state machines\down state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+			//States.ReadStateContainer(rXmlContent, @"state machines\down state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
 			//rXmlContent.Unload();
 
 			////load the forward states
 			//strStatesFile.SetRelFilename(myCharXML.ForwardStates);
-			//States.ReadStateContainer(rXmlContent, @"Resources\state machines\forward state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+			//States.ReadStateContainer(rXmlContent, @"state machines\forward state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
 			//rXmlContent.Unload();
 
 			return true;

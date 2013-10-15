@@ -88,7 +88,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		public override bool LoadObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
+		public override bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
 		{
 			SPFSettings.LevelObjectXML myCharXML = rXmlContent.Load<SPFSettings.LevelObjectXML>(strResource.GetRelPathFileNoExt());
 			if (!base.LoadObject(rXmlContent, myCharXML, rEngine, iMessageOffset))

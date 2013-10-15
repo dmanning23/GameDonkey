@@ -733,7 +733,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		public BaseObject LoadObject(Filename strFileName, IGameDonkey rEngine, EObjectType eType, int iDifficulty)
+		public BaseObject LoadXmlObject(Filename strFileName, IGameDonkey rEngine, EObjectType eType, int iDifficulty)
 		{
 			//try to load all that stuff
 			BaseObject myCharacter;
@@ -778,7 +778,7 @@ namespace GameDonkey
 			//get the message offset
 			int iMessageOffset = GetNextMessageOffset();
 			myCharacter.PlayerQueue = this;
-			if (!myCharacter.LoadObject(strFileName, rEngine, iMessageOffset))
+			if (!myCharacter.LoadXmlObject(strFileName, rEngine, iMessageOffset))
 			{
 				Debug.Assert(false);
 				return null;
@@ -837,7 +837,7 @@ namespace GameDonkey
 			return myCharacter;
 		}
 		
-		public BaseObject LoadObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, EObjectType eType, int iDifficulty)
+		public BaseObject LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, EObjectType eType, int iDifficulty)
 		{
 			//try to load all that stuff
 			BaseObject myCharacter;
@@ -882,7 +882,7 @@ namespace GameDonkey
 			//get the message offset
 			int iMessageOffset = GetNextMessageOffset();
 			myCharacter.PlayerQueue = this;
-			if (!myCharacter.LoadObject(rXmlContent, strResource, rEngine, iMessageOffset))
+			if (!myCharacter.LoadSerializedObject(rXmlContent, strResource, rEngine, iMessageOffset))
 			{
 				Debug.Assert(false);
 				return null;

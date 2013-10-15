@@ -239,28 +239,28 @@ namespace GameDonkey
 			Renderer.LoadContent(rGraphics);
 
 			//load the background image used for the HUD
-			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"Resources\HUDBackground.png");
+			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
 
 			//load the hit spark
-			HitSpark.ReadSerializedFile(rXmlContent, @"Resources\Particles\Hit Spark", Renderer);
+			HitSpark.ReadXmlFile(@"Particles\Hit Spark.xml", Renderer);
 
 			//load the hit cloud
-			HitCloud.ReadSerializedFile(rXmlContent, @"Resources\Particles\Hit Cloud", Renderer);
+			HitCloud.ReadXmlFile(@"Particles\Hit Cloud.xml", Renderer);
 
 			//load the death particle effect
-			DeathParticles.ReadSerializedFile(rXmlContent, @"Resources\Particles\Death Particles", Renderer);
+			DeathParticles.ReadXmlFile(@"Particles\Death Particles.xml", Renderer);
 
 			//load the block particle effect
-			Block.ReadSerializedFile(rXmlContent, @"Resources\Particles\Block", Renderer);
+			Block.ReadXmlFile(@"Particles\Block.xml", Renderer);
 
 			//load the weapon hit particle effect
-			WeaponHit.ReadSerializedFile(rXmlContent, @"Resources\Particles\Weapon Hit", Renderer);
+			WeaponHit.ReadXmlFile(@"Particles\Weapon Hit.xml", Renderer);
 
 			//load the head bop particle effect
-			HeadBop.ReadSerializedFile(rXmlContent, @"Resources\Particles\ceiling bop", Renderer);
+			HeadBop.ReadXmlFile(@"Particles\ceiling bop.xml", Renderer);
 
 			//load the stunned bounce particle effect
-			StunnedBounce.ReadSerializedFile(rXmlContent, @"Resources\Particles\Stunned Bounce", Renderer);
+			StunnedBounce.ReadXmlFile(@"Particles\Stunned Bounce.xml", Renderer);
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);
@@ -284,9 +284,8 @@ namespace GameDonkey
 		{
 			//create and load a player
 			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
-			Filename myChar = new Filename();
-			myChar.SetRelFilename(strCharacterFile);
-			if (null == rPlayer.LoadObject(rXmlContent, myChar, this, EObjectType.Human, 0))
+			Filename myChar = new Filename(strCharacterFile);
+			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.Human, 0))
 			{
 				Debug.Assert(false);
 			}
@@ -294,7 +293,7 @@ namespace GameDonkey
 
 			//create a controller for that player
 			InputWrapper rQueue = new InputWrapper(eIndex, MasterClock.GetCurrentTime);
-			if (!rQueue.ReadSerializedFile(rXmlContent, @"Resources\Move List", rPlayer.Character.States.GetMessageIndexFromText))
+			if (!rQueue.ReadSerializedFile(rXmlContent, @"Move List", rPlayer.Character.States.GetMessageIndexFromText))
 			{
 				Debug.Assert(false);
 			}
@@ -312,9 +311,8 @@ namespace GameDonkey
 		{
 			//create and load a player
 			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
-			Filename myChar = new Filename();
-			myChar.SetRelFilename(strCharacterFile);
-			if (null == rPlayer.LoadObject(rXmlContent, myChar, this, EObjectType.AI, iDifficulty))
+			Filename myChar = new Filename(strCharacterFile);
+			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.AI, iDifficulty))
 			{
 				Debug.Assert(false);
 			}
@@ -322,7 +320,7 @@ namespace GameDonkey
 
 			//create a controller for that player
 			InputWrapper rQueue = new InputWrapper(PlayerIndex.One, MasterClock.GetCurrentTime);
-			if (!rQueue.ReadSerializedFile(rXmlContent, @"Resources\Move List", rPlayer.Character.States.GetMessageIndexFromText))
+			if (!rQueue.ReadSerializedFile(rXmlContent, @"Move List", rPlayer.Character.States.GetMessageIndexFromText))
 			{
 				Debug.Assert(false);
 			}
@@ -369,9 +367,8 @@ namespace GameDonkey
 			for (int i = 0; i < myDude.objects.Count; i++)
 			{
 				//load the level object
-				Filename myLevelObjectFile = new Filename();
-				myLevelObjectFile.SetRelFilename(myDude.objects[i]);
-				BaseObject rLevelObject = m_LevelObjects.LoadObject(rXmlContent, myLevelObjectFile, this, EObjectType.Level, 0);
+				Filename myLevelObjectFile = new Filename(myDude.objects[i]);
+				BaseObject rLevelObject = m_LevelObjects.LoadSerializedObject(rXmlContent, myLevelObjectFile, this, EObjectType.Level, 0);
 				if (null == rLevelObject)
 				{
 					Debug.Assert(false);

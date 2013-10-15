@@ -222,8 +222,7 @@ namespace GameDonkey
 		public Garment LoadGarment(ContentManager myContent, string strGarmentFile, IRenderer rRenderer)
 		{
 			//setup the filename
-			Filename myFileName = new Filename();
-			myFileName.SetRelFilename(strGarmentFile);
+			Filename myFileName = new Filename(strGarmentFile);
 
 			//first check if the garment is already loaded
 			Garment myGarment = CheckForXNAGarment(myFileName.GetRelPathFileNoExt());
