@@ -924,11 +924,6 @@ namespace GameDonkey
 
 		public override bool LoadXmlObject(Filename strResource, IGameDonkey rEngine, int iMessageOffset)
 		{
-			//All the filename we are gonna use
-			Filename strModelFile = new Filename();
-			Filename strAnimationFile = new Filename();
-			Filename strStateMachineFile = new Filename();
-
 			//Open the file.
 			FileStream stream = File.Open(strResource.File, FileMode.Open, FileAccess.Read);
 			XmlDocument xmlDoc = new XmlDocument();
@@ -969,7 +964,8 @@ namespace GameDonkey
 
 			//First node is the model file
 			XmlNode childNode = AssetNode.FirstChild;
-			if (!AnimationContainer.ReadXMLModelFormat(childNode.InnerXml, rEngine.Renderer))
+			Filename strModelFile = new Filename(childNode.InnerXml);
+			if (!AnimationContainer.ReadXMLModelFormat(strModelFile.File, rEngine.Renderer))
 			{
 				Debug.Assert(false);
 				return false;
@@ -977,7 +973,8 @@ namespace GameDonkey
 
 			//next node is the animation file
 			childNode = childNode.NextSibling;
-			if (!AnimationContainer.ReadXMLAnimationFormat(childNode.InnerXml))
+			Filename strAnimationFile = new Filename(childNode.InnerXml);
+			if (!AnimationContainer.ReadXMLAnimationFormat(strAnimationFile.File))
 			{
 				Debug.Assert(false);
 				return false;
@@ -996,9 +993,10 @@ namespace GameDonkey
 
 			//the state machine?
 			childNode = childNode.NextSibling;
-			strStateMachineFile.SetRelFilename(childNode.InnerXml);
+			//Filename strStateMachineFile = new Filename(childNode.InnerXml); //ignored in this game
 
 			//the states file?
+			childNode = childNode.NextSibling;
 
 			//get the height of this dude
 			childNode = childNode.NextSibling;
@@ -1017,11 +1015,13 @@ namespace GameDonkey
 
 			//get the ground states of this dude
 			childNode = childNode.NextSibling;
-			States.ReadXmlStateContainer(@"wedding state machines\ground state machine", iMessageOffset, childNode.InnerXml, this, rEngine, true, false);
+			Filename groundStatesFile = new Filename(childNode.InnerXml);
+			States.ReadXmlStateContainer(@"Content\wedding state machines\ground state machine.xml", iMessageOffset, groundStatesFile.File, this, rEngine, true, false);
 
 			//get teh upstates of this dude
 			childNode = childNode.NextSibling;
-			States.ReadXmlStateContainer(@"wedding state machines\up state machine", iMessageOffset, childNode.InnerXml, this, rEngine, true, true);
+			Filename upStatesFile = new Filename(childNode.InnerXml);
+			States.ReadXmlStateContainer(@"Content\wedding state machines\up state machine.xml", iMessageOffset, upStatesFile.File, this, rEngine, true, true);
 
 			////load the down states
 			//strStatesFile.SetRelFilename(myCharXML.DownStates);

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
 using System;
+using FilenameBuddy;
 
 namespace GameDonkey
 {

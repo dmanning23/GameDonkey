@@ -81,7 +81,13 @@ namespace GameDonkey
 		/// load all the content in an xna game
 		/// </summary>
 		/// <param name="rContent"></param>
-		public virtual void LoadContent(ContentManager rXmlContent, GraphicsDevice rGraphics) { }
+		public virtual void LoadSerializedContent(ContentManager rXmlContent, GraphicsDevice rGraphics) { }
+
+		/// <summary>
+		/// load all the content in an xna game
+		/// </summary>
+		/// <param name="rContent"></param>
+		public virtual void LoadXmlContent(GraphicsDevice rGraphics) { }
 
 		public virtual void Start()
 		{
