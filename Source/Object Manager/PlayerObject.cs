@@ -1038,7 +1038,6 @@ namespace GameDonkey
 			return true;
 		}
 
-
 		public override bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
 		{
 			SPFSettings.PlayerObjectXML myCharXML = rXmlContent.Load<SPFSettings.PlayerObjectXML>(strResource.GetRelPathFileNoExt());

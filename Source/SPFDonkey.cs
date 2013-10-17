@@ -16,6 +16,9 @@ using ParticleBuddy;
 using FilenameBuddy;
 using ResolutionBuddy;
 using GameTimer;
+using System.IO;
+using System.Xml;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -185,11 +188,6 @@ namespace GameDonkey
 		public SPFDonkey(XNARenderer rRenderer)
 			: base(rRenderer)
 		{
-			Setup();
-		}
-
-		private void Setup()
-		{
 			m_listPlayers = new List<CPlayerQueue>();
 			m_LevelObjects = new CLevelObjectQueue();
 			m_listSpawnPoints = new List<Vector2>();
@@ -223,284 +221,6 @@ namespace GameDonkey
 			m_SkyColor = Color.White;
 			m_iNumTiles = 1;
 			m_CenterPoint = Vector2.Zero;
-		}
-
-		/// <summary>
-		/// load all the content in an xna game
-		/// </summary>
-		/// <param name="rContent">content manager</param>
-		public override void LoadSerializedContent(ContentManager rXmlContent, GraphicsDevice rGraphics)
-		{
-			m_LastKeyboardState = Keyboard.GetState();
-
-			//load all the content
-
-			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			Renderer.LoadContent(rGraphics);
-
-			//load the background image used for the HUD
-			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
-
-			//load the hit spark
-			HitSpark.ReadXmlFile(@"Particles\Hit Spark.xml", Renderer);
-
-			//load the hit cloud
-			HitCloud.ReadXmlFile(@"Particles\Hit Cloud.xml", Renderer);
-
-			//load the death particle effect
-			DeathParticles.ReadXmlFile(@"Particles\Death Particles.xml", Renderer);
-
-			//load the block particle effect
-			Block.ReadXmlFile(@"Particles\Block.xml", Renderer);
-
-			//load the weapon hit particle effect
-			WeaponHit.ReadXmlFile(@"Particles\Weapon Hit.xml", Renderer);
-
-			//load the head bop particle effect
-			HeadBop.ReadXmlFile(@"Particles\ceiling bop.xml", Renderer);
-
-			//load the stunned bounce particle effect
-			StunnedBounce.ReadXmlFile(@"Particles\Stunned Bounce.xml", Renderer);
-
-			//load up our sprite font
-			Debug.Assert(null != m_Font);
-			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
-		}
-
-		/// <summary>
-		/// load all the content in an xna game
-		/// </summary>
-		/// <param name="rContent">content manager</param>
-		public override void LoadXmlContent(GraphicsDevice rGraphics)
-		{
-			m_LastKeyboardState = Keyboard.GetState();
-
-			//load all the content
-
-			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			Renderer.LoadContent(rGraphics);
-
-			//load the background image used for the HUD
-			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
-
-			//load the hit spark
-			HitSpark.ReadXmlFile(@"Particles\Hit Spark.xml", Renderer);
-
-			//load the hit cloud
-			HitCloud.ReadXmlFile(@"Particles\Hit Cloud.xml", Renderer);
-
-			//load the death particle effect
-			DeathParticles.ReadXmlFile(@"Particles\Death Particles.xml", Renderer);
-
-			//load the block particle effect
-			Block.ReadXmlFile(@"Particles\Block.xml", Renderer);
-
-			//load the weapon hit particle effect
-			WeaponHit.ReadXmlFile(@"Particles\Weapon Hit.xml", Renderer);
-
-			//load the head bop particle effect
-			HeadBop.ReadXmlFile(@"Particles\ceiling bop.xml", Renderer);
-
-			//load the stunned bounce particle effect
-			StunnedBounce.ReadXmlFile(@"Particles\Stunned Bounce.xml", Renderer);
-
-			//load up our sprite font
-			Debug.Assert(null != m_Font);
-			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
-		}
-
-		/// <summary>
-		/// load all a players data into the game
-		/// </summary>
-		/// <param name="rContent">content manager to use to load</param>
-		/// <param name="myColor">color for this player</param>
-		/// <param name="strCharacterFile">relative path for the player data file</param>
-		/// <param name="eIndex">gamepad index for this player.</param>
-		/// <param name="eType">the type of dude to load, accepts human and AI</param>
-		/// <returns></returns>
-		public CPlayerQueue LoadSerializedHumanPlayer(ContentManager rXmlContent,
-			Color myColor,
-			string strCharacterFile,
-			PlayerIndex eIndex,
-			string strPlayerName)
-		{
-			//create and load a player
-			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
-			Filename myChar = new Filename(strCharacterFile);
-			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.Human, 0))
-			{
-				Debug.Assert(false);
-			}
-			m_listPlayers.Add(rPlayer);
-
-			//create a controller for that player
-			InputWrapper rQueue = new InputWrapper(eIndex, MasterClock.GetCurrentTime);
-			if (!rQueue.ReadSerializedFile(rXmlContent, @"Move List", rPlayer.Character.States.GetMessageIndexFromText))
-			{
-				Debug.Assert(false);
-			}
-			rPlayer.InputQueue = rQueue;
-
-			rPlayer.PlayerName = strPlayerName;
-			return rPlayer;
-		}
-
-		/// <summary>
-		/// load all a players data into the game
-		/// </summary>
-		/// <param name="myColor">color for this player</param>
-		/// <param name="strCharacterFile">relative path for the player data file</param>
-		/// <param name="eIndex">gamepad index for this player.</param>
-		/// <param name="eType">the type of dude to load, accepts human and AI</param>
-		/// <returns></returns>
-		public CPlayerQueue LoadXmlHumanPlayer(Color myColor,
-			string strCharacterFile,
-			PlayerIndex eIndex,
-			string strPlayerName)
-		{
-			//create and load a player
-			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
-			Filename myChar = new Filename(strCharacterFile);
-			if (null == rPlayer.LoadXmlObject(myChar, this, EObjectType.Human, 0))
-			{
-				Debug.Assert(false);
-			}
-			m_listPlayers.Add(rPlayer);
-
-			//create a controller for that player
-			InputWrapper rQueue = new InputWrapper(eIndex, MasterClock.GetCurrentTime);
-			Filename movelistFile = new Filename(@"Move List.xml");
-			if (!rQueue.ReadXmlFile(movelistFile.File, rPlayer.Character.States.GetMessageIndexFromText))
-			{
-				Debug.Assert(false);
-			}
-			rPlayer.InputQueue = rQueue;
-
-			rPlayer.PlayerName = strPlayerName;
-			return rPlayer;
-		}
-
-		public CPlayerQueue LoadAiPlayer(ContentManager rXmlContent,
-			Color myColor,
-			string strCharacterFile,
-			int iDifficulty,
-			string strPlayerName)
-		{
-			//create and load a player
-			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
-			Filename myChar = new Filename(strCharacterFile);
-			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.AI, iDifficulty))
-			{
-				Debug.Assert(false);
-			}
-			m_listPlayers.Add(rPlayer);
-
-			//create a controller for that player
-			InputWrapper rQueue = new InputWrapper(PlayerIndex.One, MasterClock.GetCurrentTime);
-			if (!rQueue.ReadSerializedFile(rXmlContent, @"Move List", rPlayer.Character.States.GetMessageIndexFromText))
-			{
-				Debug.Assert(false);
-			}
-			rPlayer.InputQueue = rQueue;
-
-			rPlayer.PlayerName = strPlayerName;
-			return rPlayer;
-		}
-
-		public void LoadBoard(ContentManager rXmlContent, string strBoardFile)
-		{
-			//load the resource
-			SPFSettings.BoardXML myDude = rXmlContent.Load<SPFSettings.BoardXML>(strBoardFile);
-
-			//grab all the spawn points
-			for (int i = 0; i < myDude.spawnPoints.Count; i++)
-			{
-				m_listSpawnPoints.Add(myDude.spawnPoints[i].location);
-			}
-
-			//grab teh name of teh music resource for this board
-			m_strMusicFile = myDude.music;
-
-			//TODO: load the death noise
-			m_strDeathNoise = myDude.deathNoise;
-			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathNoise));
-
-			//open the background image stuff
-			m_SkyBox = (XNATexture)Renderer.LoadImage(myDude.backgroundTile);
-			m_SkyColor.R = myDude.backgroundR;
-			m_SkyColor.G = myDude.backgroundG;
-			m_SkyColor.B = myDude.backgroundB;
-			m_SkyColor.A = 255;
-
-			m_iNumTiles = myDude.numTiles;
-
-			//grab the world boundaries
-			WorldBoundaries = new Rectangle((-1 * (myDude.boardWidth / 2)),
-				(-1 * (myDude.boardHeight / 2)),
-				myDude.boardWidth,
-				myDude.boardHeight);
-
-			//load all the level objects
-			for (int i = 0; i < myDude.objects.Count; i++)
-			{
-				//load the level object
-				Filename myLevelObjectFile = new Filename(myDude.objects[i]);
-				BaseObject rLevelObject = m_LevelObjects.LoadSerializedObject(rXmlContent, myLevelObjectFile, this, EObjectType.Level, 0);
-				if (null == rLevelObject)
-				{
-					Debug.Assert(false);
-				}
-			}
-
-			m_LevelObjects.PlayerName = "Board";
-		}
-
-		public void LoadXmlBoard(string strBoardFile)
-		{
-			////load the resource
-			//SPFSettings.BoardXML myDude = rXmlContent.Load<SPFSettings.BoardXML>(strBoardFile);
-
-			////grab all the spawn points
-			//for (int i = 0; i < myDude.spawnPoints.Count; i++)
-			//{
-			//	m_listSpawnPoints.Add(myDude.spawnPoints[i].location);
-			//}
-
-			////grab teh name of teh music resource for this board
-			//m_strMusicFile = myDude.music;
-
-			////TODO: load the death noise
-			//m_strDeathNoise = myDude.deathNoise;
-			////Debug.Assert(null != CAudioManager.GetCue(m_strDeathNoise));
-
-			////open the background image stuff
-			//m_SkyBox = (XNATexture)Renderer.LoadImage(myDude.backgroundTile);
-			//m_SkyColor.R = myDude.backgroundR;
-			//m_SkyColor.G = myDude.backgroundG;
-			//m_SkyColor.B = myDude.backgroundB;
-			//m_SkyColor.A = 255;
-
-			//m_iNumTiles = myDude.numTiles;
-
-			////grab the world boundaries
-			//WorldBoundaries = new Rectangle((-1 * (myDude.boardWidth / 2)),
-			//	(-1 * (myDude.boardHeight / 2)),
-			//	myDude.boardWidth,
-			//	myDude.boardHeight);
-
-			////load all the level objects
-			//for (int i = 0; i < myDude.objects.Count; i++)
-			//{
-			//	//load the level object
-			//	Filename myLevelObjectFile = new Filename(myDude.objects[i]);
-			//	BaseObject rLevelObject = m_LevelObjects.LoadSerializedObject(rXmlContent, myLevelObjectFile, this, EObjectType.Level, 0);
-			//	if (null == rLevelObject)
-			//	{
-			//		Debug.Assert(false);
-			//	}
-			//}
-
-			//m_LevelObjects.PlayerName = "Board";
 		}
 
 		#endregion //Construction
@@ -1327,5 +1047,369 @@ namespace GameDonkey
 #endif
 
 		#endregion //Networking
+
+		#region File IO
+
+		/// <summary>
+		/// load all the content in an xna game
+		/// </summary>
+		/// <param name="rContent">content manager</param>
+		public override void LoadSerializedContent(ContentManager rXmlContent, GraphicsDevice rGraphics)
+		{
+			m_LastKeyboardState = Keyboard.GetState();
+
+			//load all the content
+
+			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
+			Renderer.LoadContent(rGraphics);
+
+			//load the background image used for the HUD
+			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
+
+			//load the hit spark
+			HitSpark.ReadXmlFile(@"Particles\Hit Spark.xml", Renderer);
+
+			//load the hit cloud
+			HitCloud.ReadXmlFile(@"Particles\Hit Cloud.xml", Renderer);
+
+			//load the death particle effect
+			DeathParticles.ReadXmlFile(@"Particles\Death Particles.xml", Renderer);
+
+			//load the block particle effect
+			Block.ReadXmlFile(@"Particles\Block.xml", Renderer);
+
+			//load the weapon hit particle effect
+			WeaponHit.ReadXmlFile(@"Particles\Weapon Hit.xml", Renderer);
+
+			//load the head bop particle effect
+			HeadBop.ReadXmlFile(@"Particles\ceiling bop.xml", Renderer);
+
+			//load the stunned bounce particle effect
+			StunnedBounce.ReadXmlFile(@"Particles\Stunned Bounce.xml", Renderer);
+
+			//load up our sprite font
+			Debug.Assert(null != m_Font);
+			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
+		}
+
+		/// <summary>
+		/// load all the content in an xna game
+		/// </summary>
+		/// <param name="rContent">content manager</param>
+		public override void LoadXmlContent(GraphicsDevice rGraphics)
+		{
+			m_LastKeyboardState = Keyboard.GetState();
+
+			//load all the content
+
+			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
+			Renderer.LoadContent(rGraphics);
+
+			//load the background image used for the HUD
+			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
+
+			//load the hit spark
+			HitSpark.ReadXmlFile(@"Particles\Hit Spark.xml", Renderer);
+
+			//load the hit cloud
+			HitCloud.ReadXmlFile(@"Particles\Hit Cloud.xml", Renderer);
+
+			//load the death particle effect
+			DeathParticles.ReadXmlFile(@"Particles\Death Particles.xml", Renderer);
+
+			//load the block particle effect
+			Block.ReadXmlFile(@"Particles\Block.xml", Renderer);
+
+			//load the weapon hit particle effect
+			WeaponHit.ReadXmlFile(@"Particles\Weapon Hit.xml", Renderer);
+
+			//load the head bop particle effect
+			HeadBop.ReadXmlFile(@"Particles\ceiling bop.xml", Renderer);
+
+			//load the stunned bounce particle effect
+			StunnedBounce.ReadXmlFile(@"Particles\Stunned Bounce.xml", Renderer);
+
+			//load up our sprite font
+			Debug.Assert(null != m_Font);
+			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
+		}
+
+		/// <summary>
+		/// load all a players data into the game
+		/// </summary>
+		/// <param name="rContent">content manager to use to load</param>
+		/// <param name="myColor">color for this player</param>
+		/// <param name="strCharacterFile">relative path for the player data file</param>
+		/// <param name="eIndex">gamepad index for this player.</param>
+		/// <param name="eType">the type of dude to load, accepts human and AI</param>
+		/// <returns></returns>
+		public CPlayerQueue LoadSerializedHumanPlayer(ContentManager rXmlContent,
+			Color myColor,
+			string strCharacterFile,
+			PlayerIndex eIndex,
+			string strPlayerName)
+		{
+			//create and load a player
+			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
+			Filename myChar = new Filename(strCharacterFile);
+			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.Human, 0))
+			{
+				Debug.Assert(false);
+			}
+			m_listPlayers.Add(rPlayer);
+
+			//create a controller for that player
+			InputWrapper rQueue = new InputWrapper(eIndex, MasterClock.GetCurrentTime);
+			if (!rQueue.ReadSerializedFile(rXmlContent, @"Move List", rPlayer.Character.States.GetMessageIndexFromText))
+			{
+				Debug.Assert(false);
+			}
+			rPlayer.InputQueue = rQueue;
+
+			rPlayer.PlayerName = strPlayerName;
+			return rPlayer;
+		}
+
+		/// <summary>
+		/// load all a players data into the game
+		/// </summary>
+		/// <param name="myColor">color for this player</param>
+		/// <param name="strCharacterFile">relative path for the player data file</param>
+		/// <param name="eIndex">gamepad index for this player.</param>
+		/// <param name="eType">the type of dude to load, accepts human and AI</param>
+		/// <returns></returns>
+		public CPlayerQueue LoadXmlHumanPlayer(Color myColor,
+			string strCharacterFile,
+			PlayerIndex eIndex,
+			string strPlayerName)
+		{
+			//create and load a player
+			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
+			Filename myChar = new Filename(strCharacterFile);
+			if (null == rPlayer.LoadXmlObject(myChar, this, EObjectType.Human, 0))
+			{
+				Debug.Assert(false);
+			}
+			m_listPlayers.Add(rPlayer);
+
+			//create a controller for that player
+			InputWrapper rQueue = new InputWrapper(eIndex, MasterClock.GetCurrentTime);
+			Filename movelistFile = new Filename(@"Move List.xml");
+			if (!rQueue.ReadXmlFile(movelistFile.File, rPlayer.Character.States.GetMessageIndexFromText))
+			{
+				Debug.Assert(false);
+			}
+			rPlayer.InputQueue = rQueue;
+
+			rPlayer.PlayerName = strPlayerName;
+			return rPlayer;
+		}
+
+		public CPlayerQueue LoadAiPlayer(ContentManager rXmlContent,
+			Color myColor,
+			string strCharacterFile,
+			int iDifficulty,
+			string strPlayerName)
+		{
+			//create and load a player
+			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
+			Filename myChar = new Filename(strCharacterFile);
+			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.AI, iDifficulty))
+			{
+				Debug.Assert(false);
+			}
+			m_listPlayers.Add(rPlayer);
+
+			//create a controller for that player
+			InputWrapper rQueue = new InputWrapper(PlayerIndex.One, MasterClock.GetCurrentTime);
+			if (!rQueue.ReadSerializedFile(rXmlContent, @"Move List", rPlayer.Character.States.GetMessageIndexFromText))
+			{
+				Debug.Assert(false);
+			}
+			rPlayer.InputQueue = rQueue;
+
+			rPlayer.PlayerName = strPlayerName;
+			return rPlayer;
+		}
+
+		public void LoadSerializedBoard(ContentManager rXmlContent, string strBoardFile)
+		{
+			//load the resource
+			SPFSettings.BoardXML myDude = rXmlContent.Load<SPFSettings.BoardXML>(strBoardFile);
+
+			//grab all the spawn points
+			for (int i = 0; i < myDude.spawnPoints.Count; i++)
+			{
+				m_listSpawnPoints.Add(myDude.spawnPoints[i].location);
+			}
+
+			//grab teh name of teh music resource for this board
+			m_strMusicFile = myDude.music;
+
+			//TODO: load the death noise
+			m_strDeathNoise = myDude.deathNoise;
+			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathNoise));
+
+			//open the background image stuff
+			m_SkyBox = (XNATexture)Renderer.LoadImage(myDude.backgroundTile);
+			m_SkyColor.R = myDude.backgroundR;
+			m_SkyColor.G = myDude.backgroundG;
+			m_SkyColor.B = myDude.backgroundB;
+			m_SkyColor.A = 255;
+
+			m_iNumTiles = myDude.numTiles;
+
+			//grab the world boundaries
+			WorldBoundaries = new Rectangle((-1 * (myDude.boardWidth / 2)),
+				(-1 * (myDude.boardHeight / 2)),
+				myDude.boardWidth,
+				myDude.boardHeight);
+
+			//load all the level objects
+			for (int i = 0; i < myDude.objects.Count; i++)
+			{
+				//load the level object
+				Filename myLevelObjectFile = new Filename(myDude.objects[i]);
+				BaseObject rLevelObject = m_LevelObjects.LoadSerializedObject(rXmlContent, myLevelObjectFile, this, EObjectType.Level, 0);
+				if (null == rLevelObject)
+				{
+					Debug.Assert(false);
+				}
+			}
+
+			m_LevelObjects.PlayerName = "Board";
+		}
+
+		public bool LoadXmlBoard(string strBoardFile)
+		{
+			//Open the file.
+			Filename myBoardFile = new Filename(strBoardFile);
+			FileStream stream = File.Open(myBoardFile.File, FileMode.Open, FileAccess.Read);
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load(stream);
+			XmlNode rootNode = xmlDoc.DocumentElement;
+
+			//make sure it is actually an xml node
+			if (rootNode.NodeType != XmlNodeType.Element)
+			{
+				//should be an xml node!!!
+				Debug.Assert(false);
+				return false;
+			}
+
+			//eat up the name of that xml node
+			string strElementName = rootNode.Name;
+			if (("XnaContent" != strElementName) || !rootNode.HasChildNodes)
+			{
+				return false;
+			}
+
+			//next node is "<Asset Type="SPFSettings.LevelObjectXML">"
+			XmlNode AssetNode = rootNode.FirstChild;
+			if (null == AssetNode)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+			if (!AssetNode.HasChildNodes)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+			if ("Asset" != AssetNode.Name)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+
+		//public int boardHeight = 0;
+		//public int boardWidth = 0;
+		//public string music = "";
+		//public string deathNoise = "";
+		//public string backgroundTile = "";
+		//public byte backgroundR = 0;
+		//public byte backgroundG = 0;
+		//public byte backgroundB = 0;
+		//public int numTiles = 0;
+		//public List<string> objects = new List<string>();
+		//public List<SpawnPointXML> spawnPoints = new List<SpawnPointXML>();
+
+			//First node is the name
+			XmlNode childNode = AssetNode.FirstChild;
+			m_LevelObjects.PlayerName = childNode.InnerXml;
+
+			//next node is the height
+			childNode = childNode.NextSibling;
+			int iHeight = Convert.ToInt32(childNode.InnerXml);
+
+			//nect node is the width
+			childNode = childNode.NextSibling;
+			int iWidth = Convert.ToInt32(childNode.InnerXml);
+
+			////grab the world boundaries
+			WorldBoundaries = new Rectangle((-1 * (iWidth / 2)),
+				(-1 * (iHeight / 2)),
+				iWidth,
+				iHeight);
+
+			//next node is the music
+			childNode = childNode.NextSibling;
+			m_strMusicFile = childNode.InnerXml;
+
+			//next node is the death noise
+			childNode = childNode.NextSibling;
+			m_strDeathNoise = childNode.InnerXml;
+			
+			////TODO: load the death noise
+			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathNoise));
+
+			//next node is the background tile
+			childNode = childNode.NextSibling;
+			Filename backgroundFile = new Filename(childNode.InnerXml);
+			m_SkyBox = (XNATexture)Renderer.LoadImage(backgroundFile.GetRelPathFileNoExt());
+
+			//load the color!
+			childNode = childNode.NextSibling;
+			m_SkyColor.R = Convert.ToByte(childNode.InnerXml);
+			childNode = childNode.NextSibling;
+			m_SkyColor.G = Convert.ToByte(childNode.InnerXml);
+			childNode = childNode.NextSibling;
+			m_SkyColor.B = Convert.ToByte(childNode.InnerXml);
+			m_SkyColor.A = 255;
+
+			//next node is the number of tiles
+			childNode = childNode.NextSibling;
+			m_iNumTiles = Convert.ToInt32(childNode.InnerXml);
+
+			//load all the level objects
+			childNode = childNode.NextSibling;
+			for (XmlNode levelNode = childNode.FirstChild;
+				null != levelNode;
+				levelNode = levelNode.NextSibling)
+			{
+				//load the level object
+				Filename myLevelObjectFile = new Filename(levelNode.InnerXml);
+				BaseObject rLevelObject = m_LevelObjects.LoadXmlObject(myLevelObjectFile, this, EObjectType.Level, 0);
+				if (null == rLevelObject)
+				{
+					Debug.Assert(false);
+				}
+			}
+
+			//spawn points
+			childNode = childNode.NextSibling;
+			for (XmlNode spawnNode = childNode.FirstChild;
+				null != spawnNode;
+				spawnNode = spawnNode.NextSibling)
+			{
+				m_listSpawnPoints.Add(Vector2Ext.ToVector2(spawnNode.InnerXml));
+			}
+
+			// Close the file.
+			stream.Close();
+			return true;
+		}
+
+		#endregion //File IO
 	}
 }
