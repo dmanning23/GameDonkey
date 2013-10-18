@@ -1,9 +1,9 @@
-﻿using System;
+﻿using FilenameBuddy;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using System.Collections.Generic;
-using FilenameBuddy;
 
 namespace GameDonkey
 {

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using GameTimer;
-using System.Diagnostics;
-using System.Xml;
+﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Xml;
 
 namespace GameDonkey
 {

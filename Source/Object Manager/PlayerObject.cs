@@ -9,8 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 #if NETWORKING
 using Microsoft.Xna.Framework.Net;
 #endif
-using ParticleBuddy;
-using CameraBuddy;
 using FilenameBuddy;
 using System.IO;
 using System.Xml;
@@ -79,9 +77,9 @@ namespace GameDonkey
 		public float Health
 		{
 			get { return m_fHealth; }
-			private set 
-			{ 
-				m_fHealth = value; 
+			private set
+			{
+				m_fHealth = value;
 			}
 		}
 
@@ -104,7 +102,8 @@ namespace GameDonkey
 
 		#region Methods
 
-		public PlayerObject(HitPauseClock rClock, int iQueueID) : base(EObjectType.Human, rClock, iQueueID)
+		public PlayerObject(HitPauseClock rClock, int iQueueID)
+			: base(EObjectType.Human, rClock, iQueueID)
 		{
 			//init is called by the base class, which will set everything up
 		}
@@ -119,7 +118,8 @@ namespace GameDonkey
 		/// Constructor for replacing a network player when they leave the game
 		/// </summary>
 		/// <param name="rHuman">the dude to be replaced, copy all his shit</param>
-		public PlayerObject(EObjectType eType, PlayerObject rHuman) : base(eType, rHuman)
+		public PlayerObject(EObjectType eType, PlayerObject rHuman)
+			: base(eType, rHuman)
 		{
 			//TODO: copy all the required shit
 			m_fAirDelta = rHuman.m_fAirDelta;
@@ -307,21 +307,21 @@ namespace GameDonkey
 					}
 				}
 			}
-//            else if (IsCancellableState(States.CurrentState()))
-//            {
-//                //The character is in a state where they cant attack, but we want to queue up for when this state ends
+			//            else if (IsCancellableState(States.CurrentState()))
+			//            {
+			//                //The character is in a state where they cant attack, but we want to queue up for when this state ends
 
 //                if (-1 != iNextMoov)
-//                {
-//#if DEBUG
-//                    string CurrentState = States.GetStateName(States.CurrentState());
-//                    string MoveName = States.GetMessageName(iNextMoov);
-//#endif
+			//                {
+			//#if DEBUG
+			//                    string CurrentState = States.GetStateName(States.CurrentState());
+			//                    string MoveName = States.GetMessageName(iNextMoov);
+			//#endif
 
 //                    //add the move to the queue
-//                    m_QueuedInput.Enqueue(iNextMoov);
-//                }
-//            }
+			//                    m_QueuedInput.Enqueue(iNextMoov);
+			//                }
+			//            }
 			else
 			{
 				//ok character is in neutral state
@@ -629,7 +629,7 @@ namespace GameDonkey
 			}
 
 			//if the player's velocity is -X, it is set to 0
-			if ( m_Velocity.X < 0.0f)
+			if (m_Velocity.X < 0.0f)
 			{
 				m_Velocity.X = 0.0f;
 
@@ -922,120 +922,98 @@ namespace GameDonkey
 
 		#region File IO
 
-		public override bool LoadXmlObject(Filename strResource, IGameDonkey rEngine, int iMessageOffset)
+		/// <summary>
+		/// Given an xml node, parse the contents.
+		/// Override in child classes to read object-specific node types.
+		/// </summary>
+		/// <param name="childNode">the xml node to read</param>
+		/// <param name="rEngine">the engine we are using to load</param>
+		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
+		/// <returns></returns>
+		public override bool ParseXmlNode(XmlNode childNode, IGameDonkey rEngine, int iMessageOffset)
 		{
-			//Open the file.
-			FileStream stream = File.Open(strResource.File, FileMode.Open, FileAccess.Read);
-			XmlDocument xmlDoc = new XmlDocument();
-			xmlDoc.Load(stream);
-			XmlNode rootNode = xmlDoc.DocumentElement;
+			//what is in this node?
+			string strName = childNode.Name;
+			string strValue = childNode.InnerXml;
 
-			//make sure it is actually an xml node
-			if (rootNode.NodeType != XmlNodeType.Element)
+			switch (strName)
 			{
-				//should be an xml node!!!
-				return false;
+				case "stateMachine":
+				{
+					//ignored in players.
+					return true;
+				}
+
+				case "states":
+				{
+					//ignored in players.
+					return true;
+				}
+
+				case "portrait":
+				{
+					//get the portrait file
+					Filename strPortraitFile = new Filename(strValue);
+					Debug.Assert(null != rEngine.Renderer.Content);
+					m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
+					return true;
+				}
+
+				case "deathSound":
+				{
+					m_strDeathSound = childNode.InnerXml;
+					//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
+					return true;
+				}
+
+				case "GroundStates":
+				{
+					//get the ground states of this dude
+					Filename groundStatesFile = new Filename(strValue);
+					if (!States.ReadXmlStateContainer(@"Content\wedding state machines\ground state machine.xml", iMessageOffset, groundStatesFile.File, this, rEngine, true, false))
+					{
+						Debug.Assert(false);
+						return false;
+					}
+					return true;
+				}
+
+				case "UpStates":
+				{
+					//get teh upstates of this dude
+					Filename upStatesFile = new Filename(childNode.InnerXml);
+					if (!States.ReadXmlStateContainer(@"Content\wedding state machines\up state machine.xml", iMessageOffset, upStatesFile.File, this, rEngine, true, true))
+					{
+						Debug.Assert(false);
+						return false;
+					}
+					return true;
+				}
+
+				case "DownStates":
+				{
+					////load the down states
+					//strStatesFile.SetRelFilename(myCharXML.DownStates);
+					//States.ReadStateContainer(rXmlContent, @"state machines\down state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+					//rXmlContent.Unload();
+					return true;
+				}
+
+				case "ForwardStates":
+				{
+					////load the forward states
+					//strStatesFile.SetRelFilename(myCharXML.ForwardStates);
+					//States.ReadStateContainer(rXmlContent, @"state machines\forward state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+					//rXmlContent.Unload();
+					return true;
+				}
+
+				default:
+				{
+					//punt to the base class
+					return base.ParseXmlNode(childNode, rEngine, iMessageOffset);
+				}
 			}
-
-			//eat up the name of that xml node
-			string strElementName = rootNode.Name;
-			if (("XnaContent" != strElementName) || !rootNode.HasChildNodes)
-			{
-				return false;
-			}
-
-			//next node is "<Asset Type="SPFSettings.PlayerObjectXML">"
-			XmlNode AssetNode = rootNode.FirstChild;
-			if (null == AssetNode)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-			if (!AssetNode.HasChildNodes)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-			if ("Asset" != AssetNode.Name)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			//First node is the model file
-			XmlNode childNode = AssetNode.FirstChild;
-			Filename strModelFile = new Filename(childNode.InnerXml);
-			if (!AnimationContainer.ReadXMLModelFormat(strModelFile.File, rEngine.Renderer))
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			//next node is the animation file
-			childNode = childNode.NextSibling;
-			Filename strAnimationFile = new Filename(childNode.InnerXml);
-			if (!AnimationContainer.ReadXMLAnimationFormat(strAnimationFile.File))
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			//next node is the garments...
-			childNode = childNode.NextSibling;
-			for (XmlNode garmentNode = childNode.FirstChild;
-				null != garmentNode;
-				garmentNode = garmentNode.NextSibling)
-			{
-				//Load up the garment.
-				Filename strGarmentFile = new Filename(garmentNode.InnerXml);
-				LoadXmlGarment(rEngine, strGarmentFile);
-			}
-
-			//the state machine?
-			childNode = childNode.NextSibling;
-			//Filename strStateMachineFile = new Filename(childNode.InnerXml); //ignored in this game
-
-			//the states file?
-			childNode = childNode.NextSibling;
-
-			//get the height of this dude
-			childNode = childNode.NextSibling;
-			m_fHeight = Convert.ToSingle(childNode.InnerXml);
-
-			//get the portrait file
-			childNode = childNode.NextSibling;
-			Filename strPortraitFile = new Filename(childNode.InnerXml);
-			Debug.Assert(null != rEngine.Renderer.Content);
-			m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
-
-			//TODO: grab the deathsound
-			childNode = childNode.NextSibling;
-			m_strDeathSound = childNode.InnerXml;
-			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
-
-			//get the ground states of this dude
-			childNode = childNode.NextSibling;
-			Filename groundStatesFile = new Filename(childNode.InnerXml);
-			States.ReadXmlStateContainer(@"Content\wedding state machines\ground state machine.xml", iMessageOffset, groundStatesFile.File, this, rEngine, true, false);
-
-			//get teh upstates of this dude
-			childNode = childNode.NextSibling;
-			Filename upStatesFile = new Filename(childNode.InnerXml);
-			States.ReadXmlStateContainer(@"Content\wedding state machines\up state machine.xml", iMessageOffset, upStatesFile.File, this, rEngine, true, true);
-
-			////load the down states
-			//strStatesFile.SetRelFilename(myCharXML.DownStates);
-			//States.ReadStateContainer(rXmlContent, @"state machines\down state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
-			//rXmlContent.Unload();
-
-			////load the forward states
-			//strStatesFile.SetRelFilename(myCharXML.ForwardStates);
-			//States.ReadStateContainer(rXmlContent, @"state machines\forward state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
-			//rXmlContent.Unload();
-
-			// Close the file.
-			stream.Close();
-			return true;
 		}
 
 		public override bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)

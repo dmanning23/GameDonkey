@@ -1,10 +1,10 @@
-﻿using System.Diagnostics;
+﻿using GameTimer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using GameTimer;
-using RenderBuddy;
 using ParticleBuddy;
+using RenderBuddy;
+using System.Diagnostics;
 
 namespace GameDonkey
 {

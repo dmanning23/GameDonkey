@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using AnimationLib;
+using CollisionBuddy;
 using Microsoft.Xna.Framework;
 using System;
-using AnimationLib;
-using CollisionBuddy;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GameDonkey
 {

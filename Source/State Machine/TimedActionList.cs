@@ -1,8 +1,5 @@
-﻿using System;
-using GameTimer;
+﻿using GameTimer;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
 namespace GameDonkey

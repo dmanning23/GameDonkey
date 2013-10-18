@@ -1,6 +1,6 @@
-﻿using StateMachineBuddy;
+﻿using GameTimer;
+using StateMachineBuddy;
 using System.Diagnostics;
-using GameTimer;
 
 namespace GameDonkey
 {

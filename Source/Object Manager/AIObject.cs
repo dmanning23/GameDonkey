@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GameTimer;
 using HadoukInput;
-using GameTimer;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.Xna.Framework;
 
 namespace GameDonkey
 {

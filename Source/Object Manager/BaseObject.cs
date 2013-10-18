@@ -209,14 +209,14 @@ namespace GameDonkey
 
 		public Vector2 Position
 		{
-			get 
-			{ 
+			get
+			{
 				Debug.Assert(m_Position.X != float.NaN);
 				Debug.Assert(m_Position.Y != float.NaN);
 				return m_Position;
 			}
-			set 
-			{ 
+			set
+			{
 				m_Position = value;
 				Debug.Assert(m_Position.X != float.NaN);
 				Debug.Assert(m_Position.Y != float.NaN);
@@ -1269,29 +1269,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		public virtual bool LoadXmlObject(Filename strFileName, IGameDonkey rEngine, int iMessageOffset)
-		{
-			//gonna have to do this the HARD way...
-
-			//open the data file and get everything out of it
-			Filename strModelFile = new Filename();
-			Filename strAnimationFile = new Filename();
-			Filename strStateMachineFile = new Filename();
-			Filename strStatesFile = new Filename();
-			List<Filename> listGarmentFiles = new List<Filename>();
-			GetFilenamesFromDataFile(strFileName, strModelFile, strAnimationFile, strStateMachineFile, strStatesFile, listGarmentFiles, ref m_fHeight);
-
-			return LoadObject(rEngine, strModelFile, strAnimationFile, listGarmentFiles, strStateMachineFile, strStatesFile, iMessageOffset, m_fHeight, false, false);
-		}
-
-		public static bool GetFilenamesFromDataFile(
-			Filename strFileName,
-			Filename strModelFile,
-			Filename strAnimationFile,
-			Filename strStateMachineFile,
-			Filename strStatesFile,
-			List<Filename> listGarmentFiles,
-			ref float fHeight)
+		public bool LoadXmlObject(Filename strFileName, IGameDonkey rEngine, int iMessageOffset)
 		{
 			//Open the file.
 			FileStream stream = File.Open(strFileName.File, FileMode.Open, FileAccess.Read);
@@ -1344,98 +1322,115 @@ namespace GameDonkey
 					null != childNode;
 					childNode = childNode.NextSibling)
 				{
-					//what is in this node?
-					string strName = childNode.Name;
-					string strValue = childNode.InnerText;
-
-					if (strName == "model")
-					{
-						strModelFile.SetRelFilename(strValue);
-					}
-					else if (strName == "animations")
-					{
-						strAnimationFile.SetRelFilename(strValue);
-					}
-					else if (strName == "stateMachine")
-					{
-						strStateMachineFile.SetRelFilename(strValue);
-					}
-					else if (strName == "states")
-					{
-						strStatesFile.SetRelFilename(strValue);
-					}
-					else if (strName == "height")
-					{
-						fHeight = Convert.ToSingle(strValue);
-					}
-					else if (strName == "garments")
-					{
-						if (childNode.HasChildNodes)
-						{
-							for (XmlNode garmentNode = childNode.FirstChild;
-								null != garmentNode;
-								garmentNode = garmentNode.NextSibling)
-							{
-								string strGarmentText = garmentNode.InnerText;
-								Filename strGarmentFile = new Filename(strGarmentText);
-								listGarmentFiles.Add(strGarmentFile);
-							}
-						}
-					}
+					ParseXmlNode(childNode, rEngine, iMessageOffset);
 				}
 			}
 
 			// Close the file.
 			stream.Close();
-
 			return true;
 		}
 
-		public bool LoadObject(IGameDonkey rEngine,
-			Filename strModelFile,
-			Filename strAnimationFile,
-			List<Filename> listGarmentFiles,
-			Filename strStateMachineFile,
-			Filename strStateActionsFile,
-			int iMessageOffset,
-			float fHeight,
-			bool bPlayer,
-			bool bFlying)
+		/// <summary>
+		/// Given an xml node, parse the contents.
+		/// Override in child classes to read object-specific node types.
+		/// </summary>
+		/// <param name="childNode">the xml node to read</param>
+		/// <param name="rEngine">the engine we are using to load</param>
+		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
+		/// <returns></returns>
+		public virtual bool ParseXmlNode(XmlNode childNode, IGameDonkey rEngine, int iMessageOffset)
 		{
-			//try to load all that stuff
-			if (!AnimationContainer.ReadXMLModelFormat(strModelFile.File, rEngine.Renderer))
-			{
-				return false;
-			}
-			m_Physics.SortBones(AnimationContainer.Model);
-			if (!AnimationContainer.ReadXMLAnimationFormat(strAnimationFile.File))
-			{
-				return false;
-			}
+			//what is in this node?
+			string strName = childNode.Name;
+			string strValue = childNode.InnerXml;
 
-			//load all the garments, if any
-			foreach (Filename myGarmentFile in listGarmentFiles)
+			switch (strName)
 			{
-				Garment myGarment = LoadXmlGarment(rEngine, myGarmentFile);
-				Debug.Assert(null != myGarment);
+				case "model":
+				{
+					Filename strModelFile = new Filename(strValue);
+					if (!AnimationContainer.ReadXMLModelFormat(strModelFile.File, rEngine.Renderer))
+					{
+						Debug.Assert(false);
+						return false;
+					}
+					m_Physics.SortBones(AnimationContainer.Model);
+					return true;
+				}
+
+				case "animations":
+				{
+					Filename strAnimationFile = new Filename(strValue);
+					if (!AnimationContainer.ReadXMLAnimationFormat(strAnimationFile.File))
+					{
+						Debug.Assert(false);
+						return false;
+					}
+					return true;
+				}
+
+				case "garments":
+				{
+					for (XmlNode garmentNode = childNode.FirstChild;
+						null != garmentNode;
+						garmentNode = garmentNode.NextSibling)
+					{
+						//Load up the garment.
+						Filename strGarmentFile = new Filename(garmentNode.InnerXml);
+						var myGarment = LoadXmlGarment(rEngine, strGarmentFile);
+						Debug.Assert(null != myGarment);
+					}
+
+					return true;
+				}
+
+				case "stateMachine":
+				{
+					//get the state machine file
+					Filename strStateMachineFile = new Filename(strValue);
+
+					//get the states file too
+					childNode = childNode.NextSibling;
+					Filename strStateActionsFile = new Filename(childNode.InnerXml);
+
+					//read in the state container
+					if (!States.ReadXmlStateContainer(
+						strStateMachineFile.File,
+						iMessageOffset,
+						strStateActionsFile.File,
+						this,
+						rEngine,
+						false,
+						false))
+					{
+						Debug.Assert(false);
+						return false;
+					}
+
+					return true;
+				}
+
+				case "states":
+				{
+					//should never get here...
+					Debug.Assert(false);
+					return false;
+				}
+
+				case "height":
+				{
+					m_fHeight = Convert.ToInt32(strValue);
+					return true;
+				}
+
+				default:
+				{
+					//should never get here...
+					Debug.Assert(false);
+					return false;
+				}
 			}
-
-			//read in the state container
-			if (!States.ReadXmlStateContainer(
-				strStateMachineFile.File,
-				iMessageOffset,
-				strStateActionsFile.File,
-				this,
-				rEngine,
-				bPlayer,
-				bFlying))
-			{
-				return false;
-			}
-
-			m_fHeight = fHeight;
-
-			return true;
 		}
 
 		public Garment LoadXmlGarment(IGameDonkey rEngine, Filename strGarmentFile)
@@ -1460,7 +1455,7 @@ namespace GameDonkey
 			return LoadObject(rXmlContent, myCharXML, rEngine, iMessageOffset);
 		}
 
-		protected virtual bool LoadObject(ContentManager rXmlContent, SPFSettings.BaseObjectXML myCharXML, IGameDonkey rEngine, int iMessageOffset)
+		public virtual bool LoadObject(ContentManager rXmlContent, SPFSettings.BaseObjectXML myCharXML, IGameDonkey rEngine, int iMessageOffset)
 		{
 			Debug.Assert(null != PlayerQueue);
 

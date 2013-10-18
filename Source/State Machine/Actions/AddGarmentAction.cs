@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using System.Xml;
-using Microsoft.Xna.Framework.Content;
-using AnimationLib;
+﻿using AnimationLib;
 using FilenameBuddy;
+using Microsoft.Xna.Framework.Content;
 using RenderBuddy;
 using StateMachineBuddy;
+using System;
+using System.Diagnostics;
+using System.Xml;
 
 namespace GameDonkey
 {

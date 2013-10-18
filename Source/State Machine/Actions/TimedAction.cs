@@ -1,10 +1,4 @@
-﻿using System;
-using GameTimer;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Diagnostics;
+﻿using GameTimer;
 
 namespace GameDonkey
 {

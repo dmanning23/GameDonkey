@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Xml;
-using AnimationLib;
+﻿using AnimationLib;
 using StateMachineBuddy;
+using System;
+using System.Diagnostics;
+using System.Xml;
 
 namespace GameDonkey
 {

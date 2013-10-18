@@ -1,5 +1,4 @@
-﻿using System;
-using StateMachineBuddy;
+﻿using StateMachineBuddy;
 
 namespace GameDonkey
 {

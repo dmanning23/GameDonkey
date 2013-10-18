@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using GameTimer;
+﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
 #if NETWORKING
 using Microsoft.Xna.Framework.Net;

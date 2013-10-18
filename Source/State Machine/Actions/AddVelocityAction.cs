@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Xml;
-using Microsoft.Xna.Framework;
-using Vector2Extensions;
+﻿using Microsoft.Xna.Framework;
 using StateMachineBuddy;
+using System;
+using System.Diagnostics;
+using System.Xml;
+using Vector2Extensions;
 
 namespace GameDonkey
 {

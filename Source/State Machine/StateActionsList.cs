@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using GameTimer;
+﻿using GameTimer;
+using Microsoft.Xna.Framework.Content;
+using StateMachineBuddy;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using Microsoft.Xna.Framework.Content;
-using StateMachineBuddy;
 
 namespace GameDonkey
 {

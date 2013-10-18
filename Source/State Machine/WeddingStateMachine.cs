@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using StateMachineBuddy;
+﻿using StateMachineBuddy;
 
 namespace GameDonkey
 {

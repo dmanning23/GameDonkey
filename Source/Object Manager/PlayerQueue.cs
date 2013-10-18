@@ -797,46 +797,6 @@ namespace GameDonkey
 			return myCharacter;
 		}
 
-		public BaseObject LoadObject(IGameDonkey rEngine,
-			Filename strModelFile,
-			Filename strAnimationFile,
-			Filename strStateMachineFile,
-			Filename strStateActionsFile,
-			List<Filename> Garments,
-			float fHeight,
-			bool bPlayer,
-			bool bFlying)
-		{
-			//try to load all that stuff
-			BaseObject myCharacter;
-			myCharacter = new BaseObject(EObjectType.Human, m_CharacterClock, m_iNextObjectID++);
-			
-			//set as the main character
-			AddCharacterToList(myCharacter);
-
-			//get the message offset
-			int iMessageOffset = GetNextMessageOffset();
-			myCharacter.PlayerQueue = this;
-			if (!myCharacter.LoadObject(rEngine, 
-				strModelFile, 
-				strAnimationFile, 
-				Garments,
-				strStateMachineFile, 
-				strStateActionsFile, 
-				iMessageOffset, 
-				fHeight, 
-				bPlayer, 
-				bFlying))
-			{
-				Debug.Assert(false);
-				return null;
-			}
-
-			m_listInactive.Add(myCharacter);
-
-			return myCharacter;
-		}
-		
 		public BaseObject LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, EObjectType eType, int iDifficulty)
 		{
 			//try to load all that stuff
