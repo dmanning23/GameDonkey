@@ -1200,6 +1200,9 @@ namespace GameDonkey
 			}
 			rPlayer.InputQueue = rQueue;
 
+			//if this is player one, let them use the keyboard
+			rPlayer.InputQueue.Controller.UseKeyboard = (PlayerIndex.One == eIndex);
+
 			rPlayer.PlayerName = strPlayerName;
 			return rPlayer;
 		}
