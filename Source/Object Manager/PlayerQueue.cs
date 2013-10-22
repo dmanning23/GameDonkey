@@ -17,7 +17,7 @@ namespace GameDonkey
 	/// <summary>
 	/// this class is for queueing up players, fireballs, etc.
 	/// </summary>
-	public class CPlayerQueue
+	public class PlayerQueue
 	{
 		#region Members
 
@@ -157,7 +157,7 @@ namespace GameDonkey
 		/// <summary>
 		/// standard constructor
 		/// </summary>
-		public CPlayerQueue(Color PlayerColor, int iQueueID)
+		public PlayerQueue(Color PlayerColor, int iQueueID)
 		{
 			m_listActive = new List<BaseObject>();
 			m_listInactive = new List<BaseObject>();
@@ -452,7 +452,7 @@ namespace GameDonkey
 			}
 		}
 
-		public void GetPlayerInput(List<CPlayerQueue> listBadGuys)
+		public void GetPlayerInput(List<PlayerQueue> listBadGuys)
 		{
 			Debug.Assert(null != m_rInputQueue);
 			for (int i = 0; i < m_listActive.Count; i++)
@@ -477,7 +477,7 @@ namespace GameDonkey
 			}
 		}
 
-		public void CheckCollisions(CPlayerQueue rOtherGuy)
+		public void CheckCollisions(PlayerQueue rOtherGuy)
 		{
 			//check for collisions
 			for (int i = 0; i < m_listActive.Count; i++)

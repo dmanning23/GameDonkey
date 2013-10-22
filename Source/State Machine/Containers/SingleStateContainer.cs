@@ -312,6 +312,7 @@ namespace GameDonkey
 				//load the state machine
 				if (!StateMachine.AppendXmlFile(strStateMachineFilename))
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -320,6 +321,7 @@ namespace GameDonkey
 				//load the state machine
 				if (!StateMachine.ReadXmlFile(strStateMachineFilename))
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -328,6 +330,7 @@ namespace GameDonkey
 			Debug.Assert(null != m_listActions);
 			if (!m_listActions.ReadXmlStateActions(strStateActionsFilename, rOwner, rEngine, StateMachine))
 			{
+				Debug.Assert(false);
 				return false;
 			}
 

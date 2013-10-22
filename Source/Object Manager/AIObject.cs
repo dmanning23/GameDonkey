@@ -110,7 +110,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rController">the controller for this player (bullshit and ignored for AI)</param>
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public override void GetPlayerInput(InputWrapper rController, List<CPlayerQueue> listBadGuys)
+		public override void GetPlayerInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
 		{
 			Debug.Assert(null != listBadGuys);
 

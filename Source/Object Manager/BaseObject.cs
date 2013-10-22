@@ -127,7 +127,7 @@ namespace GameDonkey
 		/// <summary>
 		/// The player queue that owns this object
 		/// </summary>
-		protected CPlayerQueue m_rPlayerQueue;
+		protected PlayerQueue m_rPlayerQueue;
 
 		/// <summary>
 		/// The current color of this dude
@@ -174,7 +174,7 @@ namespace GameDonkey
 		/// <summary>
 		/// The last player to attack this guy.  Used to calculate points when someone dies.
 		/// </summary>
-		protected CPlayerQueue m_rLastAttacker;
+		protected PlayerQueue m_rLastAttacker;
 
 		/// <summary>
 		/// a list of all the current particle effect emitters launched from state actions
@@ -251,7 +251,7 @@ namespace GameDonkey
 			}
 		}
 
-		public CPlayerQueue PlayerQueue
+		public PlayerQueue PlayerQueue
 		{
 			get { return m_rPlayerQueue; }
 			set { m_rPlayerQueue = value; }
@@ -310,7 +310,7 @@ namespace GameDonkey
 			set { m_DeccelAction = value; }
 		}
 
-		public CPlayerQueue LastAttacker
+		public PlayerQueue LastAttacker
 		{
 			get { return m_rLastAttacker; }
 		}
@@ -526,7 +526,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rController">the controller for this player (bullshit and ignored for AI)</param>
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public virtual void GetPlayerInput(InputWrapper rController, List<CPlayerQueue> listBadGuys)
+		public virtual void GetPlayerInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
 		{
 		}
 
@@ -1413,9 +1413,8 @@ namespace GameDonkey
 
 				case "states":
 				{
-					//should never get here...
-					Debug.Assert(false);
-					return false;
+					//Ignore this one, it is parsed up above
+					return true;
 				}
 
 				case "height":

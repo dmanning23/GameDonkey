@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework.Net;
 
 namespace GameDonkey
 {
-	public class CLevelObjectQueue : CPlayerQueue
+	public class LevelObjectQueue : PlayerQueue
 	{
-		public CLevelObjectQueue() : base(Color.White, 0)
+		public LevelObjectQueue() : base(Color.White, 0)
 		{
 		}
 

@@ -28,12 +28,12 @@ namespace GameDonkey
 		/// <summary>
 		/// list of all the player objects in the game
 		/// </summary>
-		protected List<CPlayerQueue> m_listPlayers;
+		protected List<PlayerQueue> m_listPlayers;
 
 		/// <summary>
 		/// player queue for updating level objects
 		/// </summary>
-		protected CPlayerQueue m_LevelObjects;
+		protected PlayerQueue m_LevelObjects;
 
 		/// <summary>
 		/// the spawn points for characters
@@ -72,7 +72,7 @@ namespace GameDonkey
 		GameClock m_CharacterClock;
 
 		//Game over stuff!!!
-		CPlayerQueue m_rWinner;
+		PlayerQueue m_rWinner;
 		bool m_bTie;
 		bool m_bGameOver;
 
@@ -100,17 +100,17 @@ namespace GameDonkey
 
 		#region Properties
 
-		public CPlayerQueue Character
+		public PlayerQueue Character
 		{
 			get { return m_listPlayers[0]; }
 		}
 
-		public List<CPlayerQueue> Players
+		public List<PlayerQueue> Players
 		{
 			get { return m_listPlayers; }
 		}
 
-		public CPlayerQueue LevelObjects
+		public PlayerQueue LevelObjects
 		{
 			get { return m_LevelObjects; }
 		}
@@ -187,8 +187,8 @@ namespace GameDonkey
 		public SPFDonkey(XNARenderer rRenderer)
 			: base(rRenderer)
 		{
-			m_listPlayers = new List<CPlayerQueue>();
-			m_LevelObjects = new CLevelObjectQueue();
+			m_listPlayers = new List<PlayerQueue>();
+			m_LevelObjects = new LevelObjectQueue();
 			m_listSpawnPoints = new List<Vector2>();
 
 			m_DefaultParticles = new List<EmitterTemplate>();
@@ -497,7 +497,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rPlayerQueue">the player queue to check</param>
 		/// <returns>true if the player has run out of stock</returns>
-		protected virtual bool CheckIfPlayerStockOut(CPlayerQueue rPlayerQueue)
+		protected virtual bool CheckIfPlayerStockOut(PlayerQueue rPlayerQueue)
 		{
 			return (0 >= rPlayerQueue.Stock);
 		}
@@ -507,7 +507,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rObject">the object to check for death</param>
 		/// <returns>whether or not the thing is dead</returns>
-		private bool CheckIfDead(CPlayerQueue rPlayerQueue)
+		private bool CheckIfDead(PlayerQueue rPlayerQueue)
 		{
 			Debug.Assert(null != rPlayerQueue);
 
@@ -531,7 +531,7 @@ namespace GameDonkey
 		/// Play the players death sound
 		/// </summary>
 		/// <param name="rObject">the player to kill</param>
-		private void KillPlayer(CPlayerQueue rPlayerQueue)
+		private void KillPlayer(PlayerQueue rPlayerQueue)
 		{
 			Debug.Assert(m_listSpawnPoints.Count > 0);
 			Debug.Assert(null != rPlayerQueue);
@@ -564,7 +564,7 @@ namespace GameDonkey
 			}
 		}
 
-		private void RespawnPlayer(CPlayerQueue rPlayerQueue)
+		private void RespawnPlayer(PlayerQueue rPlayerQueue)
 		{
 			//respawn the player
 			int iSpawnIndex = g_Random.Next(m_listSpawnPoints.Count);
@@ -1142,14 +1142,14 @@ namespace GameDonkey
 		/// <param name="eIndex">gamepad index for this player.</param>
 		/// <param name="eType">the type of dude to load, accepts human and AI</param>
 		/// <returns></returns>
-		public CPlayerQueue LoadSerializedHumanPlayer(ContentManager rXmlContent,
+		public PlayerQueue LoadSerializedHumanPlayer(ContentManager rXmlContent,
 			Color myColor,
 			string strCharacterFile,
 			PlayerIndex eIndex,
 			string strPlayerName)
 		{
 			//create and load a player
-			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
+			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
 			Filename myChar = new Filename(strCharacterFile);
 			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.Human, 0))
 			{
@@ -1177,13 +1177,13 @@ namespace GameDonkey
 		/// <param name="eIndex">gamepad index for this player.</param>
 		/// <param name="eType">the type of dude to load, accepts human and AI</param>
 		/// <returns></returns>
-		public CPlayerQueue LoadXmlHumanPlayer(Color myColor,
+		public PlayerQueue LoadXmlHumanPlayer(Color myColor,
 			string strCharacterFile,
 			PlayerIndex eIndex,
 			string strPlayerName)
 		{
 			//create and load a player
-			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
+			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
 			Filename myChar = new Filename(strCharacterFile);
 			if (null == rPlayer.LoadXmlObject(myChar, this, EObjectType.Human, 0))
 			{
@@ -1204,14 +1204,14 @@ namespace GameDonkey
 			return rPlayer;
 		}
 
-		public CPlayerQueue LoadAiPlayer(ContentManager rXmlContent,
+		public PlayerQueue LoadAiPlayer(ContentManager rXmlContent,
 			Color myColor,
 			string strCharacterFile,
 			int iDifficulty,
 			string strPlayerName)
 		{
 			//create and load a player
-			CPlayerQueue rPlayer = new CPlayerQueue(myColor, m_listPlayers.Count);
+			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
 			Filename myChar = new Filename(strCharacterFile);
 			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.AI, iDifficulty))
 			{
@@ -1401,7 +1401,9 @@ namespace GameDonkey
 				null != spawnNode;
 				spawnNode = spawnNode.NextSibling)
 			{
-				m_listSpawnPoints.Add(Vector2Ext.ToVector2(spawnNode.InnerXml));
+				Debug.Assert(spawnNode.HasChildNodes);
+				XmlNode locationNode = spawnNode.FirstChild;
+				m_listSpawnPoints.Add(Vector2Ext.ToVector2(locationNode.InnerXml));
 			}
 
 			// Close the file.
