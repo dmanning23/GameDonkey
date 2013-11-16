@@ -8,15 +8,9 @@ using System.Diagnostics;
 
 namespace GameDonkey
 {
-	public abstract class IGameDonkey
+	public abstract class GameDonkeyBase : IGameDonkey
 	{
 		#region Members
-
-		private XNARenderer m_Renderer;
-
-		private ParticleEngine m_ParticleEngine;
-
-		private GameClock m_Clock;
 
 		/// <summary>
 		/// the world boundaries
@@ -27,20 +21,11 @@ namespace GameDonkey
 
 		#region Properties
 
-		public XNARenderer Renderer
-		{
-			get { return m_Renderer; }
-		}
+		public abstract IRenderer Renderer { get; }
 
-		public ParticleEngine ParticleEngine
-		{
-			get { return m_ParticleEngine; }
-		}
+		public ParticleEngine ParticleEngine { get; protected set; }
 
-		protected GameClock MasterClock
-		{
-			get { return m_Clock; }
-		}
+		public GameClock MasterClock { get; protected set; }
 
 		//public CGameSoundManager SoundEngine
 		//{
@@ -63,11 +48,10 @@ namespace GameDonkey
 
 		#region Methods
 
-		public IGameDonkey(XNARenderer rRenderer)
+		public GameDonkeyBase()
 		{
-			m_Renderer = rRenderer;
-			m_ParticleEngine = new ParticleEngine();
-			m_Clock = new GameClock();
+			ParticleEngine = new ParticleEngine();
+			MasterClock = new GameClock();
 
 			WorldBoundaries = new Rectangle();
 		}
@@ -91,30 +75,8 @@ namespace GameDonkey
 
 		public virtual void Start()
 		{
-			m_Clock.Start();
-			m_Clock.TimeDelta = 0.0f;
-		}
-
-		/// <summary>
-		/// update the game engine
-		/// </summary>
-		/// <param name="rGameTime">current gametime</param>
-		/// <returns>bool: true if the game is over, false if it isn't</returns>
-		public bool Update(GameTime rGameTime)
-		{
-			m_Clock.Update(rGameTime);
-			return Update();
-		}
-
-		/// <summary>
-		/// update the game engine
-		/// </summary>
-		/// <param name="rTime">current gametime</param>
-		/// <returns>bool: true if the game is over, false if it isn't</returns>
-		public bool Update(TimeUpdater rTime)
-		{
-			m_Clock.Update(rTime);
-			return Update();
+			MasterClock.Start();
+			MasterClock.TimeDelta = 0.0f;
 		}
 
 		/// <summary>
@@ -125,6 +87,28 @@ namespace GameDonkey
 		/// </summary>
 		/// <returns>bool: whether or not this update resulted in a game over situation</returns>
 		protected abstract bool Update();
+
+		/// <summary>
+		/// update the game engine
+		/// </summary>
+		/// <param name="rGameTime">current gametime</param>
+		/// <returns>bool: true if the game is over, false if it isn't</returns>
+		public bool Update(GameTime rGameTime)
+		{
+			MasterClock.Update(rGameTime);
+			return Update();
+		}
+
+		/// <summary>
+		/// update the game engine
+		/// </summary>
+		/// <param name="rTime">current gametime</param>
+		/// <returns>bool: true if the game is over, false if it isn't</returns>
+		public bool Update(TimeUpdater rTime)
+		{
+			MasterClock.Update(rTime);
+			return Update();
+		}
 
 		public abstract void Render();
 
