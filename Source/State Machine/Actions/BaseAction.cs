@@ -32,7 +32,7 @@ namespace GameDonkey
 		/// <summary>
 		/// the time from the start of the state that this action ocuurs
 		/// </summary>
-		public float Time { get; protected set; }
+		public float Time { get; set; }
 
 		#endregion //Properties
 

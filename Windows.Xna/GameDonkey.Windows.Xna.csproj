@@ -95,11 +95,17 @@
     <Compile Include="..\Source\DefaultParticlEffects.cs">
       <Link>DefaultParticlEffects.cs</Link>
     </Compile>
-    <Compile Include="..\Source\GameDonkey.cs">
-      <Link>GameDonkey.cs</Link>
+    <Compile Include="..\Source\GameDonkeyBase.cs">
+      <Link>GameDonkeyBase.cs</Link>
     </Compile>
     <Compile Include="..\Source\GameModes.cs">
       <Link>GameModes.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\GdiDonkey.cs">
+      <Link>GdiDonkey.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\IGameDonkey.cs">
+      <Link>IGameDonkey.cs</Link>
     </Compile>
     <Compile Include="..\Source\Object Manager\AIObject.cs">
       <Link>Object Manager\AIObject.cs</Link>
@@ -145,9 +151,6 @@
     </Compile>
     <Compile Include="..\Source\Physics\ProjectilePhysicsContainer.cs">
       <Link>Physics\ProjectilePhysicsContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Source\SPFDonkey.cs">
-      <Link>SPFDonkey.cs</Link>
     </Compile>
     <Compile Include="..\Source\State Machine\ActionSort.cs">
       <Link>State Machine\ActionSort.cs</Link>
@@ -244,6 +247,9 @@
     </Compile>
     <Compile Include="..\Source\XML_Objects.cs">
       <Link>XML_Objects.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\XnaDonkey.cs">
+      <Link>XnaDonkey.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -21,9 +21,11 @@ using Vector2Extensions;
 
 namespace GameDonkey
 {
-	public class SPFDonkey : IGameDonkey
+	public class XnaDonkey : GameDonkeyBase
 	{
 		#region Members
+
+		private XNARenderer m_Renderer;
 
 		/// <summary>
 		/// list of all the player objects in the game
@@ -99,6 +101,14 @@ namespace GameDonkey
 		#endregion //Members
 
 		#region Properties
+
+		public override IRenderer Renderer
+		{
+			get
+			{
+				return m_Renderer;
+			}
+		}
 
 		public PlayerQueue Character
 		{
@@ -184,9 +194,10 @@ namespace GameDonkey
 
 		#region Construction
 
-		public SPFDonkey(XNARenderer rRenderer)
-			: base(rRenderer)
+		public XnaDonkey(XNARenderer rRenderer)
+			: base()
 		{
+			m_Renderer = rRenderer;
 			m_listPlayers = new List<PlayerQueue>();
 			m_LevelObjects = new LevelObjectQueue();
 			m_listSpawnPoints = new List<Vector2>();
@@ -664,7 +675,7 @@ namespace GameDonkey
 			Matrix cameraMatrix = Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
 
 			//draw the level
-			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
+			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
 			m_LevelObjects.Render(Renderer, true);
 #if DEBUG
 			//draw the world boundaries in debug mode?
@@ -682,23 +693,23 @@ namespace GameDonkey
 				}
 			}
 #endif
-			Renderer.SpriteBatchEnd();
+			m_Renderer.SpriteBatchEnd();
 
 			//draw the hud
-			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, Resolution.TransformationMatrix());
+			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, Resolution.TransformationMatrix());
 			DrawHUD();
-			Renderer.SpriteBatchEnd();
+			m_Renderer.SpriteBatchEnd();
 
 			//render all the character trails, start another spritebatch
-			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
+			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
 			for (int i = 0; i < m_listPlayers.Count; i++)
 			{
 				m_listPlayers[i].Render(Renderer, false);
 			}
-			Renderer.SpriteBatchEnd();
+			m_Renderer.SpriteBatchEnd();
 
 			//render all the players
-			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
+			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
 			for (int i = 0; i < m_listPlayers.Count; i++)
 			{
 				m_listPlayers[i].Render(Renderer, true);
@@ -746,22 +757,22 @@ namespace GameDonkey
 				Renderer.DrawCameraInfo();
 			}
 #endif
-			Renderer.SpriteBatchEnd();
+			m_Renderer.SpriteBatchEnd();
 
 			//draw all the particles, start another spritebatch for the particles
-			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
+			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
 			ParticleEngine.Render(Renderer);
-			Renderer.SpriteBatchEnd();
+			m_Renderer.SpriteBatchEnd();
 		}
 
 		protected virtual void DrawBackground()
 		{
 			Debug.Assert(null != m_SkyBox);
-			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, Resolution.TransformationMatrix());
+			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, Resolution.TransformationMatrix());
 			if (m_iNumTiles <= 1)
 			{
 				//just cover the whole screen with the skybox
-				Renderer.SpriteBatch.Draw(m_SkyBox.Texture, Resolution.ScreenArea, m_SkyColor);
+				m_Renderer.SpriteBatch.Draw(m_SkyBox.Texture, Resolution.ScreenArea, m_SkyColor);
 			}
 			else
 			{
@@ -782,7 +793,7 @@ namespace GameDonkey
 					for (int j = 0; j < m_iNumTiles; j++)
 					{
 						//draw one tile and move to the next column
-						Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, m_SkyColor);
+						m_Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, m_SkyColor);
 						tileRect.X += iTileSize;
 					}
 
@@ -797,11 +808,11 @@ namespace GameDonkey
 				sourceRect.Height = ((tileRect.Height * sourceRect.Height) / iTileSize);
 				for (int i = 0; i < m_iNumTiles; i++)
 				{
-					Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, sourceRect, m_SkyColor);
+					m_Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, sourceRect, m_SkyColor);
 					tileRect.X += iTileSize;
 				}
 			}
-			Renderer.SpriteBatchEnd();
+			m_Renderer.SpriteBatchEnd();
 		}
 
 		public override void PlayParticleEffect(
@@ -840,8 +851,8 @@ namespace GameDonkey
 				myColor.A = 200;
 
 				Debug.Assert(null != Renderer);
-				Debug.Assert(null != Renderer.SpriteBatch);
-				Renderer.SpriteBatch.Draw(
+				Debug.Assert(null != m_Renderer.SpriteBatch);
+				m_Renderer.SpriteBatch.Draw(
 					m_HUDBackground.Texture,
 					new Rectangle(iLeft, iTop, (int)fHeight, (int)fHeight),
 					myColor);
@@ -851,7 +862,7 @@ namespace GameDonkey
 				if (null != myPlayer &&
 					null != myPlayer.Portrait)
 				{
-					Renderer.SpriteBatch.Draw(
+					m_Renderer.SpriteBatch.Draw(
 						myPlayer.Portrait,
 						new Rectangle(iLeft, iTop, (int)fHeight, (int)fHeight),
 						Color.White);
@@ -872,8 +883,8 @@ namespace GameDonkey
 				{
 					myDamageColor = Color.Red;
 				}
-				m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.15f, Color.DarkGray, Renderer.SpriteBatch);
-				float fCursor = m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.0f, myDamageColor, Renderer.SpriteBatch);
+				m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.15f, Color.DarkGray, m_Renderer.SpriteBatch);
+				float fCursor = m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.0f, myDamageColor, m_Renderer.SpriteBatch);
 
 				////draw the player's score
 
@@ -899,7 +910,7 @@ namespace GameDonkey
 
 				//write the players name
 				float fPortraitCenter = (fHeight * 0.5f) + iLeft;
-				m_Font.Write(m_listPlayers[i].PlayerName, new Vector2(fPortraitCenter, iTop), Justify.Center, 0.7f, Color.White, Renderer.SpriteBatch);
+				m_Font.Write(m_listPlayers[i].PlayerName, new Vector2(fPortraitCenter, iTop), Justify.Center, 0.7f, Color.White, m_Renderer.SpriteBatch);
 			}
 
 			//if the game mode is time, draw the clock
@@ -920,7 +931,7 @@ namespace GameDonkey
 					//draw the time
 					float fPositionY = iBottom + (fHeight * 0.4f);
 					string strTime = m_GameTimer.ToString();
-					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, Renderer.SpriteBatch);
+					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, m_Renderer.SpriteBatch);
 				}
 			}
 
@@ -939,7 +950,7 @@ namespace GameDonkey
 						Justify.Center,
 						3.0f,
 						myColor,
-						Renderer.SpriteBatch);
+						m_Renderer.SpriteBatch);
 				}
 				else
 				{
@@ -950,7 +961,7 @@ namespace GameDonkey
 						Justify.Center,
 						3.0f,
 						new Color(0.65f, 0.65f, 0.65f, 0.65f),
-						Renderer.SpriteBatch);
+						m_Renderer.SpriteBatch);
 				}
 			}
 
@@ -969,7 +980,7 @@ namespace GameDonkey
 		/// <param name="position">where to write the text at</param>
 		public void Write(string strText, Vector2 position)
 		{
-			m_Font.Write(strText, position, Justify.Left, 1.0f, Color.White, Renderer.SpriteBatch);
+			m_Font.Write(strText, position, Justify.Left, 1.0f, Color.White, m_Renderer.SpriteBatch);
 		}
 
 		#endregion //Draw
@@ -1060,7 +1071,7 @@ namespace GameDonkey
 			//load all the content
 
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			Renderer.LoadContent(rGraphics);
+			m_Renderer.LoadContent(rGraphics);
 
 			//load the background image used for the HUD
 			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
@@ -1102,7 +1113,7 @@ namespace GameDonkey
 			//load all the content
 
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			Renderer.LoadContent(rGraphics);
+			m_Renderer.LoadContent(rGraphics);
 
 			//load the background image used for the HUD
 			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Net;
 using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
+using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -342,12 +343,13 @@ namespace GameDonkey
 		{
 			//create the correct state machine
 			Debug.Assert(null != StateMachine);
+			Filename relFilename = new Filename(strStateMachineFilename);
 			if (bPlayerStateMachine)
 			{
 				Debug.Assert(StateMachine is WeddingStateMachine);
 
 				//load the state machine
-				if (!StateMachine.AppendXmlFile(strStateMachineFilename))
+				if (!StateMachine.AppendXmlFile(relFilename.File))
 				{
 					Debug.Assert(false);
 					return false;
@@ -356,7 +358,7 @@ namespace GameDonkey
 			else
 			{
 				//load the state machine
-				if (!StateMachine.ReadXmlFile(strStateMachineFilename))
+				if (!StateMachine.ReadXmlFile(relFilename.File))
 				{
 					Debug.Assert(false);
 					return false;

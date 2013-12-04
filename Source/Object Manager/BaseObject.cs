@@ -1388,7 +1388,7 @@ namespace GameDonkey
 				case "stateMachine":
 				{
 					//get the state machine file
-					Filename strStateMachineFile = new Filename(strValue);
+					string strStateMachineFile = strValue;
 
 					//get the states file too
 					childNode = childNode.NextSibling;
@@ -1396,7 +1396,7 @@ namespace GameDonkey
 
 					//read in the state container
 					if (!States.ReadXmlStateContainer(
-						strStateMachineFile.File,
+						strStateMachineFile,
 						iMessageOffset,
 						strStateActionsFile.File,
 						this,

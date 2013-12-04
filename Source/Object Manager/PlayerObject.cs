@@ -954,8 +954,8 @@ namespace GameDonkey
 				{
 					//get the portrait file
 					Filename strPortraitFile = new Filename(strValue);
-					Debug.Assert(null != rEngine.Renderer.Content);
-					m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
+					//Debug.Assert(null != rEngine.Renderer.Content);
+					//m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
 					return true;
 				}
 
@@ -970,7 +970,7 @@ namespace GameDonkey
 				{
 					//get the ground states of this dude
 					Filename groundStatesFile = new Filename(strValue);
-					if (!States.ReadXmlStateContainer(@"Content\wedding state machines\ground state machine.xml", iMessageOffset, groundStatesFile.File, this, rEngine, true, false))
+					if (!States.ReadXmlStateContainer(@"wedding state machines\ground state machine.xml", iMessageOffset, groundStatesFile.File, this, rEngine, true, false))
 					{
 						Debug.Assert(false);
 						return false;
@@ -982,7 +982,7 @@ namespace GameDonkey
 				{
 					//get teh upstates of this dude
 					Filename upStatesFile = new Filename(childNode.InnerXml);
-					if (!States.ReadXmlStateContainer(@"Content\wedding state machines\up state machine.xml", iMessageOffset, upStatesFile.File, this, rEngine, true, true))
+					if (!States.ReadXmlStateContainer(@"wedding state machines\up state machine.xml", iMessageOffset, upStatesFile.File, this, rEngine, true, true))
 					{
 						Debug.Assert(false);
 						return false;
