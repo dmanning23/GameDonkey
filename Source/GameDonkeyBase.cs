@@ -52,14 +52,15 @@ namespace GameDonkey
 		{
 			ParticleEngine = new ParticleEngine();
 			MasterClock = new GameClock();
-
-			WorldBoundaries = new Rectangle();
 		}
 
 		/// <summary>
 		/// load all the content in a windows forms game
 		/// </summary>
-		public virtual void LoadContent() { }
+		public virtual void LoadContent() 
+		{
+			WorldBoundaries = new Rectangle();
+		}
 
 		/// <summary>
 		/// load all the content in an xna game
