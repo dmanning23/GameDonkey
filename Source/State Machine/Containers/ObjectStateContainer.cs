@@ -13,7 +13,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="myStateMachine">the state machine this dude will use</param>
 		public ObjectStateContainer(StateMachine myStateMachine)
-			: base(myStateMachine)
+			: base(myStateMachine, "ObjectStateContainer")
 		{
 			myStateMachine.StateChangedEvent += this.StateChange;
 		}

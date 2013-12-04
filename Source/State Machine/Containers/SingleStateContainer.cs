@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
 using System;
+using System.Collections.Generic;
 
 namespace GameDonkey
 {
@@ -23,6 +24,9 @@ namespace GameDonkey
 		/// </summary>
 		public event EventHandler<StateChangeEventArgs> StateChangedEvent;
 
+		/// <summary>
+		/// Get the current state machine for this container
+		/// </summary>
 		public StateMachine StateMachine { get; private set; }
 
 		private StateActionsList m_listActions;
@@ -34,13 +38,45 @@ namespace GameDonkey
 
 		#endregion //Members
 
+		#region Properties
+
+		/// <summary>
+		/// Get the number of containers, if this is a collection
+		/// </summary>
+		public int NumContainers
+		{
+			get
+			{ 
+				//Single state container, get it?
+				return 1; 
+			}
+		}
+
+		/// <summary>
+		/// Get a list of all the containers in this dude.
+		/// </summary>
+		public List<IStateContainer> Containers 
+		{
+			get
+			{
+				return new List<IStateContainer> { this };
+			}
+		}
+
+		/// <summary>
+		/// Get the name of this state container
+		/// </summary>
+		public string Name { get; set; }
+
+		#endregion //Properties
+
 		#region Methods
 
 		/// <summary>
 		/// contructor
 		/// </summary>
 		/// <param name="myStateMachine">the state machine this dude will use</param>
-		public SingleStateContainer(StateMachine myStateMachine)
+		public SingleStateContainer(StateMachine myStateMachine, string containerName)
 		{
 			StateMachine = myStateMachine;
 			m_listActions = new StateActionsList();
@@ -48,6 +84,7 @@ namespace GameDonkey
 
 			//This container only signs up for the reset event
 			StateMachine.ResetEvent += this.StateChange;
+			Name = containerName;
 		}
 
 		public void Reset()

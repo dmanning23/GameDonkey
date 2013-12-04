@@ -21,7 +21,7 @@ namespace GameDonkey
 		///list of state machines
 		///player characters use a different state machine depending on which direction they are going
 		///</summary>
-		private List<SingleStateContainer> m_StateMachines;
+		private List<IStateContainer> m_StateMachines;
 
 		/// <summary>
 		/// The index of the state machine currently being used
@@ -56,6 +56,59 @@ namespace GameDonkey
 
 		#endregion //Members
 
+		#region Properties
+
+		/// <summary>
+		/// Get the number of containers, if this is a collection
+		/// </summary>
+		public int NumContainers
+		{
+			get
+			{
+				return m_StateMachines.Count;
+			}
+		}
+
+		/// <summary>
+		/// Get a list of all the containers in this dude.
+		/// </summary>
+		public List<IStateContainer> Containers
+		{
+			get
+			{
+				return m_StateMachines;
+			}
+		}
+
+		/// <summary>
+		/// Get the name of this state container
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				//player object state containers arent named.
+				return "PlayerObjectStateContainer";
+			}
+		}
+
+		/// <summary>
+		/// Get the current state machine for this container
+		/// </summary>
+		public StateMachine StateMachine
+		{
+			get
+			{
+				Debug.Assert(null != m_StateMachines);
+				Debug.Assert(CurrentStateMachine >= 0);
+				Debug.Assert(CurrentStateMachine < m_StateMachines.Count);
+
+				return m_StateMachines[CurrentStateMachine].StateMachine;
+			}
+		}
+
+		#endregion //Properties
+
 		#region Methods
 
 		/// <summary>
@@ -63,7 +116,7 @@ namespace GameDonkey
 		/// </summary>
 		public PlayerObjectStateContainer()
 		{
-			m_StateMachines = new List<SingleStateContainer>();
+			m_StateMachines = new List<IStateContainer>();
 			m_StateMachineChangeTimer = new CountdownTimer();
 			_currentStateMachine = 0;
 		}
@@ -537,7 +590,7 @@ namespace GameDonkey
 			bool bFlyingStateMachine)
 		{
 			//create a new single state container
-			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine));
+			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), "UpStates");
 
 			//find a place to store the new state container
 			m_StateMachines.Add(rMyStateContainer);
@@ -569,7 +622,7 @@ namespace GameDonkey
 			bool bFlyingStateMachine)
 		{
 			//create a new single state container
-			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine));
+			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), "GroundStates");
 
 			//find a place to store the new state container
 			m_StateMachines.Add(rMyStateContainer);

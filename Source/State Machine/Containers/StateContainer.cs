@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
 using System;
+using System.Collections.Generic;
 
 namespace GameDonkey
 {
@@ -21,6 +22,30 @@ namespace GameDonkey
 		event EventHandler<StateChangeEventArgs> StateChangedEvent;
 
 		#endregion //Events
+
+		#region Properties
+
+		/// <summary>
+		/// Get the number of containers, if this is a collection
+		/// </summary>
+		int NumContainers { get; }
+
+		/// <summary>
+		/// Get a list of all the containers in this dude.
+		/// </summary>
+		List<IStateContainer> Containers { get; }
+
+		/// <summary>
+		/// Get the name of this state container
+		/// </summary>
+		string Name { get; }
+
+		/// <summary>
+		/// Get the current state machine for this container
+		/// </summary>
+		StateMachine StateMachine { get; }
+
+		#endregion //Properties
 
 		#region Methods
 

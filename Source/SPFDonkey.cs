@@ -1066,25 +1066,25 @@ namespace GameDonkey
 			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
 
 			//load the hit spark
-			HitSpark.ReadXmlFile(@"Particles\Hit Spark.xml", Renderer);
+			HitSpark.ReadXmlFile(new Filename(@"Particles\Hit Spark.xml"), Renderer);
 
 			//load the hit cloud
-			HitCloud.ReadXmlFile(@"Particles\Hit Cloud.xml", Renderer);
+			HitCloud.ReadXmlFile(new Filename(@"Particles\Hit Cloud.xml"), Renderer);
 
 			//load the death particle effect
-			DeathParticles.ReadXmlFile(@"Particles\Death Particles.xml", Renderer);
+			DeathParticles.ReadXmlFile(new Filename(@"Particles\Death Particles.xml"), Renderer);
 
 			//load the block particle effect
-			Block.ReadXmlFile(@"Particles\Block.xml", Renderer);
+			Block.ReadXmlFile(new Filename(@"Particles\Block.xml"), Renderer);
 
 			//load the weapon hit particle effect
-			WeaponHit.ReadXmlFile(@"Particles\Weapon Hit.xml", Renderer);
+			WeaponHit.ReadXmlFile(new Filename(@"Particles\Weapon Hit.xml"), Renderer);
 
 			//load the head bop particle effect
-			HeadBop.ReadXmlFile(@"Particles\ceiling bop.xml", Renderer);
+			HeadBop.ReadXmlFile(new Filename(@"Particles\ceiling bop.xml"), Renderer);
 
 			//load the stunned bounce particle effect
-			StunnedBounce.ReadXmlFile(@"Particles\Stunned Bounce.xml", Renderer);
+			StunnedBounce.ReadXmlFile(new Filename(@"Particles\Stunned Bounce.xml"), Renderer);
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);
@@ -1108,25 +1108,25 @@ namespace GameDonkey
 			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
 
 			//load the hit spark
-			HitSpark.ReadXmlFile(@"Particles\Hit Spark.xml", Renderer);
+			HitSpark.ReadXmlFile(new Filename(@"Particles\Hit Spark.xml"), Renderer);
 
 			//load the hit cloud
-			HitCloud.ReadXmlFile(@"Particles\Hit Cloud.xml", Renderer);
+			HitCloud.ReadXmlFile(new Filename(@"Particles\Hit Cloud.xml"), Renderer);
 
 			//load the death particle effect
-			DeathParticles.ReadXmlFile(@"Particles\Death Particles.xml", Renderer);
+			DeathParticles.ReadXmlFile(new Filename(@"Particles\Death Particles.xml"), Renderer);
 
 			//load the block particle effect
-			Block.ReadXmlFile(@"Particles\Block.xml", Renderer);
+			Block.ReadXmlFile(new Filename(@"Particles\Block.xml"), Renderer);
 
 			//load the weapon hit particle effect
-			WeaponHit.ReadXmlFile(@"Particles\Weapon Hit.xml", Renderer);
+			WeaponHit.ReadXmlFile(new Filename(@"Particles\Weapon Hit.xml"), Renderer);
 
 			//load the head bop particle effect
-			HeadBop.ReadXmlFile(@"Particles\ceiling bop.xml", Renderer);
+			HeadBop.ReadXmlFile(new Filename(@"Particles\ceiling bop.xml"), Renderer);
 
 			//load the stunned bounce particle effect
-			StunnedBounce.ReadXmlFile(@"Particles\Stunned Bounce.xml", Renderer);
+			StunnedBounce.ReadXmlFile(new Filename(@"Particles\Stunned Bounce.xml"), Renderer);
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);
