@@ -465,7 +465,7 @@ namespace GameDonkey
 		{
 			for (int i = 0; i < m_listActive.Count; i++)
 			{
-				m_listActive[i].CheckHardCodedStates(m_rInputQueue);
+				m_listActive[i].CheckHardCodedStates();
 			}
 		}
 

@@ -37,6 +37,18 @@ namespace GameDonkey
 		/// </summary>
 		protected GameClock m_StateClock;
 
+		/// <summary>
+		/// the filename where the state actions go
+		/// </summary>
+		private Filename m_strActionsFile;
+
+		/// <summary>
+		/// Flag for whether or not we want to change bewteen state machines.
+		/// Used in the state machine tool to work on one container at a time.
+		/// Doesn't really do shit in a single container.
+		/// </summary>
+		public bool IgnoreStateMachineChange { get; set; }
+
 		#endregion //Members
 
 		#region Properties
@@ -68,6 +80,22 @@ namespace GameDonkey
 		/// Get the name of this state container
 		/// </summary>
 		public string Name { get; set; }
+
+		/// <summary>
+		/// The index of the state machine currently being used
+		/// </summary>
+		public int CurrentStateMachine 
+		{
+			get
+			{
+				//there's only one!
+				return 0;
+			}
+			set
+			{
+				//wtf?
+			}
+		}
 
 		#endregion //Properties
 
@@ -253,6 +281,11 @@ namespace GameDonkey
 			return StateMachine.CurrentStateText;
 		}
 
+		public override string ToString()
+		{
+			return Name;
+		}
+
 		#endregion //Methods
 
 		#region Networking
@@ -283,18 +316,21 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		public bool ReadXml(string strFilename, BaseObject rOwner, IGameDonkey rEngine)
+		public bool ReadXml(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine)
 		{
+			//save that filename for later
+			m_strActionsFile = strFilename;
+
 			return m_listActions.ReadXmlStateActions(strFilename, rOwner, rEngine, StateMachine);
 		}
 
-		public bool WriteXml(string strFilename)
+		public bool WriteXml()
 		{
-			return m_listActions.WriteXml(strFilename);
+			return m_listActions.WriteXml(m_strActionsFile);
 		}
 
 		public void ReadSerialized(ContentManager rXmlContent,
-			string strResource,
+			Filename strResource,
 			BaseObject rOwner,
 			IGameDonkey rEngine)
 		{
@@ -306,24 +342,24 @@ namespace GameDonkey
 
 		#region State Machine File IO
 
-		public bool ReadXmlStateMachineFile(string strFilename)
+		public bool ReadXmlStateMachineFile(Filename strFilename)
 		{
 			return StateMachine.ReadXmlFile(strFilename);
 		}
 
-		public bool AppendXmlStateMachineFile(string strFilename)
+		public bool AppendXmlStateMachineFile(Filename strFilename)
 		{
 			Debug.Assert(null != StateMachine);
 			return StateMachine.AppendXmlFile(strFilename);
 		}
 
-		public bool ReadSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
+		public bool ReadSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset)
 		{
 			Debug.Assert(null != StateMachine);
 			return StateMachine.ReadSerializedFile(rContent, strResource, iMessageOffset);
 		}
 
-		public bool AppendSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
+		public bool AppendSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset)
 		{
 			Debug.Assert(null != StateMachine);
 			return StateMachine.AppendSerializedFile(rContent, strResource, iMessageOffset);
@@ -333,9 +369,9 @@ namespace GameDonkey
 
 		#region Combined File IO
 
-		public bool ReadXmlStateContainer(string strStateMachineFilename,
+		public bool ReadXmlStateContainer(Filename strStateMachineFilename,
 			int iMessageOffset,
-			string strStateActionsFilename,
+			Filename strStateActionsFilename,
 			BaseObject rOwner,
 			IGameDonkey rEngine,
 			bool bPlayerStateMachine,
@@ -343,13 +379,12 @@ namespace GameDonkey
 		{
 			//create the correct state machine
 			Debug.Assert(null != StateMachine);
-			Filename relFilename = new Filename(strStateMachineFilename);
 			if (bPlayerStateMachine)
 			{
 				Debug.Assert(StateMachine is WeddingStateMachine);
 
 				//load the state machine
-				if (!StateMachine.AppendXmlFile(relFilename.File))
+				if (!StateMachine.AppendXmlFile(strStateMachineFilename))
 				{
 					Debug.Assert(false);
 					return false;
@@ -358,7 +393,7 @@ namespace GameDonkey
 			else
 			{
 				//load the state machine
-				if (!StateMachine.ReadXmlFile(relFilename.File))
+				if (!StateMachine.ReadXmlFile(strStateMachineFilename))
 				{
 					Debug.Assert(false);
 					return false;
@@ -377,9 +412,9 @@ namespace GameDonkey
 		}
 
 		public void ReadSerializedStateContainer(ContentManager rContent,
-			string strStateMachineResource,
+			Filename strStateMachineResource,
 			int iMessageOffset,
-			string strStateActionsResource,
+			Filename strStateActionsResource,
 			BaseObject rOwner,
 			IGameDonkey rEngine,
 			bool bPlayerStateMachine,

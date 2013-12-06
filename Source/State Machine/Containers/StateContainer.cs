@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Net;
 using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
+using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -44,6 +45,17 @@ namespace GameDonkey
 		/// Get the current state machine for this container
 		/// </summary>
 		StateMachine StateMachine { get; }
+
+		/// <summary>
+		/// The index of the state machine currently being used
+		/// </summary>
+		int CurrentStateMachine { get; set; }
+
+		/// <summary>
+		/// Flag for whether or not we want to change bewteen state machines.
+		/// Used in the state machine tool to work on one container at a time.
+		/// </summary>
+		bool IgnoreStateMachineChange { get; set; }
 
 		#endregion //Properties
 
@@ -143,12 +155,12 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		bool ReadXml(string strFilename, BaseObject rOwner, IGameDonkey rEngine);
+		bool ReadXml(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine);
 
-		bool WriteXml(string strFilename);
+		bool WriteXml();
 
 		void ReadSerialized(ContentManager rXmlContent,
-			string strResource,
+			Filename strResource,
 			BaseObject rOwner,
 			IGameDonkey rEngine);
 
@@ -156,30 +168,30 @@ namespace GameDonkey
 
 		#region State Machine File IO
 
-		bool ReadXmlStateMachineFile(string strFilename);
+		bool ReadXmlStateMachineFile(Filename strFilename);
 
-		bool AppendXmlStateMachineFile(string strFilename);
+		bool AppendXmlStateMachineFile(Filename strFilename);
 
-		bool ReadSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset);
+		bool ReadSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset);
 
-		bool AppendSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset);
+		bool AppendSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset);
 
 		#endregion //File IO
 
 		#region Combined File IO
 
-		bool ReadXmlStateContainer(string strStateMachineFilename, 
+		bool ReadXmlStateContainer(Filename strStateMachineFilename, 
 			int iMessageOffset,
-			string strStateActionsFilename,
+			Filename strStateActionsFilename,
 			BaseObject rOwner,
 			IGameDonkey rEngine,
 			bool bPlayerStateMachine,
 			bool bFlyingStateMachine);
 
-		void ReadSerializedStateContainer(ContentManager rContent, 
-			string strStateMachineResource, 
+		void ReadSerializedStateContainer(ContentManager rContent,
+			Filename strStateMachineResource, 
 			int iMessageOffset,
-			string strStateActionsResource,
+			Filename strStateActionsResource,
 			BaseObject rOwner, 
 			IGameDonkey rEngine,
 			bool bPlayerStateMachine,

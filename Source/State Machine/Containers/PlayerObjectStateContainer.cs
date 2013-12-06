@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
 using System;
+using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -32,7 +33,10 @@ namespace GameDonkey
 		/// </summary>
 		private int _currentStateMachine;
 
-		private int CurrentStateMachine
+		/// <summary>
+		/// The index of the state machine currently being used
+		/// </summary>
+		public int CurrentStateMachine
 		{
 			get
 			{
@@ -43,7 +47,6 @@ namespace GameDonkey
 				m_StateMachines[_currentStateMachine].StateMachine.StateChangedEvent -= StateChange;
 				_currentStateMachine = value;
 				m_StateMachines[_currentStateMachine].StateMachine.StateChangedEvent += StateChange;
-
 			}
 		}
 
@@ -107,6 +110,12 @@ namespace GameDonkey
 			}
 		}
 
+		/// <summary>
+		/// Flag for whether or not we want to change bewteen state machines.
+		/// Used in the state machine tool to work on one container at a time.
+		/// </summary>
+		public bool IgnoreStateMachineChange { get; set; }
+
 		#endregion //Properties
 
 		#region Methods
@@ -119,6 +128,7 @@ namespace GameDonkey
 			m_StateMachines = new List<IStateContainer>();
 			m_StateMachineChangeTimer = new CountdownTimer();
 			_currentStateMachine = 0;
+			IgnoreStateMachineChange = false;
 		}
 
 		/// <summary>
@@ -133,7 +143,12 @@ namespace GameDonkey
 				Debug.Assert(null != m_StateMachines[i]);
 				m_StateMachines[i].Reset();
 			}
-			CurrentStateMachine = 0;
+
+			//Dont reset the state container if in toool mode
+			if (!IgnoreStateMachineChange)
+			{
+				CurrentStateMachine = 0;
+			}
 
 			Debug.Assert(null != m_StateMachineChangeTimer);
 			m_StateMachineChangeTimer.Stop();
@@ -147,8 +162,8 @@ namespace GameDonkey
 		public void SendStateMessage(int iMessage)
 		{
 			Debug.Assert(null != m_StateMachines);
-			Debug.Assert(_currentStateMachine >= 0);
-			Debug.Assert(_currentStateMachine < m_StateMachines.Count);
+			Debug.Assert(CurrentStateMachine >= 0);
+			Debug.Assert(CurrentStateMachine < m_StateMachines.Count);
 
 			//grab onto the current state
 			int iCurrentState = CurrentState();
@@ -217,7 +232,10 @@ namespace GameDonkey
 
 			//do a little timer so it doesn't pop back and forth between state machines...
 			//but ignore it for switching into/out of ground state machine
-			if ((0 == iIndex) || (0 == CurrentStateMachine) || (m_StateMachineChangeTimer.RemainingTime() <= 0.0f))
+			if (!IgnoreStateMachineChange && //Is the flag set to ignore state container changes?
+				((0 == iIndex) || 
+				(0 == CurrentStateMachine) || 
+				(m_StateMachineChangeTimer.RemainingTime() <= 0.0f)))
 			{
 				//reset the new state machine to the initial state
 				m_StateMachines[CurrentStateMachine].Reset();
@@ -387,14 +405,6 @@ namespace GameDonkey
 			Debug.Assert(CurrentStateMachine >= 0);
 			Debug.Assert(CurrentStateMachine < m_StateMachines.Count);
 
-#if DEBUG
-			//make sure the state machines all match
-			string strName = m_StateMachines[0].GetStateName(iStateIndex);
-			for (int i = 1; i < m_StateMachines.Count; i++)
-			{
-				Debug.Assert(m_StateMachines[i].GetStateName(iStateIndex) == strName);
-			}
-#endif
 			return m_StateMachines[CurrentStateMachine].GetStateName(iStateIndex);
 		}
 
@@ -421,17 +431,7 @@ namespace GameDonkey
 			Debug.Assert(CurrentStateMachine >= 0);
 			Debug.Assert(CurrentStateMachine < m_StateMachines.Count);
 
-			//find the state machine with the most states
-			int iNumStates = m_StateMachines[0].NumStates();
-			for (int i = 1; i < m_StateMachines.Count; i++)
-			{
-				if (m_StateMachines[i].NumStates() > iNumStates)
-				{
-					iNumStates = m_StateMachines[i].NumStates();
-				}
-			}
-
-			return iNumStates;
+			return m_StateMachines[CurrentStateMachine].NumStates();
 		}
 
 		public int NumMessages()
@@ -474,6 +474,11 @@ namespace GameDonkey
 		public string CurrentStateText()
 		{
 			return m_StateMachines[CurrentStateMachine].CurrentStateText();
+		}
+
+		public override string ToString()
+		{
+			return Name;
 		}
 
 		#endregion //Methods
@@ -520,25 +525,29 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		public bool ReadXml(string strFilename, BaseObject rOwner, IGameDonkey rEngine)
+		public bool ReadXml(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine)
 		{
 			//don't call this dude, he'll set his own shit up
 			Debug.Assert(false);
 			return false;
 		}
 
-		public bool WriteXml(string strFilename)
+		public bool WriteXml()
 		{
-			if (m_StateMachines.Count > 0)
+			bool bOk = false;
+			foreach (var container in m_StateMachines)
 			{
-				return m_StateMachines[0].WriteXml(strFilename);
+				if (!container.WriteXml())
+				{
+					bOk = false;
+				}
 			}
 
-			return false;
+			return bOk;
 		}
 
 		public void ReadSerialized(ContentManager rXmlContent,
-			string strResource,
+			Filename strResource,
 			BaseObject rOwner,
 			IGameDonkey rEngine)
 		{
@@ -549,28 +558,28 @@ namespace GameDonkey
 
 		#region State Machine File IO
 
-		public bool ReadXmlStateMachineFile(string strFilename)
+		public bool ReadXmlStateMachineFile(Filename strFilename)
 		{
 			//not implemented
 			Debug.Assert(false);
 			return false;
 		}
 
-		public bool AppendXmlStateMachineFile(string strFilename)
+		public bool AppendXmlStateMachineFile(Filename strFilename)
 		{
 			//not implemented
 			Debug.Assert(false);
 			return false;
 		}
 
-		public bool ReadSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
+		public bool ReadSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset)
 		{
 			//not implemented
 			Debug.Assert(false);
 			return false;
 		}
 
-		public bool AppendSerializedStateMachineFile(ContentManager rContent, string strResource, int iMessageOffset)
+		public bool AppendSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset)
 		{
 			//not implemented
 			Debug.Assert(false);
@@ -581,16 +590,17 @@ namespace GameDonkey
 
 		#region Combined File IO
 
-		public bool ReadXmlStateContainer(string strStateMachineFilename,
+		public bool ReadXmlStateContainer(Filename strStateMachineFilename,
 			int iMessageOffset,
-			string strStateActionsFilename,
+			Filename strStateActionsFilename,
 			BaseObject rOwner,
 			IGameDonkey rEngine,
 			bool bPlayerStateMachine,
 			bool bFlyingStateMachine)
 		{
 			//create a new single state container
-			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), "UpStates");
+			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), 
+				strStateMachineFilename.GetFileNoExt());
 
 			//find a place to store the new state container
 			m_StateMachines.Add(rMyStateContainer);
@@ -613,9 +623,9 @@ namespace GameDonkey
 		}
 
 		public void ReadSerializedStateContainer(ContentManager rContent,
-			string strStateMachineResource,
+			Filename strStateMachineResource,
 			int iMessageOffset,
-			string strStateActionsResource,
+			Filename strStateActionsResource,
 			BaseObject rOwner,
 			IGameDonkey rEngine,
 			bool bPlayerStateMachine,

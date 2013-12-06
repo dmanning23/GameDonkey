@@ -267,7 +267,7 @@ namespace GameDonkey
 		/// Check if the play is in a hard coded state,
 		/// if so, check if its button is still being held down
 		/// </summary>
-		public override void CheckHardCodedStates(InputWrapper rController)
+		public override void CheckHardCodedStates()
 		{
 			int iCurrentState = States.CurrentState();
 
@@ -312,7 +312,7 @@ namespace GameDonkey
 			//    }
 			//}
 
-			base.CheckHardCodedStates(rController);
+			base.CheckHardCodedStates();
 		}
 
 		/// <summary>

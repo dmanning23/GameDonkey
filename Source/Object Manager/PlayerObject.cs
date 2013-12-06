@@ -343,10 +343,9 @@ namespace GameDonkey
 		/// Check if the play is in a hard coded state,
 		/// if so, check if its button is still being held down
 		/// </summary>
-		public override void CheckHardCodedStates(InputWrapper rController)
+		public override void CheckHardCodedStates()
 		{
-			Debug.Assert(null != rController);
-			base.CheckHardCodedStates(rController);
+			base.CheckHardCodedStates();
 
 			//get the rotation based on velocity
 			m_fRotation = Helper.ClampAngle(Helper.atan2(new Vector2(m_Velocity.X * -1.0f, m_Velocity.Y)));
@@ -970,7 +969,13 @@ namespace GameDonkey
 				{
 					//get the ground states of this dude
 					Filename groundStatesFile = new Filename(strValue);
-					if (!States.ReadXmlStateContainer(@"wedding state machines\ground state machine.xml", iMessageOffset, groundStatesFile.File, this, rEngine, true, false))
+					if (!States.ReadXmlStateContainer(new Filename(@"wedding state machines\ground state machine.xml"),
+						iMessageOffset, 
+						groundStatesFile, 
+						this,
+						rEngine, 
+						true, 
+						false))
 					{
 						Debug.Assert(false);
 						return false;
@@ -982,7 +987,13 @@ namespace GameDonkey
 				{
 					//get teh upstates of this dude
 					Filename upStatesFile = new Filename(childNode.InnerXml);
-					if (!States.ReadXmlStateContainer(@"wedding state machines\up state machine.xml", iMessageOffset, upStatesFile.File, this, rEngine, true, true))
+					if (!States.ReadXmlStateContainer(new Filename(@"wedding state machines\up state machine.xml"),
+						iMessageOffset, 
+						upStatesFile, 
+						this, 
+						rEngine, 
+						true, 
+						true))
 					{
 						Debug.Assert(false);
 						return false;
@@ -1061,12 +1072,26 @@ namespace GameDonkey
 
 			//load the ground states
 			Filename strStatesFile = new Filename(myCharXML.GroundStates);
-			States.ReadSerializedStateContainer(rXmlContent, @"wedding state machines\ground state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, false);
+			States.ReadSerializedStateContainer(rXmlContent,
+				new Filename(@"wedding state machines\ground state machine"), 
+				iMessageOffset, 
+				strStatesFile, 
+				this, 
+				rEngine, 
+				true, 
+				false);
 			rXmlContent.Unload();
 
 			//load the up states
 			strStatesFile.SetRelFilename(myCharXML.UpStates);
-			States.ReadSerializedStateContainer(rXmlContent, @"wedding state machines\up state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
+			States.ReadSerializedStateContainer(rXmlContent,
+				new Filename(@"wedding state machines\up state machine"), 
+				iMessageOffset, 
+				strStatesFile, 
+				this, 
+				rEngine, 
+				true, 
+				true);
 			rXmlContent.Unload();
 
 			////load the down states

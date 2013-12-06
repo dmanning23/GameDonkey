@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
+using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -137,10 +138,10 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		public bool ReadXmlStateActions(string strFilename, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
+		public bool ReadXmlStateActions(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
 		{
 			// Open the file.
-			FileStream stream = File.Open(strFilename, FileMode.Open, FileAccess.Read);
+			FileStream stream = File.Open(strFilename.File, FileMode.Open, FileAccess.Read);
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(stream);
 			XmlNode rootNode = xmlDoc.DocumentElement;
@@ -212,10 +213,10 @@ namespace GameDonkey
 			return true;
 		}
 
-		public bool WriteXml(string strFilename)
+		public bool WriteXml(Filename strFilename)
 		{
 			//open the file, create it if it doesnt exist yet
-			XmlTextWriter rXMLFile = new XmlTextWriter(strFilename, null);
+			XmlTextWriter rXMLFile = new XmlTextWriter(strFilename.File, null);
 			rXMLFile.Formatting = Formatting.Indented;
 			rXMLFile.Indentation = 1;
 			rXMLFile.IndentChar = '\t';
@@ -247,13 +248,13 @@ namespace GameDonkey
 		}
 
 		public void ReadSerializedStateActions(ContentManager rXmlContent,
-			string strResource,
+			Filename strResource,
 			BaseObject rOwner,
 			StateMachine rStateMachine,
 			IGameDonkey rEngine)
 		{
 			//load the resource
-			SPFSettings.StateContainerXML myContainer = rXmlContent.Load<SPFSettings.StateContainerXML>(strResource);
+			SPFSettings.StateContainerXML myContainer = rXmlContent.Load<SPFSettings.StateContainerXML>(strResource.GetRelPathFileNoExt());
 
 			//read in all the states
 			for (int i = 0; i < myContainer.states.Count; i++)

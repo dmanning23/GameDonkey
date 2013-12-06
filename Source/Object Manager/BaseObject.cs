@@ -530,7 +530,7 @@ namespace GameDonkey
 		{
 		}
 
-		public virtual void CheckHardCodedStates(InputWrapper rController)
+		public virtual void CheckHardCodedStates()
 		{
 			//Apply acceleration to the character
 			Accelerate();
@@ -1388,7 +1388,7 @@ namespace GameDonkey
 				case "stateMachine":
 				{
 					//get the state machine file
-					string strStateMachineFile = strValue;
+					Filename strStateMachineFile = new Filename(strValue);
 
 					//get the states file too
 					childNode = childNode.NextSibling;
@@ -1398,7 +1398,7 @@ namespace GameDonkey
 					if (!States.ReadXmlStateContainer(
 						strStateMachineFile,
 						iMessageOffset,
-						strStateActionsFile.File,
+						strStateActionsFile,
 						this,
 						rEngine,
 						false,
@@ -1485,9 +1485,9 @@ namespace GameDonkey
 
 			//read in the state container
 			States.ReadSerializedStateContainer(rXmlContent,
-				strStateMachineFile.GetRelPathFileNoExt(),
+				strStateMachineFile,
 				iMessageOffset,
-				strStatesFile.GetRelPathFileNoExt(),
+				strStatesFile,
 				this,
 				rEngine,
 				false,

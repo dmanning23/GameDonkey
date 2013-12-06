@@ -2,6 +2,7 @@
 using GameDonkey;
 using GameTimer;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using ParticleBuddy;
 using RenderBuddy;
@@ -93,29 +94,6 @@ namespace StateActionsTool
 		public void SetClockSpeed(float fSpeed)
 		{
 			CharacterClock.TimerSpeed = fSpeed;
-		}
-
-		/// <summary>
-		/// load a player into this game engine
-		/// </summary>
-		/// <param name="strCharacterDataFile">filename of the character data xml file to load</param>
-		/// <param name="bPlayer">whether or not this is a player character</param>
-		/// <param name="bFlying">whether or not the state actions to load for this player are flying states</param>
-		/// <param name="strStateActionsFile">will hold the filename of the selected state actions</param>
-		/// <returns></returns>
-		public PlayerQueue LoadPlayer(Filename strDataFile,
-			List<Filename> Garments,
-			float fHeight,
-			bool bPlayer,
-			bool bFlying)
-		{
-			Player = new PlayerQueue(Color.White, 0);
-			if (null == Player.LoadXmlObject(strDataFile, this, EObjectType.Human, 1))
-			{
-				Player = null;
-			}
-
-			return Player;
 		}
 
 		public override void Start()
@@ -259,5 +237,43 @@ namespace StateActionsTool
 		#endregion //Draw
 
 		#endregion //Methods
+
+		#region File IO
+
+		/// <summary>
+		/// load a player into this game engine
+		/// </summary>
+		/// <param name="strDataFile">filename of the character data xml file to load</param>
+		/// <param name="Garments">will hold the filename of the selected state actions</param>
+		/// <returns>player queue with all the player's stuff in it</returns>
+		public PlayerQueue LoadXmlPlayer(Filename strDataFile, List<Filename> Garments)
+		{
+			Player = new PlayerQueue(Color.White, 0);
+			if (null == Player.LoadXmlObject(strDataFile, this, EObjectType.Human, 1))
+			{
+				Player = null;
+			}
+
+			return Player;
+		}
+
+		/// <summary>
+		/// load a player into this game engine
+		/// </summary>
+		/// <param name="strDataFile">filename of the character data xml file to load</param>
+		/// <param name="Garments">will hold the filename of the selected state actions</param>
+		/// <returns>player queue with all the player's stuff in it</returns>
+		public PlayerQueue LoadSerializedPlayer(Filename strDataFile, List<Filename> Garments, ContentManager myContent)
+		{
+			Player = new PlayerQueue(Color.White, 0);
+			if (null == Player.LoadSerializedObject(myContent, strDataFile, this, EObjectType.Human, 1))
+			{
+				Player = null;
+			}
+
+			return Player;
+		}
+
+		#endregion //File IO
 	}
 }
