@@ -1350,7 +1350,7 @@ namespace GameDonkey
 				case "model":
 				{
 					Filename strModelFile = new Filename(strValue);
-					if (!AnimationContainer.ReadXMLModelFormat(strModelFile.File, rEngine.Renderer))
+					if (!AnimationContainer.ReadXMLModelFormat(strModelFile, rEngine.Renderer))
 					{
 						Debug.Assert(false);
 						return false;
@@ -1362,7 +1362,7 @@ namespace GameDonkey
 				case "animations":
 				{
 					Filename strAnimationFile = new Filename(strValue);
-					if (!AnimationContainer.ReadXMLAnimationFormat(strAnimationFile.File))
+					if (!AnimationContainer.ReadXMLAnimationFormat(strAnimationFile))
 					{
 						Debug.Assert(false);
 						return false;
@@ -1436,7 +1436,7 @@ namespace GameDonkey
 		{
 			//load the garment
 			Garment myGarment = new Garment();
-			myGarment.ReadXMLFormat(strGarmentFile.File, rEngine.Renderer, AnimationContainer.Model);
+			myGarment.ReadXMLFormat(strGarmentFile, rEngine.Renderer, AnimationContainer.Model);
 
 			//add the garment to the dude
 			myGarment.AddToModel();
@@ -1475,13 +1475,13 @@ namespace GameDonkey
 			}
 
 			//try to load all that stuff
-			if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile.GetRelPathFileNoExt(), rEngine.Renderer))
+			if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile, rEngine.Renderer))
 			{
 				Debug.Assert(false);
 				return false;
 			}
 			m_Physics.SortBones(AnimationContainer.Model);
-			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile.GetRelPathFileNoExt());
+			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
 
 			//read in the state container
 			States.ReadSerializedStateContainer(rXmlContent,
@@ -1500,7 +1500,7 @@ namespace GameDonkey
 		{
 			//load the garment
 			Garment myGarment = new Garment();
-			myGarment.ReadSerializedFormat(rXmlContent, strGarmentFile.GetRelPathFileNoExt(), rEngine.Renderer, AnimationContainer.Model);
+			myGarment.ReadSerializedFormat(rXmlContent, strGarmentFile, rEngine.Renderer, AnimationContainer.Model);
 
 			//add the garment to the dude
 			myGarment.AddToModel();

@@ -1040,7 +1040,7 @@ namespace GameDonkey
 			m_fHeight = (float)myCharXML.height;
 
 			//try to load the model
-			if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile.GetRelPathFileNoExt(), rEngine.Renderer))
+			if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile, rEngine.Renderer))
 			{
 				Debug.Assert(false);
 				return false;
@@ -1056,7 +1056,7 @@ namespace GameDonkey
 			}
 
 			//read in the animations
-			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile.GetRelPathFileNoExt());
+			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
 			rXmlContent.Unload();
 
 			//get the character portrait, load it from teh renderer content manager

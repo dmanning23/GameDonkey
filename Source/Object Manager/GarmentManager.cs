@@ -185,7 +185,7 @@ namespace GameDonkey
 			Debug.Assert(null != myGarment);
 
 			//load the garment
-			if (!myGarment.ReadXMLFormat(strGarmentFile.File, rRenderer, m_rOwner.AnimationContainer.Model))
+			if (!myGarment.ReadXMLFormat(strGarmentFile, rRenderer, m_rOwner.AnimationContainer.Model))
 			{
 				//something bad happened
 				return null;
@@ -236,7 +236,7 @@ namespace GameDonkey
 			Debug.Assert(null != myGarment);
 
 			//load the garment
-			if (!myGarment.ReadSerializedFormat(myContent,  myFileName.GetRelPathFileNoExt(), rRenderer, m_rOwner.AnimationContainer.Model))
+			if (!myGarment.ReadSerializedFormat(myContent,  myFileName, rRenderer, m_rOwner.AnimationContainer.Model))
 			{
 				//something bad happened
 				return null;

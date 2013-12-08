@@ -136,7 +136,7 @@ namespace GameDonkey
 			m_listGarments = new List<Filename>();
 		}
 
-		public virtual bool LoadObject(Filename strFileName, IGameDonkey rEngine)
+		public virtual bool LoadObject(Filename strFileName)
 		{
 			//gonna have to do this the HARD way
 
