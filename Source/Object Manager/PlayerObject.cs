@@ -253,7 +253,7 @@ namespace GameDonkey
 		public override void GetPlayerInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
 		{
 			//get the thumbstick direction
-			m_ThumbstickDirection = rController.Controller.Thumbsticks.LeftThumbstickDirection;
+			m_ThumbstickDirection = rController.Controller.Thumbsticks.LeftThumbstick.Direction;
 
 			//get the next moov from the input
 			int iNextMoov = rController.GetNextMove();
