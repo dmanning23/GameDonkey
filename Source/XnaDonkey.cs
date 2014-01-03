@@ -617,7 +617,6 @@ namespace GameDonkey
 					//that dude is pretty far away from the action
 
 					//get the amount of acceleration to add
-					float fTEST = DistanceToCenter.Length();
 					float fRatio = ((DistanceToCenter.Length() - 3000.0f) / 1800.0f) * Players[i].Character.CharacterClock.TimeDelta;
 
 					//get the direction to send him

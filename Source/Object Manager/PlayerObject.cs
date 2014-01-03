@@ -27,16 +27,19 @@ namespace GameDonkey
 		/// </summary>
 		private float m_fHealth;
 
-		/// <summary>
-		/// the angle of the direction this dude is flying
-		/// </summary>
-		private float m_fRotation;
-
 		//the current angle of the animation rotation
 		private float m_fCurrentAnimationRotation;
 
 		//SPARROWHAWKS
-		////the target angle of animation rotation
+
+		///// <summary>
+		///// the angle of the direction this dude is flying
+		///// </summary>
+		//private float m_fRotation;
+
+		///// <summary>
+		///// the target angle of animation rotation
+		///// </summary>
 		//private float m_fTargetAnimationRotation;
 
 		/// <summary>
@@ -145,10 +148,10 @@ namespace GameDonkey
 		{
 			m_fAirDelta = 0.0f;
 			Health = 10.0f;
-			m_fRotation = 0.0f;
 			m_fCurrentAnimationRotation = 0.0f;
 			m_ThumbstickDirection = Vector2.Zero;
 			//SPARROWHAWKS
+			//m_fRotation = 0.0f;
 			//m_fTargetAnimationRotation = 0.0f;
 			States = new PlayerObjectStateContainer();
 			States.StateChangedEvent += this.StateChanged;
@@ -208,6 +211,9 @@ namespace GameDonkey
 			//update the animations
 
 			//SPARROWHAWKS
+
+			//get the rotation based on velocity
+			//m_fRotation = Helper.ClampAngle(Helper.atan2(new Vector2(m_Velocity.X * -1.0f, m_Velocity.Y)));
 
 			////if the character isn't flying very fast, stand them straight up
 			//if ((States.StateMachineIndex() > 0) &&
@@ -346,9 +352,6 @@ namespace GameDonkey
 		public override void CheckHardCodedStates()
 		{
 			base.CheckHardCodedStates();
-
-			//get the rotation based on velocity
-			m_fRotation = Helper.ClampAngle(Helper.atan2(new Vector2(m_Velocity.X * -1.0f, m_Velocity.Y)));
 
 			//TODO: sliding is not working
 
@@ -543,17 +546,6 @@ namespace GameDonkey
 				//only send a ground hit message if the player was falling, 
 				//this way the player won't "bounce" out of the floor when jumping through
 				SendStateMessage((int)EMessage.HitGround);
-
-				//TODO: move all the ground hit stuff to a state action
-
-				////play the particle effect for hitting teh ground
-				//rEngine.PlayParticleEffect(EDefaultParticleEffects.GroundHit,
-				//    Vector2.Zero,
-				//    rGroundHit.Position,
-				//    Color.White);
-
-				////play the sound effect for hitting teh ground
-				//rEngine.PlaySound("hitground");
 			}
 		}
 

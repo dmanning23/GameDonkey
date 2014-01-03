@@ -532,6 +532,8 @@ namespace GameDonkey
 
 		public virtual void CheckHardCodedStates()
 		{
+			//TODO: move all this hardcode states junk into update
+
 			//Apply acceleration to the character
 			Accelerate();
 
@@ -1063,7 +1065,6 @@ namespace GameDonkey
 			//add the top
 			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y - (int)(m_fHeight * 0.8f)), Color.Red);
 		}
-
 
 		#endregion //Rendering
 
