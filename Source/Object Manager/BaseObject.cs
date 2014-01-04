@@ -104,11 +104,6 @@ namespace GameDonkey
 		protected Vector2 m_Position;
 
 		/// <summary>
-		/// this dude's orientation
-		/// </summary>
-		private bool m_bFlip;
-
-		/// <summary>
 		/// the velocity vector of this object
 		/// </summary>
 		protected Vector2 m_Velocity;
@@ -223,11 +218,10 @@ namespace GameDonkey
 			}
 		}
 
-		public bool Flip
-		{
-			get { return m_bFlip; }
-			set { m_bFlip = value; }
-		}
+		/// <summary>
+		/// this dude's orientation
+		/// </summary>
+		public bool Flip { get; set; }
 
 		public Vector2 Velocity
 		{
@@ -350,7 +344,7 @@ namespace GameDonkey
 			m_AnimationContainer = new AnimationContainer();
 			States = null;
 			m_Position = new Vector2(0.0f);
-			m_bFlip = false;
+			Flip = false;
 			m_Velocity = new Vector2(0.0f);
 			m_TrailTimer = new CountdownTimer();
 			m_rTrailAction = null;
@@ -412,7 +406,7 @@ namespace GameDonkey
 			States = rHuman.States;
 			States.StateChangedEvent += this.StateChanged;
 			m_Position = rHuman.m_Position;
-			m_bFlip = rHuman.m_bFlip;
+			Flip = rHuman.Flip;
 			m_Velocity = rHuman.m_Velocity;
 			m_TrailTimer = rHuman.m_TrailTimer;
 			m_rTrailAction = rHuman.m_rTrailAction;
@@ -493,7 +487,7 @@ namespace GameDonkey
 			UpdateEmitters();
 
 			//update the animations
-			m_AnimationContainer.Update(CharacterClock, m_Position, m_bFlip, Scale, 0.0f, false);
+			m_AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, 0.0f, false);
 
 			Debug.Assert(m_Position.X != float.NaN);
 			Debug.Assert(m_Position.Y != float.NaN);
@@ -527,6 +521,15 @@ namespace GameDonkey
 		/// <param name="rController">the controller for this player (bullshit and ignored for AI)</param>
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
 		public virtual void GetPlayerInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
+		{
+		}
+
+		/// <summary>
+		/// update an input wrapper
+		/// </summary>
+		/// <param name="rController"></param>
+		/// <param name="rInput"></param>
+		public virtual void UpdateInput(InputWrapper rController, InputState rInput)
 		{
 		}
 

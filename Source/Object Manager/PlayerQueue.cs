@@ -67,11 +67,6 @@ namespace GameDonkey
 		private CountdownTimer m_ScoreTimer;
 
 		/// <summary>
-		/// the input queue for this set of characters
-		/// </summary>
-		private InputWrapper m_rInputQueue;
-
-		/// <summary>
 		/// The player's name, either their gamertag, "AI", or name of the level
 		/// </summary>
 		private string m_strPlayerName;
@@ -95,11 +90,7 @@ namespace GameDonkey
 			get { return m_iStock; }
 		}
 
-		public InputWrapper InputQueue
-		{
-			get { return m_rInputQueue; }
-			set { m_rInputQueue = value; }
-		}
+		public InputWrapper InputQueue { get; set; }
 
 		public List<BaseObject> ActiveObjects
 		{
@@ -167,7 +158,7 @@ namespace GameDonkey
 			m_PlayerColor = PlayerColor;
 			m_iPoints = 0;
 			m_iStock = 1;
-			m_rInputQueue = null;
+			InputQueue = null;
 			m_iNextObjectID = 0;
 			m_iQueueID = iQueueID;
 			Debug.Assert(m_iQueueID >= 0);
@@ -258,54 +249,6 @@ namespace GameDonkey
 			//it must be inactive, look through that list
 			return ActivateObject(iQueueID);
 		}
-
-		//public void ReplacePlayerWithAI()
-		//{
-		//    //TODO: okay create a new AI player
-		//    CAIObject myBot= new CAIObject(m_rCharacter);
-
-		//    //replace the human in the active & inactive lists
-
-		//    //check the active list
-		//    bool bFound = false;
-		//    for (int i = 0; i < m_listActive.Count; i++)
-		//    {
-		//        Debug.Assert(null != m_listActive[i]);
-		//        if (m_listActive[i].GlobalID == m_rCharacter.GlobalID)
-		//        {
-		//            m_listActive[i] = myBot;
-		//            bFound = true;
-		//        }
-
-		//        //update all the pointers too
-		//        m_listActive[i].ReplaceOwner(myBot);
-		//    }
-			
-		//    //check the inactive list
-		//    if (!bFound)
-		//    {
-		//        for (int i = 0; i < m_listInactive.Count; i++)
-		//        {
-		//            Debug.Assert(null != m_listInactive[i]);
-		//            if (m_listInactive[i].GlobalID == m_rCharacter.GlobalID)
-		//            {
-		//                m_listInactive[i] = myBot;
-		//                bFound = true;
-		//            }
-
-		//            //update all the pointers too
-		//            m_listInactive[i].ReplaceOwner(myBot);
-		//        }
-		//    }
-
-		//    Debug.Assert(bFound);
-
-		//    //replace the character
-		//    m_rCharacter = myBot;
-
-		//    //change the name
-		//    m_strPlayerName = "The AI formerly known as " + m_strPlayerName;
-		//}
 
 		/// <summary>
 		/// Take an object out of the active list, put it in the inactive list
@@ -452,12 +395,17 @@ namespace GameDonkey
 			}
 		}
 
+		public void UpdateInput(InputState rInput)
+		{
+			Character.UpdateInput(InputQueue, rInput);
+		}
+
 		public void GetPlayerInput(List<PlayerQueue> listBadGuys)
 		{
-			Debug.Assert(null != m_rInputQueue);
+			Debug.Assert(null != InputQueue);
 			for (int i = 0; i < m_listActive.Count; i++)
 			{
-				m_listActive[i].GetPlayerInput(m_rInputQueue, listBadGuys);
+				m_listActive[i].GetPlayerInput(InputQueue, listBadGuys);
 			}
 		}
 

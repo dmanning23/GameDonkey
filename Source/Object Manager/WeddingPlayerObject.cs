@@ -22,16 +22,31 @@ namespace GameDonkey
 	{
 		#region Members
 
-		//the current angle of the animation rotation
-		public float CurrentAnimationRotation { get; protected set; }
+		/// <summary>
+		/// How much health this character has left
+		/// </summary>
+		private float m_fHealth;
 
-		//WEDDING STUFF
+		//the current angle of the animation rotation
+		private float m_fCurrentAnimationRotation;
+
+		//SPARROWHAWKS
+
+		///// <summary>
+		///// the angle of the direction this dude is flying
+		///// </summary>
+		//private float m_fRotation;
+
+		///// <summary>
+		///// the target angle of animation rotation
+		///// </summary>
+		//private float m_fTargetAnimationRotation;
 
 		/// <summary>
 		/// the amount of time the player has been in the air.
 		/// When this is over the TIME_TILL_FALL threshhold, the player's state machine is sent a "Fell" message
 		/// </summary>
-		public float AirDelta { get; protected set; }
+		private float m_fAirDelta;
 
 		/// <summary>
 		/// Number of times the player has been hit in a row
@@ -43,9 +58,10 @@ namespace GameDonkey
 		private const float m_fHitPause = 0.2f; //how long hit pause is in this game
 		private const float m_fStrengthMultiplier = 1.0f; //amount to multiply how far characters are hit in this game
 		private const float m_fDamageMultiplier = 2.5f; //amount to multiply how much damage characters do in this game
-		protected const float m_fNeutralFlyingSpeed = 900.0f; //how fast the character has to be moving through the air before they leave neutral state
+		private const float m_fNeutralFlyingSpeed = 900.0f; //how fast the character has to be moving through the air before they leave neutral state
+		private const float m_fFlyingRotationSpeed = (540.0f * ((float)Math.PI / 180.0f)); //max speed how fast characters can rotate while flying
 
-		public string DeathSound { get; protected set; }
+		private string m_strDeathSound;
 
 		/// <summary>
 		/// texture to hold the portrait for the HUD
@@ -61,14 +77,23 @@ namespace GameDonkey
 
 		#region Properties
 
-		/// <summary>
-		/// How much health this character has left
-		/// </summary>
-		public float Health { get; protected set; }
+		public float Health
+		{
+			get { return m_fHealth; }
+			private set
+			{
+				m_fHealth = value;
+			}
+		}
 
 		public Texture2D Portrait
 		{
 			get { return m_Portrait; }
+		}
+
+		public string DeathSound
+		{
+			get { return m_strDeathSound; }
 		}
 
 		public int ComboCounter
@@ -100,10 +125,10 @@ namespace GameDonkey
 			: base(eType, rHuman)
 		{
 			//TODO: copy all the required shit
-			AirDelta = rHuman.AirDelta;
+			m_fAirDelta = rHuman.m_fAirDelta;
 			Health = rHuman.Health;
 			m_Portrait = rHuman.m_Portrait;
-			DeathSound = rHuman.DeathSound;
+			m_strDeathSound = rHuman.m_strDeathSound;
 		}
 
 		/// <summary>
@@ -121,14 +146,17 @@ namespace GameDonkey
 
 		protected override void Init()
 		{
-			Reset();
-
-			CurrentAnimationRotation = 0.0f;
+			m_fAirDelta = 0.0f;
+			Health = 10.0f;
+			m_fCurrentAnimationRotation = 0.0f;
 			m_ThumbstickDirection = Vector2.Zero;
-			
+			//SPARROWHAWKS
+			//m_fRotation = 0.0f;
+			//m_fTargetAnimationRotation = 0.0f;
 			States = new PlayerObjectStateContainer();
 			States.StateChangedEvent += this.StateChanged;
 			m_Physics = new PlayerPhysicsContainer(this);
+			m_ComboCounter = 0;
 		}
 
 		/// <summary>
@@ -138,7 +166,7 @@ namespace GameDonkey
 		{
 			base.Reset();
 			Health = 10.0f;
-			AirDelta = 0.0f;
+			m_fAirDelta = 0.0f;
 			m_ComboCounter = 0;
 		}
 
@@ -160,7 +188,17 @@ namespace GameDonkey
 			m_BlockTimer.Update(CharacterClock);
 			m_TrailTimer.Update(CharacterClock);
 
-			UpdateFallMessage(bUpdateGravity);
+			//add the fall delta to the time not on the ground
+			m_fAirDelta += CharacterClock.TimeDelta;
+
+			if (bUpdateGravity)
+			{
+				//if the airdelta is greater than the falltime, send a fall message
+				if (m_fAirDelta >= m_fTimeToFall)
+				{
+					SendStateMessage((int)EMessage.Fell);
+				}
+			}
 
 			//update the garments of this dude
 			MyGarments.Update(CharacterClock);
@@ -171,47 +209,44 @@ namespace GameDonkey
 			UpdateEmitters();
 
 			//update the animations
-			UpdateRotation();
 
-			m_AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentAnimationRotation, false);
-		}
+			//SPARROWHAWKS
 
-		/// <summary>
-		/// update an input wrapper
-		/// </summary>
-		/// <param name="rController"></param>
-		/// <param name="rInput"></param>
-		public override void UpdateInput(InputWrapper rController, InputState rInput)
-		{
-			rController.Update(rInput, Flip);
-		}
+			//get the rotation based on velocity
+			//m_fRotation = Helper.ClampAngle(Helper.atan2(new Vector2(m_Velocity.X * -1.0f, m_Velocity.Y)));
 
-		/// <summary>
-		/// Check if the character should be sent a "fall" message
-		/// Overload this in your child class
-		/// </summary>
-		public virtual void UpdateFallMessage(bool bUpdateGravity)
-		{
-			//add the fall delta to the time not on the ground
-			AirDelta += CharacterClock.TimeDelta;
+			////if the character isn't flying very fast, stand them straight up
+			//if ((States.StateMachineIndex() > 0) &&
+			//    (m_Velocity.LengthSquared() > (m_fNeutralFlyingSpeed * m_fNeutralFlyingSpeed)))
+			//{
+			//    //rotate 90 degrees to make the rotation the up vector
+			//    m_fTargetAnimationRotation = Helper.ClampAngle(m_fRotation - MathHelper.ToRadians(90.0f));
+			//}
+			//else
+			//{
+			//    m_fTargetAnimationRotation = 0.0f;
+			//}
 
-			if (bUpdateGravity)
-			{
-				//if the airdelta is greater than the falltime, send a fall message
-				if (AirDelta >= m_fTimeToFall)
-				{
-					SendStateMessage((int)EMessage.Fell);
-				}
-			}
-		}
+			////rotate characters slower so they don't pop (180 degrees/second sounds good)
+			//if (Math.Abs(m_fCurrentAnimationRotation - m_fTargetAnimationRotation) < (m_fFlyingRotationSpeed * CharacterClock.TimeDelta))
+			//{
+			//    m_fCurrentAnimationRotation = m_fTargetAnimationRotation;
+			//}
+			//else
+			//{
+			//    //how far do we have to go?
+			//    float fRotation = m_fCurrentAnimationRotation - m_fTargetAnimationRotation;
+			//    if (fRotation < 0.0f)
+			//    {
+			//        m_fCurrentAnimationRotation += (m_fFlyingRotationSpeed * CharacterClock.TimeDelta);
+			//    }
+			//    else
+			//    {
+			//        m_fCurrentAnimationRotation -= (m_fFlyingRotationSpeed * CharacterClock.TimeDelta);
+			//    }
+			//}
 
-		/// <summary>
-		/// Update the character rotation before they are animated.
-		/// Overload this function in the child class for your game
-		/// </summary>
-		public virtual void UpdateRotation()
-		{
-			//Overload in child classes!
+			m_AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, m_fCurrentAnimationRotation, false);
 		}
 
 		/// <summary>
@@ -318,14 +353,8 @@ namespace GameDonkey
 		{
 			base.CheckHardCodedStates();
 
-			CheckMovementMessages();
-		}
+			//TODO: sliding is not working
 
-		/// <summary>
-		/// Send any messages based on the direction the character is moving.
-		/// </summary>
-		public virtual void CheckMovementMessages()
-		{
 			//check for FlyingUp, FlyingDown, FlyingForward, FlyingBack, NeutralSpeed
 			if (m_Velocity.LengthSquared() > (m_fNeutralFlyingSpeed * m_fNeutralFlyingSpeed)) //Use 700 as the point of neutral -> flying
 			{
@@ -357,6 +386,28 @@ namespace GameDonkey
 				//character is not moving very fast in any direction
 				SendStateMessage((int)EMessage.NeutralSpeed);
 			}
+
+			//SPARROWHAWKS
+			////If this dude is currently flying, check the direction 
+			//if (m_States.StateMachineIndex() > 0)
+			//{
+			//    if (!Flip)
+			//    {
+			//        //if facing forward but moving -x direction, send turn around message
+			//        if (0.0f > Velocity.X)
+			//        {
+			//            SendStateMessage((int)EMessage.Back);
+			//        }
+			//    }
+			//    else
+			//    {
+			//        //else if facing backward but moving +x direction, send turn around message
+			//        if (0.0f < Velocity.X)
+			//        {
+			//            SendStateMessage((int)EMessage.Back);
+			//        }
+			//    }
+			//}
 		}
 
 		#region Hit Response
@@ -486,7 +537,7 @@ namespace GameDonkey
 			if (0.0f < m_Velocity.Y)
 			{
 				//if the player's velocity is +y, it is set to 0
-				AirDelta = 0.0f;
+				m_fAirDelta = 0.0f;
 				m_Velocity.Y = 0.0f;
 
 				Debug.Assert(m_Position.X != float.NaN);
@@ -788,10 +839,10 @@ namespace GameDonkey
 			base.Accelerate();
 
 			//Add extra gravity based on how long the character has been in the air
-			if (AirDelta >= m_fTimeForExtraGravity)
+			if (m_fAirDelta >= m_fTimeForExtraGravity)
 			{
 				//get how long past we are
-				float fGravityAmount = (AirDelta - m_fTimeForExtraGravity) * 600.0f;
+				float fGravityAmount = (m_fAirDelta - m_fTimeForExtraGravity) * 600.0f;
 
 				//Get teh acceleration
 				float myAcceleration = (fGravityAmount * CharacterClock.TimeDelta) * Scale;
@@ -901,7 +952,7 @@ namespace GameDonkey
 
 				case "deathSound":
 				{
-					DeathSound = childNode.InnerXml;
+					m_strDeathSound = childNode.InnerXml;
 					//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
 					return true;
 				}
@@ -1005,8 +1056,8 @@ namespace GameDonkey
 			Debug.Assert(null != rEngine.Renderer.Content);
 			m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
 
-			//grab the deathsound
-			DeathSound = myCharXML.deathSound;
+			//TODO: grab the deathsound
+			m_strDeathSound = myCharXML.deathSound;
 			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
 
 			//SPARROWHAWKS

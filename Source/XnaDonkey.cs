@@ -307,7 +307,7 @@ namespace GameDonkey
 
 				if (null != m_listPlayers[i].InputQueue)
 				{
-					m_listPlayers[i].InputQueue.Update(rInput, m_listPlayers[i].Character.Flip);
+					m_listPlayers[i].UpdateInput(rInput);
 				}
 			}
 		}
