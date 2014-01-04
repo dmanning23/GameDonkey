@@ -7,7 +7,7 @@ namespace GameDonkey
 	/// <summary>
 	/// list of all the common states between all sparrow hawk state machines
 	/// </summary>
-	enum EState
+	public enum EState
 	{
 		Quick = 0,
 		QuickUp,
@@ -35,7 +35,7 @@ namespace GameDonkey
 	/// <summary>
 	/// A list of the states that are appended to flying state machines
 	/// </summary>
-	enum EFlyingState
+	public enum EFlyingState
 	{
 		Falling = EState.NumStates,
 		Float,
@@ -52,7 +52,7 @@ namespace GameDonkey
 	/// <summary>
 	/// A list of the states that are appended to groud state machines
 	/// </summary>
-	enum EGroundState
+	public enum EGroundState
 	{
 		Standing = EState.NumStates,
 		Walking,
@@ -66,7 +66,7 @@ namespace GameDonkey
 	/// <summary>
 	/// list of all the common messages between all sparrow hawk state machines
 	/// </summary>
-	enum EMessage
+	public enum EMessage
 	{
 		Quick = 0,
 		QuickUp,
@@ -111,7 +111,7 @@ namespace GameDonkey
 
 	#endregion //State Machine Enums
 
-	class WeddingStateMachine : StateMachine
+	public class WeddingStateMachine : StateMachine
 	{
 		#region Members
 

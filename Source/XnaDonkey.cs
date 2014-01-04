@@ -1168,8 +1168,8 @@ namespace GameDonkey
 			m_listPlayers.Add(rPlayer);
 
 			//create a controller for that player
-			InputWrapper rQueue = new InputWrapper(eIndex, MasterClock.GetCurrentTime);
-			if (!rQueue.ReadSerializedFile(rXmlContent, @"Move List", rPlayer.Character.States.GetMessageIndexFromText))
+			InputWrapper rQueue = new InputWrapper(new ControllerWrapper(eIndex, (PlayerIndex.One == eIndex)), MasterClock.GetCurrentTime);
+			if (!rQueue.ReadSerializedFile(rXmlContent, new Filename(@"Move List.xml"), rPlayer.Character.States.GetMessageIndexFromText))
 			{
 				Debug.Assert(false);
 			}
@@ -1202,9 +1202,8 @@ namespace GameDonkey
 			m_listPlayers.Add(rPlayer);
 
 			//create a controller for that player
-			InputWrapper rQueue = new InputWrapper(eIndex, MasterClock.GetCurrentTime);
-			Filename movelistFile = new Filename(@"Move List.xml");
-			if (!rQueue.ReadXmlFile(movelistFile.File, rPlayer.Character.States.GetMessageIndexFromText))
+			InputWrapper rQueue = new InputWrapper(new ControllerWrapper(eIndex, (PlayerIndex.One == eIndex)), MasterClock.GetCurrentTime);
+			if (!rQueue.ReadXmlFile(new Filename(@"Move List.xml"), rPlayer.Character.States.GetMessageIndexFromText))
 			{
 				Debug.Assert(false);
 			}
@@ -1233,8 +1232,8 @@ namespace GameDonkey
 			m_listPlayers.Add(rPlayer);
 
 			//create a controller for that player
-			InputWrapper rQueue = new InputWrapper(PlayerIndex.One, MasterClock.GetCurrentTime);
-			if (!rQueue.ReadSerializedFile(rXmlContent, @"Move List", rPlayer.Character.States.GetMessageIndexFromText))
+			InputWrapper rQueue = new InputWrapper(null, MasterClock.GetCurrentTime);
+			if (!rQueue.ReadSerializedFile(rXmlContent, new Filename(@"Move List.xml"), rPlayer.Character.States.GetMessageIndexFromText))
 			{
 				Debug.Assert(false);
 			}

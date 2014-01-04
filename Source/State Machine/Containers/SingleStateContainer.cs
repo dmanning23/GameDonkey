@@ -286,6 +286,11 @@ namespace GameDonkey
 			return Name;
 		}
 
+		public int StateMachineIndex()
+		{
+			return 0;
+		}
+
 		#endregion //Methods
 
 		#region Networking
