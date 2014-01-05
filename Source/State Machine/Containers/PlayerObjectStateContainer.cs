@@ -44,9 +44,20 @@ namespace GameDonkey
 			}
 			set
 			{
-				m_StateMachines[_currentStateMachine].StateMachine.StateChangedEvent -= StateChange;
-				_currentStateMachine = value;
-				m_StateMachines[_currentStateMachine].StateMachine.StateChangedEvent += StateChange;
+				if (IsCurrentStateMachineValid)
+				{
+					m_StateMachines[_currentStateMachine].StateMachine.StateChangedEvent -= StateChange;
+					_currentStateMachine = value;
+					m_StateMachines[_currentStateMachine].StateMachine.StateChangedEvent += StateChange;
+				}
+			}
+		}
+
+		private bool IsCurrentStateMachineValid
+		{
+			get
+			{
+				return (_currentStateMachine < m_StateMachines.Count);
 			}
 		}
 

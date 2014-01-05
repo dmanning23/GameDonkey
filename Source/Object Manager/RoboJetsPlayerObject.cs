@@ -198,7 +198,7 @@ namespace GameDonkey
 				{
 					//get the ground states of this dude
 					Filename groundStatesFile = new Filename(strValue);
-					if (!States.ReadXmlStateContainer(new Filename(@"wedding state machines\ground state machine.xml"),
+					if (!States.ReadXmlStateContainer(new Filename(@"Robot\robot state machine.xml"),
 						iMessageOffset, 
 						groundStatesFile, 
 						this,
@@ -216,7 +216,7 @@ namespace GameDonkey
 				{
 					//get teh upstates of this dude
 					Filename upStatesFile = new Filename(childNode.InnerXml);
-					if (!States.ReadXmlStateContainer(new Filename(@"wedding state machines\up state machine.xml"),
+					if (!States.ReadXmlStateContainer(new Filename(@"Robot\robot state machine.xml"),
 						iMessageOffset, 
 						upStatesFile, 
 						this, 

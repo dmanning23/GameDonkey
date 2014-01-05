@@ -121,14 +121,13 @@ namespace GameDonkey
 
 		protected override void Init()
 		{
-			Reset();
-
 			CurrentAnimationRotation = 0.0f;
 			m_ThumbstickDirection = Vector2.Zero;
-			
 			States = new PlayerObjectStateContainer();
 			States.StateChangedEvent += this.StateChanged;
 			m_Physics = new PlayerPhysicsContainer(this);
+
+			Reset();
 		}
 
 		/// <summary>

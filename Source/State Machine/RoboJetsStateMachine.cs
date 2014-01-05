@@ -541,16 +541,22 @@ namespace GameDonkey
 			{
 				foreach (var stateName in Enum.GetNames(typeof(EJetState)))
 				{
-					SetStateName(iEnumIndex, stateName);
-					iEnumIndex++;
+					if (iEnumIndex != (int)EJetState.NumJetStates)
+					{
+						SetStateName(iEnumIndex, stateName);
+						iEnumIndex++;
+					}
 				}
 			}
 			else
 			{
 				foreach (var stateName in Enum.GetNames(typeof(ERobotState)))
 				{
-					SetStateName(iEnumIndex, stateName);
-					iEnumIndex++;
+					if (iEnumIndex != (int)ERobotState.NumRobotStates)
+					{
+						SetStateName(iEnumIndex, stateName);
+						iEnumIndex++;
+					}
 				}
 			}
 

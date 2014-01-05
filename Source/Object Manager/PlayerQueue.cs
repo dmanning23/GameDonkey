@@ -689,10 +689,10 @@ namespace GameDonkey
 			{
 				case EObjectType.Human:
 					{
-						myCharacter = new PlayerObject(m_CharacterClock, m_iNextObjectID++);
+						myCharacter = new RoboJetsPlayerObject(m_CharacterClock, m_iNextObjectID++);
 
 						//set as the main character
-						AddCharacterToList((PlayerObject)myCharacter);
+						AddCharacterToList(myCharacter);
 					}
 					break;
 				case EObjectType.AI:
@@ -702,7 +702,7 @@ namespace GameDonkey
 						myCharacter = myDude;
 
 						//set as the main characters
-						AddCharacterToList((PlayerObject)myCharacter);
+						AddCharacterToList(myCharacter);
 					}
 					break;
 				case EObjectType.Projectile:
