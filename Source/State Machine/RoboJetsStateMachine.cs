@@ -10,8 +10,7 @@ namespace GameDonkey
 	/// </summary>
 	public enum EState
 	{
-		Neutral = 0,
-		Transforming,
+		Transforming = 0,
 		SwitchToRobotStateMachine,
 		SwitchToJetStateMachine,
 		Stunned,
