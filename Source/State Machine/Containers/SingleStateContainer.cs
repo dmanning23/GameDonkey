@@ -386,7 +386,8 @@ namespace GameDonkey
 			Debug.Assert(null != StateMachine);
 			if (bPlayerStateMachine)
 			{
-				Debug.Assert(StateMachine is WeddingStateMachine);
+				//WEDDING GAME
+				//Debug.Assert(StateMachine is WeddingStateMachine);
 
 				//load the state machine
 				if (!StateMachine.AppendXmlFile(strStateMachineFilename))
@@ -429,7 +430,8 @@ namespace GameDonkey
 			Debug.Assert(null != StateMachine);
 			if (bPlayerStateMachine)
 			{
-				Debug.Assert(StateMachine is WeddingStateMachine);
+				//WEDDING GAME
+				//Debug.Assert(StateMachine is WeddingStateMachine);
 
 				//load the state machine
 				StateMachine.AppendSerializedFile(rContent, strStateMachineResource, iMessageOffset);

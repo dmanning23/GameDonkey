@@ -192,13 +192,16 @@ namespace GameDonkey
 			//check if we are changing state machines
 			switch (m_StateMachines[CurrentStateMachine].CurrentState())
 			{
-				case (int)EState.SwitchToGroundStateMachine:
+				//WEDDING GAME
+				//case (int)EState.SwitchToGroundStateMachine:
+				case (int)EState.SwitchToRobotStateMachine:
 				{
 					//Try to change state machines if it is safe
 					StateMachineIndex(0, eventArgs);
 				}
 				break;
-				case (int)EState.SwitchToUpStateMachine:
+				//case (int)EState.SwitchToUpStateMachine:
+				case (int)EState.SwitchToJetStateMachine:
 				{
 					StateMachineIndex(1, eventArgs);
 				}
@@ -604,7 +607,9 @@ namespace GameDonkey
 			bool bFlyingStateMachine)
 		{
 			//create a new single state container
-			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), 
+			//WEDDING GAME
+			//SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), 
+			SingleStateContainer rMyStateContainer = new SingleStateContainer(new RoboJetsStateMachine(bFlyingStateMachine), 
 				strStateMachineFilename.GetFileNoExt());
 
 			//find a place to store the new state container
@@ -637,7 +642,9 @@ namespace GameDonkey
 			bool bFlyingStateMachine)
 		{
 			//create a new single state container
-			SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), "GroundStates");
+			//WEDDING GAME
+			//SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), "GroundStates");
+			SingleStateContainer rMyStateContainer = new SingleStateContainer(new RoboJetsStateMachine(bFlyingStateMachine), "GroundStates");
 
 			//find a place to store the new state container
 			m_StateMachines.Add(rMyStateContainer);

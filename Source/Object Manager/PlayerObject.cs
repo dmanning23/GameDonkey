@@ -192,17 +192,6 @@ namespace GameDonkey
 		/// </summary>
 		public virtual void UpdateFallMessage(bool bUpdateGravity)
 		{
-			//add the fall delta to the time not on the ground
-			AirDelta += CharacterClock.TimeDelta;
-
-			if (bUpdateGravity)
-			{
-				//if the airdelta is greater than the falltime, send a fall message
-				if (AirDelta >= m_fTimeToFall)
-				{
-					SendStateMessage((int)EMessage.Fell);
-				}
-			}
 		}
 
 		/// <summary>
@@ -326,37 +315,6 @@ namespace GameDonkey
 		/// </summary>
 		public virtual void CheckMovementMessages()
 		{
-			//check for FlyingUp, FlyingDown, FlyingForward, FlyingBack, NeutralSpeed
-			if (m_Velocity.LengthSquared() > (m_fNeutralFlyingSpeed * m_fNeutralFlyingSpeed)) //Use 700 as the point of neutral -> flying
-			{
-				//check if moving horzontal or vertical
-				if (Math.Abs(m_Velocity.X) > Math.Abs(m_Velocity.Y))
-				{
-					//flying horzontal
-
-					//check if going forward or back
-					if (m_Velocity.X > 0.0f)
-					{
-						//flying +x
-						SendStateMessage(Flip ? (int)EMessage.FlyingBack : (int)EMessage.FlyingForward);
-					}
-					else
-					{
-						//flying -x
-						SendStateMessage(Flip ? (int)EMessage.FlyingForward : (int)EMessage.FlyingBack);
-					}
-				}
-				else
-				{
-					//flying vertical, dive is much faster because its so much more powerful than the other modes
-					SendStateMessage((m_Velocity.Y > 900.0f) ? (int)EMessage.FlyingDown : (int)EMessage.FlyingUp);
-				}
-			}
-			else
-			{
-				//character is not moving very fast in any direction
-				SendStateMessage((int)EMessage.NeutralSpeed);
-			}
 		}
 
 		#region Hit Response
@@ -492,9 +450,11 @@ namespace GameDonkey
 				Debug.Assert(m_Position.X != float.NaN);
 				Debug.Assert(m_Position.Y != float.NaN);
 
+				//WEDDING GAME
+
 				//only send a ground hit message if the player was falling, 
 				//this way the player won't "bounce" out of the floor when jumping through
-				SendStateMessage((int)EMessage.HitGround);
+				//SendStateMessage((int)EMessage.HitGround);
 			}
 		}
 

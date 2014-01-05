@@ -64,6 +64,12 @@
     <Compile Include="..\Source\IGameDonkey.cs">
       <Link>IGameDonkey.cs</Link>
     </Compile>
+    <Compile Include="..\Source\Object Manager\RoboJetsPlayerObject.cs">
+      <Link>Object Manager\RoboJetsPlayerObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\RoboJetsStateMachine.cs">
+      <Link>State Machine\RoboJetsStateMachine.cs</Link>
+    </Compile>
     <Compile Include="..\Source\XnaDonkey.cs">
       <Link>XnaDonkey.cs</Link>
     </Compile>
