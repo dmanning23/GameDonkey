@@ -241,9 +241,6 @@ namespace GameDonkey
 			Debug.Assert(0 <= iIndex);
 			Debug.Assert(iIndex < 4);
 
-			//better not be switching to the same state machine...
-			Debug.Assert(iIndex != CurrentStateMachine);
-
 			//do a little timer so it doesn't pop back and forth between state machines...
 			//but ignore it for switching into/out of ground state machine
 			if (!IgnoreStateMachineChange && //Is the flag set to ignore state container changes?
@@ -251,6 +248,9 @@ namespace GameDonkey
 				(0 == CurrentStateMachine) || 
 				(m_StateMachineChangeTimer.RemainingTime() <= 0.0f)))
 			{
+				//better not be switching to the same state machine...
+				Debug.Assert(iIndex != CurrentStateMachine);
+
 				//reset the new state machine to the initial state
 				m_StateMachines[CurrentStateMachine].Reset();
 
@@ -354,7 +354,7 @@ namespace GameDonkey
 			Debug.Assert(null != m_StateMachines);
 
 			//replace in all the state actions
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < m_StateMachines.Count; i++)
 			{
 				m_StateMachines[i].ReplaceOwner(myBot);
 			}
@@ -431,7 +431,7 @@ namespace GameDonkey
 #if DEBUG
 			//make sure the state machines all match
 			string strName = m_StateMachines[0].GetMessageName(iMessageIndex);
-			for (int i = 1; i < 4; i++)
+			for (int i = 1; i < m_StateMachines.Count; i++)
 			{
 				Debug.Assert(m_StateMachines[i].GetMessageName(iMessageIndex) == strName);
 			}
@@ -456,7 +456,7 @@ namespace GameDonkey
 
 			//find the state machine with the most states
 			int iNumMessages = m_StateMachines[0].NumMessages();
-			for (int i = 1; i < 4; i++)
+			for (int i = 1; i < m_StateMachines.Count; i++)
 			{
 				if (m_StateMachines[i].NumMessages() > iNumMessages)
 				{

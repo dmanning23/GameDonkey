@@ -406,9 +406,12 @@ namespace GameDonkey
 				}
 			}
 
+			//save that filename for later
+			m_strActionsFile = strStateActionsFilename;
+
 			//load the state actions
 			Debug.Assert(null != m_listActions);
-			if (!m_listActions.ReadXmlStateActions(strStateActionsFilename, rOwner, rEngine, StateMachine))
+			if (!m_listActions.ReadXmlStateActions(m_strActionsFile, rOwner, rEngine, StateMachine))
 			{
 				Debug.Assert(false);
 				return false;
@@ -444,9 +447,12 @@ namespace GameDonkey
 				StateMachine.ReadSerializedFile(rContent, strStateMachineResource, iMessageOffset);
 			}
 
+			//save that filename for later
+			m_strActionsFile = strStateActionsResource;
+
 			//load the state actions
 			Debug.Assert(null != m_listActions);
-			m_listActions.ReadSerializedStateActions(rContent, strStateActionsResource, rOwner, StateMachine, rEngine);
+			m_listActions.ReadSerializedStateActions(rContent, m_strActionsFile, rOwner, StateMachine, rEngine);
 		}
 
 		#endregion //Combined File IO

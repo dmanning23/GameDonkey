@@ -559,6 +559,18 @@ namespace GameDonkey
 				}
 			}
 
+			//Set all the message names
+			iEnumIndex = 0;
+			foreach (var messageName in Enum.GetNames(typeof(EMessage)))
+			{
+				if (iEnumIndex != (int)EMessage.NumMessages)
+				{
+					SetMessageName(iEnumIndex, messageName);
+					iEnumIndex++;
+				}
+			}
+
+
 			#endregion //state names
 		}
 

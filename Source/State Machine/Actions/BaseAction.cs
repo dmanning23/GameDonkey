@@ -130,10 +130,10 @@ namespace GameDonkey
 		}
 
 		/// <summary>
-		/// overloaded in child classes to write out action specific stuff
+		/// Write out all the xml required for a state action
 		/// </summary>
 		/// <param name="rXMLFile"></param>
-		public virtual void WriteXml(XmlTextWriter rXMLFile)
+		public void WriteXml(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("Item");
 			rXMLFile.WriteAttributeString("Type", StateActionFactory.TypeToXMLString(ActionType));
@@ -149,9 +149,17 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			//write out the action specific crap
-			WriteXml(rXMLFile);
+			WriteActionXml(rXMLFile);
 
 			rXMLFile.WriteEndElement(); //Item
+		}
+
+		/// <summary>
+		/// overloaded in child classes to write out action specific stuff
+		/// </summary>
+		/// <param name="rXMLFile"></param>
+		protected virtual void WriteActionXml(XmlTextWriter rXMLFile)
+		{
 		}
 
 		static public void ReadSerializedListActions(BaseObject rOwner,
