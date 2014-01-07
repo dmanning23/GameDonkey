@@ -436,7 +436,7 @@ namespace GameDonkey
 				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootForward);
 				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
 				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootDown);
+				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootForward);
 				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyDownShootForward);
 				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyDownShootForward);
 				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyDownShootUp);
