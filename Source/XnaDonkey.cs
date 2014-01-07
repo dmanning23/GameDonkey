@@ -1154,14 +1154,13 @@ namespace GameDonkey
 		/// <returns></returns>
 		public PlayerQueue LoadSerializedHumanPlayer(ContentManager rXmlContent,
 			Color myColor,
-			string strCharacterFile,
+			Filename strCharacterFile,
 			PlayerIndex eIndex,
 			string strPlayerName)
 		{
 			//create and load a player
 			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
-			Filename myChar = new Filename(strCharacterFile);
-			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.Human, 0))
+			if (null == rPlayer.LoadSerializedObject(rXmlContent, strCharacterFile, this, EObjectType.Human, 0))
 			{
 				Debug.Assert(false);
 			}
@@ -1188,14 +1187,13 @@ namespace GameDonkey
 		/// <param name="eType">the type of dude to load, accepts human and AI</param>
 		/// <returns></returns>
 		public PlayerQueue LoadXmlHumanPlayer(Color myColor,
-			string strCharacterFile,
+			Filename strCharacterFile,
 			PlayerIndex eIndex,
 			string strPlayerName)
 		{
 			//create and load a player
 			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
-			Filename myChar = new Filename(strCharacterFile);
-			if (null == rPlayer.LoadXmlObject(myChar, this, EObjectType.Human, 0))
+			if (null == rPlayer.LoadXmlObject(strCharacterFile, this, EObjectType.Human, 0))
 			{
 				Debug.Assert(false);
 			}
@@ -1203,7 +1201,7 @@ namespace GameDonkey
 
 			//create a controller for that player
 			InputWrapper rQueue = new InputWrapper(new ControllerWrapper(eIndex, (PlayerIndex.One == eIndex)), MasterClock.GetCurrentTime);
-			if (!rQueue.ReadXmlFile(new Filename(@"Move List.xml"), rPlayer.Character.States.GetMessageIndexFromText))
+			if (!rQueue.ReadXmlFile(new Filename(@"MoveList.xml"), rPlayer.Character.States.GetMessageIndexFromText))
 			{
 				Debug.Assert(false);
 			}
@@ -1218,14 +1216,13 @@ namespace GameDonkey
 
 		public PlayerQueue LoadAiPlayer(ContentManager rXmlContent,
 			Color myColor,
-			string strCharacterFile,
+			Filename strCharacterFile,
 			int iDifficulty,
 			string strPlayerName)
 		{
 			//create and load a player
 			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
-			Filename myChar = new Filename(strCharacterFile);
-			if (null == rPlayer.LoadSerializedObject(rXmlContent, myChar, this, EObjectType.AI, iDifficulty))
+			if (null == rPlayer.LoadSerializedObject(rXmlContent, strCharacterFile, this, EObjectType.AI, iDifficulty))
 			{
 				Debug.Assert(false);
 			}
@@ -1243,10 +1240,10 @@ namespace GameDonkey
 			return rPlayer;
 		}
 
-		public void LoadSerializedBoard(ContentManager rXmlContent, string strBoardFile)
+		public void LoadSerializedBoard(ContentManager rXmlContent, Filename strBoardFile)
 		{
 			//load the resource
-			SPFSettings.BoardXML myDude = rXmlContent.Load<SPFSettings.BoardXML>(strBoardFile);
+			SPFSettings.BoardXML myDude = rXmlContent.Load<SPFSettings.BoardXML>(strBoardFile.GetRelPathFileNoExt());
 
 			//grab all the spawn points
 			for (int i = 0; i < myDude.spawnPoints.Count; i++)
@@ -1280,8 +1277,7 @@ namespace GameDonkey
 			for (int i = 0; i < myDude.objects.Count; i++)
 			{
 				//load the level object
-				Filename myLevelObjectFile = new Filename(myDude.objects[i]);
-				BaseObject rLevelObject = m_LevelObjects.LoadSerializedObject(rXmlContent, myLevelObjectFile, this, EObjectType.Level, 0);
+				BaseObject rLevelObject = m_LevelObjects.LoadSerializedObject(rXmlContent, new Filename(myDude.objects[i]), this, EObjectType.Level, 0);
 				if (null == rLevelObject)
 				{
 					Debug.Assert(false);
@@ -1291,11 +1287,10 @@ namespace GameDonkey
 			m_LevelObjects.PlayerName = "Board";
 		}
 
-		public bool LoadXmlBoard(string strBoardFile)
+		public bool LoadXmlBoard(Filename strBoardFile)
 		{
 			//Open the file.
-			Filename myBoardFile = new Filename(strBoardFile);
-			FileStream stream = File.Open(myBoardFile.File, FileMode.Open, FileAccess.Read);
+			FileStream stream = File.Open(strBoardFile.File, FileMode.Open, FileAccess.Read);
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(stream);
 			XmlNode rootNode = xmlDoc.DocumentElement;
