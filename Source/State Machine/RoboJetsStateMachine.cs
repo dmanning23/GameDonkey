@@ -28,21 +28,49 @@ namespace GameDonkey
 		RobotFlyBackwardShootForward,
 		RobotFlyUpShootForward,
 		RobotFlyDownShootForward,
+		
 		RobotSitStillShootUp,
 		RobotFlyForwardShootUp,
 		RobotFlyBackwardShootUp,
 		RobotFlyUpShootUp,
 		RobotFlyDownShootUp,
+
 		RobotSitStillShootDown,
 		RobotFlyForwardShootDown,
 		RobotFlyBackwardShootDown,
 		RobotFlyUpShootDown,
 		RobotFlyDownShootDown,
+
 		RobotSitStillShootBackward,
 		RobotFlyForwardShootBackward,
 		RobotFlyBackwardShootBackward,
 		RobotFlyUpShootBackward,
 		RobotFlyDownShootBackward,
+
+		RobotSitStillShootUpForward,
+		RobotFlyForwardShootUpForward,
+		RobotFlyBackwardShootUpForward,
+		RobotFlyUpShootUpForward,
+		RobotFlyDownShootUpForward,
+
+		RobotSitStillShootDownForward,
+		RobotFlyForwardShootDownForward,
+		RobotFlyBackwardShootDownForward,
+		RobotFlyUpShootDownForward,
+		RobotFlyDownShootDownForward,
+
+		RobotSitStillShootUpBack,
+		RobotFlyForwardShootUpBack,
+		RobotFlyBackwardShootUpBack,
+		RobotFlyUpShootUpBack,
+		RobotFlyDownShootUpBack,
+
+		RobotSitStillShootDownBack,
+		RobotFlyForwardShootDownBack,
+		RobotFlyBackwardShootDownBack,
+		RobotFlyUpShootDownBack,
+		RobotFlyDownShootDownBack,
+
 		NumRobotStates
 	}
 
@@ -93,10 +121,14 @@ namespace GameDonkey
 		DownRight,
 		ForwardRight,
 		BackRight,
-		UpReleaseRight,
-		DownReleaseRight,
-		ForwardReleaseRight,
-		BackReleaseRight,
+
+		//diagonals
+		UpForwardRight,
+		DownForwardRight,
+		DownBackRight,
+		UpBackRight,
+
+		NeutralRight,
 
 		NumMessages
 	}
