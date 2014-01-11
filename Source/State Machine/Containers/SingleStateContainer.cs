@@ -331,7 +331,7 @@ namespace GameDonkey
 
 		public bool WriteXml()
 		{
-			return m_listActions.WriteXml(m_strActionsFile);
+			return m_listActions.WriteXml(m_strActionsFile, StateMachine);
 		}
 
 		public void ReadSerialized(ContentManager rXmlContent,

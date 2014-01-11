@@ -14,20 +14,7 @@ namespace GameDonkey
 	{
 		#region Members
 
-		/// <summary>
-		/// List of all the actions to perform when in this state
-		/// </summary>
-		protected List<IBaseAction> m_listActions;
-
-		/// <summary>
-		/// name of the state this thing is describing
-		/// </summary>
-		protected string m_strStateName;
-
-		/// <summary>
-		/// whether or not this is an attack/throw state
-		/// </summary>
-		protected bool m_bIsAttack;
+		private List<IBaseAction> m_listActions;
 
 		/// <summary>
 		/// If this state is an attack or a throw, the time that the startup ends
@@ -43,19 +30,25 @@ namespace GameDonkey
 
 		#region Properties
 
-		public string Name
-		{
-			get { return m_strStateName; }
-		}
+		/// <summary>
+		/// name of the state this thing is describing
+		/// </summary>
+		public string StateName { get; set; }
 
-		public bool IsAttack
-		{
-			get { return m_bIsAttack; }
-		}
+		/// <summary>
+		/// whether or not this is an attack/throw state
+		/// </summary>
+		public bool IsAttack { get; private set; }
 
+		/// <summary>
+		/// List of all the actions to perform when in this state
+		/// </summary>
 		public List<IBaseAction> Actions
 		{
-			get { return m_listActions; }
+			get
+			{
+				return m_listActions;
+			}
 		}
 
 		#endregion //Properties
@@ -75,9 +68,9 @@ namespace GameDonkey
 		/// </summary>
 		public void StateChange()
 		{
-			for (int i = 0; i < m_listActions.Count; i++ )
+			for (int i = 0; i < Actions.Count; i++ )
 			{
-				m_listActions[i].AlreadyRun = false;
+				Actions[i].AlreadyRun = false;
 			}
 		}
 
@@ -89,25 +82,25 @@ namespace GameDonkey
 		/// <param name="fCurTime">the current time</param>
 		public void ExecuteAction(float fPrevTime, float fCurTime)
 		{
-			Debug.Assert(null != m_listActions);
+			Debug.Assert(null != Actions);
 
 			//loop through all actions, execute the ones between the time slice
-			for (int i = 0; i < m_listActions.Count; i++)
+			for (int i = 0; i < Actions.Count; i++)
 			{
 				//first check if the time of this action is expired
-				if (m_listActions[i].Time > fCurTime)
+				if (Actions[i].Time > fCurTime)
 				{
 					//this action hasn't been run yet!
 					return;
 				}
 
 				//check if this action hasn't happened yet
-				else if (m_listActions[i].Time >= fPrevTime)
+				else if (Actions[i].Time >= fPrevTime)
 				{
 					//if the action is expired, make sure it has been run anyways
-					if (!m_listActions[i].AlreadyRun)
+					if (!Actions[i].AlreadyRun)
 					{
-						if (m_listActions[i].Execute())
+						if (Actions[i].Execute())
 						{
 							//the state was changed when that dude was running
 							return;
@@ -119,7 +112,7 @@ namespace GameDonkey
 #if DEBUG
 			////okay, if it gets here and the last action is a deactivate/sendstatemessage, 
 			////and its already been done, it means something broke somewhere
-			//IBaseAction rLastAction = m_listActions[m_listActions.Count - 1];
+			//IBaseAction rLastAction = Actions[Actions.Count - 1];
 			//if (rLastAction.AlreadyRun && 
 			//    ((rLastAction.ActionType == EActionType.Deactivate) || 
 			//    (rLastAction.ActionType == EActionType.SendStateMessage)))
@@ -131,7 +124,7 @@ namespace GameDonkey
 
 		public bool Compare(StateActions rInst)
 		{
-			if (m_strStateName != rInst.m_strStateName)
+			if (StateName != rInst.StateName)
 			{
 				Debug.Assert(false);
 				return false;
@@ -146,16 +139,16 @@ namespace GameDonkey
 				Debug.Assert(false);
 				return false;
 			}
-			if (m_listActions.Count != rInst.m_listActions.Count)
+			if (Actions.Count != rInst.Actions.Count)
 			{
 				Debug.Assert(false);
 				return false;
 			}
 
 			//compare all the actions
-			for (int i = 0; i < m_listActions.Count; i++)
+			for (int i = 0; i < Actions.Count; i++)
 			{
-				if (!m_listActions[i].Compare(rInst.m_listActions[i]))
+				if (!Actions[i].Compare(rInst.Actions[i]))
 				{
 					Debug.Assert(false);
 					return false;
@@ -171,17 +164,17 @@ namespace GameDonkey
 		private void CalculateAttackTime()
 		{
 			//does this state have any attack actions?
-			for (int i = 0; i < m_listActions.Count; i++)
+			for (int i = 0; i < Actions.Count; i++)
 			{
-				if ((m_listActions[i].ActionType == EActionType.CreateAttack) ||
-					(m_listActions[i].ActionType == EActionType.CreateThrow) ||
-					(m_listActions[i].ActionType == EActionType.CreateHitCircle))
+				if ((Actions[i].ActionType == EActionType.CreateAttack) ||
+					(Actions[i].ActionType == EActionType.CreateThrow) ||
+					(Actions[i].ActionType == EActionType.CreateHitCircle))
 				{
 					//set this state to an attack state
-					m_bIsAttack = true;
+					IsAttack = true;
 
 					//check if this is the end of the startup 
-					CreateAttackAction rAction = (CreateAttackAction)m_listActions[i];
+					CreateAttackAction rAction = (CreateAttackAction)Actions[i];
 					if (0.0f == m_fActiveTime)
 					{
 						m_fActiveTime = rAction.Time;
@@ -193,13 +186,13 @@ namespace GameDonkey
 						m_fRecoveryTime = rAction.Time + rAction.TimeDelta;
 					}
 				}
-				else if (m_listActions[i].ActionType == EActionType.Projectile)
+				else if (Actions[i].ActionType == EActionType.Projectile)
 				{
 					//set this state to an attack state
-					m_bIsAttack = true;
+					IsAttack = true;
 
 					//check if this is the end of the startup 
-					ProjectileAction rAction = (ProjectileAction)m_listActions[i];
+					ProjectileAction rAction = (ProjectileAction)Actions[i];
 					if (0.0f == m_fActiveTime)
 					{
 						m_fActiveTime = rAction.Time;
@@ -216,7 +209,7 @@ namespace GameDonkey
 
 		public bool IsAttackActive(GameClock rStateClock)
 		{
-			Debug.Assert(m_bIsAttack);
+			Debug.Assert(IsAttack);
 
 			//the attacks are still active if the recovery time hasnt started
 			return (rStateClock.CurrentTime < m_fRecoveryTime);
@@ -229,9 +222,9 @@ namespace GameDonkey
 		public void ReplaceOwner(BaseObject myBot)
 		{
 			//replace in all the state actions
-			for (int i = 0; i < m_listActions.Count; i++)
+			for (int i = 0; i < Actions.Count; i++)
 			{
-				m_listActions[i].Owner = myBot;
+				Actions[i].Owner = myBot;
 			}
 		}
 
@@ -250,7 +243,7 @@ namespace GameDonkey
 
 			//save the action
 			Debug.Assert(null != myAction);
-			m_listActions.Add(myAction);
+			Actions.Add(myAction);
 
 			//sort the list of actions
 			Sort();
@@ -265,12 +258,12 @@ namespace GameDonkey
 		/// <param name="iActionIndex">index of the item to remove</param>
 		public bool RemoveAction(IBaseAction rBaseAction)
 		{
-			return m_listActions.Remove(rBaseAction);
+			return Actions.Remove(rBaseAction);
 		}
 
 		public void Sort()
 		{
-			m_listActions.Sort(new ActionSort());
+			Actions.Sort(new ActionSort());
 		}
 
 		#endregion //Tool Methods
@@ -322,7 +315,7 @@ namespace GameDonkey
 
 					if (strName == "name")
 					{
-						m_strStateName = strValue;
+						StateName = strValue;
 					}
 					else if (strName == "actions")
 					{
@@ -358,14 +351,14 @@ namespace GameDonkey
 
 			//write out the state name
 			rXMLFile.WriteStartElement("name");
-			rXMLFile.WriteString(m_strStateName);
+			rXMLFile.WriteString(StateName);
 			rXMLFile.WriteEndElement(); //name
 
 			//write out the state actions
 			rXMLFile.WriteStartElement("actions");
-			for (int i = 0; i < m_listActions .Count; i++)
+			for (int i = 0; i < Actions .Count; i++)
 			{
-				m_listActions[i].WriteXml(rXMLFile);
+				Actions[i].WriteXml(rXMLFile);
 			}
 			rXMLFile.WriteEndElement(); //actions
 			rXMLFile.WriteEndElement(); //Item
@@ -374,10 +367,10 @@ namespace GameDonkey
 		public void ReadSerialized(SPFSettings.StateActionsXML myActions, BaseObject rOwner, IGameDonkey rEngine, ContentManager rXmlContent, StateMachine rStateMachine)
 		{
 			//grab teh state name
-			m_strStateName = myActions.name;
+			StateName = myActions.name;
 
 			//verify that the state is in the state machine!
-			Debug.Assert(-1 != rStateMachine.GetStateIndexFromText(m_strStateName));
+			Debug.Assert(-1 != rStateMachine.GetStateIndexFromText(StateName));
 
 			//set up all the actions
 			IBaseAction.ReadSerializedListActions(rOwner, myActions.actions, ref m_listActions, rEngine, rXmlContent, rStateMachine);

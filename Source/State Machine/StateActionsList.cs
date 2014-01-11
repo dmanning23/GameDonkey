@@ -213,7 +213,7 @@ namespace GameDonkey
 			return true;
 		}
 
-		public bool WriteXml(Filename strFilename)
+		public bool WriteXml(Filename strFilename, StateMachine rStateMachine)
 		{
 			//open the file, create it if it doesnt exist yet
 			XmlTextWriter rXMLFile = new XmlTextWriter(strFilename.File, null);
@@ -228,12 +228,36 @@ namespace GameDonkey
 			rXMLFile.WriteStartElement("Asset");
 			rXMLFile.WriteAttributeString("Type", "SPFSettings.StateContainerXML");
 
-			//write out joints
+			//write out start node
 			rXMLFile.WriteStartElement("states");
-			for (int i = 0; i < m_listActions.Count; i++)
+
+			//Go through the states and make sure they all have a set of actions in there!
+			for (int i = 0; i < rStateMachine.NumStates; i++)
 			{
-				m_listActions[i].WriteXml(rXMLFile);
+				//Get the state name
+				string strStateName = rStateMachine.GetStateName(i);
+
+				//Find the state actions for this state and write them out
+				bool bFound = false;
+				for (int j = 0; j < m_listActions.Count; j++)
+				{
+					if (m_listActions[j].StateName == strStateName)
+					{
+						bFound = true;
+						m_listActions[j].WriteXml(rXMLFile);
+						break;
+					}
+				}
+
+				//If it wasn't found, create a new set of state actions, set the name, and write it out
+				if (!bFound)
+				{
+					var actions = new StateActions();
+					actions.StateName = strStateName;
+					actions.WriteXml(rXMLFile);
+				}
 			}
+			
 			rXMLFile.WriteEndElement(); //XnaContent
 			rXMLFile.WriteEndElement(); //Asset
 			rXMLFile.WriteEndElement(); //states
@@ -270,7 +294,7 @@ namespace GameDonkey
 			for (int i = 0; i < rStateMachine.NumStates; i++)
 			{
 				string strStateMachineName = rStateMachine.GetStateName(i);
-				string strStateActionName = m_listActions[i].Name;
+				string strStateActionName = m_listActions[i].StateName;
 				Debug.Assert(strStateMachineName == strStateActionName);
 			}
 #endif
