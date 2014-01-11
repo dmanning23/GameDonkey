@@ -199,11 +199,11 @@ namespace GameDonkey
 					//get the ground states of this dude
 					Filename groundStatesFile = new Filename(strValue);
 					if (!States.ReadXmlStateContainer(new Filename(@"Robot\robot state machine.xml"),
-						iMessageOffset, 
-						groundStatesFile, 
+						iMessageOffset,
+						groundStatesFile,
 						this,
-						rEngine, 
-						true, 
+						rEngine,
+						true,
 						false))
 					{
 						Debug.Assert(false);

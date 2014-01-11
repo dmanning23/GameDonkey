@@ -79,21 +79,21 @@ namespace GameDonkey
 	/// </summary>
 	public enum EJetState
 	{
-		JetFlyNeutralNoTurn = EState.NumStates,
-		JetFlyNeutralTurnUp,
-		JetFlyNeutralTurnDown,
-		JetAfterburnerNoTurn,
-		JetAfterburnerTurnUp,
-		JetAfterburnerTurnDown,
-		JetBrakeNoTurn,
-		JetBrakeTurnUp,
-		JetBrakeTurnDown,
-		JetBankUpNoTurn,
-		JetBankUpTurnUp,
-		JetBankUpTurnDown,
-		JetBankDownNoTurn,
-		JetBankDownTurnUp,
-		JetBankDownTurnDown,
+		FlyNeutralNoTurn = EState.NumStates,
+		FlyNeutralTurnUp,
+		FlyNeutralTurnDown,
+		AfterburnerNoTurn,
+		AfterburnerTurnUp,
+		AfterburnerTurnDown,
+		BrakeNoTurn,
+		BrakeTurnUp,
+		BrakeTurnDown,
+		BankUpNoTurn,
+		BankUpTurnUp,
+		BankUpTurnDown,
+		BankDownNoTurn,
+		BankDownTurnUp,
+		BankDownTurnDown,
 		NumJetStates
 	}
 
@@ -178,7 +178,7 @@ namespace GameDonkey
 			{
 				for (int i = 0; i < (int)EJetState.NumJetStates; i++)
 				{
-					SetEntry(i, (int)EMessage.Done, (int)EJetState.JetFlyNeutralNoTurn);
+					SetEntry(i, (int)EMessage.Done, (int)EJetState.FlyNeutralNoTurn);
 				}
 			}
 			else
@@ -189,18 +189,70 @@ namespace GameDonkey
 				}
 			}
 
+			SetStateMachineEntries(bJetStateMachine);
+		}
+
+		/// <summary>
+		/// Set all the default state machine entries
+		/// </summary>
+		/// <param name="bJetStateMachine"></param>
+		private void SetStateMachineEntries(bool bJetStateMachine)
+		{
 			//Setup some hard coded entries
 			if (bJetStateMachine)
 			{
 				for (int i = (int)EState.NumStates; i < (int)EJetState.NumJetStates; i++)
 				{
+					SetEntry(i, (int)EMessage.Transform, (int)EState.SwitchToRobotStateMachine);
 					SetEntry(i, (int)EMessage.TurnAround, (int)EState.TurningAround);
+
+					SetEntry(i, (int)EMessage.SitStillShootForward, (int)EJetState.FlyNeutralNoTurn);
+					SetEntry(i, (int)EMessage.FlyForwardShootForward, (int)EJetState.AfterburnerNoTurn);
+					SetEntry(i, (int)EMessage.FlyBackwardShootForward, (int)EJetState.BrakeNoTurn);
+					SetEntry(i, (int)EMessage.FlyUpShootForward, (int)EJetState.BankUpNoTurn);
+					SetEntry(i, (int)EMessage.FlyDownShootForward, (int)EJetState.BankDownNoTurn);
+					SetEntry(i, (int)EMessage.SitStillShootUp, (int)EJetState.FlyNeutralTurnUp);
+					SetEntry(i, (int)EMessage.FlyForwardShootUp, (int)EJetState.AfterburnerTurnUp);
+					SetEntry(i, (int)EMessage.FlyBackwardShootUp, (int)EJetState.BrakeTurnUp);
+					SetEntry(i, (int)EMessage.FlyUpShootUp, (int)EJetState.BankUpTurnUp);
+					SetEntry(i, (int)EMessage.FlyDownShootUp, (int)EJetState.BankDownTurnUp);
+					SetEntry(i, (int)EMessage.SitStillShootDown, (int)EJetState.FlyNeutralTurnDown);
+					SetEntry(i, (int)EMessage.FlyForwardShootDown, (int)EJetState.AfterburnerTurnDown);
+					SetEntry(i, (int)EMessage.FlyBackwardShootDown, (int)EJetState.BrakeTurnDown);
+					SetEntry(i, (int)EMessage.FlyUpShootDown, (int)EJetState.BankUpTurnDown);
+					SetEntry(i, (int)EMessage.FlyDownShootDown, (int)EJetState.BankDownTurnDown);
+					SetEntry(i, (int)EMessage.SitStillShootBackward, (int)EJetState.FlyNeutralNoTurn);
+					SetEntry(i, (int)EMessage.FlyForwardShootBackward, (int)EJetState.AfterburnerNoTurn);
+					SetEntry(i, (int)EMessage.FlyBackwardShootBackward, (int)EJetState.BrakeNoTurn);
+					SetEntry(i, (int)EMessage.FlyUpShootBackward, (int)EJetState.BankUpNoTurn);
+					SetEntry(i, (int)EMessage.FlyDownShootBackward, (int)EJetState.BankDownNoTurn);
+					SetEntry(i, (int)EMessage.SitStillShootUpForward, (int)EJetState.FlyNeutralTurnUp);
+					SetEntry(i, (int)EMessage.FlyForwardShootUpForward, (int)EJetState.AfterburnerTurnUp);
+					SetEntry(i, (int)EMessage.FlyBackwardShootUpForward, (int)EJetState.BrakeTurnUp);
+					SetEntry(i, (int)EMessage.FlyUpShootUpForward, (int)EJetState.BankUpTurnUp);
+					SetEntry(i, (int)EMessage.FlyDownShootUpForward, (int)EJetState.BankDownTurnUp);
+					SetEntry(i, (int)EMessage.SitStillShootDownForward, (int)EJetState.FlyNeutralTurnDown);
+					SetEntry(i, (int)EMessage.FlyForwardShootDownForward, (int)EJetState.AfterburnerTurnDown);
+					SetEntry(i, (int)EMessage.FlyBackwardShootDownForward, (int)EJetState.BrakeTurnDown);
+					SetEntry(i, (int)EMessage.FlyUpShootDownForward, (int)EJetState.BankUpTurnDown);
+					SetEntry(i, (int)EMessage.FlyDownShootDownForward, (int)EJetState.BankDownTurnDown);
+					SetEntry(i, (int)EMessage.SitStillShootUpBack, (int)EJetState.FlyNeutralTurnUp);
+					SetEntry(i, (int)EMessage.FlyForwardShootUpBack, (int)EJetState.AfterburnerTurnUp);
+					SetEntry(i, (int)EMessage.FlyBackwardShootUpBack, (int)EJetState.BrakeTurnUp);
+					SetEntry(i, (int)EMessage.FlyUpShootUpBack, (int)EJetState.BankUpTurnUp);
+					SetEntry(i, (int)EMessage.FlyDownShootUpBack, (int)EJetState.BankDownTurnUp);
+					SetEntry(i, (int)EMessage.SitStillShootDownBack, (int)EJetState.FlyNeutralTurnDown);
+					SetEntry(i, (int)EMessage.FlyForwardShootDownBack, (int)EJetState.AfterburnerTurnDown);
+					SetEntry(i, (int)EMessage.FlyBackwardShootDownBack, (int)EJetState.BrakeTurnDown);
+					SetEntry(i, (int)EMessage.FlyUpShootDownBack, (int)EJetState.BankUpTurnDown);
+					SetEntry(i, (int)EMessage.FlyDownShootDownBack, (int)EJetState.BankDownTurnDown);
 				}
 			}
 			else
 			{
 				for (int i = (int)EState.NumStates; i < (int)ERobotState.NumRobotStates; i++)
 				{
+					SetEntry(i, (int)EMessage.Transform, (int)EState.SwitchToJetStateMachine);
 					SetEntry(i, (int)EMessage.TurnAround, (int)EState.TurningAround);
 
 					SetEntry(i, (int)EMessage.SitStillShootForward, (int)ERobotState.SitStillShootForward);
