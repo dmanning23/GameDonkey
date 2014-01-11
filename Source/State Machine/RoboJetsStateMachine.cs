@@ -23,53 +23,53 @@ namespace GameDonkey
 	/// </summary>
 	public enum ERobotState
 	{
-		RobotSitStillShootForward = EState.NumStates,
-		RobotFlyForwardShootForward,
-		RobotFlyBackwardShootForward,
-		RobotFlyUpShootForward,
-		RobotFlyDownShootForward,
+		SitStillShootForward = EState.NumStates,
+		FlyForwardShootForward,
+		FlyBackwardShootForward,
+		FlyUpShootForward,
+		FlyDownShootForward,
 		
-		RobotSitStillShootUp,
-		RobotFlyForwardShootUp,
-		RobotFlyBackwardShootUp,
-		RobotFlyUpShootUp,
-		RobotFlyDownShootUp,
+		SitStillShootUp,
+		FlyForwardShootUp,
+		FlyBackwardShootUp,
+		FlyUpShootUp,
+		FlyDownShootUp,
 
-		RobotSitStillShootDown,
-		RobotFlyForwardShootDown,
-		RobotFlyBackwardShootDown,
-		RobotFlyUpShootDown,
-		RobotFlyDownShootDown,
+		SitStillShootDown,
+		FlyForwardShootDown,
+		FlyBackwardShootDown,
+		FlyUpShootDown,
+		FlyDownShootDown,
 
-		RobotSitStillShootBackward,
-		RobotFlyForwardShootBackward,
-		RobotFlyBackwardShootBackward,
-		RobotFlyUpShootBackward,
-		RobotFlyDownShootBackward,
+		SitStillShootBackward,
+		FlyForwardShootBackward,
+		FlyBackwardShootBackward,
+		FlyUpShootBackward,
+		FlyDownShootBackward,
 
-		RobotSitStillShootUpForward,
-		RobotFlyForwardShootUpForward,
-		RobotFlyBackwardShootUpForward,
-		RobotFlyUpShootUpForward,
-		RobotFlyDownShootUpForward,
+		SitStillShootUpForward,
+		FlyForwardShootUpForward,
+		FlyBackwardShootUpForward,
+		FlyUpShootUpForward,
+		FlyDownShootUpForward,
 
-		RobotSitStillShootDownForward,
-		RobotFlyForwardShootDownForward,
-		RobotFlyBackwardShootDownForward,
-		RobotFlyUpShootDownForward,
-		RobotFlyDownShootDownForward,
+		SitStillShootDownForward,
+		FlyForwardShootDownForward,
+		FlyBackwardShootDownForward,
+		FlyUpShootDownForward,
+		FlyDownShootDownForward,
 
-		RobotSitStillShootUpBack,
-		RobotFlyForwardShootUpBack,
-		RobotFlyBackwardShootUpBack,
-		RobotFlyUpShootUpBack,
-		RobotFlyDownShootUpBack,
+		SitStillShootUpBack,
+		FlyForwardShootUpBack,
+		FlyBackwardShootUpBack,
+		FlyUpShootUpBack,
+		FlyDownShootUpBack,
 
-		RobotSitStillShootDownBack,
-		RobotFlyForwardShootDownBack,
-		RobotFlyBackwardShootDownBack,
-		RobotFlyUpShootDownBack,
-		RobotFlyDownShootDownBack,
+		SitStillShootDownBack,
+		FlyForwardShootDownBack,
+		FlyBackwardShootDownBack,
+		FlyUpShootDownBack,
+		FlyDownShootDownBack,
 
 		NumRobotStates
 	}
@@ -105,30 +105,55 @@ namespace GameDonkey
 		Transform = 0,
 		Done,
 		Hit,
+		TurnAround,
 
-		//Left thumbstick
-		Up,
-		Down,
-		Forward,
-		Back,
-		UpRelease,
-		DownRelease,
-		ForwardRelease,
-		BackRelease,
+		SitStillShootForward,
+		FlyForwardShootForward,
+		FlyBackwardShootForward,
+		FlyUpShootForward,
+		FlyDownShootForward,
 
-		//These are all for the right thumbstick
-		UpRight,
-		DownRight,
-		ForwardRight,
-		BackRight,
+		SitStillShootUp,
+		FlyForwardShootUp,
+		FlyBackwardShootUp,
+		FlyUpShootUp,
+		FlyDownShootUp,
 
-		//diagonals
-		UpForwardRight,
-		DownForwardRight,
-		DownBackRight,
-		UpBackRight,
+		SitStillShootDown,
+		FlyForwardShootDown,
+		FlyBackwardShootDown,
+		FlyUpShootDown,
+		FlyDownShootDown,
 
-		NeutralRight,
+		SitStillShootBackward,
+		FlyForwardShootBackward,
+		FlyBackwardShootBackward,
+		FlyUpShootBackward,
+		FlyDownShootBackward,
+
+		SitStillShootUpForward,
+		FlyForwardShootUpForward,
+		FlyBackwardShootUpForward,
+		FlyUpShootUpForward,
+		FlyDownShootUpForward,
+
+		SitStillShootDownForward,
+		FlyForwardShootDownForward,
+		FlyBackwardShootDownForward,
+		FlyUpShootDownForward,
+		FlyDownShootDownForward,
+
+		SitStillShootUpBack,
+		FlyForwardShootUpBack,
+		FlyBackwardShootUpBack,
+		FlyUpShootUpBack,
+		FlyDownShootUpBack,
+
+		SitStillShootDownBack,
+		FlyForwardShootDownBack,
+		FlyBackwardShootDownBack,
+		FlyUpShootDownBack,
+		FlyDownShootDownBack,
 
 		NumMessages
 	}
@@ -160,380 +185,65 @@ namespace GameDonkey
 			{
 				for (int i = 0; i < (int)ERobotState.NumRobotStates; i++)
 				{
-					SetEntry(i, (int)EMessage.Done, (int)ERobotState.RobotSitStillShootForward);
+					SetEntry(i, (int)EMessage.Done, (int)ERobotState.SitStillShootForward);
 				}
 			}
 
 			//Setup some hard coded entries
 			if (bJetStateMachine)
 			{
+				for (int i = (int)EState.NumStates; i < (int)EJetState.NumJetStates; i++)
+				{
+					SetEntry(i, (int)EMessage.TurnAround, (int)EState.TurningAround);
+				}
 			}
 			else
 			{
-				#region RobotSitStillShootForward
-				SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootForward);
-				SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.UpRelease, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.BackRelease, (int)ERobotState.RobotSitStillShootForward);
-				SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.UpRight, (int)ERobotState.RobotSitStillShootUp);
-				SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.DownRight, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.ForwardRight, (int)ERobotState.RobotSitStillShootForward);
-				SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.BackRight, (int)ERobotState.RobotSitStillShootBackward);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootForward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotSitStillShootForward);
-				#endregion
-				#region RobotSitStillShootUp
-				SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootUp);
-				SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootUp);
-				SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootUp);
-				SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootUp);
-				//SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.UpRelease, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.ForwardRelease, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.BackRelease, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.UpRight, (int)ERobotState.RobotSitStillShootUp);
-				SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.DownRight, (int)ERobotState.RobotSitStillShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.ForwardRight, (int)ERobotState.RobotSitStillShootForward);
-				SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.BackRight, (int)ERobotState.RobotSitStillShootBackward);
-				SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotSitStillShootUp, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotSitStillShootDown);
-				#endregion
-				#region RobotSitStillShootDown
-				SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.UpRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.ForwardRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.BackRelease, (int)ERobotState.RobotSitStillShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.UpRight, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.DownRight, (int)ERobotState.RobotSitStillShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.ForwardRight, (int)ERobotState.RobotSitStillShootForward);
-				SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.BackRight, (int)ERobotState.RobotSitStillShootBackward);
-				//SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotSitStillShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootDown, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotSitStillShootDown);
-				#endregion
-				#region RobotSitStillShootBackward
-				SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootBackward);
-				SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootBackward);
-				SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootBackward);
-				SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootBackward);
-				//SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.UpRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.BackRelease, (int)ERobotState.RobotSitStillShootForward);
-				SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.UpRight, (int)ERobotState.RobotSitStillShootUp);
-				SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.DownRight, (int)ERobotState.RobotSitStillShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.ForwardRight, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.BackRight, (int)ERobotState.RobotSitStillShootBackward);
-				//SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotSitStillShootDown);
-				SetEntry((int)ERobotState.RobotSitStillShootBackward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotSitStillShootForward);
-				#endregion
+				for (int i = (int)EState.NumStates; i < (int)ERobotState.NumRobotStates; i++)
+				{
+					SetEntry(i, (int)EMessage.TurnAround, (int)EState.TurningAround);
 
-				#region RobotFlyForwardShootForward
-				SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyForwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.DownRight, (int)ERobotState.RobotFlyForwardShootDown);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.BackRight, (int)ERobotState.RobotFlyForwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootForward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				#endregion //RobotSitStillShootForward
-				#region RobotFlyForwardShootUp
-				SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootUp);
-				SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootUp);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyForwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyForwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.ForwardRelease, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyForwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.UpRight, (int)ERobotState.RobotFlyForwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.DownRight, (int)ERobotState.RobotFlyForwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.BackRight, (int)ERobotState.RobotFlyForwardShootBackward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyForwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyForwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootUp, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootUp);
-				#endregion
-				#region RobotFlyForwardShootDown
-				SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootDown);
-				SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootDown);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootDown);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.ForwardRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.UpRight, (int)ERobotState.RobotFlyForwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.DownRight, (int)ERobotState.RobotFlyForwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.BackRight, (int)ERobotState.RobotFlyForwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyForwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyForwardShootDown);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootDown, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootDown);
-				#endregion
-				#region RobotFlyForwardShootBackward
-				SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootBackward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotSitStillShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyForwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.DownRight, (int)ERobotState.RobotFlyForwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.BackRight, (int)ERobotState.RobotFlyForwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyForwardShootDown);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyForwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyForwardShootBackward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootBackward);
-				#endregion
-
-				#region RobotFlyBackwardShootForward
-				SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.BackRelease, (int)ERobotState.RobotSitStillShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyBackwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.DownRight, (int)ERobotState.RobotFlyBackwardShootDown);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.BackRight, (int)ERobotState.RobotFlyBackwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootForward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				#endregion
-				#region RobotFlyBackwardShootUp
-				SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootUp);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootUp);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.BackRelease, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.UpRight, (int)ERobotState.RobotFlyBackwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.DownRight, (int)ERobotState.RobotFlyBackwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.BackRight, (int)ERobotState.RobotFlyBackwardShootBackward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootUp, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				#endregion
-				#region RobotFlyBackwardShootDown
-				SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootDown);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootDown);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.BackRelease, (int)ERobotState.RobotSitStillShootDown);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.UpRight, (int)ERobotState.RobotFlyBackwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.DownRight, (int)ERobotState.RobotFlyBackwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.BackRight, (int)ERobotState.RobotFlyBackwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootDown, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				#endregion
-				#region RobotFlyBackwardShootBackward
-				SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootBackward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootBackward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.BackRelease, (int)ERobotState.RobotSitStillShootBackward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyBackwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.DownRight, (int)ERobotState.RobotFlyBackwardShootBackward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.BackRight, (int)ERobotState.RobotFlyBackwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyBackwardShootBackward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				#endregion
-
-				#region RobotFlyUpShootForward
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.UpRelease, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyUpShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyUpShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyUpShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyUpShootUp);
-				SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.DownRight, (int)ERobotState.RobotFlyUpShootDown);
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.BackRight, (int)ERobotState.RobotFlyUpShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootForward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				#endregion
-				#region RobotFlyUpShootUp
-				//SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootUp);
-				SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootUp);
-				SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.UpRelease, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyUpShootUp);
-				//SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyUpShootUp);
-				//SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyUpShootUp);
-				//SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.UpRight, (int)ERobotState.RobotFlyUpShootUp);
-				SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.DownRight, (int)ERobotState.RobotFlyUpShootDown);
-				SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyUpShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.BackRight, (int)ERobotState.RobotFlyUpShootBackward);
-				SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyUpShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootUp, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				#endregion
-				#region RobotFlyUpShootDown
-				//SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootDown);
-				SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.UpRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyUpShootDown);
-				//SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyUpShootDown);
-				//SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyUpShootDown);
-				SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.UpRight, (int)ERobotState.RobotFlyUpShootUp);
-				//SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.DownRight, (int)ERobotState.RobotFlyUpShootDown);
-				SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyUpShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.BackRight, (int)ERobotState.RobotFlyUpShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyUpShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootDown, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyForwardShootForward);
-				#endregion
-				#region RobotFlyUpShootBackward
-				//SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootBackward);
-				SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootBackward);
-				SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootBackward);
-				SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootBackward);
-				SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.UpRelease, (int)ERobotState.RobotSitStillShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.DownRelease, (int)ERobotState.RobotFlyUpShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyUpShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyUpShootBackward);
-				SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyUpShootUp);
-				SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.DownRight, (int)ERobotState.RobotFlyUpShootDown);
-				SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyUpShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.BackRight, (int)ERobotState.RobotFlyUpShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyBackwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyUpShootBackward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyUpShootForward);
-				#endregion
-
-				#region RobotFlyDownShootForward
-				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootForward);
-				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyDownShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyDownShootUp);
-				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.DownRight, (int)ERobotState.RobotFlyDownShootDown);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.BackRight, (int)ERobotState.RobotFlyDownShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyDownShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyDownShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyDownShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootForward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyDownShootForward);
-				#endregion
-				#region RobotFlyDownShootUp
-				SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootUp);
-				//SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootUp);
-				SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootUp);
-				SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootUp);
-				//SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyDownShootUp);
-				SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootUp);
-				//SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyDownShootUp);
-				//SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyDownShootUp);
-				//SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.UpRight, (int)ERobotState.RobotFlyDownShootUp);
-				SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.DownRight, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.BackRight, (int)ERobotState.RobotFlyDownShootBackward);
-				SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyDownShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyDownShootUp);
-				//SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyDownShootUp);
-				//SetEntry((int)ERobotState.RobotFlyDownShootUp, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyDownShootUp);
-				#endregion
-				#region RobotFlyDownShootDown
-				SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootDown);
-				//SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootDown);
-				SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootDown);
-				//SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootDown);
-				//SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyDownShootDown);
-				//SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.UpRight, (int)ERobotState.RobotFlyDownShootUp);
-				//SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.DownRight, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyDownShootForward);
-				SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.BackRight, (int)ERobotState.RobotFlyDownShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyDownShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyDownShootDown);
-				//SetEntry((int)ERobotState.RobotFlyDownShootDown, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyDownShootDown);
-				#endregion
-				#region RobotFlyDownShootBackward
-				SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.Up, (int)ERobotState.RobotFlyUpShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.Down, (int)ERobotState.RobotFlyDownShootBackward);
-				SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.Forward, (int)ERobotState.RobotFlyForwardShootBackward);
-				SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.Back, (int)ERobotState.RobotFlyBackwardShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.UpRelease, (int)ERobotState.RobotFlyDownShootBackward);
-				SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.DownRelease, (int)ERobotState.RobotSitStillShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.ForwardRelease, (int)ERobotState.RobotFlyDownShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.BackRelease, (int)ERobotState.RobotFlyDownShootBackward);
-				SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.UpRight, (int)ERobotState.RobotFlyDownShootUp);
-				SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.DownRight, (int)ERobotState.RobotFlyDownShootDown);
-				SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.ForwardRight, (int)ERobotState.RobotFlyDownShootForward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.BackRight, (int)ERobotState.RobotFlyDownShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.UpReleaseRight, (int)ERobotState.RobotFlyDownShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.DownReleaseRight, (int)ERobotState.RobotFlyDownShootBackward);
-				//SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.ForwardReleaseRight, (int)ERobotState.RobotFlyDownShootBackward);
-				SetEntry((int)ERobotState.RobotFlyDownShootBackward, (int)EMessage.BackReleaseRight, (int)ERobotState.RobotFlyDownShootForward);
-				#endregion
+					SetEntry(i, (int)EMessage.SitStillShootForward, (int)ERobotState.SitStillShootForward);
+					SetEntry(i, (int)EMessage.FlyForwardShootForward, (int)ERobotState.FlyForwardShootForward);
+					SetEntry(i, (int)EMessage.FlyBackwardShootForward, (int)ERobotState.FlyBackwardShootForward);
+					SetEntry(i, (int)EMessage.FlyUpShootForward, (int)ERobotState.FlyUpShootForward);
+					SetEntry(i, (int)EMessage.FlyDownShootForward, (int)ERobotState.FlyDownShootForward);
+					SetEntry(i, (int)EMessage.SitStillShootUp, (int)ERobotState.SitStillShootUp);
+					SetEntry(i, (int)EMessage.FlyForwardShootUp, (int)ERobotState.FlyForwardShootUp);
+					SetEntry(i, (int)EMessage.FlyBackwardShootUp, (int)ERobotState.FlyBackwardShootUp);
+					SetEntry(i, (int)EMessage.FlyUpShootUp, (int)ERobotState.FlyUpShootUp);
+					SetEntry(i, (int)EMessage.FlyDownShootUp, (int)ERobotState.FlyDownShootUp);
+					SetEntry(i, (int)EMessage.SitStillShootDown, (int)ERobotState.SitStillShootDown);
+					SetEntry(i, (int)EMessage.FlyForwardShootDown, (int)ERobotState.FlyForwardShootDown);
+					SetEntry(i, (int)EMessage.FlyBackwardShootDown, (int)ERobotState.FlyBackwardShootDown);
+					SetEntry(i, (int)EMessage.FlyUpShootDown, (int)ERobotState.FlyUpShootDown);
+					SetEntry(i, (int)EMessage.FlyDownShootDown, (int)ERobotState.FlyDownShootDown);
+					SetEntry(i, (int)EMessage.SitStillShootBackward, (int)ERobotState.SitStillShootBackward);
+					SetEntry(i, (int)EMessage.FlyForwardShootBackward, (int)ERobotState.FlyForwardShootBackward);
+					SetEntry(i, (int)EMessage.FlyBackwardShootBackward, (int)ERobotState.FlyBackwardShootBackward);
+					SetEntry(i, (int)EMessage.FlyUpShootBackward, (int)ERobotState.FlyUpShootBackward);
+					SetEntry(i, (int)EMessage.FlyDownShootBackward, (int)ERobotState.FlyDownShootBackward);
+					SetEntry(i, (int)EMessage.SitStillShootUpForward, (int)ERobotState.SitStillShootUpForward);
+					SetEntry(i, (int)EMessage.FlyForwardShootUpForward, (int)ERobotState.FlyForwardShootUpForward);
+					SetEntry(i, (int)EMessage.FlyBackwardShootUpForward, (int)ERobotState.FlyBackwardShootUpForward);
+					SetEntry(i, (int)EMessage.FlyUpShootUpForward, (int)ERobotState.FlyUpShootUpForward);
+					SetEntry(i, (int)EMessage.FlyDownShootUpForward, (int)ERobotState.FlyDownShootUpForward);
+					SetEntry(i, (int)EMessage.SitStillShootDownForward, (int)ERobotState.SitStillShootDownForward);
+					SetEntry(i, (int)EMessage.FlyForwardShootDownForward, (int)ERobotState.FlyForwardShootDownForward);
+					SetEntry(i, (int)EMessage.FlyBackwardShootDownForward, (int)ERobotState.FlyBackwardShootDownForward);
+					SetEntry(i, (int)EMessage.FlyUpShootDownForward, (int)ERobotState.FlyUpShootDownForward);
+					SetEntry(i, (int)EMessage.FlyDownShootDownForward, (int)ERobotState.FlyDownShootDownForward);
+					SetEntry(i, (int)EMessage.SitStillShootUpBack, (int)ERobotState.SitStillShootUpBack);
+					SetEntry(i, (int)EMessage.FlyForwardShootUpBack, (int)ERobotState.FlyForwardShootUpBack);
+					SetEntry(i, (int)EMessage.FlyBackwardShootUpBack, (int)ERobotState.FlyBackwardShootUpBack);
+					SetEntry(i, (int)EMessage.FlyUpShootUpBack, (int)ERobotState.FlyUpShootUpBack);
+					SetEntry(i, (int)EMessage.FlyDownShootUpBack, (int)ERobotState.FlyDownShootUpBack);
+					SetEntry(i, (int)EMessage.SitStillShootDownBack, (int)ERobotState.SitStillShootDownBack);
+					SetEntry(i, (int)EMessage.FlyForwardShootDownBack, (int)ERobotState.FlyForwardShootDownBack);
+					SetEntry(i, (int)EMessage.FlyBackwardShootDownBack, (int)ERobotState.FlyBackwardShootDownBack);
+					SetEntry(i, (int)EMessage.FlyUpShootDownBack, (int)ERobotState.FlyUpShootDownBack);
+					SetEntry(i, (int)EMessage.FlyDownShootDownBack, (int)ERobotState.FlyDownShootDownBack);
+				}
 			}
 		}
 

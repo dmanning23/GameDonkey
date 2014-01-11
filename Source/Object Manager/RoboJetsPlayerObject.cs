@@ -160,7 +160,7 @@ namespace GameDonkey
 					//if facing forward but moving -x direction, send turn around message
 					if (0.0f > Velocity.X)
 					{
-						SendStateMessage((int)EMessage.Back);
+						SendStateMessage((int)EMessage.TurnAround);
 					}
 				}
 				else
@@ -168,7 +168,7 @@ namespace GameDonkey
 					//else if facing backward but moving +x direction, send turn around message
 					if (0.0f < Velocity.X)
 					{
-						SendStateMessage((int)EMessage.Back);
+						SendStateMessage((int)EMessage.TurnAround);
 					}
 				}
 			}
