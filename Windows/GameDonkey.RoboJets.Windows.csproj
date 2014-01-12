@@ -67,6 +67,12 @@
     <Compile Include="..\Source\Object Manager\RoboJetsPlayerObject.cs">
       <Link>Object Manager\RoboJetsPlayerObject.cs</Link>
     </Compile>
+    <Compile Include="..\Source\State Machine\ActionDirection.cs">
+      <Link>State Machine\ActionDirection.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\EDirectionType.cs">
+      <Link>State Machine\Actions\EDirectionType.cs</Link>
+    </Compile>
     <Compile Include="..\Source\State Machine\RoboJetsStateMachine.cs">
       <Link>State Machine\RoboJetsStateMachine.cs</Link>
     </Compile>

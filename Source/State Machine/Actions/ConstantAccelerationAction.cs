@@ -15,7 +15,7 @@ namespace GameDonkey
 		/// The pixels/second to add to this characters velocity every second.
 		/// should be +x and -y
 		/// </summary>
-		private Vector2 m_Velocity;
+		public ActionDirection Velocity { get; set; }
 
 		/// <summary>
 		/// The point at which to stop adding velocity to the character
@@ -23,30 +23,9 @@ namespace GameDonkey
 		/// </summary>
 		private Vector2 m_MaxVelocity;
 
-		/// <summary>
-		/// Whether or not we want this add velocity action to use the left thumbstick to get its direction.
-		/// </summary>
-		private bool m_bUseObjectDirection;
-
-		/// <summary>
-		/// The length of the velocity to add to the character.
-		/// This is only used if the thumbstick flag is true
-		/// </summary>
-		private float m_fVelocityLength;
-
 		#endregion //Members
 
 		#region Properties
-
-		/// <summary>
-		/// The pixels/second to add to this characters velocity every second.
-		/// should be -y and +x
-		/// </summary>
-		public Vector2 Velocity
-		{
-			get { return m_Velocity; }
-			set { m_Velocity = value; }
-		}
 
 		/// <summary>
 		/// The point at which to stop adding velocity to the character
@@ -56,17 +35,6 @@ namespace GameDonkey
 		{
 			get { return m_MaxVelocity; }
 			set { m_MaxVelocity = value; }
-		}
-
-		public bool UseObjectDirection
-		{
-			get { return m_bUseObjectDirection; }
-			set { m_bUseObjectDirection = value; }
-		}
-
-		public float VelocityLength
-		{
-			get { return m_fVelocityLength; }
 		}
 
 		#endregion //Properties
@@ -79,10 +47,8 @@ namespace GameDonkey
 		public ConstantAccelerationAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.ConstantAcceleration;
-			m_Velocity = new Vector2(0.0f);
+			Velocity = new ActionDirection();
 			m_MaxVelocity = new Vector2(0.0f);
-			m_bUseObjectDirection = false;
-			m_fVelocityLength = 0.0f;
 		}
 
 		/// <summary>
@@ -106,29 +72,14 @@ namespace GameDonkey
 			
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
-			Debug.Assert(m_bUseObjectDirection == myAction.m_bUseObjectDirection);
-			Debug.Assert(m_fVelocityLength == myAction.m_fVelocityLength);
+			Debug.Assert(Velocity.Compare(myAction.Velocity));
 
 			return true;
 		}
 
 		public Vector2 GetMyVelocity()
 		{
-			//the final velocity we will add to the character
-			Vector2 myVelocity = Velocity;
-
-			if (m_bUseObjectDirection && (Owner.Direction() != Vector2.Zero))
-			{
-				//use the thumbstick direction from the object
-				myVelocity = Owner.Direction() * m_fVelocityLength;
-			}
-			else
-			{
-				//use the velocity from this action
-				myVelocity.X = (Owner.Flip ? -m_Velocity.X : m_Velocity.X);
-			}
-
-			return myVelocity;
+			return Velocity.GetDirection(Owner);
 		}
 
 		#endregion //Methods
@@ -193,17 +144,13 @@ namespace GameDonkey
 							return false;
 						}
 					}
-					else if (strName == "velocity")
+					else if (strName == "direction")
 					{
-						m_Velocity = strValue.ToVector2();
+						Velocity.ReadXml(childNode.FirstChild);
 					}
 					else if (strName == "maxVelocity")
 					{
 						m_MaxVelocity = strValue.ToVector2();
-					}
-					else if (strName == "useObjectDirection")
-					{
-						m_bUseObjectDirection = Convert.ToBoolean(strValue);
 					}
 					else
 					{
@@ -212,10 +159,8 @@ namespace GameDonkey
 				}
 			}
 
-			m_fVelocityLength = m_Velocity.Length();
-
-			Debug.Assert(m_Velocity.Y <= 0.0f);
-			Debug.Assert(m_Velocity.X >= 0.0f);
+			Debug.Assert(Velocity.Velocity.Y <= 0.0f);
+			Debug.Assert(Velocity.Velocity.X >= 0.0f);
 			Debug.Assert(m_MaxVelocity.Y <= 0.0f);
 			Debug.Assert(m_MaxVelocity.X >= 0.0f);
 
@@ -228,16 +173,12 @@ namespace GameDonkey
 		/// <param name="rXMLFile"></param>
 		protected override void WriteActionXml(XmlTextWriter rXMLFile)
 		{
-			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(m_Velocity.StringFromVector());
+			rXMLFile.WriteStartElement("direction");
+			Velocity.WriteXml(rXMLFile);
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("maxVelocity");
 			rXMLFile.WriteString(m_MaxVelocity.StringFromVector());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("useObjectDirection");
-			rXMLFile.WriteString(m_bUseObjectDirection ? "true" : "false");
 			rXMLFile.WriteEndElement();
 		}
 
@@ -248,14 +189,12 @@ namespace GameDonkey
 		public bool ReadSerialized(SPFSettings.ConstantAccelerationActionXML myAction)
 		{
 			Debug.Assert(myAction.type == ActionType.ToString());
-			m_Velocity = myAction.velocity;
+			Velocity.ReadSerialized(myAction.direction);
 			m_MaxVelocity = myAction.maxVelocity;
-			m_bUseObjectDirection = myAction.useObjectDirection;
-			m_fVelocityLength = m_Velocity.Length();
 			ReadSerializedBase(myAction);
 
-			Debug.Assert(m_Velocity.Y <= 0.0f);
-			Debug.Assert(m_Velocity.X >= 0.0f);
+			Debug.Assert(Velocity.Velocity.Y <= 0.0f);
+			Debug.Assert(Velocity.Velocity.X >= 0.0f);
 			Debug.Assert(m_MaxVelocity.Y <= 0.0f);
 			Debug.Assert(m_MaxVelocity.X >= 0.0f);
 

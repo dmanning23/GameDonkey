@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using ParticleBuddy;
 using System.Collections.Generic;
+using GameDonkey;
 
 namespace SPFSettings
 {
@@ -26,22 +27,26 @@ namespace SPFSettings
 		public float time = 0.0f;
 	}
 
-	public class AddVelocityActionXML : BaseActionXML
+	public class DirectionActionXML
 	{
 		public Vector2 velocity = new Vector2(0.0f);
-		public bool useObjectDirection = false;
+		public string directionType = "";
+	}
+
+	public class AddVelocityActionXML : BaseActionXML
+	{
+		public DirectionActionXML direction = new DirectionActionXML();
 	}
 
 	public class ConstantAccelerationActionXML : BaseActionXML
 	{
-		public Vector2 velocity = new Vector2(0.0f);
+		public DirectionActionXML direction = new DirectionActionXML();
 		public Vector2 maxVelocity = new Vector2(0.0f);
-		public bool useObjectDirection = false;
 	}
 
 	public class ConstantDeccelerationActionXML : BaseActionXML
 	{
-		public Vector2 velocity = new Vector2(0.0f);
+		public DirectionActionXML direction = new DirectionActionXML();
 		public float minYVelocity = 0.0f;
 	}
 
@@ -85,7 +90,7 @@ namespace SPFSettings
 	public class ParticleEffectActionXML : BaseActionXML
 	{
 		public string bone = "";
-		public Vector2 direction = new Vector2(0.0f);
+		public DirectionActionXML direction = new DirectionActionXML();
 		public Vector2 StartOffset = new Vector2(0.0f);
 		public List<ParticleXML> emitter = new List<ParticleXML>();
 	}
@@ -106,8 +111,7 @@ namespace SPFSettings
 		public string filename = "";
 		public Vector2 startOffset = new Vector2(0.0f);
 		public float scale = 0.0f;
-		public Vector2 velocity = new Vector2(0.0f);
-		public bool useObjectDirection = false;
+		public DirectionActionXML direction = new DirectionActionXML();
 	}
 
 	public class SendStateMessageActionXML : BaseActionXML
@@ -117,8 +121,7 @@ namespace SPFSettings
 
 	public class SetVelocityActionXML : BaseActionXML
 	{
-		public Vector2 velocity = new Vector2(0.0f);
-		public bool useObjectDirection = false;
+		public DirectionActionXML direction = new DirectionActionXML();
 	}
 
 	public class TrailActionXML : BaseActionXML

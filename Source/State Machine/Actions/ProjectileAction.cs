@@ -31,21 +31,10 @@ namespace GameDonkey
 		public Vector2 StartOffset { get; set; }
 
 		/// <summary>
-		/// Whether or not we want this projectile to get initial velocity from the left thumbstick to get its direction.
-		/// </summary>
-		private bool m_bUseObjectDirection;
-
-		/// <summary>
 		/// The direction to set the projectile's initial velocity when this action is run.
 		/// This is only used if the thumbstick flag is false
 		/// </summary>
-		private Vector2 m_Velocity;
-
-		/// <summary>
-		/// The length of the velocity to add to the projectile.
-		/// This is only used if the thumbstick flag is true
-		/// </summary>
-		private float m_fVelocityLength;
+		public ActionDirection Velocity { get; set; }
 
 		/// <summary>
 		/// How much to scale the projectile.  Read in from the xml file, not the "runtime scale"
@@ -59,27 +48,6 @@ namespace GameDonkey
 		public Filename Filename
 		{
 			get { return m_strProjectileFileName; }
-		}
-
-		public Vector2 Velocity
-		{
-			get { return m_Velocity; }
-			set 
-			{ 
-				m_Velocity = value;
-				m_fVelocityLength = m_Velocity.Length();
-			}
-		}
-
-		public bool UseObjectDirection
-		{
-			get { return m_bUseObjectDirection; }
-			set { m_bUseObjectDirection = value; }
-		}
-
-		public float VelocityLength
-		{
-			get { return m_fVelocityLength; }
 		}
 
 		public float Scale
@@ -109,9 +77,7 @@ namespace GameDonkey
 			m_strProjectileFileName = new Filename();
 			StartOffset = new Vector2(0.0f);
 			m_fScale = 1.0f;
-			m_Velocity = new Vector2(0.0f);
-			m_bUseObjectDirection = false;
-			m_fVelocityLength = 0.0f;
+			Velocity = new ActionDirection();
 		}
 
 		/// <summary>
@@ -146,22 +112,7 @@ namespace GameDonkey
 				m_rProjectile.Position = ProjectilePosition;
 				m_rProjectile.Flip = Owner.Flip;
 
-				//set the initial velocity
-				Vector2 myVelocity = Velocity;
-
-				//If we want the thumbstick direction and it is pointing in a direction...
-				if (m_bUseObjectDirection && (Owner.Direction() != Vector2.Zero))
-				{
-					//use the thumbstick direction from the object
-					myVelocity = Owner.Direction() * VelocityLength;
-				}
-				else
-				{
-					//use the velocity from this action
-					myVelocity.X = (Owner.Flip ? -Velocity.X : Velocity.X);
-				}
-
-				m_rProjectile.Velocity = myVelocity * m_rProjectile.Scale;
+				m_rProjectile.Velocity = (Velocity.GetDirection(Owner) / Owner.Scale) * m_rProjectile.Scale;
 
 				//run the animation container so all the bones will be in the correct position when it updates
 				//This way, any particle effects created will be in correct location.
@@ -190,8 +141,7 @@ namespace GameDonkey
 			Debug.Assert(m_strProjectileFileName.File == myAction.m_strProjectileFileName.File);
 			//Debug.Assert(m_StartOffset.X == myAction.m_StartOffset.X);
 			//Debug.Assert(m_StartOffset.Y == myAction.m_StartOffset.Y);
-			Debug.Assert(m_bUseObjectDirection == myAction.m_bUseObjectDirection);
-			Debug.Assert(VelocityLength == myAction.VelocityLength);
+			Debug.Assert(Velocity.Compare(myAction.Velocity));
 
 			return true;
 		}
@@ -297,13 +247,9 @@ namespace GameDonkey
 					{
 						Scale = Convert.ToSingle(strValue);
 					}
-					else if (strName == "velocity")
+					else if (strName == "direction")
 					{
-						Velocity = strValue.ToVector2();
-					}
-					else if (strName == "useObjectDirection")
-					{
-						m_bUseObjectDirection = Convert.ToBoolean(strValue);
+						Velocity.ReadXml(childNode.FirstChild);
 					}
 					else
 					{
@@ -335,12 +281,8 @@ namespace GameDonkey
 			rXMLFile.WriteString(m_fScale.ToString());
 			rXMLFile.WriteEndElement();
 
-			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(Velocity.StringFromVector());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("useObjectDirection");
-			rXMLFile.WriteString(m_bUseObjectDirection ? "true" : "false");
+			rXMLFile.WriteStartElement("direction");
+			Velocity.WriteXml(rXMLFile);
 			rXMLFile.WriteEndElement();
 		}
 
@@ -368,8 +310,7 @@ namespace GameDonkey
 				return false;
 			}
 
-			Velocity = myAction.velocity;
-			m_bUseObjectDirection = myAction.useObjectDirection;
+			Velocity.ReadSerialized(myAction.direction);
 
 			Scale = myAction.scale;
 

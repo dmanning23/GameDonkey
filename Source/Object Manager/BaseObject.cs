@@ -1080,7 +1080,7 @@ namespace GameDonkey
 			}
 
 			//Get teh acceleration
-			Vector2 myAcceleration = (m_AccelAction.GetMyVelocity() * CharacterClock.TimeDelta) * Scale;
+			Vector2 myAcceleration = (m_AccelAction.GetMyVelocity() * CharacterClock.TimeDelta);
 			myAcceleration += Velocity;
 
 			//set the Y velocity?
@@ -1106,7 +1106,7 @@ namespace GameDonkey
 			}
 
 			//Get teh acceleration
-			Vector2 myDecceleration = (m_DeccelAction.Velocity * CharacterClock.TimeDelta) * Scale;
+			Vector2 myDecceleration = (m_DeccelAction.GetMyVelocity() * CharacterClock.TimeDelta);
 
 			//set the y velocity
 			myDecceleration.Y += Velocity.Y;

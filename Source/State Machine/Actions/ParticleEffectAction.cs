@@ -31,7 +31,7 @@ namespace GameDonkey
 		/// <summary>
 		/// the direction to shoot the particle effect
 		/// </summary>
-		public Vector2 Direction { get; set; }
+		public ActionDirection Velocity { get; set; }
 
 		/// <summary>
 		/// the offset from the character origin to start the particle effect from
@@ -84,7 +84,7 @@ namespace GameDonkey
 			m_rTemplate = new EmitterTemplate();
 			m_strBoneName = "";
 			m_rBone = null;
-			Direction = new Vector2(0.0f);
+			Velocity = new ActionDirection();
 			StartOffset = new Vector2(0.0f);
 
 			m_ParticleEngine = rEngine.ParticleEngine;
@@ -99,7 +99,7 @@ namespace GameDonkey
 			Debug.Assert(null != m_ParticleEngine);
 			Debug.Assert(!AlreadyRun);
 
-			Emitter myEmitter = m_ParticleEngine.PlayParticleEffect(m_rTemplate, Direction, Owner.Position, StartOffset, m_rBone.GetPosition, m_rTemplate.ParticleColor, Owner.Flip);
+			Emitter myEmitter = m_ParticleEngine.PlayParticleEffect(m_rTemplate, Velocity.GetDirection(Owner), Owner.Position, StartOffset, m_rBone.GetPosition, m_rTemplate.ParticleColor, Owner.Flip);
 			Debug.Assert(null != myEmitter);
 			Owner.Emitters.Add(myEmitter);
 
@@ -114,8 +114,7 @@ namespace GameDonkey
 			Debug.Assert(Time == myAction.Time);
 			Debug.Assert(m_rTemplate.Compare(myAction.m_rTemplate));
 			Debug.Assert(m_strBoneName == myAction.m_strBoneName);
-			Debug.Assert(Direction.X == myAction.Direction.X);
-			Debug.Assert(Direction.Y == myAction.Direction.Y);
+			Debug.Assert(Velocity.Compare(myAction.Velocity));
 			Debug.Assert(m_rTemplate.ParticleColor == myAction.m_rTemplate.ParticleColor);
 			Debug.Assert(StartOffset.X == myAction.StartOffset.X);
 			//Debug.Assert(m_StartOffset.Y == myAction.m_StartOffset.Y);
@@ -202,7 +201,7 @@ namespace GameDonkey
 					}
 					else if (strName == "direction")
 					{
-						Direction = strValue.ToVector2();
+						Velocity.ReadXml(childNode.FirstChild);
 					}
 					else if (strName == "StartOffset")
 					{
@@ -245,7 +244,7 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("direction");
-			rXMLFile.WriteString(Direction.StringFromVector());
+			Velocity.WriteXml(rXMLFile);
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("StartOffset");
@@ -276,7 +275,7 @@ namespace GameDonkey
 				Debug.Assert(null != m_rBone);
 			}
 
-			Direction = myAction.direction;
+			Velocity.ReadSerialized(myAction.direction);
 			StartOffset = myAction.StartOffset;
 			Debug.Assert(myAction.emitter.Count == 1);
 			if (!m_rTemplate.ReadSerializedObject(myAction.emitter[0], rEngine.Renderer))

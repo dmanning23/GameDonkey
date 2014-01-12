@@ -3,7 +3,6 @@ using StateMachineBuddy;
 using System;
 using System.Diagnostics;
 using System.Xml;
-using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -12,48 +11,11 @@ namespace GameDonkey
 		#region Members
 
 		/// <summary>
-		/// Whether or not we want this add velocity action to use the left thumbstick to get its direction.
-		/// </summary>
-		private bool m_bUseObjectDirection;
-
-		/// <summary>
 		/// The direction to add to the players velocity to when this action is run.
-		/// This is only used if the thumbstick flag is false
 		/// </summary>
-		private Vector2 m_Velocity;
-
-		/// <summary>
-		/// The length of the velocity to add to the character.
-		/// This is only used if the thumbstick flag is true
-		/// </summary>
-		private float m_fVelocityLength;
+		public ActionDirection Velocity { get; set; }
 
 		#endregion //Members
-
-		#region Properties
-
-		public Vector2 Velocity
-		{
-			get { return m_Velocity; }
-			set
-			{
-				m_Velocity = value;
-				m_fVelocityLength = m_Velocity.Length();
-			}
-		}
-
-		public bool UseObjectDirection
-		{
-			get { return m_bUseObjectDirection; }
-			set { m_bUseObjectDirection = value; }
-		}
-
-		public float VelocityLength
-		{
-			get { return m_fVelocityLength; }
-		}
-
-		#endregion //Properties
 
 		#region Methods
 
@@ -63,8 +25,7 @@ namespace GameDonkey
 		public AddVelocityAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.AddVelocity;
-			Velocity = new Vector2(0.0f);
-			m_bUseObjectDirection = false;
+			Velocity = new ActionDirection();
 		}
 
 		/// <summary>
@@ -77,21 +38,8 @@ namespace GameDonkey
 			Debug.Assert(!AlreadyRun);
 
 			//the final velocity we will add to the character
-			Vector2 myVelocity = Velocity;
-
-			//If we want the thumbstick direction and it is pointing in a direction...
-			if (m_bUseObjectDirection && (Owner.Direction() != Vector2.Zero))
-			{
-				//use the thumbstick direction from the object
-				myVelocity = Owner.Direction() * VelocityLength;
-			}
-			else
-			{
-				//use the velocity from this action
-				myVelocity.X = (Owner.Flip ? -Velocity.X : Velocity.X);
-			}
-
-			Owner.Velocity += myVelocity * Owner.Scale;
+			Vector2 myVelocity = Velocity.GetDirection(Owner);
+			Owner.Velocity += myVelocity;
 
 			return base.Execute();
 		}
@@ -102,8 +50,7 @@ namespace GameDonkey
 			
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
-			Debug.Assert(m_bUseObjectDirection == myAction.m_bUseObjectDirection);
-			Debug.Assert(VelocityLength == myAction.VelocityLength);
+			Debug.Assert(Velocity.Compare(myAction.Velocity));
 
 			return true;
 		}
@@ -170,13 +117,9 @@ namespace GameDonkey
 							return false;
 						}
 					}
-					else if (strName == "velocity")
+					else if (strName == "direction")
 					{
-						Velocity = strValue.ToVector2();
-					}
-					else if (strName == "useObjectDirection")
-					{
-						m_bUseObjectDirection = Convert.ToBoolean(strValue);
+						Velocity.ReadXml(childNode.FirstChild);
 					}
 					else
 					{
@@ -194,12 +137,8 @@ namespace GameDonkey
 		/// <param name="rXMLFile"></param>
 		protected override void WriteActionXml(XmlTextWriter rXMLFile)
 		{
-			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(Velocity.StringFromVector());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("useObjectDirection");
-			rXMLFile.WriteString(m_bUseObjectDirection ? "true" : "false");
+			rXMLFile.WriteStartElement("direction");
+			Velocity.WriteXml(rXMLFile);
 			rXMLFile.WriteEndElement();
 		}
 
@@ -210,8 +149,7 @@ namespace GameDonkey
 		public bool ReadSerialized(SPFSettings.AddVelocityActionXML myAction)
 		{
 			Debug.Assert(myAction.type == ActionType.ToString());
-			Velocity = myAction.velocity;
-			m_bUseObjectDirection = myAction.useObjectDirection;
+			Velocity.ReadSerialized(myAction.direction);
 			ReadSerializedBase(myAction);
 
 			return true;
