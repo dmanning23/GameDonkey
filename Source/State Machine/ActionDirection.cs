@@ -22,7 +22,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Whether or not we want this action to use the left thumbstick to get its direction.
 		/// </summary>
-		private EDirectionType DirectionType { get; set; }
+		public EDirectionType DirectionType { get; set; }
 
 		/// <summary>
 		/// The length of the velocity to add to the character.
