@@ -471,10 +471,11 @@ namespace GameDonkey
 			int iCurrentState = States.CurrentState();
 			if ((int)EState.Stunned == iCurrentState)
 			{
-				rEngine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
-					m_Velocity,
-					rGroundHit.Position,
-					Color.White);
+				//WEDDING GAME
+				//rEngine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
+				//	m_Velocity,
+				//	rGroundHit.Position,
+				//	Color.White);
 
 				//add camera shake
 				rEngine.AddCameraShake(0.2f);
@@ -483,11 +484,12 @@ namespace GameDonkey
 			}
 			else
 			{
-				//play the ceiling head bop particle effect
-				rEngine.PlayParticleEffect(EDefaultParticleEffects.HeadBop,
-					Vector2.Zero,
-					rGroundHit.Position,
-					Color.White);
+				//WEDDING GAME
+				////play the ceiling head bop particle effect
+				//rEngine.PlayParticleEffect(EDefaultParticleEffects.HeadBop,
+				//	Vector2.Zero,
+				//	rGroundHit.Position,
+				//	Color.White);
 			}
 
 			//if the player's velocity is -y, it is set to 0
@@ -498,8 +500,6 @@ namespace GameDonkey
 				Debug.Assert(m_Position.X != float.NaN);
 				Debug.Assert(m_Position.Y != float.NaN);
 			}
-
-			//TODO: make a particle effect & sound for hitting ceiling
 		}
 
 		protected override void RespondToLeftWallHit(Hit rGroundHit, IGameDonkey rEngine)
