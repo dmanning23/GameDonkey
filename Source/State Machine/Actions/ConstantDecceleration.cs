@@ -159,8 +159,8 @@ namespace GameDonkey
 				}
 			}
 
-			Debug.Assert(Velocity.Velocity.Y <= 0.0f);
-			Debug.Assert(Velocity.Velocity.X >= 0.0f);
+			Debug.Assert(Velocity.Velocity.X <= 0.0f);
+			Debug.Assert(Velocity.Velocity.Y >= 0.0f);
 			Debug.Assert(m_fMinYVelocity >= 0.0f);
 
 			return true;
