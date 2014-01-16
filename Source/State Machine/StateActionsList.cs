@@ -12,7 +12,7 @@ namespace GameDonkey
 	/// <summary>
 	/// A list of all the state actions for a single state machine.
 	/// </summary>
-	class StateActionsList
+	public class StateActionsList
 	{
 		#region Members
 

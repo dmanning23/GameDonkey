@@ -14,7 +14,7 @@ namespace GameDonkey
 	/// <summary>
 	/// This is a container with multiple hierarchical state machines
 	/// </summary>
-	class PlayerObjectStateContainer : IStateContainer
+	public class PlayerObjectStateContainer : IStateContainer
 	{
 		#region Members
 
@@ -198,7 +198,7 @@ namespace GameDonkey
 		/// if the state change was not safe, we need to pop back into the previous state.
 		/// </summary>
 		/// <param name="iCurState">the new state of the object</param>
-		public void StateChange(object sender, StateChangeEventArgs eventArgs)
+		public virtual void StateChange(object sender, StateChangeEventArgs eventArgs)
 		{
 			//check if we are changing state machines
 			switch (m_StateMachines[CurrentStateMachine].CurrentState())
@@ -289,7 +289,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="fPrevTime">the last time that the object executed actions</param>
 		/// <param name="fCurTime">the time in seconds that the object has been in this state</param>
-		public void ExecuteActions(GameClock rGameClock)
+		public virtual void ExecuteActions(GameClock rGameClock)
 		{
 			Debug.Assert(null != m_StateMachines);
 			Debug.Assert(CurrentStateMachine >= 0);

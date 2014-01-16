@@ -16,7 +16,7 @@ namespace GameDonkey
 	/// Heads up, this state machine doesn't sign up for all the state change messages...
 	/// It's meant to be used with playerstatecontainer, otherwise use the singlestatecontainer
 	/// </summary>
-	class SingleStateContainer : IStateContainer
+	public class SingleStateContainer : IStateContainer
 	{
 		#region Members
 
