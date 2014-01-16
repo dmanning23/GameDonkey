@@ -1162,7 +1162,7 @@ namespace GameDonkey
 			string strPlayerName)
 		{
 			//create and load a player
-			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
+			PlayerQueue rPlayer = CreatePlayerQueue(myColor, m_listPlayers.Count);
 			if (null == rPlayer.LoadSerializedObject(rXmlContent, strCharacterFile, this, EObjectType.Human, 0))
 			{
 				Debug.Assert(false);
@@ -1195,7 +1195,7 @@ namespace GameDonkey
 			string strPlayerName)
 		{
 			//create and load a player
-			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
+			PlayerQueue rPlayer = CreatePlayerQueue(myColor, m_listPlayers.Count);
 			if (null == rPlayer.LoadXmlObject(strCharacterFile, this, EObjectType.Human, 0))
 			{
 				Debug.Assert(false);
@@ -1224,7 +1224,7 @@ namespace GameDonkey
 			string strPlayerName)
 		{
 			//create and load a player
-			PlayerQueue rPlayer = new PlayerQueue(myColor, m_listPlayers.Count);
+			PlayerQueue rPlayer = CreatePlayerQueue(myColor, m_listPlayers.Count);
 			if (null == rPlayer.LoadSerializedObject(rXmlContent, strCharacterFile, this, EObjectType.AI, iDifficulty))
 			{
 				Debug.Assert(false);

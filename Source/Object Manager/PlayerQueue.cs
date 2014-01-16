@@ -166,6 +166,11 @@ namespace GameDonkey
 			m_ScoreTimer = new CountdownTimer();
 		}
 
+		public virtual PlayerObject CreateHumanPlayer()
+		{
+			return new PlayerObject(m_CharacterClock, m_iNextObjectID++);
+		}
+
 		/// <summary>
 		/// pull an item out of the inactive list and add it to the active list.
 		/// </summary>
@@ -689,7 +694,7 @@ namespace GameDonkey
 			{
 				case EObjectType.Human:
 					{
-						myCharacter = new RoboJetsPlayerObject(m_CharacterClock, m_iNextObjectID++);
+						myCharacter = CreateHumanPlayer();
 
 						//set as the main character
 						AddCharacterToList(myCharacter);
@@ -753,7 +758,7 @@ namespace GameDonkey
 			{
 				case EObjectType.Human:
 				{
-					myCharacter = new PlayerObject(m_CharacterClock, m_iNextObjectID++);
+					myCharacter = CreateHumanPlayer();
 
 					//set as the main character
 					AddCharacterToList((PlayerObject)myCharacter);

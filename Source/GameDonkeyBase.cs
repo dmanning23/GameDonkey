@@ -55,6 +55,17 @@ namespace GameDonkey
 		}
 
 		/// <summary>
+		/// factory method
+		/// </summary>
+		/// <param name="myColor"></param>
+		/// <param name="iQueueID"></param>
+		/// <returns></returns>
+		public virtual PlayerQueue CreatePlayerQueue(Color myColor, int iQueueID)
+		{
+			return new PlayerQueue(myColor, iQueueID);
+		}
+
+		/// <summary>
 		/// load all the content in a windows forms game
 		/// </summary>
 		public virtual void LoadContent() 

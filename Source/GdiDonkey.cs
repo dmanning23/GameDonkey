@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace StateActionsTool
+namespace GameDonkey
 {
 	public class GdiDonkey : GameDonkeyBase
 	{
@@ -248,7 +248,7 @@ namespace StateActionsTool
 		/// <returns>player queue with all the player's stuff in it</returns>
 		public PlayerQueue LoadXmlPlayer(Filename strDataFile, List<Filename> Garments)
 		{
-			Player = new PlayerQueue(Color.White, 0);
+			Player = CreatePlayerQueue(Color.White, 0);
 			if (null == Player.LoadXmlObject(strDataFile, this, EObjectType.Human, 1))
 			{
 				Player = null;
@@ -265,7 +265,7 @@ namespace StateActionsTool
 		/// <returns>player queue with all the player's stuff in it</returns>
 		public PlayerQueue LoadSerializedPlayer(Filename strDataFile, List<Filename> Garments, ContentManager myContent)
 		{
-			Player = new PlayerQueue(Color.White, 0);
+			Player = CreatePlayerQueue(Color.White, 0);
 			if (null == Player.LoadSerializedObject(myContent, strDataFile, this, EObjectType.Human, 1))
 			{
 				Player = null;

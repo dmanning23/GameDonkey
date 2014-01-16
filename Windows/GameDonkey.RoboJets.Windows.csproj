@@ -64,9 +64,6 @@
     <Compile Include="..\Source\IGameDonkey.cs">
       <Link>IGameDonkey.cs</Link>
     </Compile>
-    <Compile Include="..\Source\Object Manager\RoboJetsPlayerObject.cs">
-      <Link>Object Manager\RoboJetsPlayerObject.cs</Link>
-    </Compile>
     <Compile Include="..\Source\State Machine\ActionDirection.cs">
       <Link>State Machine\ActionDirection.cs</Link>
     </Compile>
