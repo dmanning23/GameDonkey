@@ -7,7 +7,7 @@ namespace SPFSettings
 {
 	#region Action XML Objects
 
-	public class StateContainerXML
+	public class StateActionListXML
 	{
 		public List<StateActionsXML> states = new List<StateActionsXML>();
 	}
@@ -153,13 +153,18 @@ namespace SPFSettings
 
 	#region Character XML Objects
 
+	public class StateContainerXML
+	{
+		public string stateMachine = "";
+		public string stateActions = "";
+	}
+
 	public class BaseObjectXML
 	{
 		public string model = "";
 		public string animations = "";
 		public List<string> garments = new List<string>();
-		public string stateMachine = "";
-		public string states = "";
+		public List<StateContainerXML> states = new List<StateContainerXML>();
 		public int height = 0;
 	}
 
@@ -167,10 +172,6 @@ namespace SPFSettings
 	{
 		public string portrait = "";
 		public string deathSound = "";
-		public string GroundStates = "";
-		public string UpStates = "";
-		public string DownStates = "";
-		public string ForwardStates = "";
 	}
 
 	public class ProjectileObjectXML : BaseObjectXML

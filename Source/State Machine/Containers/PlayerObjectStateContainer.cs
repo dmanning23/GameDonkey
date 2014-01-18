@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using GameTimer;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
@@ -8,6 +9,7 @@ using Microsoft.Xna.Framework.Net;
 using StateMachineBuddy;
 using System;
 using FilenameBuddy;
+using SPFSettings;
 
 namespace GameDonkey
 {
@@ -200,35 +202,13 @@ namespace GameDonkey
 		/// <param name="iCurState">the new state of the object</param>
 		public virtual void StateChange(object sender, StateChangeEventArgs eventArgs)
 		{
-			//check if we are changing state machines
-			switch (m_StateMachines[CurrentStateMachine].CurrentState())
-			{
-				//WEDDING GAME
-				//case (int)EState.SwitchToGroundStateMachine:
-				case (int)EState.SwitchToRobotStateMachine:
-				{
-					//Try to change state machines if it is safe
-					StateMachineIndex(0, eventArgs);
-				}
-				break;
-				//case (int)EState.SwitchToUpStateMachine:
-				case (int)EState.SwitchToJetStateMachine:
-				{
-					StateMachineIndex(1, eventArgs);
-				}
-				break;
-				default:
-				{
-					//reset the current single state container
-					m_StateMachines[CurrentStateMachine].StateChange(sender, eventArgs);
+			//reset the current single state container
+			m_StateMachines[CurrentStateMachine].StateChange(sender, eventArgs);
 
-					//for all other events, fire off the event if anyone is listening
-					if (null != StateChangedEvent)
-					{
-						StateChangedEvent(this, eventArgs);
-					}
-				}
-				break;
+			//for all other events, fire off the event if anyone is listening
+			if (null != StateChangedEvent)
+			{
+				StateChangedEvent(this, eventArgs);
 			}
 		}
 
@@ -236,10 +216,10 @@ namespace GameDonkey
 		/// change the index of the state machine to use
 		/// </summary>
 		/// <param name="iIndex"></param>
-		protected void StateMachineIndex(int iIndex, StateChangeEventArgs eventArgs)
+		public void StateMachineIndex(int iIndex, StateChangeEventArgs eventArgs)
 		{
 			Debug.Assert(0 <= iIndex);
-			Debug.Assert(iIndex < 4);
+			Debug.Assert(iIndex < m_StateMachines.Count);
 
 			//do a little timer so it doesn't pop back and forth between state machines...
 			//but ignore it for switching into/out of ground state machine
@@ -542,9 +522,9 @@ namespace GameDonkey
 
 		#endregion //Networking
 
-		#region State Action File IO
+		#region File IO
 
-		public bool ReadXml(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine)
+		public virtual bool ReadXmlStateContainer(XmlNode rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
 		{
 			//don't call this dude, he'll set his own shit up
 			Debug.Assert(false);
@@ -565,112 +545,15 @@ namespace GameDonkey
 			return bOk;
 		}
 
-		public void ReadSerialized(ContentManager rXmlContent,
-			Filename strResource,
-			BaseObject rOwner,
-			IGameDonkey rEngine)
+		public virtual void ReadSerializedStateContainer(ContentManager rContent,
+			List<StateContainerXML> childNodes,
+			IGameDonkey rEngine,
+			int iMessageOffset,
+			BaseObject rOwner)
 		{
 			//don't call this dude, he'll set his own shit up
 		}
 
-		#endregion //State Action File IO
-
-		#region State Machine File IO
-
-		public bool ReadXmlStateMachineFile(Filename strFilename)
-		{
-			//not implemented
-			Debug.Assert(false);
-			return false;
-		}
-
-		public bool AppendXmlStateMachineFile(Filename strFilename)
-		{
-			//not implemented
-			Debug.Assert(false);
-			return false;
-		}
-
-		public bool ReadSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset)
-		{
-			//not implemented
-			Debug.Assert(false);
-			return false;
-		}
-
-		public bool AppendSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset)
-		{
-			//not implemented
-			Debug.Assert(false);
-			return false;
-		}
-
 		#endregion //File IO
-
-		#region Combined File IO
-
-		public bool ReadXmlStateContainer(Filename strStateMachineFilename,
-			int iMessageOffset,
-			Filename strStateActionsFilename,
-			BaseObject rOwner,
-			IGameDonkey rEngine,
-			bool bPlayerStateMachine,
-			bool bFlyingStateMachine)
-		{
-			//create a new single state container
-			//WEDDING GAME
-			//SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), 
-			SingleStateContainer rMyStateContainer = new SingleStateContainer(new RoboJetsStateMachine(bFlyingStateMachine), 
-				strStateMachineFilename.GetFileNoExt());
-
-			//find a place to store the new state container
-			m_StateMachines.Add(rMyStateContainer);
-			Debug.Assert(m_StateMachines.Count < 4);
-
-			//read in the stuff
-			if (!rMyStateContainer.ReadXmlStateContainer(
-				strStateMachineFilename, 
-				iMessageOffset, 
-				strStateActionsFilename, 
-				rOwner, 
-				rEngine,
-				bPlayerStateMachine, 
-				bFlyingStateMachine))
-			{
-				return false;
-			}
-
-			return true;
-		}
-
-		public void ReadSerializedStateContainer(ContentManager rContent,
-			Filename strStateMachineResource,
-			int iMessageOffset,
-			Filename strStateActionsResource,
-			BaseObject rOwner,
-			IGameDonkey rEngine,
-			bool bPlayerStateMachine,
-			bool bFlyingStateMachine)
-		{
-			//create a new single state container
-			//WEDDING GAME
-			//SingleStateContainer rMyStateContainer = new SingleStateContainer(new WeddingStateMachine(bFlyingStateMachine), "GroundStates");
-			SingleStateContainer rMyStateContainer = new SingleStateContainer(new RoboJetsStateMachine(bFlyingStateMachine), "GroundStates");
-
-			//find a place to store the new state container
-			m_StateMachines.Add(rMyStateContainer);
-
-			//read in the stuff
-			rMyStateContainer.ReadSerializedStateContainer(rContent, 
-				strStateMachineResource, 
-				iMessageOffset, 
-				strStateActionsResource, 
-				rOwner, 
-				rEngine, 
-				bPlayerStateMachine, 
-				bFlyingStateMachine);
-		}
-
-		#endregion //Combined File IO
 	}
 }

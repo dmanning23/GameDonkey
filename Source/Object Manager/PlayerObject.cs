@@ -837,18 +837,6 @@ namespace GameDonkey
 
 			switch (strName)
 			{
-				case "stateMachine":
-				{
-					//ignored in players.
-					return true;
-				}
-
-				case "states":
-				{
-					//ignored in players.
-					return true;
-				}
-
 				case "portrait":
 				{
 					//get the portrait file
@@ -862,60 +850,6 @@ namespace GameDonkey
 				{
 					DeathSound = childNode.InnerXml;
 					//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
-					return true;
-				}
-
-				case "GroundStates":
-				{
-					//get the ground states of this dude
-					Filename groundStatesFile = new Filename(strValue);
-					if (!States.ReadXmlStateContainer(new Filename(@"wedding state machines\ground state machine.xml"),
-						iMessageOffset, 
-						groundStatesFile, 
-						this,
-						rEngine, 
-						true, 
-						false))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-					return true;
-				}
-
-				case "UpStates":
-				{
-					//get teh upstates of this dude
-					Filename upStatesFile = new Filename(childNode.InnerXml);
-					if (!States.ReadXmlStateContainer(new Filename(@"wedding state machines\up state machine.xml"),
-						iMessageOffset, 
-						upStatesFile, 
-						this, 
-						rEngine, 
-						true, 
-						true))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-					return true;
-				}
-
-				case "DownStates":
-				{
-					////load the down states
-					//strStatesFile.SetRelFilename(myCharXML.DownStates);
-					//States.ReadStateContainer(rXmlContent, @"state machines\down state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
-					//rXmlContent.Unload();
-					return true;
-				}
-
-				case "ForwardStates":
-				{
-					////load the forward states
-					//strStatesFile.SetRelFilename(myCharXML.ForwardStates);
-					//States.ReadStateContainer(rXmlContent, @"state machines\forward state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
-					//rXmlContent.Unload();
 					return true;
 				}
 
@@ -936,7 +870,6 @@ namespace GameDonkey
 
 			Filename strModelFile = new Filename(myCharXML.model);
 			Filename strAnimationFile = new Filename(myCharXML.animations);
-			Filename strStateMachineFile = new Filename(myCharXML.stateMachine);
 			m_fHeight = (float)myCharXML.height;
 
 			//try to load the model
@@ -971,38 +904,12 @@ namespace GameDonkey
 			//SPARROWHAWKS
 
 			//load the ground states
-			Filename strStatesFile = new Filename(myCharXML.GroundStates);
 			States.ReadSerializedStateContainer(rXmlContent,
-				new Filename(@"wedding state machines\ground state machine"), 
+				myCharXML.states, 
+				rEngine,
 				iMessageOffset, 
-				strStatesFile, 
-				this, 
-				rEngine, 
-				true, 
-				false);
+				this);
 			rXmlContent.Unload();
-
-			//load the up states
-			strStatesFile.SetRelFilename(myCharXML.UpStates);
-			States.ReadSerializedStateContainer(rXmlContent,
-				new Filename(@"wedding state machines\up state machine"), 
-				iMessageOffset, 
-				strStatesFile, 
-				this, 
-				rEngine, 
-				true, 
-				true);
-			rXmlContent.Unload();
-
-			////load the down states
-			//strStatesFile.SetRelFilename(myCharXML.DownStates);
-			//States.ReadStateContainer(rXmlContent, @"state machines\down state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
-			//rXmlContent.Unload();
-
-			////load the forward states
-			//strStatesFile.SetRelFilename(myCharXML.ForwardStates);
-			//States.ReadStateContainer(rXmlContent, @"state machines\forward state machine", iMessageOffset, strStatesFile.GetRelPathFileNoExt(), this, rEngine, true, true);
-			//rXmlContent.Unload();
 
 			return true;
 		}

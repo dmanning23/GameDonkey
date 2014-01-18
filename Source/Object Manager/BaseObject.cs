@@ -598,7 +598,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Call this when the state changes to reset everything for the new state
 		/// </summary>
-		protected void StateChanged(object sender, StateChangeEventArgs eventArgs)
+		protected virtual void StateChanged(object sender, StateChangeEventArgs eventArgs)
 		{
 			//was this a turn around message?
 			if (States.CurrentState() == (int)EState.TurningAround)
@@ -1389,36 +1389,9 @@ namespace GameDonkey
 					return true;
 				}
 
-				case "stateMachine":
-				{
-					//get the state machine file
-					Filename strStateMachineFile = new Filename(strValue);
-
-					//get the states file too
-					childNode = childNode.NextSibling;
-					Filename strStateActionsFile = new Filename(childNode.InnerXml);
-
-					//read in the state container
-					if (!States.ReadXmlStateContainer(
-						strStateMachineFile,
-						iMessageOffset,
-						strStateActionsFile,
-						this,
-						rEngine,
-						false,
-						false))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-
-					return true;
-				}
-
 				case "states":
 				{
-					//Ignore this one, it is parsed up above
-					return true;
+					return States.ReadXmlStateContainer(childNode, rEngine, iMessageOffset, this);
 				}
 
 				case "height":
@@ -1464,8 +1437,6 @@ namespace GameDonkey
 
 			Filename strModelFile = new Filename(myCharXML.model);
 			Filename strAnimationFile = new Filename(myCharXML.animations);
-			Filename strStatesFile = new Filename(myCharXML.states);
-			Filename strStateMachineFile = new Filename(myCharXML.stateMachine);
 			m_fHeight = (float)myCharXML.height;
 
 			//load all the garments
@@ -1489,13 +1460,10 @@ namespace GameDonkey
 
 			//read in the state container
 			States.ReadSerializedStateContainer(rXmlContent,
-				strStateMachineFile,
-				iMessageOffset,
-				strStatesFile,
-				this,
+				myCharXML.states,
 				rEngine,
-				false,
-				false);
+				iMessageOffset,
+				this);
 
 			return true;
 		}

@@ -1,4 +1,5 @@
-﻿using GameTimer;
+﻿using SPFSettings;
+using GameTimer;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using System.Collections.Generic;
@@ -161,7 +162,7 @@ namespace GameDonkey
 				return false;
 			}
 
-			//next node is "<Asset Type="SPFSettings.StateContainerXML">"
+			//next node is "<Asset Type="SPFSettings.StateActionListXML">"
 			XmlNode AssetNode = rootNode.FirstChild;
 			if (null == AssetNode)
 			{
@@ -226,7 +227,7 @@ namespace GameDonkey
 			//add the xml node
 			rXMLFile.WriteStartElement("XnaContent");
 			rXMLFile.WriteStartElement("Asset");
-			rXMLFile.WriteAttributeString("Type", "SPFSettings.StateContainerXML");
+			rXMLFile.WriteAttributeString("Type", "SPFSettings.StateActionListXML");
 
 			//write out start node
 			rXMLFile.WriteStartElement("states");
@@ -278,7 +279,7 @@ namespace GameDonkey
 			IGameDonkey rEngine)
 		{
 			//load the resource
-			SPFSettings.StateContainerXML myContainer = rXmlContent.Load<SPFSettings.StateContainerXML>(strResource.GetRelPathFileNoExt());
+			StateActionListXML myContainer = rXmlContent.Load<StateActionListXML>(strResource.GetRelPathFileNoExt());
 
 			//read in all the states
 			for (int i = 0; i < myContainer.states.Count; i++)

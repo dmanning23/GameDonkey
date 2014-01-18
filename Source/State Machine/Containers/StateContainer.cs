@@ -7,6 +7,8 @@ using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
 using FilenameBuddy;
+using System.Xml;
+using SPFSettings;
 
 namespace GameDonkey
 {
@@ -155,50 +157,14 @@ namespace GameDonkey
 
 		#endregion //Networking
 
-		#region State Action File IO
+		#region File IO
 
-		bool ReadXml(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine);
+		bool ReadXmlStateContainer(XmlNode rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner);
 
 		bool WriteXml();
 
-		void ReadSerialized(ContentManager rXmlContent,
-			Filename strResource,
-			BaseObject rOwner,
-			IGameDonkey rEngine);
-
-		#endregion //State Action File IO
-
-		#region State Machine File IO
-
-		bool ReadXmlStateMachineFile(Filename strFilename);
-
-		bool AppendXmlStateMachineFile(Filename strFilename);
-
-		bool ReadSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset);
-
-		bool AppendSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset);
+		void ReadSerializedStateContainer(ContentManager rContent, List<StateContainerXML> childNodes, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner);
 
 		#endregion //File IO
-
-		#region Combined File IO
-
-		bool ReadXmlStateContainer(Filename strStateMachineFilename, 
-			int iMessageOffset,
-			Filename strStateActionsFilename,
-			BaseObject rOwner,
-			IGameDonkey rEngine,
-			bool bPlayerStateMachine,
-			bool bFlyingStateMachine);
-
-		void ReadSerializedStateContainer(ContentManager rContent,
-			Filename strStateMachineResource, 
-			int iMessageOffset,
-			Filename strStateActionsResource,
-			BaseObject rOwner, 
-			IGameDonkey rEngine,
-			bool bPlayerStateMachine,
-			bool bFlyingStateMachine);
-
-		#endregion //Combined File IO
 	}
 }

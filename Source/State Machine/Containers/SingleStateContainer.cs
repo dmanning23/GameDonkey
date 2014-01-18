@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using SPFSettings;
 using GameTimer;
 using Microsoft.Xna.Framework.Content;
 #if NETWORKING
@@ -8,6 +9,7 @@ using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
 using FilenameBuddy;
+using System.Xml;
 
 namespace GameDonkey
 {
@@ -321,12 +323,106 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		public bool ReadXml(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine)
+		/// <summary>
+		/// Read the list of state contiainers:
+		/// <states>
+		///		<Item Type="SPFSettings.StateContainerXML">
+		///			<stateMachine>state machine.xml</stateMachine>
+		///			<stateContainer>state actions.xml</stateContainer>
+		///		</Item>
+		///	</states>
+		/// </summary>
+		/// <param name="rXMLNode"></param>
+		/// <param name="rEngine"></param>
+		/// <param name="iMessageOffset"></param>
+		/// <param name="rOwner"></param>
+		/// <returns></returns>
+		public bool ReadXmlStateContainer(XmlNode rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
 		{
-			//save that filename for later
-			m_strActionsFile = strFilename;
+			//This dude should onlt have one child node
+			if (1 != rXMLNode.ChildNodes.Count)
+			{
+				return false;
+			}
 
-			return m_listActions.ReadXmlStateActions(strFilename, rOwner, rEngine, StateMachine);
+			//Get that first node
+			XmlNode childNode = rXMLNode.FirstChild;
+			return ReadXmlSingleStateContainer(childNode, rEngine, iMessageOffset, rOwner);
+		}
+
+		/// <summary>
+		/// Read in a single state container
+		///	<Item Type="SPFSettings.StateContainerXML">
+		///		<stateMachine>state machine.xml</stateMachine>
+		///		<stateContainer>state actions.xml</stateContainer>
+		///	</Item>
+		/// </summary>
+		/// <param name="rXMLNode"></param>
+		/// <param name="rEngine"></param>
+		/// <param name="iMessageOffset"></param>
+		/// <param name="rOwner"></param>
+		/// <returns></returns>
+		public bool ReadXmlSingleStateContainer(XmlNode rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
+		{
+			if ("Item" != rXMLNode.Name)
+			{
+				return false;
+			}
+
+			//should have an attribute Type
+			XmlNamedNodeMap mapAttributes = rXMLNode.Attributes;
+			for (int i = 0; i < mapAttributes.Count; i++)
+			{
+				//will only have the name attribute
+				if ("Type" ==  mapAttributes.Item(i).Name)
+				{
+					if ("SPFSettings.StateContainerXML" != mapAttributes.Item(i).Value)
+					{
+						return false;
+					}
+				}
+			}
+
+			//Read in child nodes
+			if (!rXMLNode.HasChildNodes)
+			{
+				return false;
+			}
+
+			//get the state machine xml node
+			XmlNode stateNode = rXMLNode.FirstChild;
+			string strName = rXMLNode.Name;
+			string strValue = rXMLNode.InnerXml;
+			if (strName != "stateMachine")
+			{
+				return false;
+			}
+
+			//load the state machine
+			if (!ReadXmlStateMachine(StateMachine, new Filename(strValue)))
+			{
+				Debug.Assert(false);
+				return false;
+			}
+
+			//get the state action xml node
+			stateNode = stateNode.NextSibling;
+			strName = stateNode.Name;
+			strValue = stateNode.InnerXml;
+			if (strName != "stateActions")
+			{
+				return false;
+			}
+
+			//load the state actions
+			Debug.Assert(null != m_listActions);
+			m_strActionsFile = new Filename(strValue);
+			return m_listActions.ReadXmlStateActions(m_strActionsFile, rOwner, rEngine, StateMachine);
+		}
+
+		public virtual bool ReadXmlStateMachine(StateMachine machine, Filename file)
+		{
+			return machine.ReadXmlFile(file);
 		}
 
 		public bool WriteXml()
@@ -334,125 +430,37 @@ namespace GameDonkey
 			return m_listActions.WriteXml(m_strActionsFile, StateMachine);
 		}
 
-		public void ReadSerialized(ContentManager rXmlContent,
-			Filename strResource,
-			BaseObject rOwner,
-			IGameDonkey rEngine)
-		{
-			Debug.Assert(null != StateMachine);
-			m_listActions.ReadSerializedStateActions(rXmlContent, strResource, rOwner, StateMachine, rEngine);
-		}
-
-		#endregion //State Action File IO
-
-		#region State Machine File IO
-
-		public bool ReadXmlStateMachineFile(Filename strFilename)
-		{
-			return StateMachine.ReadXmlFile(strFilename);
-		}
-
-		public bool AppendXmlStateMachineFile(Filename strFilename)
-		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.AppendXmlFile(strFilename);
-		}
-
-		public bool ReadSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset)
-		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.ReadSerializedFile(rContent, strResource, iMessageOffset);
-		}
-
-		public bool AppendSerializedStateMachineFile(ContentManager rContent, Filename strResource, int iMessageOffset)
-		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.AppendSerializedFile(rContent, strResource, iMessageOffset);
-		}
-
-		#endregion //File IO
-
-		#region Combined File IO
-
-		public bool ReadXmlStateContainer(Filename strStateMachineFilename,
-			int iMessageOffset,
-			Filename strStateActionsFilename,
-			BaseObject rOwner,
-			IGameDonkey rEngine,
-			bool bPlayerStateMachine,
-			bool bFlyingStateMachine)
-		{
-			//create the correct state machine
-			Debug.Assert(null != StateMachine);
-			if (bPlayerStateMachine)
-			{
-				//WEDDING GAME
-				//Debug.Assert(StateMachine is WeddingStateMachine);
-
-				//load the state machine
-				if (!StateMachine.AppendXmlFile(strStateMachineFilename))
-				{
-					Debug.Assert(false);
-					return false;
-				}
-			}
-			else
-			{
-				//load the state machine
-				if (!StateMachine.ReadXmlFile(strStateMachineFilename))
-				{
-					Debug.Assert(false);
-					return false;
-				}
-			}
-
-			//save that filename for later
-			m_strActionsFile = strStateActionsFilename;
-
-			//load the state actions
-			Debug.Assert(null != m_listActions);
-			if (!m_listActions.ReadXmlStateActions(m_strActionsFile, rOwner, rEngine, StateMachine))
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			return true;
-		}
-
 		public void ReadSerializedStateContainer(ContentManager rContent,
-			Filename strStateMachineResource,
-			int iMessageOffset,
-			Filename strStateActionsResource,
-			BaseObject rOwner,
-			IGameDonkey rEngine,
-			bool bPlayerStateMachine,
-			bool bFlyingStateMachine)
+			List<StateContainerXML> childNodes, 
+			IGameDonkey rEngine, 
+			int iMessageOffset, 
+			BaseObject rOwner)
 		{
-			//create the correct state machine
-			Debug.Assert(null != StateMachine);
-			if (bPlayerStateMachine)
-			{
-				//WEDDING GAME
-				//Debug.Assert(StateMachine is WeddingStateMachine);
+			//there should only be one action object in there
+			Debug.Assert(1 == childNodes.Count);
+			ReadSerializedSingleStateContainer(rContent, childNodes[0], rEngine, iMessageOffset, rOwner);
+		}
 
-				//load the state machine
-				StateMachine.AppendSerializedFile(rContent, strStateMachineResource, iMessageOffset);
-			}
-			else
-			{
-				StateMachine = new StateMachine();
-
-				//load the state machine
-				StateMachine.ReadSerializedFile(rContent, strStateMachineResource, iMessageOffset);
-			}
+		public void ReadSerializedSingleStateContainer(ContentManager rContent,
+			StateContainerXML childNode,
+			IGameDonkey rEngine,
+			int iMessageOffset,
+			BaseObject rOwner)
+		{
+			//load the state machine
+			ReadSerializedStateMachine(rContent, StateMachine, new Filename(childNode.stateMachine), iMessageOffset);
 
 			//save that filename for later
-			m_strActionsFile = strStateActionsResource;
+			m_strActionsFile = new Filename(childNode.stateActions);
 
 			//load the state actions
 			Debug.Assert(null != m_listActions);
 			m_listActions.ReadSerializedStateActions(rContent, m_strActionsFile, rOwner, StateMachine, rEngine);
+		}
+
+		public virtual void ReadSerializedStateMachine(ContentManager rContent, StateMachine machine, Filename file, int iMessageOffset)
+		{
+			machine.ReadSerializedFile(rContent, file, iMessageOffset);
 		}
 
 		#endregion //Combined File IO

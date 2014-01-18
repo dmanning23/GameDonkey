@@ -64,6 +64,21 @@
     <Compile Include="..\Source\IGameDonkey.cs">
       <Link>IGameDonkey.cs</Link>
     </Compile>
+    <Compile Include="..\Source\State Machine\ActionDirection.cs">
+      <Link>State Machine\ActionDirection.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\EDirectionType.cs">
+      <Link>State Machine\Actions\EDirectionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Containers\SingleStateAppenderContainer.cs">
+      <Link>State Machine\Containers\SingleStateAppenderContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\EMessage.cs">
+      <Link>State Machine\EMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\EState.cs">
+      <Link>State Machine\EState.cs</Link>
+    </Compile>
     <Compile Include="..\Source\XnaDonkey.cs">
       <Link>XnaDonkey.cs</Link>
     </Compile>
