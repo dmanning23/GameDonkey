@@ -94,38 +94,25 @@ namespace GameDonkey
 		/// Given an xml node, parse the contents.
 		/// Override in child classes to read object-specific node types.
 		/// </summary>
-		/// <param name="childNode">the xml node to read</param>
+		/// <param name="childNode">the xml data to read</param>
 		/// <param name="rEngine">the engine we are using to load</param>
 		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public override bool ParseXmlNode(XmlNode childNode, IGameDonkey rEngine, int iMessageOffset)
+		public override bool ParseXmlData(BaseObjectData childNode, IGameDonkey rEngine, int iMessageOffset)
 		{
-			//what is in this node?
-			string strName = childNode.Name;
-			string strValue = childNode.InnerXml;
-
-			switch (strName)
+			var data = childNode as LevelObjectData;
+			if (null == data)
 			{
-				case "size":
-				{
-					//set the scale
-					Scale = Convert.ToSingle(strValue);
-					return true;
-				}
-
-				case "location":
-				{
-					//set teh position
-					Position = Vector2Ext.ToVector2(strValue);
-					return true;
-				}
-
-				default:
-				{
-					//punt to the base class
-					return base.ParseXmlNode(childNode, rEngine, iMessageOffset);
-				}
+				return false;
 			}
+
+			//set the scale
+			Scale = data.Size;
+		
+			//set teh position
+			Position = data.Position;
+
+			return base.ParseXmlData(childNode, rEngine, iMessageOffset);
 		}
 
 		public override bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
@@ -137,7 +124,7 @@ namespace GameDonkey
 			}
 
 			//set the scale
-			Scale = (float)myCharXML.size;
+			Scale = myCharXML.size;
 
 			//set teh position
 			Position = myCharXML.location;

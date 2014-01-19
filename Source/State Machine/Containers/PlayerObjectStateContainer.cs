@@ -524,7 +524,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		public virtual bool ReadXmlStateContainer(XmlNode rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
+		public virtual bool ReadXmlStateContainer(BaseObjectData xmlData, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
 		{
 			//don't call this dude, he'll set his own shit up
 			Debug.Assert(false);

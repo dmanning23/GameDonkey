@@ -159,7 +159,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		bool ReadXmlStateContainer(XmlNode rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner);
+		bool ReadXmlStateContainer(BaseObjectData xmlData, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner);
 
 		bool WriteXml();
 

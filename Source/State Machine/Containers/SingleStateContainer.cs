@@ -332,22 +332,23 @@ namespace GameDonkey
 		///		</Item>
 		///	</states>
 		/// </summary>
-		/// <param name="rXMLNode"></param>
+		/// <param name="xmlData"></param>
 		/// <param name="rEngine"></param>
 		/// <param name="iMessageOffset"></param>
 		/// <param name="rOwner"></param>
 		/// <returns></returns>
-		public bool ReadXmlStateContainer(XmlNode rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
+		public bool ReadXmlStateContainer(BaseObjectData xmlData, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
 		{
-			//This dude should onlt have one child node
-			if (1 != rXMLNode.ChildNodes.Count)
+			//Get that first node
+			foreach (var singleData in xmlData.StateContainers)
 			{
-				return false;
+				if (!ReadXmlSingleStateContainer(singleData, rEngine, iMessageOffset, rOwner))
+				{
+					return false;
+				}
 			}
 
-			//Get that first node
-			XmlNode childNode = rXMLNode.FirstChild;
-			return ReadXmlSingleStateContainer(childNode, rEngine, iMessageOffset, rOwner);
+			return true;
 		}
 
 		/// <summary>
@@ -362,61 +363,20 @@ namespace GameDonkey
 		/// <param name="iMessageOffset"></param>
 		/// <param name="rOwner"></param>
 		/// <returns></returns>
-		public bool ReadXmlSingleStateContainer(XmlNode rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
+		public bool ReadXmlSingleStateContainer(StateContainerXML rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner)
 		{
-			if ("Item" != rXMLNode.Name)
-			{
-				return false;
-			}
-
-			//should have an attribute Type
-			XmlNamedNodeMap mapAttributes = rXMLNode.Attributes;
-			for (int i = 0; i < mapAttributes.Count; i++)
-			{
-				//will only have the name attribute
-				if ("Type" ==  mapAttributes.Item(i).Name)
-				{
-					if ("SPFSettings.StateContainerXML" != mapAttributes.Item(i).Value)
-					{
-						return false;
-					}
-				}
-			}
-
-			//Read in child nodes
-			if (!rXMLNode.HasChildNodes)
-			{
-				return false;
-			}
-
-			//get the state machine xml node
-			XmlNode stateNode = rXMLNode.FirstChild;
-			string strName = rXMLNode.Name;
-			string strValue = rXMLNode.InnerXml;
-			if (strName != "stateMachine")
-			{
-				return false;
-			}
-
 			//load the state machine
-			if (!ReadXmlStateMachine(StateMachine, new Filename(strValue)))
+			if (!ReadXmlStateMachine(StateMachine, new Filename(rXMLNode.stateMachine)))
 			{
 				Debug.Assert(false);
 				return false;
 			}
 
 			//get the state action xml node
-			stateNode = stateNode.NextSibling;
-			strName = stateNode.Name;
-			strValue = stateNode.InnerXml;
-			if (strName != "stateActions")
-			{
-				return false;
-			}
 
 			//load the state actions
 			Debug.Assert(null != m_listActions);
-			m_strActionsFile = new Filename(strValue);
+			m_strActionsFile = new Filename(rXMLNode.stateActions);
 			return m_listActions.ReadXmlStateActions(m_strActionsFile, rOwner, rEngine, StateMachine);
 		}
 

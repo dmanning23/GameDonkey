@@ -825,40 +825,26 @@ namespace GameDonkey
 		/// Given an xml node, parse the contents.
 		/// Override in child classes to read object-specific node types.
 		/// </summary>
-		/// <param name="childNode">the xml node to read</param>
+		/// <param name="childNode">the xml data to read</param>
 		/// <param name="rEngine">the engine we are using to load</param>
 		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public override bool ParseXmlNode(XmlNode childNode, IGameDonkey rEngine, int iMessageOffset)
+		public override bool ParseXmlData(BaseObjectData childNode, IGameDonkey rEngine, int iMessageOffset)
 		{
-			//what is in this node?
-			string strName = childNode.Name;
-			string strValue = childNode.InnerXml;
-
-			switch (strName)
+			var data = childNode as PlayerObjectData;
+			if (null == data)
 			{
-				case "portrait":
-				{
-					//get the portrait file
-					Filename strPortraitFile = new Filename(strValue);
-					//Debug.Assert(null != rEngine.Renderer.Content);
-					//m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
-					return true;
-				}
-
-				case "deathSound":
-				{
-					DeathSound = childNode.InnerXml;
-					//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
-					return true;
-				}
-
-				default:
-				{
-					//punt to the base class
-					return base.ParseXmlNode(childNode, rEngine, iMessageOffset);
-				}
+				return false;
 			}
+
+			//TODO: load player object stuff
+
+			//Debug.Assert(null != rEngine.Renderer.Content);
+			//m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
+			DeathSound = data.DeathSoundFile.ToString();
+			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
+
+			return base.ParseXmlData(childNode, rEngine, iMessageOffset);
 		}
 
 		public override bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)

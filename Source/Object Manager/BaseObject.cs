@@ -1273,140 +1273,48 @@ namespace GameDonkey
 
 		#region File IO
 
-		public bool LoadXmlObject(Filename strFileName, IGameDonkey rEngine, int iMessageOffset)
-		{
-			//Open the file.
-			FileStream stream = File.Open(strFileName.File, FileMode.Open, FileAccess.Read);
-			XmlDocument xmlDoc = new XmlDocument();
-			xmlDoc.Load(stream);
-			XmlNode rootNode = xmlDoc.DocumentElement;
-
-			//make sure it is actually an xml node
-			if (rootNode.NodeType != XmlNodeType.Element)
-			{
-				return false;
-			}
-
-			//eat up the name of that xml node
-			string strElementName = rootNode.Name;
-			if (("XnaContent" != strElementName) || !rootNode.HasChildNodes)
-			{
-				return false;
-			}
-
-			//get the next node
-			XmlNode rXMLNode = rootNode.FirstChild;
-			if ("Asset" != rXMLNode.Name)
-			{
-				return false;
-			}
-
-			//should have an attribute Type
-			XmlNamedNodeMap mapAttributes = rXMLNode.Attributes;
-			for (int i = 0; i < mapAttributes.Count; i++)
-			{
-				//will only have the name attribute
-				string strName = mapAttributes.Item(i).Name;
-				string strValue = mapAttributes.Item(i).Value;
-				if ("Type" == strName)
-				{
-					if (("SPFSettings.PlayerObjectXML" != strValue) &&
-						("SPFSettings.BaseObjectXML" != strValue) &&
-						("SPFSettings.LevelObjectXML" != strValue))
-					{
-						return false;
-					}
-				}
-			}
-
-			//Read in child nodes
-			if (rXMLNode.HasChildNodes)
-			{
-				for (XmlNode childNode = rXMLNode.FirstChild;
-					null != childNode;
-					childNode = childNode.NextSibling)
-				{
-					ParseXmlNode(childNode, rEngine, iMessageOffset);
-				}
-			}
-
-			// Close the file.
-			stream.Close();
-			return true;
-		}
-
 		/// <summary>
 		/// Given an xml node, parse the contents.
 		/// Override in child classes to read object-specific node types.
 		/// </summary>
-		/// <param name="childNode">the xml node to read</param>
+		/// <param name="childNode">the xml data to read</param>
 		/// <param name="rEngine">the engine we are using to load</param>
 		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public virtual bool ParseXmlNode(XmlNode childNode, IGameDonkey rEngine, int iMessageOffset)
+		public virtual bool ParseXmlData(BaseObjectData childNode, IGameDonkey rEngine, int iMessageOffset)
 		{
-			//what is in this node?
-			string strName = childNode.Name;
-			string strValue = childNode.InnerXml;
-
-			switch (strName)
+			//read in the model
+			if (!AnimationContainer.ReadXMLModelFormat(childNode.ModelFile, rEngine.Renderer))
 			{
-				case "model":
-				{
-					Filename strModelFile = new Filename(strValue);
-					if (!AnimationContainer.ReadXMLModelFormat(strModelFile, rEngine.Renderer))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-					m_Physics.SortBones(AnimationContainer.Model);
-					return true;
-				}
-
-				case "animations":
-				{
-					Filename strAnimationFile = new Filename(strValue);
-					if (!AnimationContainer.ReadXMLAnimationFormat(strAnimationFile))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-					return true;
-				}
-
-				case "garments":
-				{
-					for (XmlNode garmentNode = childNode.FirstChild;
-						null != garmentNode;
-						garmentNode = garmentNode.NextSibling)
-					{
-						//Load up the garment.
-						Filename strGarmentFile = new Filename(garmentNode.InnerXml);
-						var myGarment = LoadXmlGarment(rEngine, strGarmentFile);
-						Debug.Assert(null != myGarment);
-					}
-
-					return true;
-				}
-
-				case "states":
-				{
-					return States.ReadXmlStateContainer(childNode, rEngine, iMessageOffset, this);
-				}
-
-				case "height":
-				{
-					m_fHeight = Convert.ToInt32(strValue);
-					return true;
-				}
-
-				default:
-				{
-					//should never get here...
-					Debug.Assert(false);
-					return false;
-				}
+				Debug.Assert(false);
+				return false;
 			}
+			m_Physics.SortBones(AnimationContainer.Model);
+
+			//read in the animations
+			if (!AnimationContainer.ReadXMLAnimationFormat(childNode.AnimationFile))
+			{
+				Debug.Assert(false);
+				return false;
+			}
+
+			//read in the garments
+			foreach (var garmentFile in childNode.GarmentFiles)
+			{
+				//Load up the garment.
+				var myGarment = LoadXmlGarment(rEngine, garmentFile);
+				Debug.Assert(null != myGarment);
+			}
+
+			//read in the states
+			if (!States.ReadXmlStateContainer(childNode, rEngine, iMessageOffset, this))
+			{
+				return false;
+			}
+
+			//read in the height
+			m_fHeight = childNode.Height;
+			return true;
 		}
 
 		public Garment LoadXmlGarment(IGameDonkey rEngine, Filename strGarmentFile)

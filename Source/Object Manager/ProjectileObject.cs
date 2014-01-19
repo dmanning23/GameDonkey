@@ -16,6 +16,11 @@ namespace GameDonkey
 		/// </summary>
 		BaseObject m_rPlayer;
 
+		/// <summary>
+		/// Whether or not this projectile can be blocked by other attacks
+		/// </summary>
+		public bool WeaponHits { get; private set; }
+
 		#endregion //Members
 
 		#region Methods
@@ -53,6 +58,26 @@ namespace GameDonkey
 		public override void ReplaceOwner(PlayerObject myBot)
 		{
 			m_rPlayer = myBot;
+		}
+
+		/// <summary>
+		/// Given an xml node, parse the contents.
+		/// Override in child classes to read object-specific node types.
+		/// </summary>
+		/// <param name="childNode">the xml data to read</param>
+		/// <param name="rEngine">the engine we are using to load</param>
+		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
+		/// <returns></returns>
+		public override bool ParseXmlData(BaseObjectData childNode, IGameDonkey rEngine, int iMessageOffset)
+		{
+			ProjectileObjectData data = childNode as ProjectileObjectData;
+			if (null == data)
+			{
+				return false;
+			}
+
+			WeaponHits = data.Weaponhits;
+			return base.ParseXmlData(childNode, rEngine, iMessageOffset);
 		}
 
 		#endregion //Methods

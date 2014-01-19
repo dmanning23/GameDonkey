@@ -690,11 +690,13 @@ namespace GameDonkey
 		{
 			//try to load all that stuff
 			BaseObject myCharacter;
+			BaseObjectData myData;
 			switch (eType)
 			{
 				case EObjectType.Human:
 					{
 						myCharacter = CreateHumanPlayer();
+						myData = new PlayerObjectData();
 
 						//set as the main character
 						AddCharacterToList(myCharacter);
@@ -705,6 +707,7 @@ namespace GameDonkey
 						AIObject myDude = new AIObject(m_CharacterClock, m_iNextObjectID++);
 						myDude.Difficulty = iDifficulty;
 						myCharacter = myDude;
+						myData = new PlayerObjectData();
 
 						//set as the main characters
 						AddCharacterToList(myCharacter);
@@ -714,11 +717,13 @@ namespace GameDonkey
 					{
 						Debug.Assert(null != m_rCharacter);
 						myCharacter = new ProjectileObject(m_CharacterClock, m_rCharacter, m_iNextObjectID++);
+						myData = new ProjectileObjectData();
 					}
 					break;
 				case EObjectType.Level:
 					{
 						myCharacter = new LevelObject(m_CharacterClock, m_iNextObjectID++);
+						myData = new LevelObjectData();
 					}
 					break;
 				default:
@@ -730,8 +735,17 @@ namespace GameDonkey
 
 			//get the message offset
 			int iMessageOffset = GetNextMessageOffset();
+
+			//load the object data
+			if (!myData.LoadObject(strFileName))
+			{
+				Debug.Assert(false);
+				return null;
+			}
+
+			//load the object data into the thing
 			myCharacter.PlayerQueue = this;
-			if (!myCharacter.LoadXmlObject(strFileName, rEngine, iMessageOffset))
+			if (!myCharacter.ParseXmlData(myData, rEngine, iMessageOffset))
 			{
 				Debug.Assert(false);
 				return null;

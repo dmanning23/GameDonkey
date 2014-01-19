@@ -244,9 +244,8 @@ namespace GameDonkey
 		/// load a player into this game engine
 		/// </summary>
 		/// <param name="strDataFile">filename of the character data xml file to load</param>
-		/// <param name="Garments">will hold the filename of the selected state actions</param>
 		/// <returns>player queue with all the player's stuff in it</returns>
-		public PlayerQueue LoadXmlPlayer(Filename strDataFile, List<Filename> Garments)
+		public PlayerQueue LoadXmlPlayer(Filename strDataFile)
 		{
 			Player = CreatePlayerQueue(Color.White, 0);
 			if (null == Player.LoadXmlObject(strDataFile, this, EObjectType.Human, 1))
