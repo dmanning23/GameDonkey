@@ -142,6 +142,7 @@ namespace GameDonkey
 			{
 				if (!ReadStates(childNode))
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -161,6 +162,7 @@ namespace GameDonkey
 					//should be a list of junk
 					if ("Item" != stateNode.Name)
 					{
+						Debug.Assert(false);
 						return false;
 					}
 
@@ -173,6 +175,7 @@ namespace GameDonkey
 						{
 							if ("SPFSettings.StateContainerXML" != mapAttributes.Item(i).Value)
 							{
+								Debug.Assert(false);
 								return false;
 							}
 						}
@@ -181,6 +184,7 @@ namespace GameDonkey
 					//Read in child nodes
 					if (!stateNode.HasChildNodes)
 					{
+						Debug.Assert(false);
 						return false;
 					}
 
@@ -190,6 +194,7 @@ namespace GameDonkey
 					string strValue = childNode.InnerXml;
 					if (strName != "stateMachine")
 					{
+						Debug.Assert(false);
 						return false;
 					}
 					string stateMachineFile = strValue;
@@ -200,6 +205,7 @@ namespace GameDonkey
 					strValue = childNode.InnerXml;
 					if (strName != "stateActions")
 					{
+						Debug.Assert(false);
 						return false;
 					}
 					string stateActionFile = strValue;

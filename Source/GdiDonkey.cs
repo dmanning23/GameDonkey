@@ -250,6 +250,7 @@ namespace GameDonkey
 			Player = CreatePlayerQueue(Color.White, 0);
 			if (null == Player.LoadXmlObject(strDataFile, this, EObjectType.Human, 1))
 			{
+				Debug.Assert(false);
 				Player = null;
 			}
 

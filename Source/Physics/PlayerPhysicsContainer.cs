@@ -6,7 +6,7 @@ namespace GameDonkey
 	/// <summary>
 	/// Manages physics for player objects
 	/// </summary>
-	class PlayerPhysicsContainer : IPhysicsContainer
+	public class PlayerPhysicsContainer : IPhysicsContainer
 	{
 		#region Methods
 

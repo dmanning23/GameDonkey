@@ -29,7 +29,7 @@ namespace GameDonkey
 
 		protected override void Init()
 		{
-			m_Physics = new LevelObjectPhysicsContainer(this);
+			Physics = new LevelObjectPhysicsContainer(this);
 			States = new ObjectStateContainer(new StateMachine());
 			States.StateChangedEvent += this.StateChanged;
 		}
@@ -39,7 +39,7 @@ namespace GameDonkey
 			Vector2 FirstCollisionPoint,
 			Vector2 SecondCollisionPoint)
 		{
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(null != rOtherObject);
 
 			//get a vector from the level object to the object

@@ -116,7 +116,7 @@ namespace GameDonkey
 			States.ReplaceOwner(myBot);
 
 			//replace in the physics
-			m_Physics.ReplaceOwner(myBot);
+			Physics.ReplaceOwner(myBot);
 		}
 
 		protected override void Init()
@@ -125,7 +125,7 @@ namespace GameDonkey
 			m_ThumbstickDirection = Vector2.Zero;
 			States = new PlayerObjectStateContainer();
 			States.StateChangedEvent += this.StateChanged;
-			m_Physics = new PlayerPhysicsContainer(this);
+			Physics = new PlayerPhysicsContainer(this);
 
 			Reset();
 		}
@@ -320,7 +320,7 @@ namespace GameDonkey
 
 		public override void HitResponse(IGameDonkey rEngine)
 		{
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 
 			//iterate through the hits, parsing as we go
 			for (EHitType i = 0; i < EHitType.NumHits; i++)
@@ -417,7 +417,7 @@ namespace GameDonkey
 
 		protected override void RespondToGroundHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(EHitType.GroundHit == rGroundHit.HitType);
 
 			//move the player UP out of the floor
@@ -459,7 +459,7 @@ namespace GameDonkey
 
 		protected override void RespondToCeilingHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(EHitType.CeilingHit == rGroundHit.HitType);
 
 			//move the player down out of the ceiling
@@ -504,7 +504,7 @@ namespace GameDonkey
 
 		protected override void RespondToLeftWallHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(EHitType.LeftWallHit == rGroundHit.HitType);
 
 			//move the player UP out of the floor
@@ -539,7 +539,7 @@ namespace GameDonkey
 
 		protected override void RespondToRightWallHit(Hit rGroundHit, IGameDonkey rEngine)
 		{
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(EHitType.RightWallHit == rGroundHit.HitType);
 
 			//move the player UP out of the floor

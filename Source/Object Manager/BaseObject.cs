@@ -130,11 +130,6 @@ namespace GameDonkey
 		public Color PlayerColor { get; set; }
 
 		/// <summary>
-		/// thing for managing all the collisions, hits for this dude
-		/// </summary>
-		protected IPhysicsContainer m_Physics;
-
-		/// <summary>
 		/// Whether or not an attack has landed during the current state.  Used for combo engine.
 		/// </summary>
 		protected bool m_bAttackLanded;
@@ -261,10 +256,10 @@ namespace GameDonkey
 			get { return m_iQueueID; }
 		}
 
-		public IPhysicsContainer Physics
-		{
-			get { return m_Physics; }
-		}
+		/// <summary>
+		/// thing for managing all the collisions, hits for this dude
+		/// </summary>
+		public IPhysicsContainer Physics { get; set; }
 
 		public EObjectType Type
 		{
@@ -372,13 +367,13 @@ namespace GameDonkey
 
 			Init();
 
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(null != States);
 		}
 
 		protected virtual void Init()
 		{
-			m_Physics = new PlayerPhysicsContainer(this);
+			Physics = new PlayerPhysicsContainer(this);
 			States = new ObjectStateContainer(new StateMachine());
 			States.StateChangedEvent += this.StateChanged;
 		}
@@ -412,7 +407,7 @@ namespace GameDonkey
 			m_rTrailAction = rHuman.m_rTrailAction;
 			m_rPlayerQueue = rHuman.m_rPlayerQueue;
 			PlayerColor = rHuman.PlayerColor;
-			m_Physics = rHuman.m_Physics;
+			Physics = rHuman.Physics;
 			m_bAttackLanded = rHuman.m_bAttackLanded;
 			m_QueuedInput = rHuman.m_QueuedInput;
 			m_fHeight = rHuman.m_fHeight;
@@ -454,8 +449,8 @@ namespace GameDonkey
 			Debug.Assert(null != m_TrailTimer);
 			m_TrailTimer.Stop();
 			m_rTrailAction = null;
-			Debug.Assert(null != m_Physics);
-			m_Physics.Reset();
+			Debug.Assert(null != Physics);
+			Physics.Reset();
 			m_bAttackLanded = false;
 			Debug.Assert(null != m_QueuedInput);
 			m_QueuedInput.Clear();
@@ -644,7 +639,7 @@ namespace GameDonkey
 
 		public void CheckCollisions(BaseObject rBadGuy)
 		{
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 
 			//make sure not to check collisions against ourselves
 			if (GlobalID != rBadGuy.GlobalID)
@@ -655,8 +650,8 @@ namespace GameDonkey
 
 		public void CheckWorldCollisions(Rectangle rWorldBoundaries)
 		{
-			Debug.Assert(null != m_Physics);
-			m_Physics.CheckWorldCollisions(Velocity, rWorldBoundaries);
+			Debug.Assert(null != Physics);
+			Physics.CheckWorldCollisions(Velocity, rWorldBoundaries);
 		}
 
 		//public void CheckCollisions(List<CBullet> rBadGuys, Rectangle WorldBoundaries)
@@ -680,7 +675,7 @@ namespace GameDonkey
 			Debug.Assert(null != rOtherObject);
 			Debug.Assert(EObjectType.Level != rOtherObject.Owner.Type);
 			Debug.Assert(null != rAttackAction);
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(m_iGlobalID == rAttackAction.Owner.m_iGlobalID);
 
 			//set "attack landed" flag for this state for combo engine
@@ -720,7 +715,7 @@ namespace GameDonkey
 			Debug.Assert(null != rOtherObject);
 			Debug.Assert(EObjectType.Level != rOtherObject.Owner.Type);
 			Debug.Assert(null != rAttackAction);
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(m_iGlobalID == rAttackAction.Owner.m_iGlobalID);
 
 			//set "attack landed" flag for this state for combo engine
@@ -758,7 +753,7 @@ namespace GameDonkey
 			Debug.Assert(null != rOtherObject);
 			Debug.Assert(EObjectType.Level != rOtherObject.Owner.Type);
 			Debug.Assert(null != rAttackAction);
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 
 			//that better be my attack
 			Debug.Assert(m_iGlobalID == rAttackAction.Owner.m_iGlobalID);
@@ -806,7 +801,7 @@ namespace GameDonkey
 
 		public virtual void HitResponse(IGameDonkey rEngine)
 		{
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 
 			//do boundary hits here in the base class
 			if (Physics.HitFlags[(int)EHitType.GroundHit])
@@ -886,7 +881,7 @@ namespace GameDonkey
 
 			//TOOD: override in level object and do nothing
 
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(EHitType.CeilingHit == rGroundHit.HitType);
 
 			//move the player down out of the ceiling
@@ -908,7 +903,7 @@ namespace GameDonkey
 
 			//TOOD: override in level object and do nothing
 
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(EHitType.LeftWallHit == rGroundHit.HitType);
 
 			//move the player UP out of the floor
@@ -930,7 +925,7 @@ namespace GameDonkey
 
 			//TOOD: override in level object and do nothing
 
-			Debug.Assert(null != m_Physics);
+			Debug.Assert(null != Physics);
 			Debug.Assert(EHitType.RightWallHit == rGroundHit.HitType);
 
 			//move the player UP out of the floor
@@ -1289,7 +1284,7 @@ namespace GameDonkey
 				Debug.Assert(false);
 				return false;
 			}
-			m_Physics.SortBones(AnimationContainer.Model);
+			Physics.SortBones(AnimationContainer.Model);
 
 			//read in the animations
 			if (!AnimationContainer.ReadXMLAnimationFormat(childNode.AnimationFile))
@@ -1363,7 +1358,7 @@ namespace GameDonkey
 				Debug.Assert(false);
 				return false;
 			}
-			m_Physics.SortBones(AnimationContainer.Model);
+			Physics.SortBones(AnimationContainer.Model);
 			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
 
 			//read in the state container

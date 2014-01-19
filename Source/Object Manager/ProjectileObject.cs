@@ -32,7 +32,7 @@ namespace GameDonkey
 
 		protected override void Init()
 		{
-			m_Physics = new ProjectilePhysicsContainer(this);
+			Physics = new ProjectilePhysicsContainer(this);
 			States = new ObjectStateContainer(new StateMachine());
 			States.StateChangedEvent += this.StateChanged;
 		}
