@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using ParticleBuddy;
 using System.Collections.Generic;
-using GameDonkey;
 
 namespace SPFSettings
 {

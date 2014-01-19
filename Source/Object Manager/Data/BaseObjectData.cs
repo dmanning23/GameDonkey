@@ -1,10 +1,10 @@
 ﻿using FilenameBuddy;
+using SPFSettings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using SPFSettings;
 
 namespace GameDonkey
 {

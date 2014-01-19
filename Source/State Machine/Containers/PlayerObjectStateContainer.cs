@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 using GameTimer;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
@@ -8,7 +7,6 @@ using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
 using System;
-using FilenameBuddy;
 using SPFSettings;
 
 namespace GameDonkey
@@ -382,14 +380,6 @@ namespace GameDonkey
 			Debug.Assert(CurrentStateMachine >= 0);
 			Debug.Assert(CurrentStateMachine < m_StateMachines.Count);
 
-#if DEBUG
-			//make sure the state machines all match
-			int iIndex = m_StateMachines[0].GetMessageIndexFromText(strMessageName);
-			for (int i = 0; i < m_StateMachines.Count; i++)
-			{
-				Debug.Assert(m_StateMachines[i].GetMessageIndexFromText(strMessageName) == iIndex);
-			}
-#endif
 			return m_StateMachines[CurrentStateMachine].GetMessageIndexFromText(strMessageName);
 		}
 

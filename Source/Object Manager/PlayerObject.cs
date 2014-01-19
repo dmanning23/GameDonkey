@@ -10,8 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Net;
 #endif
 using FilenameBuddy;
-using System.IO;
-using System.Xml;
 
 namespace GameDonkey
 {

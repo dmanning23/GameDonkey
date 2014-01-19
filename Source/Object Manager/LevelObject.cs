@@ -5,8 +5,6 @@ using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using System;
 using System.Diagnostics;
-using System.Xml;
-using Vector2Extensions;
 
 namespace GameDonkey
 {

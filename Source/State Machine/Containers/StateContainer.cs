@@ -6,8 +6,6 @@ using Microsoft.Xna.Framework.Net;
 using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
-using FilenameBuddy;
-using System.Xml;
 using SPFSettings;
 
 namespace GameDonkey

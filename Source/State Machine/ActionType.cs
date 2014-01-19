@@ -1,4 +1,5 @@
-﻿namespace GameDonkey
+﻿
+namespace GameDonkey
 {
 	public enum EActionType
 	{

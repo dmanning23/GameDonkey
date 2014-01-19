@@ -9,7 +9,6 @@ using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
 using FilenameBuddy;
-using System.Xml;
 
 namespace GameDonkey
 {

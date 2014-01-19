@@ -1,15 +1,9 @@
-﻿using System.Diagnostics;
-using SPFSettings;
-using GameTimer;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 #if NETWORKING
 using Microsoft.Xna.Framework.Net;
 #endif
 using StateMachineBuddy;
-using System;
-using System.Collections.Generic;
 using FilenameBuddy;
-using System.Xml;
 
 namespace GameDonkey
 {

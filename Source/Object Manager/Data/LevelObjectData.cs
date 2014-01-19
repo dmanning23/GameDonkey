@@ -1,11 +1,6 @@
-﻿using FilenameBuddy;
+﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Xml;
-using SPFSettings;
-using Microsoft.Xna.Framework;
 using Vector2Extensions;
 
 namespace GameDonkey

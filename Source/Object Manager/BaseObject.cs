@@ -3,8 +3,6 @@ using HadoukInput;
 using GameTimer;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 #if NETWORKING

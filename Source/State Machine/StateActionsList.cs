@@ -1,12 +1,12 @@
-﻿using SPFSettings;
+﻿using FilenameBuddy;
 using GameTimer;
 using Microsoft.Xna.Framework.Content;
+using SPFSettings;
 using StateMachineBuddy;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using FilenameBuddy;
 
 namespace GameDonkey
 {

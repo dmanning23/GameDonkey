@@ -1,9 +1,7 @@
 ﻿using FilenameBuddy;
-using GameDonkey;
 using GameTimer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using ParticleBuddy;
 using RenderBuddy;
 using System;
