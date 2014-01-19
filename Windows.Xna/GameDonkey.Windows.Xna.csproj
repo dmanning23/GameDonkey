@@ -113,8 +113,17 @@
     <Compile Include="..\Source\Object Manager\BaseObject.cs">
       <Link>Object Manager\BaseObject.cs</Link>
     </Compile>
-    <Compile Include="..\Source\Object Manager\CharacterData.cs">
-      <Link>Object Manager\CharacterData.cs</Link>
+    <Compile Include="..\Source\Object Manager\Data\BaseObjectData.cs">
+      <Link>Object Manager\Data\BaseObjectData.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\Data\LevelObjectData.cs">
+      <Link>Object Manager\Data\LevelObjectData.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\Data\PlayerObjectData.cs">
+      <Link>Object Manager\Data\PlayerObjectData.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\Data\ProjectileObjectData.cs">
+      <Link>Object Manager\Data\ProjectileObjectData.cs</Link>
     </Compile>
     <Compile Include="..\Source\Object Manager\GarmentManager.cs">
       <Link>Object Manager\GarmentManager.cs</Link>
@@ -152,6 +161,9 @@
     <Compile Include="..\Source\Physics\ProjectilePhysicsContainer.cs">
       <Link>Physics\ProjectilePhysicsContainer.cs</Link>
     </Compile>
+    <Compile Include="..\Source\State Machine\ActionDirection.cs">
+      <Link>State Machine\ActionDirection.cs</Link>
+    </Compile>
     <Compile Include="..\Source\State Machine\ActionSort.cs">
       <Link>State Machine\ActionSort.cs</Link>
     </Compile>
@@ -187,6 +199,9 @@
     </Compile>
     <Compile Include="..\Source\State Machine\Actions\DeactivateAction.cs">
       <Link>State Machine\Actions\DeactivateAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\EDirectionType.cs">
+      <Link>State Machine\Actions\EDirectionType.cs</Link>
     </Compile>
     <Compile Include="..\Source\State Machine\Actions\EvadeAction.cs">
       <Link>State Machine\Actions\EvadeAction.cs</Link>
