@@ -112,33 +112,6 @@ namespace GameDonkey
 		/// <returns></returns>
 		public bool ReadXml(XmlNode rXMLNode)
 		{
-			//read in xml action
-
-			if ("Item" != rXMLNode.Name)
-			{
-				return false;
-			}
-
-			//should have an attribute Type
-			XmlNamedNodeMap mapAttributes = rXMLNode.Attributes;
-			for (int i = 0; i < mapAttributes.Count; i++)
-			{
-				//will only have the name attribute
-				string strName = mapAttributes.Item(i).Name;
-				string strValue = mapAttributes.Item(i).Value;
-				if ("Type" == strName)
-				{
-					if (strValue != "SPFSettings.DirectionActionXML")
-					{
-						return false;
-					}
-				}
-				else
-				{
-					return false;
-				}
-			}
-
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)
 			{
@@ -174,9 +147,6 @@ namespace GameDonkey
 		/// <param name="rXMLFile"></param>
 		public void WriteXml(XmlTextWriter rXMLFile)
 		{
-			rXMLFile.WriteStartElement("Item");
-			rXMLFile.WriteAttributeString("Type", "SPFSettings.DirectionActionXML");
-
 			rXMLFile.WriteStartElement("velocity");
 			rXMLFile.WriteString(Velocity.StringFromVector());
 			rXMLFile.WriteEndElement();
@@ -184,8 +154,6 @@ namespace GameDonkey
 			rXMLFile.WriteStartElement("directionType");
 			rXMLFile.WriteString(DirectionType.ToString());
 			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteEndElement(); //Item
 		}
 
 		/// <summary>

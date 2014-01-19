@@ -255,6 +255,7 @@ namespace GameDonkey
 				{
 					var actions = new StateActions();
 					actions.StateName = strStateName;
+					m_listActions.Add(actions);
 					actions.WriteXml(rXMLFile);
 				}
 			}

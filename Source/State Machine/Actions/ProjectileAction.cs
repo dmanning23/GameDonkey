@@ -249,7 +249,7 @@ namespace GameDonkey
 					}
 					else if (strName == "direction")
 					{
-						Velocity.ReadXml(childNode.FirstChild);
+						Velocity.ReadXml(childNode);
 					}
 					else
 					{
