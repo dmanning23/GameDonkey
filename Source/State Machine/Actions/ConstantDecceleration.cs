@@ -15,29 +15,15 @@ namespace GameDonkey
 		/// The pixels/second to add to this characters velocity every second.
 		/// should be -x and +y
 		/// </summary>
-		public ActionDirection Velocity { get; set; }
+		public Vector2 Velocity { get; set; }
 
 		/// <summary>
 		/// The point at which to stop adding y velocity to the character
 		/// should be +y.  Don't care about x, that will always slow down to 0.0
 		/// </summary>
-		private float m_fMinYVelocity;
+		public float MinYVelocity { get; private set; }
 
 		#endregion //Members
-
-		#region Properties
-
-		/// <summary>
-		/// The point at which to stop adding y velocity to the character
-		/// should be +y
-		/// </summary>
-		public float MinYVelocity
-		{
-			get { return m_fMinYVelocity; }
-			set { m_fMinYVelocity = value; }
-		}
-
-		#endregion //Properties
 
 		#region Methods
 
@@ -47,8 +33,8 @@ namespace GameDonkey
 		public ConstantDeccelerationAction(BaseObject rOwner) : base(rOwner)
 		{
 			ActionType = EActionType.ConstantDecceleration;
-			Velocity = new ActionDirection();
-			m_fMinYVelocity = 0.0f;
+			Velocity = Vector2.Zero;
+			MinYVelocity = 0.0f;
 		}
 
 		/// <summary>
@@ -66,18 +52,13 @@ namespace GameDonkey
 			return base.Execute();
 		}
 
-		public Vector2 GetMyVelocity()
-		{
-			return Velocity.GetDirection(Owner);
-		}
-
 		public override bool Compare(IBaseAction rInst)
 		{
 			ConstantDeccelerationAction myAction = (ConstantDeccelerationAction)rInst;
 
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
-			Debug.Assert(Velocity.Compare(myAction.Velocity));
+			Debug.Assert(Velocity == myAction.Velocity);
 
 			return true;
 		}
@@ -146,11 +127,11 @@ namespace GameDonkey
 					}
 					else if (strName == "direction")
 					{
-						Velocity.ReadXml(childNode);
+						Velocity = strValue.ToVector2();
 					}
 					else if (strName == "minYVelocity")
 					{
-						m_fMinYVelocity = Convert.ToSingle(strValue);
+						MinYVelocity = Convert.ToSingle(strValue);
 					}
 					else
 					{
@@ -159,9 +140,9 @@ namespace GameDonkey
 				}
 			}
 
-			Debug.Assert(Velocity.Velocity.X <= 0.0f);
-			Debug.Assert(Velocity.Velocity.Y >= 0.0f);
-			Debug.Assert(m_fMinYVelocity >= 0.0f);
+			Debug.Assert(Velocity.X <= 0.0f);
+			Debug.Assert(Velocity.Y >= 0.0f);
+			Debug.Assert(MinYVelocity >= 0.0f);
 
 			return true;
 		}
@@ -173,11 +154,11 @@ namespace GameDonkey
 		protected override void WriteActionXml(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("direction");
-			Velocity.WriteXml(rXMLFile);
+			rXMLFile.WriteString(Velocity.StringFromVector());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("minYVelocity");
-			rXMLFile.WriteString(m_fMinYVelocity.ToString());
+			rXMLFile.WriteString(MinYVelocity.ToString());
 			rXMLFile.WriteEndElement();
 		}
 
@@ -188,13 +169,13 @@ namespace GameDonkey
 		public bool ReadSerialized(SPFSettings.ConstantDeccelerationActionXML myAction)
 		{
 			Debug.Assert(myAction.type == ActionType.ToString());
-			Velocity.ReadSerialized(myAction.direction);
-			m_fMinYVelocity = myAction.minYVelocity;
+			Velocity = myAction.direction;
+			MinYVelocity = myAction.minYVelocity;
 			ReadSerializedBase(myAction);
 
-			Debug.Assert(Velocity.Velocity.Y <= 0.0f);
-			Debug.Assert(Velocity.Velocity.X >= 0.0f);
-			Debug.Assert(m_fMinYVelocity >= 0.0f);
+			Debug.Assert(Velocity.Y <= 0.0f);
+			Debug.Assert(Velocity.X >= 0.0f);
+			Debug.Assert(MinYVelocity >= 0.0f);
 
 			return true;
 		}

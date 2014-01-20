@@ -296,24 +296,6 @@ namespace GameDonkey
 			}
 		}
 
-		/// <summary>
-		/// Check if the play is in a hard coded state,
-		/// if so, check if its button is still being held down
-		/// </summary>
-		public override void CheckHardCodedStates()
-		{
-			base.CheckHardCodedStates();
-
-			CheckMovementMessages();
-		}
-
-		/// <summary>
-		/// Send any messages based on the direction the character is moving.
-		/// </summary>
-		public virtual void CheckMovementMessages()
-		{
-		}
-
 		#region Hit Response
 
 		public override void HitResponse(IGameDonkey rEngine)

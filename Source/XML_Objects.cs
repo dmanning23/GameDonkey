@@ -40,12 +40,12 @@ namespace SPFSettings
 	public class ConstantAccelerationActionXML : BaseActionXML
 	{
 		public DirectionActionXML direction = new DirectionActionXML();
-		public Vector2 maxVelocity = new Vector2(0.0f);
+		public float maxVelocity = 0.0f;
 	}
 
 	public class ConstantDeccelerationActionXML : BaseActionXML
 	{
-		public DirectionActionXML direction = new DirectionActionXML();
+		public Vector2 direction = new Vector2(0.0f);
 		public float minYVelocity = 0.0f;
 	}
 

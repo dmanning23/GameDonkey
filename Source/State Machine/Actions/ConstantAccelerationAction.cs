@@ -13,31 +13,15 @@ namespace GameDonkey
 
 		/// <summary>
 		/// The pixels/second to add to this characters velocity every second.
-		/// should be +x and -y
 		/// </summary>
 		public ActionDirection Velocity { get; set; }
 
 		/// <summary>
 		/// The point at which to stop adding velocity to the character
-		/// should be +x and -y
 		/// </summary>
-		private Vector2 m_MaxVelocity;
+		public float MaxVelocity { get; set; }
 
 		#endregion //Members
-
-		#region Properties
-
-		/// <summary>
-		/// The point at which to stop adding velocity to the character
-		/// should be -y and +x
-		/// </summary>
-		public Vector2 MaxVelocity
-		{
-			get { return m_MaxVelocity; }
-			set { m_MaxVelocity = value; }
-		}
-
-		#endregion //Properties
 
 		#region Methods
 
@@ -48,7 +32,7 @@ namespace GameDonkey
 		{
 			ActionType = EActionType.ConstantAcceleration;
 			Velocity = new ActionDirection();
-			m_MaxVelocity = new Vector2(0.0f);
+			MaxVelocity = 0.0f;
 		}
 
 		/// <summary>
@@ -150,7 +134,7 @@ namespace GameDonkey
 					}
 					else if (strName == "maxVelocity")
 					{
-						m_MaxVelocity = strValue.ToVector2();
+						MaxVelocity = Convert.ToSingle(strValue);
 					}
 					else
 					{
@@ -158,11 +142,6 @@ namespace GameDonkey
 					}
 				}
 			}
-
-			Debug.Assert(Velocity.Velocity.Y <= 0.0f);
-			Debug.Assert(Velocity.Velocity.X >= 0.0f);
-			Debug.Assert(m_MaxVelocity.Y <= 0.0f);
-			Debug.Assert(m_MaxVelocity.X >= 0.0f);
 
 			return true;
 		}
@@ -178,7 +157,7 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("maxVelocity");
-			rXMLFile.WriteString(m_MaxVelocity.StringFromVector());
+			rXMLFile.WriteString(MaxVelocity.ToString());
 			rXMLFile.WriteEndElement();
 		}
 
@@ -190,13 +169,8 @@ namespace GameDonkey
 		{
 			Debug.Assert(myAction.type == ActionType.ToString());
 			Velocity.ReadSerialized(myAction.direction);
-			m_MaxVelocity = myAction.maxVelocity;
+			MaxVelocity = myAction.maxVelocity;
 			ReadSerializedBase(myAction);
-
-			Debug.Assert(Velocity.Velocity.Y <= 0.0f);
-			Debug.Assert(Velocity.Velocity.X >= 0.0f);
-			Debug.Assert(m_MaxVelocity.Y <= 0.0f);
-			Debug.Assert(m_MaxVelocity.X >= 0.0f);
 
 			return true;
 		}

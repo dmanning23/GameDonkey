@@ -1074,19 +1074,36 @@ namespace GameDonkey
 
 			//Get teh acceleration
 			Vector2 myAcceleration = (m_AccelAction.GetMyVelocity() * CharacterClock.TimeDelta);
-			myAcceleration += Velocity;
 
-			//set the Y velocity?
-			if (myAcceleration.Y > m_AccelAction.MaxVelocity.Y)
-			{
-				m_Velocity.Y = myAcceleration.Y;
-			}
+			//Add the acceleration to the velocity
+			Velocity += myAcceleration;
 
-			//set the x velocity?
-			float fAbsVelocity = Math.Abs(myAcceleration.X);
-			if (fAbsVelocity < m_AccelAction.MaxVelocity.X)
+			//Are we going too fast?
+			if (Velocity.LengthSquared() > (m_AccelAction.MaxVelocity * m_AccelAction.MaxVelocity))
 			{
-				m_Velocity.X = myAcceleration.X;
+				//Find the amount to pull the velocity back... 
+
+				//Get the length of the acceleration
+				float fAccelLength = myAcceleration.Length();
+
+				//Get the delta of how much speed we need to shed
+				float fVelocityDif = Velocity.Length() - m_AccelAction.MaxVelocity;
+
+				//If it is less than the amount of accleration added, use the delta
+				if (fAccelLength > fVelocityDif)
+				{
+					fVelocityDif = fAccelLength;
+				}
+
+				//Get the opposite direction from the accleration
+				Vector2 oppositeDir = Velocity * -1.0f;
+				oppositeDir.Normalize();
+
+				//Multiply speed delta by the unit vector of the opposite direction
+				Vector2 decel = fVelocityDif * oppositeDir;
+
+				//add to the velocity
+				Velocity += decel;
 			}
 		}
 
@@ -1099,13 +1116,25 @@ namespace GameDonkey
 			}
 
 			//Get teh acceleration
-			Vector2 myDecceleration = (m_DeccelAction.GetMyVelocity() * CharacterClock.TimeDelta);
+			Vector2 myDecceleration = (m_DeccelAction.Velocity * CharacterClock.TimeDelta);
 
 			//set the y velocity
-			myDecceleration.Y += Velocity.Y;
-			if (myDecceleration.Y < m_DeccelAction.MinYVelocity)
+			if (m_Velocity.Y <= m_DeccelAction.MinYVelocity)
 			{
-				m_Velocity.Y = myDecceleration.Y;
+				//
+				myDecceleration.Y += m_Velocity.Y;
+
+				//only deccelerate to minY
+				m_Velocity.Y = MathHelper.Clamp(myDecceleration.Y, m_Velocity.Y, m_DeccelAction.MinYVelocity);
+			}
+			else
+			{
+				//moving left -x, flip the Y decceleration
+				myDecceleration.Y *= -1.0f;
+				myDecceleration.Y += m_Velocity.Y;
+
+				//only deccelerate to minY
+				m_Velocity.Y = MathHelper.Clamp(myDecceleration.Y, m_DeccelAction.MinYVelocity, m_Velocity.Y);
 			}
 
 			//set the X velocity
