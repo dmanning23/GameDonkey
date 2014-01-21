@@ -341,8 +341,8 @@ namespace GameDonkey
 					}
 				}
 
-				//check if anyone has won
-				CheckForWinner();
+				//TODO: check if anyone has won
+				//CheckForWinner();
 
 				//update the level objects
 				m_LevelObjects.Update(m_GameTimer, true);

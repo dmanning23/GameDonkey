@@ -47,7 +47,7 @@ namespace GameDonkey
 			Debug.Assert(!AlreadyRun);
 
 			//set the constant accleration variable in the base object
-			Owner.DeccelerationAction = this;
+			Owner.DeccelAction = this;
 
 			return base.Execute();
 		}

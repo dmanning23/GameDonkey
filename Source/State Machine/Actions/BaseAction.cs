@@ -393,6 +393,28 @@ namespace GameDonkey
 						outputList.Add(myAction);
 					}
 					break;
+					case EActionType.Rotate:
+					{
+						RotateAction myAction = new RotateAction(rOwner);
+						SPFSettings.RotateActionXML myActionXML = (SPFSettings.RotateActionXML)inputList[i];
+						if (!myAction.ReadSerialized(myActionXML))
+						{
+							Debug.Assert(false);
+						}
+						outputList.Add(myAction);
+					}
+					break;
+					case EActionType.TargetRotation:
+					{
+						TargetRotationAction myAction = new TargetRotationAction(rOwner);
+						SPFSettings.TargetRotationActionXML myActionXML = (SPFSettings.TargetRotationActionXML)inputList[i];
+						if (!myAction.ReadSerialized(myActionXML))
+						{
+							Debug.Assert(false);
+						}
+						outputList.Add(myAction);
+					}
+					break;
 					default:
 					{
 						Debug.Assert(false);

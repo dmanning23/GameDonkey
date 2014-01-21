@@ -37,6 +37,8 @@ namespace GameDonkey
 				case EActionType.SetVelocity: { return new SetVelocityAction(rOwner); }
 				case EActionType.Trail: { return new TrailAction(rOwner); }
 				case EActionType.BlockState: { return new BlockingStateAction(rOwner); }
+				case EActionType.Rotate: { return new RotateAction(rOwner); }
+				case EActionType.TargetRotation: { return new TargetRotationAction(rOwner); }
 				default: { Debug.Assert(false); return null; }
 			}
 		}
@@ -77,6 +79,8 @@ namespace GameDonkey
 			else if (strXMLType == "SPFSettings.TrailActionXML") { return EActionType.Trail; }
 			else if (strXMLType == "SPFSettings.AddGarmentActionXML") { return EActionType.AddGarment; }
 			else if (strXMLType == "SPFSettings.BlockingStateActionXML") { return EActionType.BlockState; }
+			else if (strXMLType == "SPFSettings.RotateActionXML") { return EActionType.Rotate; }
+			else if (strXMLType == "SPFSettings.TargetRotationActionXML") { return EActionType.TargetRotation; }
 			else { Debug.Assert(false); return EActionType.NumTypes; }
 		}
 
@@ -101,6 +105,8 @@ namespace GameDonkey
 				case EActionType.Trail: { return "SPFSettings.TrailActionXML"; }
 				case EActionType.AddGarment: { return "SPFSettings.AddGarmentActionXML"; }
 				case EActionType.BlockState: { return "SPFSettings.BlockingStateActionXML"; }
+				case EActionType.Rotate: { return "SPFSettings.RotateActionXML"; }
+				case EActionType.TargetRotation: { return "SPFSettings.TargetRotationActionXML"; }
 				default: { Debug.Assert(false); return ""; }
 			}
 		}

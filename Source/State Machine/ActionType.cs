@@ -21,6 +21,8 @@ namespace GameDonkey
 		ParticleEffect,
 		SendStateMessage,
 		Deactivate,
+		Rotate,
+		TargetRotation,
 		NumTypes
 	}
 }

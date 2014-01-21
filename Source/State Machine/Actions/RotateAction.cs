@@ -6,19 +6,14 @@ using System.Xml;
 
 namespace GameDonkey
 {
-	public class ConstantAccelerationAction : IBaseAction
+	public class RotateAction : IBaseAction
 	{
 		#region Members
 
 		/// <summary>
-		/// The pixels/second to add to this characters velocity every second.
+		/// The radians/second to rotate
 		/// </summary>
-		public ActionDirection Velocity { get; set; }
-
-		/// <summary>
-		/// The point at which to stop adding velocity to the character
-		/// </summary>
-		public float MaxVelocity { get; set; }
+		public float Rotation { get; set; }
 
 		#endregion //Members
 
@@ -27,11 +22,11 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public ConstantAccelerationAction(BaseObject rOwner) : base(rOwner)
+		public RotateAction(BaseObject rOwner)
+			: base(rOwner)
 		{
-			ActionType = EActionType.ConstantAcceleration;
-			Velocity = new ActionDirection();
-			MaxVelocity = 0.0f;
+			ActionType = EActionType.Rotate;
+			Rotation = 0.0f;
 		}
 
 		/// <summary>
@@ -43,26 +38,21 @@ namespace GameDonkey
 			Debug.Assert(null != Owner);
 			Debug.Assert(!AlreadyRun);
 
-			//set the constant accleration variable in the base object
-			Owner.AccelAction = this;
+			//set the rotation action variable in the base object
+			Owner.RotationPerSecond = Rotation;
 
 			return base.Execute();
 		}
 
 		public override bool Compare(IBaseAction rInst)
 		{
-			ConstantAccelerationAction myAction = (ConstantAccelerationAction)rInst;
+			var myAction = (RotateAction)rInst;
 			
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
-			Debug.Assert(Velocity.Compare(myAction.Velocity));
+			Debug.Assert(Rotation == myAction.Rotation);
 
 			return true;
-		}
-
-		public Vector2 GetMyVelocity()
-		{
-			return Velocity.GetDirection(Owner);
 		}
 
 		#endregion //Methods
@@ -127,13 +117,9 @@ namespace GameDonkey
 							return false;
 						}
 					}
-					else if (strName == "direction")
+					else if (strName == "rotation")
 					{
-						Velocity.ReadXml(childNode);
-					}
-					else if (strName == "maxVelocity")
-					{
-						MaxVelocity = Convert.ToSingle(strValue);
+						Rotation = MathHelper.ToRadians(Convert.ToSingle(strValue));
 					}
 					else
 					{
@@ -151,12 +137,8 @@ namespace GameDonkey
 		/// <param name="rXMLFile"></param>
 		protected override void WriteActionXml(XmlTextWriter rXMLFile)
 		{
-			rXMLFile.WriteStartElement("direction");
-			Velocity.WriteXml(rXMLFile);
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("maxVelocity");
-			rXMLFile.WriteString(MaxVelocity.ToString());
+			rXMLFile.WriteStartElement("rotation");
+			rXMLFile.WriteString(MathHelper.ToDegrees(Rotation).ToString());
 			rXMLFile.WriteEndElement();
 		}
 
@@ -164,11 +146,10 @@ namespace GameDonkey
 		/// Read from a serialized file
 		/// </summary>
 		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.ConstantAccelerationActionXML myAction)
+		public bool ReadSerialized(SPFSettings.RotateActionXML myAction)
 		{
 			Debug.Assert(myAction.type == ActionType.ToString());
-			Velocity.ReadSerialized(myAction.direction);
-			MaxVelocity = myAction.maxVelocity;
+			Rotation = MathHelper.ToRadians(myAction.rotation);
 			ReadSerializedBase(myAction);
 
 			return true;

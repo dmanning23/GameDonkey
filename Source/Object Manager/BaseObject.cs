@@ -82,11 +82,6 @@ namespace GameDonkey
 		protected CountdownTimer m_BlockTimer;
 
 		/// <summary>
-		/// pointer to the current "throw" action (this dude is being thrown)
-		/// </summary>
-		protected CreateThrowAction m_rCurrentThrow;
-
-		/// <summary>
 		/// evasion timer, if this is running it means there are no push collsions
 		/// </summary>
 		protected CountdownTimer m_EvasionTimer;
@@ -118,11 +113,6 @@ namespace GameDonkey
 		protected TrailAction m_rTrailAction;
 
 		/// <summary>
-		/// The player queue that owns this object
-		/// </summary>
-		protected PlayerQueue m_rPlayerQueue;
-
-		/// <summary>
 		/// The current color of this dude
 		/// </summary>
 		public Color PlayerColor { get; set; }
@@ -150,16 +140,6 @@ namespace GameDonkey
 		protected DrawList m_DrawList;
 
 		/// <summary>
-		/// Acceleration to apply to this dude for the current state
-		/// </summary>
-		protected ConstantAccelerationAction m_AccelAction;
-
-		/// <summary>
-		/// Decceleration to apply to this dude for the current state
-		/// </summary>
-		protected ConstantDeccelerationAction m_DeccelAction;
-
-		/// <summary>
 		/// The last player to attack this guy.  Used to calculate points when someone dies.
 		/// </summary>
 		protected PlayerQueue m_rLastAttacker;
@@ -179,11 +159,10 @@ namespace GameDonkey
 			get { return m_EvasionTimer; }
 		}
 
-		public CreateThrowAction CurrentThrow
-		{
-			get { return m_rCurrentThrow; }
-			set { m_rCurrentThrow = value; }
-		}
+		/// <summary>
+		/// pointer to the current "throw" action (this dude is being thrown)
+		/// </summary>
+		public CreateThrowAction CurrentThrow { get; set; }
 
 		public AnimationContainer AnimationContainer
 		{
@@ -238,11 +217,10 @@ namespace GameDonkey
 			}
 		}
 
-		public PlayerQueue PlayerQueue
-		{
-			get { return m_rPlayerQueue; }
-			set { m_rPlayerQueue = value; }
-		}
+		/// <summary>
+		/// The player queue that owns this object
+		/// </summary>
+		public PlayerQueue PlayerQueue { get; set; }
 
 		public uint GlobalID
 		{
@@ -282,20 +260,23 @@ namespace GameDonkey
 		/// <summary>
 		/// Acceleration to apply to this dude for the current state
 		/// </summary>
-		public ConstantAccelerationAction AccelerationAction
-		{
-			get { return m_AccelAction; }
-			set { m_AccelAction = value; }
-		}
+		public ConstantAccelerationAction AccelAction { get; set; }
 
 		/// <summary>
 		/// Decceleration to apply to this dude for the current state
 		/// </summary>
-		public ConstantDeccelerationAction DeccelerationAction
-		{
-			get { return m_DeccelAction; }
-			set { m_DeccelAction = value; }
-		}
+		public ConstantDeccelerationAction DeccelAction { get; set; }
+
+		/// <summary>
+		/// rotation to apply to this dude for the current state
+		/// stored in radians/second
+		/// </summary>
+		public float RotationPerSecond { get; set; }
+
+		/// <summary>
+		/// The current rotation of this dude.
+		/// </summary>
+		public float CurrentRotation { get; set; }
 
 		public PlayerQueue LastAttacker
 		{
@@ -333,7 +314,7 @@ namespace GameDonkey
 			CurrentBlocks = new TimedActionList<BlockingStateAction>();
 			m_BlockTimer = new CountdownTimer();
 			m_EvasionTimer = new CountdownTimer();
-			m_rCurrentThrow = null;
+			CurrentThrow = null;
 			m_AnimationContainer = new AnimationContainer();
 			States = null;
 			m_Position = new Vector2(0.0f);
@@ -341,19 +322,21 @@ namespace GameDonkey
 			m_Velocity = new Vector2(0.0f);
 			m_TrailTimer = new CountdownTimer();
 			m_rTrailAction = null;
-			m_rPlayerQueue = null;
+			PlayerQueue = null;
 			PlayerColor = Color.White;
 			m_bAttackLanded = false;
 			m_QueuedInput = new Queue<int>();
 			m_fHeight = 0.0f;
 			m_fScale = 1.0f;
+			RotationPerSecond = 0.0f;
+			CurrentRotation = 0.0f;
 
 			m_DrawList = new DrawList();
 			m_DrawList.CurrentColor = Color.White;
 			m_DrawList.Scale = m_fScale;
 
-			m_AccelAction = null;
-			m_DeccelAction = null;
+			AccelAction = null;
+			DeccelAction = null;
 
 			Debug.Assert(null != rClock);
 			CharacterClock = rClock;
@@ -390,7 +373,7 @@ namespace GameDonkey
 			CurrentBlocks = rHuman.CurrentBlocks;
 			m_BlockTimer = rHuman.m_BlockTimer;
 			m_EvasionTimer = rHuman.m_EvasionTimer;
-			m_rCurrentThrow = rHuman.m_rCurrentThrow;
+			CurrentThrow = rHuman.CurrentThrow;
 			m_AnimationContainer = rHuman.m_AnimationContainer;
 			if (null != States)
 			{
@@ -403,7 +386,7 @@ namespace GameDonkey
 			m_Velocity = rHuman.m_Velocity;
 			m_TrailTimer = rHuman.m_TrailTimer;
 			m_rTrailAction = rHuman.m_rTrailAction;
-			m_rPlayerQueue = rHuman.m_rPlayerQueue;
+			PlayerQueue = rHuman.PlayerQueue;
 			PlayerColor = rHuman.PlayerColor;
 			Physics = rHuman.Physics;
 			m_bAttackLanded = rHuman.m_bAttackLanded;
@@ -411,8 +394,8 @@ namespace GameDonkey
 			m_fHeight = rHuman.m_fHeight;
 			m_fScale = rHuman.m_fScale;
 			m_DrawList = rHuman.m_DrawList;
-			m_AccelAction = rHuman.m_AccelAction;
-			m_DeccelAction = rHuman.m_DeccelAction;
+			AccelAction = rHuman.AccelAction;
+			DeccelAction = rHuman.DeccelAction;
 			CharacterClock = rHuman.CharacterClock;
 			m_rLastAttacker = rHuman.m_rLastAttacker;
 			MyGarments = rHuman.MyGarments;
@@ -440,7 +423,7 @@ namespace GameDonkey
 			m_BlockTimer.Stop();
 			Debug.Assert(null != m_EvasionTimer);
 			m_EvasionTimer.Stop();
-			m_rCurrentThrow = null;
+			CurrentThrow = null;
 			Debug.Assert(null != States);
 			States.Reset();
 			m_Velocity = Vector2.Zero;
@@ -452,10 +435,12 @@ namespace GameDonkey
 			m_bAttackLanded = false;
 			Debug.Assert(null != m_QueuedInput);
 			m_QueuedInput.Clear();
-			m_AccelAction = null;
-			m_DeccelAction = null;
+			AccelAction = null;
+			DeccelAction = null;
 			m_rLastAttacker = null;
 			MyGarments.Reset();
+			RotationPerSecond = 0.0f;
+			CurrentRotation = 0.0f;
 		}
 
 		public virtual int DisplayHealth()
@@ -480,7 +465,7 @@ namespace GameDonkey
 			UpdateEmitters();
 
 			//update the animations
-			m_AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, 0.0f, false);
+			m_AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
 
 			Debug.Assert(m_Position.X != float.NaN);
 			Debug.Assert(m_Position.Y != float.NaN);
@@ -535,6 +520,9 @@ namespace GameDonkey
 
 			//apply decceleration to the character
 			Deccelerate();
+
+			//rorate the object
+			ApplyRotation();
 		}
 
 		public void UpdateRagdoll(bool bIgnoreRagdoll)
@@ -615,8 +603,9 @@ namespace GameDonkey
 			m_rTrailAction = null;
 
 			//clear the accel & deccel
-			m_AccelAction = null;
-			m_DeccelAction = null;
+			AccelAction = null;
+			DeccelAction = null;
+			RotationPerSecond = 0.0f;
 
 			//remove any state specific garments
 			MyGarments.Reset();
@@ -1067,19 +1056,19 @@ namespace GameDonkey
 		protected virtual void Accelerate()
 		{
 			//Is this character acclerating?
-			if (null == m_AccelAction)
+			if (null == AccelAction)
 			{
 				return;
 			}
 
 			//Get teh acceleration
-			Vector2 myAcceleration = (m_AccelAction.GetMyVelocity() * CharacterClock.TimeDelta);
+			Vector2 myAcceleration = (AccelAction.GetMyVelocity() * CharacterClock.TimeDelta);
 
 			//Add the acceleration to the velocity
 			Velocity += myAcceleration;
 
 			//Are we going too fast?
-			if (Velocity.LengthSquared() > (m_AccelAction.MaxVelocity * m_AccelAction.MaxVelocity))
+			if (Velocity.LengthSquared() > (AccelAction.MaxVelocity * AccelAction.MaxVelocity))
 			{
 				//Find the amount to pull the velocity back... 
 
@@ -1087,7 +1076,7 @@ namespace GameDonkey
 				float fAccelLength = myAcceleration.Length();
 
 				//Get the delta of how much speed we need to shed
-				float fVelocityDif = Velocity.Length() - m_AccelAction.MaxVelocity;
+				float fVelocityDif = Velocity.Length() - AccelAction.MaxVelocity;
 
 				//If it is less than the amount of accleration added, use the delta
 				if (fAccelLength > fVelocityDif)
@@ -1110,22 +1099,22 @@ namespace GameDonkey
 		protected void Deccelerate()
 		{
 			//Is this character decclerating?
-			if (null == m_DeccelAction)
+			if (null == DeccelAction)
 			{
 				return;
 			}
 
 			//Get teh acceleration
-			Vector2 myDecceleration = (m_DeccelAction.Velocity * CharacterClock.TimeDelta);
+			Vector2 myDecceleration = (DeccelAction.Velocity * CharacterClock.TimeDelta);
 
 			//set the y velocity
-			if (m_Velocity.Y <= m_DeccelAction.MinYVelocity)
+			if (m_Velocity.Y <= DeccelAction.MinYVelocity)
 			{
 				//
 				myDecceleration.Y += m_Velocity.Y;
 
 				//only deccelerate to minY
-				m_Velocity.Y = MathHelper.Clamp(myDecceleration.Y, m_Velocity.Y, m_DeccelAction.MinYVelocity);
+				m_Velocity.Y = MathHelper.Clamp(myDecceleration.Y, m_Velocity.Y, DeccelAction.MinYVelocity);
 			}
 			else
 			{
@@ -1134,7 +1123,7 @@ namespace GameDonkey
 				myDecceleration.Y += m_Velocity.Y;
 
 				//only deccelerate to minY
-				m_Velocity.Y = MathHelper.Clamp(myDecceleration.Y, m_DeccelAction.MinYVelocity, m_Velocity.Y);
+				m_Velocity.Y = MathHelper.Clamp(myDecceleration.Y, DeccelAction.MinYVelocity, m_Velocity.Y);
 			}
 
 			//set the X velocity
@@ -1154,6 +1143,18 @@ namespace GameDonkey
 				//only deccelerate to 0
 				m_Velocity.X = MathHelper.Clamp(myDecceleration.X, 0.0f, m_Velocity.X);
 			}
+		}
+
+		public void ApplyRotation()
+		{
+			//Is this character rotating?
+			if (0.0f == RotationPerSecond)
+			{
+				return;
+			}
+
+			//add the rotation to the current rotation
+			CurrentRotation += RotationPerSecond * CharacterClock.TimeDelta;
 		}
 
 		/// <summary>

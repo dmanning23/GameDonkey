@@ -388,7 +388,7 @@ namespace GameDonkey
 					Velocity = throwVelocity;
 
 					//null out that pointer
-					m_rCurrentThrow = null;
+					CurrentThrow = null;
 				}
 			}
 

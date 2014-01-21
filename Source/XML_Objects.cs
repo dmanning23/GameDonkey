@@ -49,6 +49,17 @@ namespace SPFSettings
 		public float minYVelocity = 0.0f;
 	}
 
+	public class RotateActionXML : BaseActionXML
+	{
+		public float rotation = 0.0f;
+	}
+
+	public class TargetRotationActionXML : BaseActionXML
+	{
+		public float timeDelta = 0.0f;
+		public float targetRotation = 0.0f;
+	}
+
 	public class CreateAttackActionXML : BaseActionXML
 	{
 		public string boneName = "";
