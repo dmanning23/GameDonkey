@@ -38,10 +38,22 @@ namespace GameDonkey
 			Debug.Assert(null != Owner);
 			Debug.Assert(!AlreadyRun);
 
-			//TODO: get the amount of rotation/second to add
+			//get the amount of rotation/second to add
+			float rotationDelta = 0.0f;
+			if (Owner.Flip)
+			{
+				rotationDelta = Owner.CurrentRotation + TargetRotation;
+			}
+			else
+			{
+				rotationDelta = Owner.CurrentRotation - TargetRotation;
+			}
+
+			//change to rotation / second
+			rotationDelta /= TimeDelta;
 
 			//set the rotation action variable in the base object
-			Owner.RotationPerSecond = TargetRotation;
+			Owner.RotationPerSecond = rotationDelta;
 
 			return base.Execute();
 		}
