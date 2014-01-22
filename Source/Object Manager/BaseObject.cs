@@ -607,8 +607,10 @@ namespace GameDonkey
 
 			//make sure to update this dude, 
 			//because projectiles are activated in the player's update loop and placed in front of them in the update loop
-			AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
-
+			if (this is ProjectileObject)
+			{
+				AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
+			}
 			m_bAttackLanded = false;
 
 			//kill all the particle effects and clear out that list
