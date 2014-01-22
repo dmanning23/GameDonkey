@@ -85,11 +85,19 @@ namespace GameDonkey
 				//use the thumbstick direction from the object
 				myVelocity = rOwner.Direction() * -VelocityLength;
 			}
+			else if ((EDirectionType.Velocity == DirectionType) && (rOwner.Velocity != Vector2.Zero))
+			{
+				//use the thumbstick direction from the object
+				Vector2 direction = rOwner.Velocity;
+				direction.Normalize();
+				myVelocity = direction * VelocityLength;
+			}
 			else if (EDirectionType.Relative == DirectionType)
 			{
 				//use teh direction based on where the character is poitniing
 				Matrix rotation = MatrixExt.Orientation(rOwner.CurrentRotation);
-				return MatrixExt.Multiply(rotation, (rOwner.Flip ? -myVelocity : myVelocity));
+				myVelocity.X = (rOwner.Flip ? -Velocity.X : Velocity.X);
+				myVelocity = MatrixExt.Multiply(rotation, myVelocity);
 			}
 			else
 			{

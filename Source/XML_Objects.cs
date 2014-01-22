@@ -57,7 +57,7 @@ namespace SPFSettings
 	public class TargetRotationActionXML : BaseActionXML
 	{
 		public float timeDelta = 0.0f;
-		public float targetRotation = 0.0f;
+		public DirectionActionXML targetRotation = new DirectionActionXML();
 	}
 
 	public class CreateAttackActionXML : BaseActionXML

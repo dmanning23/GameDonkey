@@ -13,7 +13,7 @@ namespace GameDonkey
 		/// <summary>
 		/// The rotation this action will aim for
 		/// </summary>
-		public float TargetRotation { get; set; }
+		public ActionDirection TargetRotation { get; set; }
 
 		#endregion //Members
 
@@ -26,7 +26,7 @@ namespace GameDonkey
 			: base(rOwner)
 		{
 			ActionType = EActionType.TargetRotation;
-			TargetRotation = 0.0f;
+			TargetRotation = new ActionDirection();
 		}
 
 		/// <summary>
@@ -38,15 +38,22 @@ namespace GameDonkey
 			Debug.Assert(null != Owner);
 			Debug.Assert(!AlreadyRun);
 
+			//get the direction
+			Vector2 direction = TargetRotation.GetDirection(Owner);
+			direction = new Vector2((Owner.Flip ? (direction.X * -1.0f) : direction.X), (direction.Y * -1.0f));
+
+			//Convert the direction to a rotation
+			float fAngle = Helper.atan2(direction);
+
 			//get the amount of rotation/second to add
 			float rotationDelta = 0.0f;
 			if (Owner.Flip)
 			{
-				rotationDelta = TargetRotation + Owner.CurrentRotation;
+				rotationDelta = fAngle + Owner.CurrentRotation;
 			}
 			else
 			{
-				rotationDelta = TargetRotation - Owner.CurrentRotation;
+				rotationDelta = fAngle - Owner.CurrentRotation;
 			}
 
 			//change to rotation / second
@@ -64,7 +71,7 @@ namespace GameDonkey
 			
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
-			Debug.Assert(TargetRotation == myAction.TargetRotation);
+			Debug.Assert(TargetRotation.Compare(myAction.TargetRotation));
 
 			return true;
 		}
@@ -139,7 +146,7 @@ namespace GameDonkey
 					}
 					else if (strName == "targetRotation")
 					{
-						TargetRotation = MathHelper.ToRadians(Convert.ToSingle(strValue));
+						TargetRotation.ReadXml(childNode);
 					}
 					else
 					{
@@ -163,7 +170,7 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("targetRotation");
-			rXMLFile.WriteString(MathHelper.ToDegrees(TargetRotation).ToString());
+			TargetRotation.WriteXml(rXMLFile);
 			rXMLFile.WriteEndElement();
 		}
 
@@ -174,7 +181,7 @@ namespace GameDonkey
 		public bool ReadSerialized(SPFSettings.TargetRotationActionXML myAction)
 		{
 			Debug.Assert(myAction.type == ActionType.ToString());
-			TargetRotation = MathHelper.ToRadians(myAction.targetRotation);
+			TargetRotation.ReadSerialized(myAction.targetRotation);
 			TimeDelta = myAction.timeDelta;
 			ReadSerializedBase(myAction);
 

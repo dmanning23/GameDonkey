@@ -218,11 +218,17 @@
     <Compile Include="..\Source\State Machine\Actions\ProjectileAction.cs">
       <Link>State Machine\Actions\ProjectileAction.cs</Link>
     </Compile>
+    <Compile Include="..\Source\State Machine\Actions\RotateAction.cs">
+      <Link>State Machine\Actions\RotateAction.cs</Link>
+    </Compile>
     <Compile Include="..\Source\State Machine\Actions\SendStateMessageAction.cs">
       <Link>State Machine\Actions\SendStateMessageAction.cs</Link>
     </Compile>
     <Compile Include="..\Source\State Machine\Actions\SetVelocityAction.cs">
       <Link>State Machine\Actions\SetVelocityAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\TargetRotationAction.cs">
+      <Link>State Machine\Actions\TargetRotationAction.cs</Link>
     </Compile>
     <Compile Include="..\Source\State Machine\Actions\TimedAction.cs">
       <Link>State Machine\Actions\TimedAction.cs</Link>
@@ -309,6 +315,10 @@
     <ProjectReference Include="..\..\HadoukInput\Windows.XNA\HadoukInput.Windows.XNA.csproj">
       <Project>{13B04F1A-2DF6-426D-B0C5-300F9ED2AA5A}</Project>
       <Name>HadoukInput.Windows.XNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MatrixExtensions\Windows.XNA\MatrixExtensions.Windows.XNA.csproj">
+      <Project>{0385A3F2-14F7-4D60-A988-1E32686BE221}</Project>
+      <Name>MatrixExtensions.Windows.XNA</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\RenderBuddy\Windows.XNA\RenderBuddy.Windows.XNA.csproj">
       <Project>{BB375F09-143B-41CB-B38E-FD9317E33F02}</Project>
