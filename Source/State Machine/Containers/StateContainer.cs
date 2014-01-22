@@ -133,8 +133,6 @@ namespace GameDonkey
 
 		GameClock GetStateClock();
 
-		int StateMachineIndex();
-
 		#endregion //Methods
 
 		#region Networking

@@ -1,9 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using Microsoft.Xna.Framework;
 using SPFSettings;
 using System;
 using System.Diagnostics;
 using System.Xml;
 using Vector2Extensions;
+using MatrixExtensions;
 
 namespace GameDonkey
 {
@@ -59,7 +61,7 @@ namespace GameDonkey
 		public ActionDirection()
 		{
 			Velocity = new Vector2(0.0f);
-			DirectionType = EDirectionType.SetDirection;
+			DirectionType = EDirectionType.Absolute;
 		}
 
 		/// <summary>
@@ -82,6 +84,12 @@ namespace GameDonkey
 			{
 				//use the thumbstick direction from the object
 				myVelocity = rOwner.Direction() * -VelocityLength;
+			}
+			else if (EDirectionType.Relative == DirectionType)
+			{
+				//use teh direction based on where the character is poitniing
+				Matrix rotation = MatrixExt.Orientation(rOwner.CurrentRotation);
+				return MatrixExt.Multiply(rotation, (rOwner.Flip ? -myVelocity : myVelocity));
 			}
 			else
 			{

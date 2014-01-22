@@ -42,11 +42,11 @@ namespace GameDonkey
 			float rotationDelta = 0.0f;
 			if (Owner.Flip)
 			{
-				rotationDelta = Owner.CurrentRotation + TargetRotation;
+				rotationDelta = TargetRotation + Owner.CurrentRotation;
 			}
 			else
 			{
-				rotationDelta = Owner.CurrentRotation - TargetRotation;
+				rotationDelta = TargetRotation - Owner.CurrentRotation;
 			}
 
 			//change to rotation / second
@@ -98,11 +98,13 @@ namespace GameDonkey
 				{
 					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}
 				else
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -141,6 +143,7 @@ namespace GameDonkey
 					}
 					else
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}

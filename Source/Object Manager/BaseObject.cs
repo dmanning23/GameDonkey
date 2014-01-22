@@ -87,11 +87,6 @@ namespace GameDonkey
 		protected CountdownTimer m_EvasionTimer;
 
 		/// <summary>
-		/// the animation container for this dude
-		/// </summary>
-		protected AnimationContainer m_AnimationContainer;
-
-		/// <summary>
 		/// this dude's position
 		/// </summary>
 		protected Vector2 m_Position;
@@ -164,10 +159,10 @@ namespace GameDonkey
 		/// </summary>
 		public CreateThrowAction CurrentThrow { get; set; }
 
-		public AnimationContainer AnimationContainer
-		{
-			get { return m_AnimationContainer; }
-		}
+		/// <summary>
+		/// the animation container for this dude
+		/// </summary>
+		public AnimationContainer AnimationContainer { get; private set; }
 
 		/// <summary>
 		/// The state machine and state actions for this dude
@@ -315,7 +310,7 @@ namespace GameDonkey
 			m_BlockTimer = new CountdownTimer();
 			m_EvasionTimer = new CountdownTimer();
 			CurrentThrow = null;
-			m_AnimationContainer = new AnimationContainer();
+			AnimationContainer = new AnimationContainer();
 			States = null;
 			m_Position = new Vector2(0.0f);
 			Flip = false;
@@ -374,7 +369,7 @@ namespace GameDonkey
 			m_BlockTimer = rHuman.m_BlockTimer;
 			m_EvasionTimer = rHuman.m_EvasionTimer;
 			CurrentThrow = rHuman.CurrentThrow;
-			m_AnimationContainer = rHuman.m_AnimationContainer;
+			AnimationContainer = rHuman.AnimationContainer;
 			if (null != States)
 			{
 				States.StateChangedEvent -= this.StateChanged;
@@ -465,7 +460,7 @@ namespace GameDonkey
 			UpdateEmitters();
 
 			//update the animations
-			m_AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
+			AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
 
 			Debug.Assert(m_Position.X != float.NaN);
 			Debug.Assert(m_Position.Y != float.NaN);
@@ -527,7 +522,7 @@ namespace GameDonkey
 
 		public void UpdateRagdoll(bool bIgnoreRagdoll)
 		{
-			m_AnimationContainer.UpdateRagdoll(bIgnoreRagdoll, Scale);
+			AnimationContainer.UpdateRagdoll(bIgnoreRagdoll, Scale);
 		}
 
 		/// <summary>
@@ -612,7 +607,7 @@ namespace GameDonkey
 
 			//make sure to update this dude, 
 			//because projectiles are activated in the player's update loop and placed in front of them in the update loop
-			m_AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, 0.0f, false);
+			AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
 
 			m_bAttackLanded = false;
 
@@ -1032,7 +1027,7 @@ namespace GameDonkey
 
 		public void RenderPhysics(IRenderer rRenderer)
 		{
-			m_AnimationContainer.Model.DrawPhysics(rRenderer, true, Color.White);
+			AnimationContainer.Model.DrawPhysics(rRenderer, true, Color.White);
 		}
 
 		public void DrawCameraInfo(IRenderer rRenderer)
@@ -1154,7 +1149,15 @@ namespace GameDonkey
 			}
 
 			//add the rotation to the current rotation
-			CurrentRotation += RotationPerSecond * CharacterClock.TimeDelta;
+			if (Flip)
+			{
+				CurrentRotation -= RotationPerSecond * CharacterClock.TimeDelta;
+			}
+			else
+			{
+				CurrentRotation += RotationPerSecond * CharacterClock.TimeDelta;
+			}
+			CurrentRotation = Helper.ClampAngle(CurrentRotation);
 		}
 
 		/// <summary>
@@ -1236,7 +1239,7 @@ namespace GameDonkey
 		public void GetAllWeaponBones(List<string> listWeapons)
 		{
 			//get all the weapons from this dude's model
-			m_AnimationContainer.Model.GetAllWeaponBones(listWeapons);
+			AnimationContainer.Model.GetAllWeaponBones(listWeapons);
 
 			//get all the weapons loaded into the garment manager
 			MyGarments.GetAllWeaponBones(listWeapons);

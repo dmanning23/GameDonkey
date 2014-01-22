@@ -20,9 +20,6 @@ namespace GameDonkey
 	{
 		#region Members
 
-		//the current angle of the animation rotation
-		public float CurrentAnimationRotation { get; protected set; }
-
 		//WEDDING STUFF
 
 		/// <summary>
@@ -119,7 +116,6 @@ namespace GameDonkey
 
 		protected override void Init()
 		{
-			CurrentAnimationRotation = 0.0f;
 			m_ThumbstickDirection = Vector2.Zero;
 			States = new PlayerObjectStateContainer();
 			States.StateChangedEvent += this.StateChanged;
@@ -170,7 +166,7 @@ namespace GameDonkey
 			//update the animations
 			UpdateRotation();
 
-			m_AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentAnimationRotation, false);
+			AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
 		}
 
 		/// <summary>
