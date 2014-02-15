@@ -1173,7 +1173,7 @@ namespace GameDonkey
 			InputWrapper rQueue = new InputWrapper(new ControllerWrapper(eIndex, (PlayerIndex.One == eIndex)), MasterClock.GetCurrentTime)
 			{
 				BufferedInputExpire = 0.0f,
-				QueuedInputExpire = 0.0f
+				QueuedInputExpire = 0.05f
 			};
 			if (!rQueue.ReadSerializedFile(rXmlContent, new Filename(@"Move List.xml"), rPlayer.Character.States.GetMessageIndexFromText))
 			{
@@ -1210,7 +1210,7 @@ namespace GameDonkey
 			InputWrapper rQueue = new InputWrapper(new ControllerWrapper(eIndex, (PlayerIndex.One == eIndex)), MasterClock.GetCurrentTime)
 			{
 				BufferedInputExpire = 0.0f,
-				QueuedInputExpire = 0.0f
+				QueuedInputExpire = 0.05f
 			};
 			if (!rQueue.ReadXmlFile(new Filename(@"MoveList.xml"), rPlayer.Character.States.GetMessageIndexFromText))
 			{
@@ -1243,7 +1243,7 @@ namespace GameDonkey
 			InputWrapper rQueue = new InputWrapper(null, MasterClock.GetCurrentTime)
 			{
 				BufferedInputExpire = 0.0f,
-				QueuedInputExpire = 0.0f
+				QueuedInputExpire = 0.05f
 			};
 			if (!rQueue.ReadSerializedFile(rXmlContent, new Filename(@"Move List.xml"), rPlayer.Character.States.GetMessageIndexFromText))
 			{
