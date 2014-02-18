@@ -52,3 +52,9 @@
 [submodule "externals/UndoRedoBuddy"]
 	path = externals/UndoRedoBuddy
 	url = git@github.com:dmanning23/UndoRedoBuddy.git
+[submodule "externals/Equationator"]
+	path = externals/Equationator
+	url = git@github.com:dmanning23/Equationator.git
+[submodule "externals/BulletMLLib"]
+	path = externals/BulletMLLib
+	url = git@github.com:dmanning23/BulletMLLib.git
