@@ -9,6 +9,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>GameDonkey.Windows</RootNamespace>
     <AssemblyName>GameDonkey.Windows</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -19,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>full</DebugType>
@@ -28,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +43,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
@@ -48,6 +53,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -256,75 +262,75 @@
       <Project>{779f99a3-b976-45b2-ae0d-ad3eaf92a0d4}</Project>
       <Name>Equationator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
+    <ProjectReference Include="..\..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
       <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
       <Name>Lidgren.Network.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj">
+    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj">
       <Project>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</Project>
       <Name>MonoGame.Framework.WindowsGL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\GameTimer\Windows\GameTimer.Windows.csproj">
+    <ProjectReference Include="..\..\GameTimer\Windows\GameTimer.Windows.csproj">
       <Project>{6B6D4188-5C03-4E16-923B-96FDBC85B91A}</Project>
       <Name>GameTimer.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\RenderBuddy\Windows\RenderBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\RenderBuddy\Windows\RenderBuddy.Windows.csproj">
       <Project>{5C9D6145-A763-4B79-8541-0C44C6DEE72D}</Project>
       <Name>RenderBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\HadoukInput\Windows\HadoukInput.Windows.csproj">
+    <ProjectReference Include="..\..\HadoukInput\Windows\HadoukInput.Windows.csproj">
       <Project>{85D723F7-83EF-4C75-82BA-9385D0AC8448}</Project>
       <Name>HadoukInput.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\CameraBuddy\Windows\CameraBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\CameraBuddy\Windows\CameraBuddy.Windows.csproj">
       <Project>{5320A521-E249-4027-A241-F91E79020EE2}</Project>
       <Name>CameraBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\FontBuddy\Windows\FontBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\FontBuddy\Windows\FontBuddy.Windows.csproj">
       <Project>{65B5BB5D-0C69-4DDB-8DE6-F6B91C41279D}</Project>
       <Name>FontBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\MatrixExtensions\Windows\MatrixExtensions.Windows.csproj">
+    <ProjectReference Include="..\..\MatrixExtensions\Windows\MatrixExtensions.Windows.csproj">
       <Project>{E2C50D0B-A1C1-4F67-92CB-BE0E587A3CE6}</Project>
       <Name>MatrixExtensions.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\Vector2Extensions\Windows\Vector2Extensions.Windows.csproj">
+    <ProjectReference Include="..\..\Vector2Extensions\Windows\Vector2Extensions.Windows.csproj">
       <Project>{2C5ACADA-D15A-4193-BA0A-D36A362075F4}</Project>
       <Name>Vector2Extensions.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\AnimationLib\Windows\AnimationLib.csproj">
+    <ProjectReference Include="..\..\AnimationLib\Windows\AnimationLib.csproj">
       <Project>{252DF212-370D-4682-B3D8-85CE9ACE545E}</Project>
       <Name>AnimationLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\BasicPrimitiveBuddy\Windows\BasicPrimitiveBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\BasicPrimitiveBuddy\Windows\BasicPrimitiveBuddy.Windows.csproj">
       <Project>{0FAA1286-7BFA-4765-8B51-62E438CB121D}</Project>
       <Name>BasicPrimitiveBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\DrawListBuddy\Windows\DrawListBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\DrawListBuddy\Windows\DrawListBuddy.Windows.csproj">
       <Project>{1ABFAAEC-29E3-430C-B212-5B15E75E6192}</Project>
       <Name>DrawListBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\Filename\Windows\Filename.Windows.csproj">
+    <ProjectReference Include="..\..\Filename\Windows\Filename.Windows.csproj">
       <Project>{2A84DFE8-75E0-4774-BAAF-00629ED44405}</Project>
       <Name>Filename.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\ParticleBuddy\Windows\ParticleBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\ParticleBuddy\Windows\ParticleBuddy.Windows.csproj">
       <Project>{679A3FB5-9B58-44D7-B4E4-A0C3B6F641A7}</Project>
       <Name>ParticleBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\RandomExtensions\Windows\RandomExtensions.Windows.csproj">
+    <ProjectReference Include="..\..\RandomExtensions\Windows\RandomExtensions.Windows.csproj">
       <Project>{F0BBA30F-66E1-4E2F-BDF6-E17FF317C34E}</Project>
       <Name>RandomExtensions.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\StateMachine\Windows\StateMachineBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\StateMachine\Windows\StateMachineBuddy.Windows.csproj">
       <Project>{CD66EEB4-8381-41A8-ABED-372DC31646AC}</Project>
       <Name>StateMachineBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\CollisionBuddy\Windows\CollisionBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\CollisionBuddy\Windows\CollisionBuddy.Windows.csproj">
       <Project>{E032CF52-88BC-4D76-8E93-3798F5EE5CD2}</Project>
       <Name>CollisionBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\ResolutionBuddy\Windows\ResolutionBuddy.Windows.csproj">
+    <ProjectReference Include="..\..\ResolutionBuddy\Windows\ResolutionBuddy.Windows.csproj">
       <Project>{28342DF0-0089-4A2A-B3D4-6DCD65D6D8E4}</Project>
       <Name>ResolutionBuddy.Windows</Name>
     </ProjectReference>
