@@ -214,7 +214,7 @@ namespace GameDonkey
 		/// change the index of the state machine to use
 		/// </summary>
 		/// <param name="iIndex"></param>
-		public void StateMachineIndex(int iIndex, StateChangeEventArgs eventArgs)
+		public virtual void StateMachineIndex(int iIndex, StateChangeEventArgs eventArgs)
 		{
 			Debug.Assert(0 <= iIndex);
 			Debug.Assert(iIndex < m_StateMachines.Count);
