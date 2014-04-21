@@ -41,7 +41,7 @@ namespace GameDonkey
 
 			//get the direction
 			Vector2 direction = TargetRotation.GetDirection(Owner);
-			direction = new Vector2((Owner.Flip ? (direction.X * -1.0f) : direction.X), direction.Y);
+			direction.X = (Owner.Flip ? (direction.X * -1.0f) : direction.X);
 
 			//Convert the direction to a rotation
 			float fAngle = Helper.ClampAngle(direction.Angle());

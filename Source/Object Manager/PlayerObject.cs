@@ -166,7 +166,7 @@ namespace GameDonkey
 			//update the animations
 			UpdateRotation();
 
-			AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
+			UpdateAnimation();
 		}
 
 		/// <summary>

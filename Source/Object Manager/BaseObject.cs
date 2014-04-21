@@ -474,11 +474,19 @@ namespace GameDonkey
 
 			UpdateEmitters();
 
-			//update the animations
-			AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
+			UpdateAnimation();
 
 			Debug.Assert(m_Position.X != float.NaN);
 			Debug.Assert(m_Position.Y != float.NaN);
+		}
+
+		/// <summary>
+		/// update the animation container.
+		/// </summary>
+		public virtual void UpdateAnimation()
+		{
+			//update the animations
+			AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
 		}
 
 		/// <summary>
