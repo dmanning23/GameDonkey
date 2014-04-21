@@ -145,6 +145,11 @@ namespace GameDonkey
 		/// </summary>
 		private List<Emitter> m_listEmitters;
 
+		/// <summary>
+		/// The rotation of this dude
+		/// </summary>
+		private float _currentRotation = 0.0f;
+
 		#endregion //Members
 
 		#region Properties
@@ -271,7 +276,17 @@ namespace GameDonkey
 		/// <summary>
 		/// The current rotation of this dude.
 		/// </summary>
-		public float CurrentRotation { get; set; }
+		public float CurrentRotation 
+		{
+			get
+			{
+				return _currentRotation;
+			}
+			set
+			{
+				_currentRotation = Helper.ClampAngle(value);
+			}
+		}
 
 		public PlayerQueue LastAttacker
 		{

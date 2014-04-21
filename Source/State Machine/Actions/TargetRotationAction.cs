@@ -3,6 +3,7 @@ using StateMachineBuddy;
 using System;
 using System.Diagnostics;
 using System.Xml;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -40,10 +41,10 @@ namespace GameDonkey
 
 			//get the direction
 			Vector2 direction = TargetRotation.GetDirection(Owner);
-			direction = new Vector2((Owner.Flip ? (direction.X * -1.0f) : direction.X), (direction.Y * -1.0f));
+			direction = new Vector2((Owner.Flip ? (direction.X * -1.0f) : direction.X), direction.Y);
 
 			//Convert the direction to a rotation
-			float fAngle = Helper.atan2(direction);
+			float fAngle = Helper.ClampAngle(direction.Angle());
 
 			//get the amount of rotation/second to add
 			float rotationDelta = 0.0f;

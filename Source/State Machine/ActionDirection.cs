@@ -72,40 +72,104 @@ namespace GameDonkey
 		{
 			Debug.Assert(null != rOwner);
 
-			//the final velocity we will add to the character
-			Vector2 myVelocity = Velocity;
+			switch (DirectionType)
+			{
+				case EDirectionType.Controller:
+				{
+					return ControllerDirection(rOwner) * rOwner.Scale;
+				}
 
-			if ((EDirectionType.Controller == DirectionType) && (rOwner.Direction() != Vector2.Zero))
+				case EDirectionType.NegController:
+				{
+					return NegControllerDirection(rOwner) * rOwner.Scale;
+				}
+
+				case EDirectionType.Velocity:
+				{
+					return VelocityDirection(rOwner) * rOwner.Scale;
+				}
+
+				case EDirectionType.Relative:
+				{
+					return RelativeDirection(rOwner) * rOwner.Scale;
+				}
+
+				default: //absolute
+				{
+					return AbsoluteDirection(rOwner) * rOwner.Scale;
+				}
+			}
+		}
+
+		private Vector2 ControllerDirection(BaseObject rOwner)
+		{
+			if (rOwner.Direction() != Vector2.Zero)
 			{
 				//use the thumbstick direction from the object
-				myVelocity = rOwner.Direction() * VelocityLength;
+				return rOwner.Direction() * VelocityLength;
 			}
-			else if ((EDirectionType.NegController == DirectionType) && (rOwner.Direction() != Vector2.Zero))
+			else if (rOwner.Velocity != Vector2.Zero)
 			{
-				//use the thumbstick direction from the object
-				myVelocity = rOwner.Direction() * -VelocityLength;
-			}
-			else if ((EDirectionType.Velocity == DirectionType) && (rOwner.Velocity != Vector2.Zero))
-			{
-				//use the thumbstick direction from the object
-				Vector2 direction = rOwner.Velocity;
-				direction.Normalize();
-				myVelocity = direction * VelocityLength;
-			}
-			else if (EDirectionType.Relative == DirectionType)
-			{
-				//use teh direction based on where the character is poitniing
-				Matrix rotation = MatrixExt.Orientation(rOwner.CurrentRotation);
-				myVelocity.X = (rOwner.Flip ? -Velocity.X : Velocity.X);
-				myVelocity = MatrixExt.Multiply(rotation, myVelocity);
+				//use teh direction the object is travelling
+				return VelocityDirection(rOwner);
 			}
 			else
 			{
 				//use the velocity from this action
-				myVelocity.X = (rOwner.Flip ? -Velocity.X : Velocity.X);
+				return RelativeDirection(rOwner);
 			}
+		}
 
-			return myVelocity * rOwner.Scale;
+		private Vector2 NegControllerDirection(BaseObject rOwner)
+		{
+			if (rOwner.Direction() != Vector2.Zero)
+			{
+				//use the opposite thumbstick direction from the object
+				return rOwner.Direction() * -VelocityLength;
+			}
+			else if (rOwner.Velocity != Vector2.Zero)
+			{
+				//use teh direction the object is travelling, but flip the X
+				return -1.0f * VelocityDirection(rOwner);
+			}
+			else
+			{
+				//use the velocity from this action
+				return -1.0f * RelativeDirection(rOwner);
+			}
+		}
+
+		private Vector2 VelocityDirection(BaseObject rOwner)
+		{
+			if (rOwner.Velocity != Vector2.Zero)
+			{
+				//use teh direction the object is travelling
+				Vector2 direction = rOwner.Velocity;
+				direction.Normalize();
+				return direction * VelocityLength;
+			}
+			else
+			{
+				//use teh direction based on where the character is pointing
+				return RelativeDirection(rOwner);
+			}
+		}
+
+		private Vector2 RelativeDirection(BaseObject rOwner)
+		{
+			//use teh direction based on where the character is pointing
+			Vector2 myDirection = Velocity;
+			Matrix rotation = MatrixExt.Orientation(rOwner.CurrentRotation);
+			myDirection.X = (rOwner.Flip ? -Velocity.X : Velocity.X);
+			return MatrixExt.Multiply(rotation, myDirection);
+		}
+
+		private Vector2 AbsoluteDirection(BaseObject rOwner)
+		{
+			//use the velocity from this action
+			Vector2 myDirection = Velocity;
+			myDirection.X = (rOwner.Flip ? -Velocity.X : Velocity.X);
+			return myDirection;
 		}
 
 		public bool Compare(ActionDirection rInst)
