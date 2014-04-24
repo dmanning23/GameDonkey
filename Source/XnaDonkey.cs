@@ -25,6 +25,8 @@ namespace GameDonkey
 	{
 		#region Members
 
+		public const float RubberBandLength = 3000.0f;
+
 		private XNARenderer m_Renderer;
 
 		/// <summary>
@@ -92,6 +94,11 @@ namespace GameDonkey
 		/// the center point between all the players
 		/// </summary>
 		private Vector2 m_CenterPoint;
+
+		/// <summary>
+		/// The velocity of the center point
+		/// </summary>
+		public Vector2 CenterVelocity { get; set; }
 
 		/// <summary>
 		/// a list of all the default particle effects used int he game
@@ -189,6 +196,22 @@ namespace GameDonkey
 		{
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.WeaponHit]; }
 		}
+
+		public Vector2 CenterPoint
+		{
+			get
+			{
+				return m_CenterPoint;
+			}
+		}
+
+		//public XNARenderer Renderer
+		//{
+		//	get
+		//	{
+		//		return m_Renderer;
+		//	}
+		//}
 
 		#endregion //Properties
 
@@ -601,6 +624,7 @@ namespace GameDonkey
 		public void RubberBand()
 		{
 			//get the center point in between all the guys
+			Vector2 prevCenter = m_CenterPoint;
 			m_CenterPoint = Vector2.Zero;
 			for (int i = 0; i < Players.Count; i++)
 			{
@@ -608,29 +632,33 @@ namespace GameDonkey
 			}
 			m_CenterPoint /= Players.Count;
 
+			//set the change of the center point
+			CenterVelocity = prevCenter - m_CenterPoint;
+
 			//Check if any of the players are too far away
 			for (int i = 0; i < Players.Count; i++)
 			{
 				Vector2 DistanceToCenter = m_CenterPoint - Players[i].Character.Position;
-				if (DistanceToCenter.LengthSquared() > (3000.0f * 3000.0f))
+				if (DistanceToCenter.LengthSquared() > (RubberBandLength * RubberBandLength))
 				{
 					//that dude is pretty far away from the action
 
 					//get the amount of acceleration to add
-					float fRatio = ((DistanceToCenter.Length() - 3000.0f) / 1800.0f) * Players[i].Character.CharacterClock.TimeDelta;
+					float fDelta = (DistanceToCenter.Length() - RubberBandLength);
 
 					//get the direction to send him
 					DistanceToCenter.Normalize();
 
 					//move the character towards the center of the screen
-					Players[i].Character.Position += (fRatio * 1000.0f) * DistanceToCenter;
+					Players[i].Character.Position += (fDelta * DistanceToCenter) * 0.05f;
 
-					//kill the characters velocity a little bit
-					Vector2 myVelocity = Players[i].Character.Velocity;
-					float fDotProduct = ((myVelocity.X * DistanceToCenter.X) + (myVelocity.Y * DistanceToCenter.Y));
-					if (fDotProduct <= 0.0f)
+					//move the other players too
+					for (int j = 0; j < Players.Count; j++)
 					{
-						Players[i].Character.Velocity *= 1.0f - fRatio;
+						if (j != i)
+						{
+							Players[j].Character.Position = Players[j].Character.Position + (fDelta * -DistanceToCenter) * 0.05f;
+						}
 					}
 				}
 			}
@@ -649,7 +677,10 @@ namespace GameDonkey
 			m_LevelObjects.UpdateDrawlists();
 		}
 
-		public override void Render()
+		/// <summary>
+		/// update the camera before rendering
+		/// </summary>
+		public void UpdateCameraMatrix()
 		{
 			//set up the camera
 			if (m_bGameOver && !m_bTie)
@@ -667,11 +698,24 @@ namespace GameDonkey
 			}
 
 			//draw the background before the camera is set
-			DrawBackground();
+			//DrawBackground();
 
 			//Get the camera matrix we are gonna use
 			Renderer.Camera.BeginScene(false);
-			Matrix cameraMatrix = Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
+		}
+
+		/// <summary>
+		/// get the gameplay matrix
+		/// </summary>
+		/// <returns></returns>
+		public Matrix GetCameraMatrix()
+		{
+			return Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
+		}
+
+		public override void Render()
+		{
+			Matrix cameraMatrix = GetCameraMatrix();
 
 			//draw the level
 			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
