@@ -1026,7 +1026,11 @@ namespace GameDonkey
 			AnimationContainer.Render(m_DrawList, PlayerColor);
 		}
 
-		public void Render(IRenderer rRenderer)
+		/// <summary>
+		/// Do the actual drawing of the dude
+		/// </summary>
+		/// <param name="rRenderer"></param>
+		public virtual void Render(IRenderer rRenderer)
 		{
 			m_DrawList.Render(rRenderer);
 		}
