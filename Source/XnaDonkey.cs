@@ -664,6 +664,15 @@ namespace GameDonkey
 			}
 		}
 
+		public override void PlayParticleEffect(
+			EDefaultParticleEffects eEffect,
+			Vector2 Velocity,
+			Vector2 Position,
+			Color myColor)
+		{
+			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], Velocity, Position, Vector2.Zero, null, myColor, false);
+		}
+
 		#region Draw
 
 		public void UpdateDrawlists()
@@ -717,98 +726,18 @@ namespace GameDonkey
 		{
 			Matrix cameraMatrix = GetCameraMatrix();
 
-			//draw the level
-			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
-			m_LevelObjects.Render(Renderer, true);
-#if DEBUG
-			//draw the world boundaries in debug mode?
-			if (m_bRenderWorldBoundaries)
-			{
-				Renderer.Primitive.Rectangle(WorldBoundaries, Color.Red);
-			}
+			RenderLevel(cameraMatrix);
 
-			//draw the spawn points for debug mode
-			if (m_bRenderSpawnPoints)
-			{
-				for (int i = 0; i < m_listSpawnPoints.Count; i++)
-				{
-					Renderer.Primitive.Circle(m_listSpawnPoints[i], 10, Color.Red);
-				}
-			}
-#endif
-			m_Renderer.SpriteBatchEnd();
+			RenderHUD();
 
-			//draw the hud
-			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, Resolution.TransformationMatrix());
-			DrawHUD();
-			m_Renderer.SpriteBatchEnd();
+			RenderCharacterTrails(cameraMatrix);
 
-			//render all the character trails, start another spritebatch
-			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
-			for (int i = 0; i < m_listPlayers.Count; i++)
-			{
-				m_listPlayers[i].Render(Renderer, false);
-			}
-			m_Renderer.SpriteBatchEnd();
+			RenderCharacters(cameraMatrix);
 
-			//render all the players
-			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
-			for (int i = 0; i < m_listPlayers.Count; i++)
-			{
-				m_listPlayers[i].Render(Renderer, true);
-
-#if DEBUG
-				//draw debug info?
-				if (m_bRenderPhysics)
-				{
-					for (int j = 0; j < m_listPlayers[i].ActiveObjects.Count; j++)
-					{
-						m_listPlayers[i].ActiveObjects[j].AnimationContainer.Model.DrawPhysics(Renderer, true, Color.White);
-					}
-				}
-#endif
-
-				//draw the push box for each character?
-				if (m_bRenderJointSkeleton)
-				{
-					for (int j = 0; j < m_listPlayers[i].ActiveObjects.Count; j++)
-					{
-						Renderer.Primitive.Circle(m_listPlayers[i].Character.Position,
-						                          (int)(m_listPlayers[i].Character.MinDistance()), 
-						                          Color.White);
-					}
-				}
-
-				////draw bones, ragdoll
-				//m_listPlayers[i].Character.AnimationContainer.Model.RenderJointSkeleton(Renderer);
-				//m_listPlayers[i].Character.AnimationContainer.Model.RenderOutline(Renderer, 1.0f);
-				//m_listPlayers[i].Character.AnimationContainer.Model.DrawSkeleton(Renderer, true, Color.White);
-				//m_listPlayers[i].Character.AnimationContainer.Model.DrawJoints(Renderer, true, Color.Red);
-			}
-
-			////TEST
-			//Renderer.DrawCircle(m_CenterPoint, 56, Color.Black);
-
-#if DEBUG
-			if (m_bDrawCameraInfo)
-			{
-				for (int i = 0; i < m_listPlayers.Count; i++)
-				{
-					m_listPlayers[i].DrawCameraInfo(Renderer);
-				}
-
-				Renderer.DrawCameraInfo();
-			}
-#endif
-			m_Renderer.SpriteBatchEnd();
-
-			//draw all the particles, start another spritebatch for the particles
-			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
-			ParticleEngine.Render(Renderer);
-			m_Renderer.SpriteBatchEnd();
+			RenderParticleEffects(cameraMatrix);
 		}
 
-		protected virtual void DrawBackground()
+		protected virtual void RenderBackground()
 		{
 			Debug.Assert(null != m_SkyBox);
 			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, Resolution.TransformationMatrix());
@@ -858,17 +787,35 @@ namespace GameDonkey
 			m_Renderer.SpriteBatchEnd();
 		}
 
-		public override void PlayParticleEffect(
-			EDefaultParticleEffects eEffect,
-			Vector2 Velocity,
-			Vector2 Position,
-			Color myColor)
+		protected virtual void RenderLevel(Matrix cameraMatrix)
 		{
-			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], Velocity, Position, Vector2.Zero, null, myColor, false);
+			//draw the level
+			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
+			m_LevelObjects.Render(Renderer, true);
+#if DEBUG
+			//draw the world boundaries in debug mode?
+			if (m_bRenderWorldBoundaries)
+			{
+				Renderer.Primitive.Rectangle(WorldBoundaries, Color.Red);
+			}
+
+			//draw the spawn points for debug mode
+			if (m_bRenderSpawnPoints)
+			{
+				for (int i = 0; i < m_listSpawnPoints.Count; i++)
+				{
+					Renderer.Primitive.Circle(m_listSpawnPoints[i], 10, Color.Red);
+				}
+			}
+#endif
+			m_Renderer.SpriteBatchEnd();
 		}
 
-		protected virtual void DrawHUD()
+		protected virtual void RenderHUD()
 		{
+			//draw the hud
+			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, Resolution.TransformationMatrix());
+
 			//um, the width and height of the player pictures
 			float fScreenHeight = Resolution.TitleSafeArea.Height;
 			float fScreenWidth = Resolution.TitleSafeArea.Width;
@@ -1017,6 +964,81 @@ namespace GameDonkey
 
 			//CPlayerObject myDude = Players[1].Character as CPlayerObject;
 			//Write(myDude.ComboCounter.ToString(), new Vector2(200, 100));
+
+			m_Renderer.SpriteBatchEnd();
+		}
+
+		protected virtual void RenderCharacterTrails(Matrix cameraMatrix)
+		{
+			//render all the character trails, start another spritebatch
+			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
+			for (int i = 0; i < m_listPlayers.Count; i++)
+			{
+				m_listPlayers[i].Render(Renderer, false);
+			}
+			m_Renderer.SpriteBatchEnd();
+		}
+
+		protected virtual void RenderCharacters(Matrix cameraMatrix)
+		{
+			//render all the players
+			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
+			for (int i = 0; i < m_listPlayers.Count; i++)
+			{
+				m_listPlayers[i].Render(Renderer, true);
+
+#if DEBUG
+				//draw debug info?
+				if (m_bRenderPhysics)
+				{
+					for (int j = 0; j < m_listPlayers[i].ActiveObjects.Count; j++)
+					{
+						m_listPlayers[i].ActiveObjects[j].AnimationContainer.Model.DrawPhysics(Renderer, true, Color.White);
+					}
+				}
+#endif
+
+				//draw the push box for each character?
+				if (m_bRenderJointSkeleton)
+				{
+					for (int j = 0; j < m_listPlayers[i].ActiveObjects.Count; j++)
+					{
+						Renderer.Primitive.Circle(m_listPlayers[i].Character.Position,
+												  (int)(m_listPlayers[i].Character.MinDistance()),
+												  Color.White);
+					}
+				}
+
+				////draw bones, ragdoll
+				//m_listPlayers[i].Character.AnimationContainer.Model.RenderJointSkeleton(Renderer);
+				//m_listPlayers[i].Character.AnimationContainer.Model.RenderOutline(Renderer, 1.0f);
+				//m_listPlayers[i].Character.AnimationContainer.Model.DrawSkeleton(Renderer, true, Color.White);
+				//m_listPlayers[i].Character.AnimationContainer.Model.DrawJoints(Renderer, true, Color.Red);
+			}
+
+			////TEST
+			//Renderer.DrawCircle(m_CenterPoint, 56, Color.Black);
+
+#if DEBUG
+			if (m_bDrawCameraInfo)
+			{
+				for (int i = 0; i < m_listPlayers.Count; i++)
+				{
+					m_listPlayers[i].DrawCameraInfo(Renderer);
+				}
+
+				Renderer.DrawCameraInfo();
+			}
+#endif
+			m_Renderer.SpriteBatchEnd();
+		}
+
+		protected virtual void RenderParticleEffects(Matrix cameraMatrix)
+		{
+			//draw all the particles, start another spritebatch for the particles
+			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
+			ParticleEngine.Render(Renderer);
+			m_Renderer.SpriteBatchEnd();
 		}
 
 		/// <summary>

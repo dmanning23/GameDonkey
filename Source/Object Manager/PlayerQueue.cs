@@ -171,6 +171,11 @@ namespace GameDonkey
 			return new PlayerObject(m_CharacterClock, m_iNextObjectID++);
 		}
 
+		public virtual PlayerObjectData CreatePlayerObjectData()
+		{
+			return new PlayerObjectData();
+		}
+
 		/// <summary>
 		/// pull an item out of the inactive list and add it to the active list.
 		/// </summary>
@@ -696,7 +701,7 @@ namespace GameDonkey
 				case EObjectType.Human:
 					{
 						myCharacter = CreateHumanPlayer();
-						myData = new PlayerObjectData();
+						myData = CreatePlayerObjectData();
 
 						//set as the main character
 						AddCharacterToList(myCharacter);
@@ -707,7 +712,7 @@ namespace GameDonkey
 						AIObject myDude = new AIObject(m_CharacterClock, m_iNextObjectID++);
 						myDude.Difficulty = iDifficulty;
 						myCharacter = myDude;
-						myData = new PlayerObjectData();
+						myData = CreatePlayerObjectData();
 
 						//set as the main characters
 						AddCharacterToList(myCharacter);
