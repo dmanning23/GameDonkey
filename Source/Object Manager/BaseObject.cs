@@ -644,7 +644,7 @@ namespace GameDonkey
 			m_listEmitters.Clear();
 		}
 
-		public void CheckCollisions(BaseObject rBadGuy)
+		public virtual void CheckCollisions(BaseObject rBadGuy)
 		{
 			Debug.Assert(null != Physics);
 

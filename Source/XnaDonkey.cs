@@ -91,11 +91,6 @@ namespace GameDonkey
 		private string m_strDeathNoise;
 
 		/// <summary>
-		/// the center point between all the players
-		/// </summary>
-		private Vector2 m_CenterPoint;
-
-		/// <summary>
 		/// The velocity of the center point
 		/// </summary>
 		public Vector2 CenterVelocity { get; set; }
@@ -197,14 +192,6 @@ namespace GameDonkey
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.WeaponHit]; }
 		}
 
-		public Vector2 CenterPoint
-		{
-			get
-			{
-				return m_CenterPoint;
-			}
-		}
-
 		//public XNARenderer Renderer
 		//{
 		//	get
@@ -253,7 +240,6 @@ namespace GameDonkey
 			m_HUDBackground = null;
 			m_SkyColor = Color.White;
 			m_iNumTiles = 1;
-			m_CenterPoint = Vector2.Zero;
 		}
 
 		#endregion //Construction
@@ -390,31 +376,7 @@ namespace GameDonkey
 
 			if (!m_bGameOver)
 			{
-				//check for collisions!
-				for (int i = 0; i < m_listPlayers.Count; i++)
-				{
-					//check for collisions between players
-					for (int j = i + 1; j < m_listPlayers.Count; j++)
-					{
-						m_listPlayers[i].CheckCollisions(m_listPlayers[j]);
-					}
-
-					//check for collisions with level objects
-					m_listPlayers[i].CheckCollisions(m_LevelObjects);
-
-					//check for world collisions
-					m_listPlayers[i].CheckWorldCollisions(WorldBoundaries);
-				}
-
-				//respond to hits!
-				for (int i = 0; i < m_listPlayers.Count; i++)
-				{
-					m_listPlayers[i].RespondToHits(this);
-				}
-				m_LevelObjects.RespondToHits(this);
-
-				//Stick all the players together
-				RubberBand();
+				CollisionDetection();
 			}
 
 			//update all the ragdoll stuff
@@ -455,6 +417,34 @@ namespace GameDonkey
 #endif
 
 			return m_bGameOver;
+		}
+
+		/// <summary>
+		/// check for collisions and respond!
+		/// </summary>
+		protected virtual void CollisionDetection()
+		{
+			for (int i = 0; i < m_listPlayers.Count; i++)
+			{
+				//check for collisions between players
+				for (int j = i + 1; j < m_listPlayers.Count; j++)
+				{
+					m_listPlayers[i].CheckCollisions(m_listPlayers[j]);
+				}
+
+				//check for collisions with level objects
+				m_listPlayers[i].CheckCollisions(m_LevelObjects);
+
+				//check for world collisions
+				m_listPlayers[i].CheckWorldCollisions(WorldBoundaries);
+			}
+
+			//respond to hits!
+			for (int i = 0; i < m_listPlayers.Count; i++)
+			{
+				m_listPlayers[i].RespondToHits(this);
+			}
+			m_LevelObjects.RespondToHits(this);
 		}
 
 		protected virtual bool CheckForWinner()
@@ -616,52 +606,6 @@ namespace GameDonkey
 		{
 			m_GameTimer.Stop();
 			m_CharacterClock.Paused = true;
-		}
-
-		/// <summary>
-		/// This function takes all the characters and rubber bands them so they cant just fly off into the sunset
-		/// </summary>
-		public void RubberBand()
-		{
-			//get the center point in between all the guys
-			Vector2 prevCenter = m_CenterPoint;
-			m_CenterPoint = Vector2.Zero;
-			for (int i = 0; i < Players.Count; i++)
-			{
-				m_CenterPoint += Players[i].Character.Position;
-			}
-			m_CenterPoint /= Players.Count;
-
-			//set the change of the center point
-			CenterVelocity = prevCenter - m_CenterPoint;
-
-			//Check if any of the players are too far away
-			for (int i = 0; i < Players.Count; i++)
-			{
-				Vector2 DistanceToCenter = m_CenterPoint - Players[i].Character.Position;
-				if (DistanceToCenter.LengthSquared() > (RubberBandLength * RubberBandLength))
-				{
-					//that dude is pretty far away from the action
-
-					//get the amount of acceleration to add
-					float fDelta = (DistanceToCenter.Length() - RubberBandLength);
-
-					//get the direction to send him
-					DistanceToCenter.Normalize();
-
-					//move the character towards the center of the screen
-					Players[i].Character.Position += (fDelta * DistanceToCenter) * 0.05f;
-
-					//move the other players too
-					for (int j = 0; j < Players.Count; j++)
-					{
-						if (j != i)
-						{
-							Players[j].Character.Position = Players[j].Character.Position + (fDelta * -DistanceToCenter) * 0.05f;
-						}
-					}
-				}
-			}
 		}
 
 		public override void PlayParticleEffect(
@@ -959,8 +903,6 @@ namespace GameDonkey
 			}
 
 			//TEST
-			//draw the contents of the first players input queue
-			//Vector2 myDistance = m_CenterPoint - Players[0].Character.Position;
 
 			//CPlayerObject myDude = Players[1].Character as CPlayerObject;
 			//Write(myDude.ComboCounter.ToString(), new Vector2(200, 100));
@@ -1015,9 +957,6 @@ namespace GameDonkey
 				//m_listPlayers[i].Character.AnimationContainer.Model.DrawSkeleton(Renderer, true, Color.White);
 				//m_listPlayers[i].Character.AnimationContainer.Model.DrawJoints(Renderer, true, Color.Red);
 			}
-
-			////TEST
-			//Renderer.DrawCircle(m_CenterPoint, 56, Color.Black);
 
 #if DEBUG
 			if (m_bDrawCameraInfo)
