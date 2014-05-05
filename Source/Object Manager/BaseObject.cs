@@ -174,7 +174,7 @@ namespace GameDonkey
 		/// </summary>
 		public IStateContainer States { get; set; }
 
-		public Vector2 Position
+		public virtual Vector2 Position
 		{
 			get
 			{
