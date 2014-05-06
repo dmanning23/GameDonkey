@@ -1198,7 +1198,7 @@ namespace GameDonkey
 		/// <param name="eIndex">gamepad index for this player.</param>
 		/// <param name="eType">the type of dude to load, accepts human and AI</param>
 		/// <returns></returns>
-		public PlayerQueue LoadXmlHumanPlayer(Color myColor,
+		public virtual PlayerQueue LoadXmlHumanPlayer(Color myColor,
 			Filename strCharacterFile,
 			PlayerIndex eIndex,
 			string strPlayerName)
