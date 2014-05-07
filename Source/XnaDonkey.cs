@@ -391,6 +391,9 @@ namespace GameDonkey
 			//update the particle engine!!
 			ParticleEngine.Update(MasterClock);
 
+			//update everything else!
+			UpdateStuff();
+
 			//debugging stuff!!!
 #if DEBUG
 			KeyboardState currentState = Keyboard.GetState();
@@ -417,6 +420,13 @@ namespace GameDonkey
 #endif
 
 			return m_bGameOver;
+		}
+
+		/// <summary>
+		/// Update enything else in a child class
+		/// </summary>
+		protected virtual void UpdateStuff()
+		{
 		}
 
 		/// <summary>
