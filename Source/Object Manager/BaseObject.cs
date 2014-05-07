@@ -655,7 +655,7 @@ namespace GameDonkey
 			}
 		}
 
-		public void CheckWorldCollisions(Rectangle rWorldBoundaries)
+		public virtual void CheckWorldCollisions(Rectangle rWorldBoundaries)
 		{
 			Debug.Assert(null != Physics);
 			Physics.CheckWorldCollisions(Velocity, rWorldBoundaries);

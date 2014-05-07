@@ -564,8 +564,8 @@ namespace GameDonkey
 		/// Do the correct score calculation
 		/// Play the players death sound
 		/// </summary>
-		/// <param name="rObject">the player to kill</param>
-		private void KillPlayer(PlayerQueue rPlayerQueue)
+		/// <param name="rPlayerQueue">the player to kill</param>
+		protected virtual void KillPlayer(PlayerQueue rPlayerQueue)
 		{
 			Debug.Assert(m_listSpawnPoints.Count > 0);
 			Debug.Assert(null != rPlayerQueue);

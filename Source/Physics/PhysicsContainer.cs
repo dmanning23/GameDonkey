@@ -713,6 +713,39 @@ namespace GameDonkey
 			}
 		}
 
+		/// <summary>
+		/// Check if a circle is hitting this dude
+		/// </summary>
+		/// <param name="circle"></param>
+		/// <returns></returns>
+		public bool CheckCircleCollision(Circle circle)
+		{
+			//loop through all my collision bones
+			for (int i = 0; i < CollisionBones.Count; i++)
+			{
+				//check this bone for collision
+				//get the image we are checking of this bone
+				Image rImage = CollisionBones[i].GetCurrentImage();
+				if (null == rImage)
+				{
+					continue;
+				}
+
+				//Do the actual collision check
+
+				//loop through all polygons, checking for collisions
+				for (int j = 0; j < rImage.Circles.Count; j++)
+				{
+					if (CollisionCheck.CircleCircleCollision(rImage.Circles[j], circle))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
 		#endregion //Collision Methods
 
 		#endregion //Methods
