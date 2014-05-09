@@ -350,8 +350,8 @@ namespace GameDonkey
 					}
 				}
 
-				//TODO: check if anyone has won
-				//CheckForWinner();
+				//check if anyone has won
+				CheckForWinner();
 
 				//update the level objects
 				m_LevelObjects.Update(m_GameTimer, true);
@@ -492,38 +492,47 @@ namespace GameDonkey
 			}
 			else
 			{
-				//check for time over
-				Debug.Assert(0.0f < MaxTime);
-				if ((null == m_rWinner) && (m_GameTimer.RemainingTime() <= 0.0f))
-				{
-					//find winner
-					int iCurrentMaxStock = 0;
-					for (int i = 0; i < m_listPlayers.Count; i++)
-					{
-						if (m_listPlayers[i].Stock >= iCurrentMaxStock)
-						{
-							//found someone with the max points, but is it a tie?
-							if ((m_rWinner != null) && (m_rWinner != m_listPlayers[i]))
-							{
-								if (m_rWinner.Stock == m_listPlayers[i].Stock)
-								{
-									m_bTie = true;
-								}
-							}
-
-							//TODO: whenever a winner is found, set their animation to the win animation
-
-							m_rWinner = m_listPlayers[i];
-							iCurrentMaxStock = m_rWinner.Stock;
-						}
-					}
-
-					StopTimers();
-					m_bGameOver = true;
-				}
+				CheckForTimeOver();
 			}
 
 			return m_bGameOver;
+		}
+
+		/// <summary>
+		/// Check if time has run out and determine a winner if it has.
+		/// Called from the CheckForWinner method
+		/// </summary>
+		protected virtual void CheckForTimeOver()
+		{
+			//check for time over
+			Debug.Assert(0.0f < MaxTime);
+			if ((null == m_rWinner) && (m_GameTimer.RemainingTime() <= 0.0f))
+			{
+				//find winner
+				int iCurrentMaxStock = 0;
+				for (int i = 0; i < m_listPlayers.Count; i++)
+				{
+					if (m_listPlayers[i].Stock >= iCurrentMaxStock)
+					{
+						//found someone with the max points, but is it a tie?
+						if ((m_rWinner != null) && (m_rWinner != m_listPlayers[i]))
+						{
+							if (m_rWinner.Stock == m_listPlayers[i].Stock)
+							{
+								m_bTie = true;
+							}
+						}
+
+						//TODO: whenever a winner is found, set their animation to the win animation
+
+						m_rWinner = m_listPlayers[i];
+						iCurrentMaxStock = m_rWinner.Stock;
+					}
+				}
+
+				StopTimers();
+				m_bGameOver = true;
+			}
 		}
 
 		/// <summary>
@@ -765,23 +774,37 @@ namespace GameDonkey
 			m_Renderer.SpriteBatchEnd();
 		}
 
+		/// <summary>
+		/// draw the hud
+		/// </summary>
 		protected virtual void RenderHUD()
 		{
 			//draw the hud
 			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, Resolution.TransformationMatrix());
 
-			//um, the width and height of the player pictures
-			float fScreenHeight = Resolution.TitleSafeArea.Height;
-			float fScreenWidth = Resolution.TitleSafeArea.Width;
+			RenderPlayerHUD();
 
-			float fHeight = (fScreenHeight * 0.17f); //height of the protrait
-			int iTop = (int)(Resolution.TitleSafeArea.Top * 1.05f); //y position of the top of the portrait
-			if (0 == iTop)
-			{
-				iTop = (int)(fHeight * 0.1f);
-			}
-			int iBottom = iTop + (int)fHeight;
-			float fCenterWidth = (fScreenWidth * 0.5f) + Resolution.TitleSafeArea.Left;
+			RenderClockHUD();
+
+			RenderWinnerHUD();
+
+			//TEST
+
+			//CPlayerObject myDude = Players[1].Character as CPlayerObject;
+			//Write(myDude.ComboCounter.ToString(), new Vector2(200, 100));
+
+			m_Renderer.SpriteBatchEnd();
+		}
+
+		protected void RenderPlayerHUD()
+		{
+			float fHeight;
+			int iTop;
+			int iBottom;
+			float fScreenHeight;
+			float fScreenWidth;
+			float fCenterWidth;
+			GetScreenHUD(out fHeight, out iTop, out iBottom, out fScreenHeight, out fScreenWidth, out fCenterWidth);
 
 			//parse through the list of players
 			for (int i = 0; i < m_listPlayers.Count; i++)
@@ -859,6 +882,17 @@ namespace GameDonkey
 				float fPortraitCenter = (fHeight * 0.5f) + iLeft;
 				m_Font.Write(m_listPlayers[i].PlayerName, new Vector2(fPortraitCenter, iTop), Justify.Center, 0.7f, Color.White, m_Renderer.SpriteBatch);
 			}
+		}
+
+		protected void RenderClockHUD()
+		{
+			float fHeight;
+			int iTop;
+			int iBottom;
+			float fScreenHeight;
+			float fScreenWidth;
+			float fCenterWidth;
+			GetScreenHUD(out fHeight, out iTop, out iBottom, out fScreenHeight, out fScreenWidth, out fCenterWidth);
 
 			//if the game mode is time, draw the clock
 			Debug.Assert(MaxTime > 0.0f);
@@ -881,6 +915,19 @@ namespace GameDonkey
 					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, m_Renderer.SpriteBatch);
 				}
 			}
+		}
+
+		protected void RenderWinnerHUD()
+		{
+			//TODO: move this shit into the game over screen
+
+			float fHeight;
+			int iTop;
+			int iBottom;
+			float fScreenHeight;
+			float fScreenWidth;
+			float fCenterWidth;
+			GetScreenHUD(out fHeight, out iTop, out iBottom, out fScreenHeight, out fScreenWidth, out fCenterWidth);
 
 			//if someone won, say who
 			if (m_bGameOver)
@@ -911,13 +958,6 @@ namespace GameDonkey
 						m_Renderer.SpriteBatch);
 				}
 			}
-
-			//TEST
-
-			//CPlayerObject myDude = Players[1].Character as CPlayerObject;
-			//Write(myDude.ComboCounter.ToString(), new Vector2(200, 100));
-
-			m_Renderer.SpriteBatchEnd();
 		}
 
 		protected virtual void RenderCharacterTrails(Matrix cameraMatrix)
@@ -929,6 +969,22 @@ namespace GameDonkey
 				m_listPlayers[i].Render(Renderer, false);
 			}
 			m_Renderer.SpriteBatchEnd();
+		}
+
+		protected static void GetScreenHUD(out float fHeight, out int iTop, out int iBottom, out float fScreenHeight, out float fScreenWidth, out float fCenterWidth)
+		{
+			//um, the width and height of the player pictures
+			fScreenHeight = Resolution.TitleSafeArea.Height;
+			fScreenWidth = Resolution.TitleSafeArea.Width;
+
+			fHeight = (fScreenHeight * 0.17f);
+			iTop = (int)(Resolution.TitleSafeArea.Top * 1.05f);
+			if (0 == iTop)
+			{
+				iTop = (int)(fHeight * 0.1f);
+			}
+			iBottom = iTop + (int)fHeight;
+			fCenterWidth = (fScreenWidth * 0.5f) + Resolution.TitleSafeArea.Left;
 		}
 
 		protected virtual void RenderCharacters(Matrix cameraMatrix)

@@ -419,6 +419,15 @@ namespace GameDonkey
 			}
 		}
 
+		public void GetPlayerAttackInput(List<PlayerQueue> listBadGuys)
+		{
+			Debug.Assert(null != InputQueue);
+			for (int i = 0; i < m_listActive.Count; i++)
+			{
+				m_listActive[i].GetPlayerAttackInput(InputQueue, listBadGuys);
+			}
+		}
+
 		public void CheckHardCodedStates()
 		{
 			for (int i = 0; i < m_listActive.Count; i++)

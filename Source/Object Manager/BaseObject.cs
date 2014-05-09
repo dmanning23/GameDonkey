@@ -521,6 +521,16 @@ namespace GameDonkey
 		}
 
 		/// <summary>
+		/// Do all the specific processing to get player attacks.
+		/// By breaking this out from GetPlayerInput, can have times when players can move but not attack, like at beginning of match
+		/// </summary>
+		/// <param name="rController">the controller for this player (bullshit and ignored for AI)</param>
+		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
+		public virtual void GetPlayerAttackInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
+		{
+		}
+
+		/// <summary>
 		/// update an input wrapper
 		/// </summary>
 		/// <param name="rController"></param>
