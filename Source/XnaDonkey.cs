@@ -75,11 +75,6 @@ namespace GameDonkey
 		/// </summary>
 		GameClock m_CharacterClock;
 
-		//Game over stuff!!!
-		PlayerQueue m_rWinner;
-		bool m_bTie;
-		bool m_bGameOver;
-
 		/// <summary>
 		/// the music resource for the current board
 		/// </summary>
@@ -147,11 +142,6 @@ namespace GameDonkey
 			get { return m_CharacterClock; }
 		}
 
-		public bool GameOver
-		{
-			get { return m_bGameOver; }
-		}
-
 		public string Music
 		{
 			get { return m_strMusicFile; }
@@ -192,13 +182,10 @@ namespace GameDonkey
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.WeaponHit]; }
 		}
 
-		//public XNARenderer Renderer
-		//{
-		//	get
-		//	{
-		//		return m_Renderer;
-		//	}
-		//}
+		//Game over stuff!!!
+		public PlayerQueue Winner { get; protected set; }
+		public bool Tie { get; protected set; }
+		public bool GameOver { get; protected set; }
 
 		#endregion //Properties
 
@@ -232,9 +219,9 @@ namespace GameDonkey
 			m_GameTimer = new CountdownTimer();
 			GameMode = EGameMode.Stock;
 			MaxTime = 186.0f;
-			m_rWinner = null;
-			m_bGameOver = false;
-			m_bTie = false;
+			Winner = null;
+			GameOver = false;
+			Tie = false;
 
 			m_SkyBox = null;
 			m_HUDBackground = null;
@@ -339,7 +326,7 @@ namespace GameDonkey
 			m_CharacterClock.Update(m_GameTimer);
 
 			//check for a winner
-			if (!m_bGameOver)
+			if (!GameOver)
 			{
 				//warn about time almost over?
 				if (EGameMode.Time == GameMode)
@@ -374,7 +361,7 @@ namespace GameDonkey
 
 			//TODO: update animation with master clock if game is over
 
-			if (!m_bGameOver)
+			if (!GameOver)
 			{
 				CollisionDetection();
 			}
@@ -419,7 +406,7 @@ namespace GameDonkey
 			}
 #endif
 
-			return m_bGameOver;
+			return GameOver;
 		}
 
 		/// <summary>
@@ -473,21 +460,21 @@ namespace GameDonkey
 			if (1 >= iNumPlayers)
 			{
 				StopTimers();
-				m_bGameOver = true;
+				GameOver = true;
 
 				//find the winner!
 				for (int i = 0; i < m_listPlayers.Count; i++)
 				{
 					if (!CheckIfPlayerStockOut(m_listPlayers[i]))
 					{
-						m_rWinner = m_listPlayers[i];
+						Winner = m_listPlayers[i];
 					}
 				}
 
 				if (0 == iNumPlayers)
 				{
 					//all the players died the same exact frame
-					m_bTie = true;
+					Tie = true;
 				}
 			}
 			else
@@ -495,7 +482,7 @@ namespace GameDonkey
 				CheckForTimeOver();
 			}
 
-			return m_bGameOver;
+			return GameOver;
 		}
 
 		/// <summary>
@@ -506,7 +493,7 @@ namespace GameDonkey
 		{
 			//check for time over
 			Debug.Assert(0.0f < MaxTime);
-			if ((null == m_rWinner) && (m_GameTimer.RemainingTime() <= 0.0f))
+			if ((null == Winner) && (m_GameTimer.RemainingTime() <= 0.0f))
 			{
 				//find winner
 				int iCurrentMaxStock = 0;
@@ -515,23 +502,23 @@ namespace GameDonkey
 					if (m_listPlayers[i].Stock >= iCurrentMaxStock)
 					{
 						//found someone with the max points, but is it a tie?
-						if ((m_rWinner != null) && (m_rWinner != m_listPlayers[i]))
+						if ((Winner != null) && (Winner != m_listPlayers[i]))
 						{
-							if (m_rWinner.Stock == m_listPlayers[i].Stock)
+							if (Winner.Stock == m_listPlayers[i].Stock)
 							{
-								m_bTie = true;
+								Tie = true;
 							}
 						}
 
 						//TODO: whenever a winner is found, set their animation to the win animation
 
-						m_rWinner = m_listPlayers[i];
-						iCurrentMaxStock = m_rWinner.Stock;
+						Winner = m_listPlayers[i];
+						iCurrentMaxStock = Winner.Stock;
 					}
 				}
 
 				StopTimers();
-				m_bGameOver = true;
+				GameOver = true;
 			}
 		}
 
@@ -655,11 +642,11 @@ namespace GameDonkey
 		public void UpdateCameraMatrix()
 		{
 			//set up the camera
-			if (m_bGameOver && !m_bTie)
+			if (GameOver && !Tie)
 			{
 				//only show the winner!
-				Debug.Assert(null != m_rWinner);
-				m_rWinner.AddToCamera(Renderer.Camera);
+				Debug.Assert(null != Winner);
+				Winner.AddToCamera(Renderer.Camera);
 			}
 			else
 			{
@@ -786,8 +773,6 @@ namespace GameDonkey
 
 			RenderClockHUD();
 
-			RenderWinnerHUD();
-
 			//TEST
 
 			//CPlayerObject myDude = Players[1].Character as CPlayerObject;
@@ -905,57 +890,14 @@ namespace GameDonkey
 					TimeColor = new Color(1.0f, 0.0f, 0.0f, .5f);
 				}
 
-				if (!m_bGameOver && (m_GameTimer.RemainingTime() > 0.0f))
+				if (!GameOver && (m_GameTimer.RemainingTime() > 0.0f))
 				{
-					Debug.Assert(null == m_rWinner);
+					Debug.Assert(null == Winner);
 
 					//draw the time
 					float fPositionY = iBottom + (fHeight * 0.4f);
 					string strTime = m_GameTimer.ToString();
 					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, m_Renderer.SpriteBatch);
-				}
-			}
-		}
-
-		protected void RenderWinnerHUD()
-		{
-			//TODO: move this shit into the game over screen
-
-			float fHeight;
-			int iTop;
-			int iBottom;
-			float fScreenHeight;
-			float fScreenWidth;
-			float fCenterWidth;
-			GetScreenHUD(out fHeight, out iTop, out iBottom, out fScreenHeight, out fScreenWidth, out fCenterWidth);
-
-			//if someone won, say who
-			if (m_bGameOver)
-			{
-				float fCenterHeight = (fScreenHeight * 0.5f) + Resolution.TitleSafeArea.Top;
-				if (!m_bTie && (null != m_rWinner))
-				{
-					Color myColor = m_rWinner.Character.PlayerColor;
-					myColor.A = 100;
-					string strMessage = m_rWinner.PlayerName + " WINS!";
-					m_Font.Write(
-						strMessage,
-						new Vector2(fCenterWidth, fCenterHeight),
-						Justify.Center,
-						3.0f,
-						myColor,
-						m_Renderer.SpriteBatch);
-				}
-				else
-				{
-					//awww, it was a draw
-					m_Font.Write(
-						"DRAW GAME",
-						new Vector2(fCenterWidth, fCenterHeight),
-						Justify.Center,
-						3.0f,
-						new Color(0.65f, 0.65f, 0.65f, 0.65f),
-						m_Renderer.SpriteBatch);
 				}
 			}
 		}
@@ -971,7 +913,7 @@ namespace GameDonkey
 			m_Renderer.SpriteBatchEnd();
 		}
 
-		protected static void GetScreenHUD(out float fHeight, out int iTop, out int iBottom, out float fScreenHeight, out float fScreenWidth, out float fCenterWidth)
+		public static void GetScreenHUD(out float fHeight, out int iTop, out int iBottom, out float fScreenHeight, out float fScreenWidth, out float fCenterWidth)
 		{
 			//um, the width and height of the player pictures
 			fScreenHeight = Resolution.TitleSafeArea.Height;
@@ -1090,18 +1032,18 @@ namespace GameDonkey
 		public void ReadGameOver(PacketReader packetReader)
 		{
 			//read in game over shit
-			m_bTie = packetReader.ReadBoolean();
-			m_bGameOver = packetReader.ReadBoolean();
+			Tie = packetReader.ReadBoolean();
+			GameOver = packetReader.ReadBoolean();
 			string strWinner = packetReader.ReadString();
 
-			if (m_bGameOver && !m_bTie)
+			if (GameOver && !Tie)
 			{
 				//find that winner
 				for (int i = 0; i < m_listPlayers.Count; i++)
 				{
 					if (m_listPlayers[i].PlayerName == strWinner)
 					{
-						m_rWinner = m_listPlayers[i];
+						Winner = m_listPlayers[i];
 						break;
 					}
 				}
@@ -1114,12 +1056,12 @@ namespace GameDonkey
 		public void WriteGameOver(PacketWriter packetWriter)
 		{
 			//write out game over shit
-			packetWriter.Write(m_bTie);
-			packetWriter.Write(m_bGameOver);
+			packetWriter.Write(Tie);
+			packetWriter.Write(GameOver);
 
-			if (m_bGameOver && (null != m_rWinner))
+			if (GameOver && (null != Winner))
 			{
-				packetWriter.Write(m_rWinner.PlayerName);
+				packetWriter.Write(Winner.PlayerName);
 			}
 			else
 			{
