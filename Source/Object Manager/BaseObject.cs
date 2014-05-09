@@ -954,7 +954,7 @@ namespace GameDonkey
 		/// add all the data for this dude to the camera
 		/// </summary>
 		/// <param name="rCamera"></param>
-		public void AddToCamera(Camera rCamera)
+		public virtual void AddToCamera(Camera rCamera)
 		{
 			//get half the height
 			int iHalfHeight = (int)(m_fHeight * 0.68f);
