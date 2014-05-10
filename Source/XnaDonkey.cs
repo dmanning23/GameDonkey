@@ -570,11 +570,11 @@ namespace GameDonkey
 			Debug.Assert(null != rObject);
 			Debug.Assert((rObject.Type == EObjectType.Human) || (rObject.Type == EObjectType.AI));
 
-			//play the effect
-			PlayParticleEffect(EDefaultParticleEffects.Death,
-				Vector2.Zero,
-				rObject.Position,
-				rObject.PlayerColor);
+			//TODO: play the death particle effect
+			//PlayParticleEffect(EDefaultParticleEffects.Death,
+			//	Vector2.Zero,
+			//	rObject.Position,
+			//	rObject.PlayerColor);
 
 			//TODO: Play death squish, and the players death sound
 			//PlaySound(m_strDeathNoise);
