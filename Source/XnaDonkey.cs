@@ -73,7 +73,7 @@ namespace GameDonkey
 		/// <summary>
 		/// Clock used to update all the characters & board objects
 		/// </summary>
-		GameClock m_CharacterClock;
+		public GameClock CharacterClock { get; protected set; }
 
 		/// <summary>
 		/// the music resource for the current board
@@ -135,11 +135,6 @@ namespace GameDonkey
 		public CountdownTimer GameTimer
 		{
 			get { return m_GameTimer; }
-		}
-
-		public GameClock CharacterClock
-		{
-			get { return m_CharacterClock; }
 		}
 
 		public string Music
@@ -206,7 +201,7 @@ namespace GameDonkey
 			}
 
 			m_Font = new FontBuddy();
-			m_CharacterClock = new GameClock();
+			CharacterClock = new GameClock();
 
 			//debugging stuff
 			m_bRenderJointSkeleton = false;
@@ -239,7 +234,7 @@ namespace GameDonkey
 		/// <param name="fSpeed">multiplier to speed up/slow down the character clock</param>
 		public void SetClockSpeed(float fSpeed)
 		{
-			m_CharacterClock.TimerSpeed = fSpeed;
+			CharacterClock.TimerSpeed = fSpeed;
 		}
 
 		public override void Start()
@@ -251,7 +246,7 @@ namespace GameDonkey
 
 			//reset the game timer
 			m_GameTimer.Start(MaxTime);
-			m_CharacterClock.Start();
+			CharacterClock.Start();
 
 			//reset teh level objects
 			m_LevelObjects.Reset();
@@ -323,7 +318,7 @@ namespace GameDonkey
 			//update all our clocks
 			float fOldTime = m_GameTimer.RemainingTime();
 			m_GameTimer.Update(MasterClock);
-			m_CharacterClock.Update(m_GameTimer);
+			CharacterClock.Update(m_GameTimer);
 
 			//check for a winner
 			if (!GameOver)
@@ -354,7 +349,7 @@ namespace GameDonkey
 						CheckIfDead(m_listPlayers[i]);
 
 						//update the characters
-						m_listPlayers[i].Update(m_CharacterClock, true);
+						m_listPlayers[i].Update(CharacterClock, true);
 					}
 				}
 			}
@@ -611,7 +606,7 @@ namespace GameDonkey
 		protected void StopTimers()
 		{
 			m_GameTimer.Stop();
-			m_CharacterClock.Paused = true;
+			CharacterClock.Paused = true;
 		}
 
 		public override void PlayParticleEffect(
