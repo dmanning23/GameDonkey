@@ -102,6 +102,7 @@ namespace SPFSettings
 		public string bone = "";
 		public DirectionActionXML direction = new DirectionActionXML();
 		public Vector2 StartOffset = new Vector2(0.0f);
+		public bool UseBoneRotation = false;
 		public List<ParticleXML> emitter = new List<ParticleXML>();
 	}
 

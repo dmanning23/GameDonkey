@@ -16,17 +16,17 @@ namespace GameDonkey
 		/// <summary>
 		/// the particle effect template to use
 		/// </summary>
-		private EmitterTemplate m_rTemplate;
+		private EmitterTemplate _template;
 
 		/// <summary>
 		/// the name of the bone to emanate from
 		/// </summary>
-		private string m_strBoneName;
+		private string _boneName;
 
 		/// <summary>
 		/// the bone to attach the particle emitter to
 		/// </summary>
-		private Bone m_rBone;
+		private Bone _bone;
 
 		/// <summary>
 		/// the direction to shoot the particle effect
@@ -39,7 +39,12 @@ namespace GameDonkey
 		/// </summary>
 		public Vector2 StartOffset { get; set; }
 
-		private ParticleEngine m_ParticleEngine;
+		private ParticleEngine ParticleEngine { get; set; }
+
+		/// <summary>
+		/// When a particle is fired, whether or not it should match the rotation of the specified bone.
+		/// </summary>
+		public bool UseBoneRotation { get; set; }
 
 		#endregion //Members
 
@@ -47,26 +52,21 @@ namespace GameDonkey
 
 		public string BoneName
 		{
-			get { return m_strBoneName; }
+			get { return _boneName; }
 			set
 			{
 				Debug.Assert(null != Owner);
-				m_strBoneName = value;
-				if (String.IsNullOrEmpty(m_strBoneName))
+				_boneName = value;
+				if (String.IsNullOrEmpty(_boneName))
 				{
-					m_rBone = null;
+					_bone = null;
 				}
 				else
 				{
-					m_rBone = Owner.AnimationContainer.Model.GetBone(m_strBoneName);
-					Debug.Assert(null != m_rBone);
+					_bone = Owner.AnimationContainer.Model.GetBone(_boneName);
+					Debug.Assert(null != _bone);
 				}
 			}
-		}
-
-		public EmitterTemplate Emitter
-		{
-			get { return m_rTemplate; }
 		}
 
 		#endregion //Properties
@@ -81,13 +81,14 @@ namespace GameDonkey
 			Debug.Assert(null != rEngine);
 			Debug.Assert(null != rEngine.ParticleEngine);
 			ActionType = EActionType.ParticleEffect;
-			m_rTemplate = new EmitterTemplate();
-			m_strBoneName = "";
-			m_rBone = null;
+			_template = new EmitterTemplate();
+			_boneName = "";
+			_bone = null;
 			Velocity = new ActionDirection();
 			StartOffset = new Vector2(0.0f);
+			UseBoneRotation = false;
 
-			m_ParticleEngine = rEngine.ParticleEngine;
+			ParticleEngine = rEngine.ParticleEngine;
 		}
 
 		/// <summary>
@@ -96,14 +97,43 @@ namespace GameDonkey
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
-			Debug.Assert(null != m_ParticleEngine);
+			Debug.Assert(null != ParticleEngine);
 			Debug.Assert(!AlreadyRun);
 
-			Emitter myEmitter = m_ParticleEngine.PlayParticleEffect(m_rTemplate, Velocity.GetDirection(Owner), Owner.Position, StartOffset, m_rBone.GetPosition, m_rTemplate.ParticleColor, Owner.Flip);
+			Emitter myEmitter = ParticleEngine.PlayParticleEffect(
+				_template, 
+				Velocity.GetDirection(Owner), 
+				Owner.Position, 
+				StartOffset, 
+				_template.ParticleColor, 
+				Owner.Flip,
+				GetPosDelegate(),
+				GetRotationDelegate());
 			Debug.Assert(null != myEmitter);
+
 			Owner.Emitters.Add(myEmitter);
 
 			return base.Execute();
+		}
+
+		private PositionDelegate GetPosDelegate()
+		{
+			if (null != _bone)
+			{
+				return _bone.GetPosition;
+			}
+			
+			return null;
+		}
+
+		private RotationDelegate GetRotationDelegate()
+		{
+			if ((null != _bone) && UseBoneRotation)
+			{
+				return _bone.TrueRotationAngle;
+			}
+
+			return null;
 		}
 
 		public override bool Compare(IBaseAction rInst)
@@ -112,10 +142,10 @@ namespace GameDonkey
 
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
-			Debug.Assert(m_rTemplate.Compare(myAction.m_rTemplate));
-			Debug.Assert(m_strBoneName == myAction.m_strBoneName);
+			Debug.Assert(_template.Compare(myAction._template));
+			Debug.Assert(_boneName == myAction._boneName);
 			Debug.Assert(Velocity.Compare(myAction.Velocity));
-			Debug.Assert(m_rTemplate.ParticleColor == myAction.m_rTemplate.ParticleColor);
+			Debug.Assert(_template.ParticleColor == myAction._template.ParticleColor);
 			Debug.Assert(StartOffset.X == myAction.StartOffset.X);
 			//Debug.Assert(m_StartOffset.Y == myAction.m_StartOffset.Y);
 
@@ -136,7 +166,7 @@ namespace GameDonkey
 			//read in xml action
 
 			Debug.Assert(null != rEngine);
-			Debug.Assert(null != m_ParticleEngine);
+			Debug.Assert(null != ParticleEngine);
 
 			if ("Item" != rXMLNode.Name)
 			{
@@ -192,11 +222,11 @@ namespace GameDonkey
 					}
 					else if (strName == "bone")
 					{
-						m_strBoneName = strValue;
-						if (m_strBoneName != "")
+						_boneName = strValue;
+						if (!string.IsNullOrEmpty(_boneName))
 						{
-							m_rBone = Owner.AnimationContainer.Model.GetBone(m_strBoneName);
-							Debug.Assert(null != m_rBone);
+							_bone = Owner.AnimationContainer.Model.GetBone(_boneName);
+							Debug.Assert(null != _bone);
 						}
 					}
 					else if (strName == "direction")
@@ -207,6 +237,10 @@ namespace GameDonkey
 					{
 						StartOffset = strValue.ToVector2();
 					}
+					else if (strName == "UseBoneRotation")
+					{
+						UseBoneRotation = Convert.ToBoolean(strValue);
+					}
 					else if (strName == "emitter")
 					{
 						if (!childNode.HasChildNodes)
@@ -216,7 +250,7 @@ namespace GameDonkey
 							return false;
 						}
 
-						if (!m_rTemplate.ReadXmlObject(childNode.FirstChild, ((null == rEngine) ? null : rEngine.Renderer)))
+						if (!_template.ReadXmlObject(childNode.FirstChild, ((null == rEngine) ? null : rEngine.Renderer)))
 						{
 							Debug.Assert(false);
 							return false;
@@ -240,7 +274,7 @@ namespace GameDonkey
 		protected override void WriteActionXml(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("bone");
-			rXMLFile.WriteString(m_strBoneName);
+			rXMLFile.WriteString(_boneName);
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("direction");
@@ -251,8 +285,12 @@ namespace GameDonkey
 			rXMLFile.WriteString(StartOffset.StringFromVector());
 			rXMLFile.WriteEndElement();
 
+			rXMLFile.WriteStartElement("UseBoneRotation");
+			rXMLFile.WriteString(UseBoneRotation.ToString());
+			rXMLFile.WriteEndElement();
+
 			rXMLFile.WriteStartElement("emitter");
-			m_rTemplate.WriteXmlObject(rXMLFile, false);
+			_template.WriteXmlObject(rXMLFile, false);
 			rXMLFile.WriteEndElement();
 		}
 
@@ -266,19 +304,20 @@ namespace GameDonkey
 			ReadSerializedBase(myAction);
 
 			Debug.Assert(null != rEngine);
-			Debug.Assert(null != m_ParticleEngine);
+			Debug.Assert(null != ParticleEngine);
 
-			m_strBoneName = myAction.bone;
-			if (m_strBoneName != "")
+			_boneName = myAction.bone;
+			if (_boneName != "")
 			{
-				m_rBone = Owner.AnimationContainer.Model.GetBone(m_strBoneName);
-				Debug.Assert(null != m_rBone);
+				_bone = Owner.AnimationContainer.Model.GetBone(_boneName);
+				Debug.Assert(null != _bone);
 			}
 
 			Velocity.ReadSerialized(myAction.direction);
 			StartOffset = myAction.StartOffset;
+			UseBoneRotation = myAction.UseBoneRotation;
 			Debug.Assert(myAction.emitter.Count == 1);
-			if (!m_rTemplate.ReadSerializedObject(myAction.emitter[0], rEngine.Renderer))
+			if (!_template.ReadSerializedObject(myAction.emitter[0], rEngine.Renderer))
 			{
 				return false;
 			}

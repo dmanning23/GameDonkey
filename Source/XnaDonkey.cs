@@ -611,11 +611,11 @@ namespace GameDonkey
 
 		public override void PlayParticleEffect(
 			EDefaultParticleEffects eEffect,
-			Vector2 Velocity,
-			Vector2 Position,
+			Vector2 velocity,
+			Vector2 position,
 			Color myColor)
 		{
-			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], Velocity, Position, Vector2.Zero, null, myColor, false);
+			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], velocity, position, Vector2.Zero, myColor, false);
 		}
 
 		#region Draw
