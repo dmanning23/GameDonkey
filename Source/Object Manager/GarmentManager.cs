@@ -57,6 +57,12 @@ namespace GameDonkey
 
 			//redo the physics lists
 			m_rOwner.Physics.GarmentChange(rAction.Garment);
+
+			//the animation has changed!!!
+			for (int i = 0; i < rAction.Garment.Fragments.Count; i++)
+			{
+				rAction.Garment.Fragments[i].AnimationContainer.RestartAnimation();
+			}
 		}
 
 		/// <summary>
