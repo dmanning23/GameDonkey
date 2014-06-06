@@ -21,7 +21,7 @@ namespace GameDonkey
 		/// The point at which to stop adding y velocity to the character
 		/// should be +y.  Don't care about x, that will always slow down to 0.0
 		/// </summary>
-		public float MinYVelocity { get; private set; }
+		public float MinYVelocity { get; set; }
 
 		#endregion //Members
 
