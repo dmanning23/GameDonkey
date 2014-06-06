@@ -276,7 +276,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\ParticleBuddy\Windows.Xna\ParticleBuddy.Windows.Xna.csproj">
+    <ProjectReference Include="..\..\ParticleBuddy\Windows.Xna\ParticleBuddy.Windows.Xna.csproj">
       <Project>{CBA2A4AF-4D39-40F0-B122-551B8728525C}</Project>
       <Name>ParticleBuddy.Windows.Xna</Name>
     </ProjectReference>
