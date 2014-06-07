@@ -182,6 +182,8 @@ namespace GameDonkey
 		public bool Tie { get; protected set; }
 		public bool GameOver { get; protected set; }
 
+		public bool DebugGame { get; set; }
+
 		#endregion //Properties
 
 		#region Construction
@@ -333,7 +335,10 @@ namespace GameDonkey
 				}
 
 				//check if anyone has won
-				CheckForWinner();
+				if (!DebugGame)
+				{
+					CheckForWinner();
+				}
 
 				//update the level objects
 				m_LevelObjects.Update(m_GameTimer, true);

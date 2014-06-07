@@ -109,9 +109,11 @@ namespace GameDonkey
 				Owner.Flip,
 				GetPosDelegate(),
 				GetRotationDelegate());
-			Debug.Assert(null != myEmitter);
-
-			Owner.Emitters.Add(myEmitter);
+			
+			if (null != myEmitter)
+			{
+				Owner.Emitters.Add(myEmitter);
+			}
 
 			return base.Execute();
 		}
