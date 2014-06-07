@@ -1,4 +1,5 @@
 ﻿using AnimationLib;
+using MatrixExtensions;
 using Microsoft.Xna.Framework;
 using ParticleBuddy;
 using StateMachineBuddy;
@@ -103,12 +104,13 @@ namespace GameDonkey
 			Emitter myEmitter = ParticleEngine.PlayParticleEffect(
 				Emitter, 
 				Velocity.GetDirection(Owner), 
-				Owner.Position, 
+				Owner.Position,
 				StartOffset,
 				Emitter.ParticleColor, 
 				Owner.Flip,
 				GetPosDelegate(),
-				GetRotationDelegate());
+				GetRotationDelegate(),
+				Owner.Rotation);
 			
 			if (null != myEmitter)
 			{

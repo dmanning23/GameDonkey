@@ -288,6 +288,11 @@ namespace GameDonkey
 			}
 		}
 
+		public float Rotation()
+		{
+			return CurrentRotation;
+		}
+
 		public PlayerQueue LastAttacker
 		{
 			get { return m_rLastAttacker; }
