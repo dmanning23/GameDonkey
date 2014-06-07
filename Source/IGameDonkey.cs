@@ -58,7 +58,7 @@ namespace GameDonkey
 		/// <returns>bool: true if the game is over, false if it isn't</returns>
 		bool Update(TimeUpdater rTime);
 
-		void Render();
+		
 
 		void AddCameraShake(float fShakeAmount);
 

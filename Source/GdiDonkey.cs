@@ -188,6 +188,17 @@ namespace GameDonkey
 
 		public override void Render()
 		{
+			RenderLevel(Matrix.Identity);
+
+			RenderCharacterTrails(Matrix.Identity);
+
+			RenderCharacters(Matrix.Identity);
+
+			RenderParticleEffects(Matrix.Identity);
+		}
+
+		protected override void RenderLevel(Matrix cameraMatrix)
+		{
 			//draw the world boundaries in debug mode?
 			if (m_bRenderWorldBoundaries)
 			{
@@ -196,10 +207,16 @@ namespace GameDonkey
 					new Vector2(WorldBoundaries.Right, WorldBoundaries.Bottom),
 					0.0f, 1.0f, Color.Red);
 			}
+		}
 
+		protected override void RenderCharacterTrails(Matrix cameraMatrix)
+		{
 			//render all the character trails, start another spritebatch
 			Player.Render(Renderer, false);
+		}
 
+		protected override void RenderCharacters(Matrix cameraMatrix)
+		{
 			//render all the players
 			Player.Render(Renderer, true);
 
@@ -217,8 +234,8 @@ namespace GameDonkey
 			{
 				for (int j = 0; j < Player.ActiveObjects.Count; j++)
 				{
-					Renderer.Primitive.Circle(Player.Character.Position, 
-						(int)(Player.Character.MinDistance()), 
+					Renderer.Primitive.Circle(Player.Character.Position,
+						(int)(Player.Character.MinDistance()),
 						Color.White);
 				}
 			}
@@ -228,7 +245,10 @@ namespace GameDonkey
 			//m_listPlayers[i].Character.AnimationContainer.Model.RenderOutline(Renderer, 1.0f);
 			//m_listPlayers[i].Character.AnimationContainer.Model.DrawSkeleton(Renderer, true, Color.White);
 			//m_listPlayers[i].Character.AnimationContainer.Model.DrawJoints(Renderer, true, Color.Red);
+		}
 
+		protected override void RenderParticleEffects(Matrix cameraMatrix)
+		{
 			//draw all the particles, start another spritebatch for the particles
 			ParticleEngine.Render(Renderer);
 		}

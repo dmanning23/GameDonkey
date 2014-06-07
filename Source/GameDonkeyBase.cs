@@ -122,7 +122,19 @@ namespace GameDonkey
 			return Update();
 		}
 
+		#region Rendering
+
 		public abstract void Render();
+
+		protected abstract void RenderLevel(Matrix cameraMatrix);
+
+		protected abstract void RenderCharacterTrails(Matrix cameraMatrix);
+
+		protected abstract void RenderCharacters(Matrix cameraMatrix);
+
+		protected abstract void RenderParticleEffects(Matrix cameraMatrix);
+
+		#endregion //Rendering
 
 		public virtual void AddCameraShake(float fShakeAmount)
 		{

@@ -737,7 +737,7 @@ namespace GameDonkey
 			m_Renderer.SpriteBatchEnd();
 		}
 
-		protected virtual void RenderLevel(Matrix cameraMatrix)
+		protected override void RenderLevel(Matrix cameraMatrix)
 		{
 			//draw the level
 			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
@@ -902,7 +902,7 @@ namespace GameDonkey
 			}
 		}
 
-		protected virtual void RenderCharacterTrails(Matrix cameraMatrix)
+		protected override void RenderCharacterTrails(Matrix cameraMatrix)
 		{
 			//render all the character trails, start another spritebatch
 			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
@@ -929,7 +929,7 @@ namespace GameDonkey
 			fCenterWidth = (fScreenWidth * 0.5f) + Resolution.TitleSafeArea.Left;
 		}
 
-		protected virtual void RenderCharacters(Matrix cameraMatrix)
+		protected override void RenderCharacters(Matrix cameraMatrix)
 		{
 			//render all the players
 			m_Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
@@ -946,7 +946,6 @@ namespace GameDonkey
 						m_listPlayers[i].ActiveObjects[j].AnimationContainer.Model.DrawPhysics(Renderer, true, Color.White);
 					}
 				}
-#endif
 
 				//draw the push box for each character?
 				if (m_bRenderJointSkeleton)
@@ -958,6 +957,7 @@ namespace GameDonkey
 												  Color.White);
 					}
 				}
+#endif
 
 				////draw bones, ragdoll
 				//m_listPlayers[i].Character.AnimationContainer.Model.RenderJointSkeleton(Renderer);
@@ -980,7 +980,7 @@ namespace GameDonkey
 			m_Renderer.SpriteBatchEnd();
 		}
 
-		protected virtual void RenderParticleEffects(Matrix cameraMatrix)
+		protected override void RenderParticleEffects(Matrix cameraMatrix)
 		{
 			//draw all the particles, start another spritebatch for the particles
 			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
