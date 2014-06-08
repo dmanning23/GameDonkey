@@ -32,7 +32,7 @@ namespace GameDonkey
 			set
 			{
 				m_strMessageName = value;
-				m_iMessage = Owner.States.GetMessageIndexFromText(m_strMessageName);
+				m_iMessage = StateContainer.GetMessageIndexFromText(m_strMessageName);
 				if (m_iMessage == -1)
 				{
 					Debug.Assert(false);
@@ -44,6 +44,8 @@ namespace GameDonkey
 		{
 			get { return m_iMessage; }
 		}
+
+		private SingleStateContainer StateContainer { get; set; }
 
 		#endregion //Properties
 
@@ -66,12 +68,11 @@ namespace GameDonkey
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
-			Debug.Assert(null != Owner);
-			Debug.Assert(null != Owner.States);
+			Debug.Assert(null != StateContainer);
 			Debug.Assert(!AlreadyRun);
 
 			//The message offset is added to this message when it is read in, so dont add anything
-			Owner.SendStateMessage(m_iMessage);
+			StateContainer.SendStateMessage(m_iMessage);
 
 			//keep running the action until it goes through?
 			AlreadyRun = true;
@@ -102,8 +103,10 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rXMLNode">the xml node to read from</param>
 		/// <returns></returns>
-		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
+			StateContainer = stateContainer;
+
 			//read in xml action
 
 			if ("Item" != rXMLNode.Name)
@@ -193,8 +196,10 @@ namespace GameDonkey
 		/// Read from a serialized file
 		/// </summary>
 		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.SendStateMessageActionXML myAction, StateMachine rStateMachine)
+		public bool ReadSerialized(SPFSettings.SendStateMessageActionXML myAction, SingleStateContainer stateContainer)
 		{
+			StateContainer = stateContainer;
+
 			Debug.Assert(myAction.type == ActionType.ToString());
 			ReadSerializedBase(myAction);
 

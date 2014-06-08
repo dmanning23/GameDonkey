@@ -272,7 +272,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		public bool ReadXml(XmlNode rXMLNode, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
+		public bool ReadXml(XmlNode rXMLNode, BaseObject rOwner, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
 			if ("Item" != rXMLNode.Name)
 			{
@@ -320,7 +320,7 @@ namespace GameDonkey
 					else if (strName == "actions")
 					{
 						//Read in all the success actions
-						if (!IBaseAction.ReadXmlListActions(rOwner, ref m_listActions, childNode, rEngine, rStateMachine))
+						if (!IBaseAction.ReadXmlListActions(rOwner, ref m_listActions, childNode, rEngine, stateContainer))
 						{
 							Debug.Assert(false);
 							return false;
@@ -364,16 +364,16 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement(); //Item
 		}
 
-		public void ReadSerialized(SPFSettings.StateActionsXML myActions, BaseObject rOwner, IGameDonkey rEngine, ContentManager rXmlContent, StateMachine rStateMachine)
+		public void ReadSerialized(SPFSettings.StateActionsXML myActions, BaseObject rOwner, IGameDonkey rEngine, ContentManager rXmlContent, SingleStateContainer stateContainer)
 		{
 			//grab teh state name
 			StateName = myActions.name;
 
 			//verify that the state is in the state machine!
-			Debug.Assert(-1 != rStateMachine.GetStateIndexFromText(StateName));
+			Debug.Assert(-1 != stateContainer.GetStateIndexFromText(StateName));
 
 			//set up all the actions
-			IBaseAction.ReadSerializedListActions(rOwner, myActions.actions, ref m_listActions, rEngine, rXmlContent, rStateMachine);
+			IBaseAction.ReadSerializedListActions(rOwner, myActions.actions, ref m_listActions, rEngine, rXmlContent, stateContainer);
 
 			//calculate "active" and "recovery" phases
 			CalculateAttackTime();

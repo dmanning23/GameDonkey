@@ -86,7 +86,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rXMLNode">the xml node to read from</param>
 		/// <returns></returns>
-		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
 			//read in xml action
 

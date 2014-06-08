@@ -75,13 +75,13 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rXMLNode">the xml node to read from</param>
 		/// <returns></returns>
-		public abstract bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine);
+		public abstract bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer);
 
 		static public bool ReadXmlListActions(BaseObject rOwner,
 			ref List<IBaseAction> outputList,
 			XmlNode rParentNode,
 			IGameDonkey rEngine,
-			StateMachine rStateMachine)
+			SingleStateContainer stateContainer)
 		{
 			//set up all the actions
 			if (!rParentNode.HasChildNodes)
@@ -118,7 +118,7 @@ namespace GameDonkey
 				}
 
 				IBaseAction myAction = StateActionFactory.CreateStateAction(eChildType, rOwner, rEngine);
-				if (!myAction.ReadXml(childNode, rEngine, rStateMachine))
+				if (!myAction.ReadXml(childNode, rEngine, stateContainer))
 				{
 					Debug.Assert(false);
 					return false;
@@ -167,7 +167,7 @@ namespace GameDonkey
 			ref List<IBaseAction> outputList,
 			IGameDonkey rEngine,
 			ContentManager rXmlContent,
-			StateMachine rStateMachine)
+			SingleStateContainer stateContainer)
 		{
 			Debug.Assert(null != rOwner);
 
@@ -235,7 +235,7 @@ namespace GameDonkey
 					{
 						CreateAttackAction myAction = new CreateAttackAction(rOwner);
 						SPFSettings.CreateAttackActionXML myActionXML = (SPFSettings.CreateAttackActionXML)inputList[i];
-						if (myAction.ReadSerialized(myActionXML, rEngine, rXmlContent, rStateMachine))
+						if (myAction.ReadSerialized(myActionXML, rEngine, rXmlContent, stateContainer))
 						{
 							outputList.Add(myAction);
 						}
@@ -261,7 +261,7 @@ namespace GameDonkey
 					{
 						CreateThrowAction myAction = new CreateThrowAction(rOwner);
 						SPFSettings.CreateThrowActionXML myActionXML = (SPFSettings.CreateThrowActionXML)inputList[i];
-						if (myAction.ReadSerialized(myActionXML, rEngine, rXmlContent, rStateMachine))
+						if (myAction.ReadSerialized(myActionXML, rEngine, rXmlContent, stateContainer))
 						{
 							outputList.Add(myAction);
 						}
@@ -342,7 +342,7 @@ namespace GameDonkey
 					{
 						SendStateMessageAction myAction = new SendStateMessageAction(rOwner);
 						SPFSettings.SendStateMessageActionXML myActionXML = (SPFSettings.SendStateMessageActionXML)inputList[i];
-						if (!myAction.ReadSerialized(myActionXML, rStateMachine))
+						if (!myAction.ReadSerialized(myActionXML, stateContainer))
 						{
 							Debug.Assert(false);
 						}
@@ -386,7 +386,7 @@ namespace GameDonkey
 					{
 						BlockingStateAction myAction = new BlockingStateAction(rOwner);
 						SPFSettings.BlockingStateActionXML myActionXML = (SPFSettings.BlockingStateActionXML)inputList[i];
-						if (!myAction.ReadSerialized(myActionXML, rEngine, rXmlContent, rStateMachine))
+						if (!myAction.ReadSerialized(myActionXML, rEngine, rXmlContent, stateContainer))
 						{
 							Debug.Assert(false);
 						}

@@ -139,7 +139,7 @@ namespace GameDonkey
 
 		#region State Action File IO
 
-		public bool ReadXmlStateActions(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine, StateMachine rStateMachine)
+		public bool ReadXmlStateActions(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
 			// Open the file.
 			FileStream stream = File.Open(strFilename.File, FileMode.Open, FileAccess.Read);
@@ -201,7 +201,7 @@ namespace GameDonkey
 					continue;
 				}
 
-				if (!myActions.ReadXml(childNode, rOwner, rEngine, rStateMachine))
+				if (!myActions.ReadXml(childNode, rOwner, rEngine, stateContainer))
 				{
 					Debug.Assert(false);
 					return false;
@@ -276,7 +276,7 @@ namespace GameDonkey
 		public void ReadSerializedStateActions(ContentManager rXmlContent,
 			Filename strResource,
 			BaseObject rOwner,
-			StateMachine rStateMachine,
+			SingleStateContainer stateContainer,
 			IGameDonkey rEngine)
 		{
 			//load the resource
@@ -286,16 +286,16 @@ namespace GameDonkey
 			for (int i = 0; i < myContainer.states.Count; i++)
 			{
 				StateActions myActions = new StateActions();
-				myActions.ReadSerialized(myContainer.states[i], rOwner, rEngine, rXmlContent, rStateMachine);
+				myActions.ReadSerialized(myContainer.states[i], rOwner, rEngine, rXmlContent, stateContainer);
 				m_listActions.Add(myActions);
 			}
-			Debug.Assert(rStateMachine.NumStates == m_listActions.Count);
+			Debug.Assert(stateContainer.NumStates() == m_listActions.Count);
 
 			//make sure every state has a state action!
 #if DEBUG
-			for (int i = 0; i < rStateMachine.NumStates; i++)
+			for (int i = 0; i < stateContainer.NumStates(); i++)
 			{
-				string strStateMachineName = rStateMachine.GetStateName(i);
+				string strStateMachineName = stateContainer.GetStateName(i);
 				string strStateActionName = m_listActions[i].StateName;
 				Debug.Assert(strStateMachineName == strStateActionName);
 			}

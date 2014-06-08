@@ -112,7 +112,7 @@ namespace GameDonkey
 
 		#region File IO
 
-		protected override bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		protected override bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
 			//what is in this node?
 			string strName = childNode.Name;
@@ -146,8 +146,8 @@ namespace GameDonkey
 			{
 				m_Direction = strValue.ToVector2();
 			}
-			
-			return base.ReadActionAttribute(childNode, rEngine, rStateMachine);
+
+			return base.ReadActionAttribute(childNode, rEngine, stateContainer);
 		}
 
 		/// <summary>
@@ -171,7 +171,7 @@ namespace GameDonkey
 		/// Read from a serialized file
 		/// </summary>
 		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.CreateThrowActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, StateMachine rStateMachine)
+		public bool ReadSerialized(SPFSettings.CreateThrowActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, SingleStateContainer stateContainer)
 		{
 			Debug.Assert(myAction.type == ActionType.ToString());
 
@@ -180,7 +180,7 @@ namespace GameDonkey
 			Debug.Assert(m_iThrowMessage >= 0);
 			m_fReleaseTimeDelta = myAction.releaseTimeDelta;
 
-			return base.ReadSerialized(myAction, rEngine,rXmlContent, rStateMachine);
+			return base.ReadSerialized(myAction, rEngine, rXmlContent, stateContainer);
 		}
 
 		#endregion //File IO

@@ -371,7 +371,7 @@ namespace GameDonkey
 			//load the state actions
 			Debug.Assert(null != m_listActions);
 			m_strActionsFile = new Filename(rXMLNode.stateActions);
-			return m_listActions.ReadXmlStateActions(m_strActionsFile, rOwner, rEngine, StateMachine);
+			return m_listActions.ReadXmlStateActions(m_strActionsFile, rOwner, rEngine, this);
 		}
 
 		public virtual bool ReadXmlStateMachine(StateMachine machine, Filename file)
@@ -409,7 +409,7 @@ namespace GameDonkey
 
 			//load the state actions
 			Debug.Assert(null != m_listActions);
-			m_listActions.ReadSerializedStateActions(rContent, m_strActionsFile, rOwner, StateMachine, rEngine);
+			m_listActions.ReadSerializedStateActions(rContent, m_strActionsFile, rOwner, this, rEngine);
 		}
 
 		public virtual void ReadSerializedStateMachine(ContentManager rContent, StateMachine machine, Filename file, int iMessageOffset)

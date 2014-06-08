@@ -168,7 +168,7 @@ namespace GameDonkey
 		/// </summary>
 		/// <param name="rXMLNode">the xml node to read from</param>
 		/// <returns></returns>
-		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
 			//read in xml action
 
@@ -204,7 +204,7 @@ namespace GameDonkey
 					null != childNode;
 					childNode = childNode.NextSibling)
 				{
-					if (!ReadActionAttribute(childNode, rEngine, rStateMachine))
+					if (!ReadActionAttribute(childNode, rEngine, stateContainer))
 					{
 						return false;
 					}
@@ -214,7 +214,7 @@ namespace GameDonkey
 			return true;
 		}
 
-		protected virtual bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, StateMachine rStateMachine)
+		protected virtual bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
 			//what is in this node?
 			string strName = childNode.Name;
@@ -248,7 +248,7 @@ namespace GameDonkey
 			else if (strName == "successActions")
 			{
 				//Read in all the success actions
-				if (!IBaseAction.ReadXmlListActions(Owner, ref m_listSuccessActions, childNode, rEngine, rStateMachine))
+				if (!IBaseAction.ReadXmlListActions(Owner, ref m_listSuccessActions, childNode, rEngine, stateContainer))
 				{
 					return false;
 				}
@@ -287,7 +287,7 @@ namespace GameDonkey
 		/// Read from a serialized file
 		/// </summary>
 		/// <param name="myAction">the xml item to read the action from</param>
-		public virtual bool ReadSerialized(SPFSettings.BlockingStateActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, StateMachine rStateMachine)
+		public virtual bool ReadSerialized(SPFSettings.BlockingStateActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, SingleStateContainer stateContainer)
 		{
 			Debug.Assert(myAction.type == ActionType.ToString());
 			ReadSerializedBase(myAction);
@@ -300,7 +300,7 @@ namespace GameDonkey
 			HitSound = myAction.hitSound;
 			//TODO: verify the sound action
 			//Debug.Assert(null != CAudioManager.GetCue(m_strHitSound));
-			IBaseAction.ReadSerializedListActions(Owner, myAction.successActions, ref m_listSuccessActions, rEngine, rXmlContent, rStateMachine);
+			IBaseAction.ReadSerializedListActions(Owner, myAction.successActions, ref m_listSuccessActions, rEngine, rXmlContent, stateContainer);
 
 			return true;
 		}
