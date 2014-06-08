@@ -106,8 +106,8 @@ namespace GameDonkey
 				Velocity.GetDirection(Owner), 
 				Owner.Position,
 				StartOffset,
-				Emitter.ParticleColor, 
-				Owner.Flip,
+				Emitter.ParticleColor,
+				GetFlip(),
 				GetPosDelegate(),
 				GetRotationDelegate(),
 				Owner.Rotation);
@@ -138,6 +138,16 @@ namespace GameDonkey
 			}
 
 			return null;
+		}
+
+		private bool GetFlip()
+		{
+			if ((null != _bone) && UseBoneRotation)
+			{
+				return _bone.Flipped;
+			}
+
+			return Owner.Flip;
 		}
 
 		public override bool Compare(IBaseAction rInst)
