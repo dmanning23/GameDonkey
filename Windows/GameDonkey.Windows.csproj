@@ -85,6 +85,9 @@
     <Compile Include="..\Source\State Machine\ActionDirection.cs">
       <Link>State Machine\ActionDirection.cs</Link>
     </Compile>
+    <Compile Include="..\Source\State Machine\Actions\CameraShakeAction.cs">
+      <Link>State Machine\Actions\CameraShakeAction.cs</Link>
+    </Compile>
     <Compile Include="..\Source\State Machine\Actions\EDirectionType.cs">
       <Link>State Machine\Actions\EDirectionType.cs</Link>
     </Compile>

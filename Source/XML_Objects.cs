@@ -97,6 +97,12 @@ namespace SPFSettings
 		public float timeDelta = 0.0f;
 	}
 
+	public class CameraShakeActionXML : BaseActionXML
+	{
+		public float TimeDelta = 0.0f;
+		public float ShakeAmount = 0.0f;
+	}
+
 	public class ParticleEffectActionXML : BaseActionXML
 	{
 		public string bone = "";

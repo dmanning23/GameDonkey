@@ -21,24 +21,26 @@ namespace GameDonkey
 			switch (eType)
 			{
 				case EActionType.AddGarment: { return new AddGarmentAction(rOwner); }
+				case EActionType.PlayAnimation: { return new PlayAnimationAction(rOwner); }
 				case EActionType.AddVelocity: { return new AddVelocityAction(rOwner); }
+				case EActionType.SetVelocity: { return new SetVelocityAction(rOwner); }
 				case EActionType.ConstantAcceleration: { return new ConstantAccelerationAction(rOwner); }
 				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationAction(rOwner); }
-				case EActionType.CreateAttack: { return new CreateAttackAction(rOwner); }
 				case EActionType.CreateBlock: { return new CreateBlockAction(rOwner); }
-				case EActionType.CreateThrow: { return new CreateThrowAction(rOwner); }
-				case EActionType.Deactivate: { return new DeactivateAction(rOwner); }
 				case EActionType.Evade: { return new EvadeAction(rOwner); }
-				case EActionType.ParticleEffect: { return new ParticleEffectAction(rOwner, rEngine); }
-				case EActionType.PlayAnimation: { return new PlayAnimationAction(rOwner); }
-				case EActionType.PlaySound: { return new PlaySoundAction(rOwner, rEngine); }
 				case EActionType.Projectile: { return new ProjectileAction(rOwner); }
-				case EActionType.SendStateMessage: { return new SendStateMessageAction(rOwner); }
-				case EActionType.SetVelocity: { return new SetVelocityAction(rOwner); }
+				case EActionType.PlaySound: { return new PlaySoundAction(rOwner, rEngine); }
 				case EActionType.Trail: { return new TrailAction(rOwner); }
+				case EActionType.CreateAttack: { return new CreateAttackAction(rOwner); }
 				case EActionType.BlockState: { return new BlockingStateAction(rOwner); }
+				case EActionType.CreateHitCircle: { return new CreateHitCircleAction(rOwner); }
+				case EActionType.CreateThrow: { return new CreateThrowAction(rOwner); }
+				case EActionType.ParticleEffect: { return new ParticleEffectAction(rOwner, rEngine); }
+				case EActionType.SendStateMessage: { return new SendStateMessageAction(rOwner); }
+				case EActionType.Deactivate: { return new DeactivateAction(rOwner); }
 				case EActionType.Rotate: { return new RotateAction(rOwner); }
 				case EActionType.TargetRotation: { return new TargetRotationAction(rOwner); }
+				case EActionType.CameraShake: { return new CameraShakeAction(rOwner); }
 				default: { Debug.Assert(false); return null; }
 			}
 		}
@@ -79,8 +81,10 @@ namespace GameDonkey
 			else if (strXMLType == "SPFSettings.TrailActionXML") { return EActionType.Trail; }
 			else if (strXMLType == "SPFSettings.AddGarmentActionXML") { return EActionType.AddGarment; }
 			else if (strXMLType == "SPFSettings.BlockingStateActionXML") { return EActionType.BlockState; }
+			else if (strXMLType == "SPFSettings.CreateHitCircleActionXML") { return EActionType.CreateHitCircle; }
 			else if (strXMLType == "SPFSettings.RotateActionXML") { return EActionType.Rotate; }
 			else if (strXMLType == "SPFSettings.TargetRotationActionXML") { return EActionType.TargetRotation; }
+			else if (strXMLType == "SPFSettings.CameraShakeActionXML") { return EActionType.CameraShake; }
 			else { Debug.Assert(false); return EActionType.NumTypes; }
 		}
 
@@ -93,6 +97,7 @@ namespace GameDonkey
 				case EActionType.ConstantDecceleration: { return "SPFSettings.ConstantDeccelerationActionXML"; }
 				case EActionType.CreateAttack: { return "SPFSettings.CreateAttackActionXML"; }
 				case EActionType.CreateBlock: { return "SPFSettings.CreateBlockActionXML"; }
+				case EActionType.CreateHitCircle: { return "SPFSettings.CreateHitCircleActionXML"; }
 				case EActionType.CreateThrow: { return "SPFSettings.CreateThrowActionXML"; }
 				case EActionType.Deactivate: { return "SPFSettings.DeactivateActionXML"; }
 				case EActionType.Evade: { return "SPFSettings.EvadeActionXML"; }
@@ -107,6 +112,7 @@ namespace GameDonkey
 				case EActionType.BlockState: { return "SPFSettings.BlockingStateActionXML"; }
 				case EActionType.Rotate: { return "SPFSettings.RotateActionXML"; }
 				case EActionType.TargetRotation: { return "SPFSettings.TargetRotationActionXML"; }
+				case EActionType.CameraShake: { return "SPFSettings.CameraShakeActionXML"; }
 				default: { Debug.Assert(false); return ""; }
 			}
 		}

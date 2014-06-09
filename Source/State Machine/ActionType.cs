@@ -23,6 +23,7 @@ namespace GameDonkey
 		Deactivate,
 		Rotate,
 		TargetRotation,
+		CameraShake,
 		NumTypes
 	}
 }
