@@ -110,7 +110,7 @@ namespace GameDonkey
 				GetFlip(),
 				GetPosDelegate(),
 				GetRotationDelegate(),
-				Owner.Rotation);
+				GetOwnerRotation());
 			
 			if (null != myEmitter)
 			{
@@ -148,6 +148,16 @@ namespace GameDonkey
 			}
 
 			return Owner.Flip;
+		}
+
+		private RotationDelegate GetOwnerRotation()
+		{
+			if ((null != _bone) && UseBoneRotation)
+			{
+				return null;
+			}
+
+			return Owner.Rotation;
 		}
 
 		public override bool Compare(IBaseAction rInst)
