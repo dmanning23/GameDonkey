@@ -140,12 +140,6 @@ namespace GameDonkey
 		protected PlayerQueue m_rLastAttacker;
 
 		/// <summary>
-		/// a list of all the current particle effect emitters launched from state actions
-		/// Used to kill particle emitters when state changes
-		/// </summary>
-		private List<Emitter> m_listEmitters;
-
-		/// <summary>
 		/// The rotation of this dude
 		/// </summary>
 		private float _currentRotation = 0.0f;
@@ -298,10 +292,11 @@ namespace GameDonkey
 			get { return m_rLastAttacker; }
 		}
 
-		public List<Emitter> Emitters
-		{
-			get { return m_listEmitters; }
-		}
+        /// <summary>
+        /// a list of all the current particle effect emitters launched from state actions
+        /// Used to kill particle emitters when state changes
+        /// </summary>
+		public List<Emitter> Emitters { get; private set; }
 
 		#endregion //Properties
 
@@ -359,7 +354,7 @@ namespace GameDonkey
 			m_rLastAttacker = null;
 
 			MyGarments = new GarmentManager(this);
-			m_listEmitters = new List<Emitter>();
+			Emitters = new List<Emitter>();
 
 			Init();
 
@@ -500,12 +495,12 @@ namespace GameDonkey
 		protected void UpdateEmitters()
 		{
 			int i = 0;
-			while (i < m_listEmitters.Count)
+			while (i < Emitters.Count)
 			{
-				Emitter curEmitter = m_listEmitters[i];
+                Emitter curEmitter = Emitters[i];
 				if (curEmitter.IsDead())
 				{
-					m_listEmitters.RemoveAt(i);
+                    Emitters.RemoveAt(i);
 				}
 				else
 				{
@@ -652,11 +647,11 @@ namespace GameDonkey
 			m_bAttackLanded = false;
 
 			//kill all the particle effects and clear out that list
-			foreach (Emitter curEmitter in m_listEmitters)
+            foreach (Emitter curEmitter in Emitters)
 			{
 				curEmitter.EmitterTimer.Stop();
 			}
-			m_listEmitters.Clear();
+            Emitters.Clear();
 		}
 
 		public virtual void CheckCollisions(BaseObject rBadGuy)
