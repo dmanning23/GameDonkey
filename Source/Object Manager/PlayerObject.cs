@@ -737,6 +737,12 @@ namespace GameDonkey
 			}
 		}
 
+		public override void KillPlayer()
+		{
+			//set health to 0, that will kill the dude
+			Health = 0;
+		}
+
 		#endregion //Methods
 
 		#region Networking

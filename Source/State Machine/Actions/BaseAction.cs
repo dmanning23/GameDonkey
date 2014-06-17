@@ -415,6 +415,18 @@ namespace GameDonkey
 						outputList.Add(myAction);
 					}
 					break;
+
+					case EActionType.KillPlayer:
+					{
+						KillPlayerAction myAction = new KillPlayerAction(rOwner);
+						SPFSettings.KillPlayerActionXML myActionXML = (SPFSettings.KillPlayerActionXML)inputList[i];
+						if (!myAction.ReadSerialized(myActionXML))
+						{
+							Debug.Assert(false);
+						}
+						outputList.Add(myAction);
+					}
+					break;
 					default:
 					{
 						Debug.Assert(false);

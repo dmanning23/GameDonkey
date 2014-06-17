@@ -1269,6 +1269,13 @@ namespace GameDonkey
 			return Vector2.Zero;
 		}
 
+		/// <summary>
+		/// Kill this dude!
+		/// </summary>
+		public virtual void KillPlayer()
+		{
+		}
+
 		#region Tools
 
 		/// <summary>

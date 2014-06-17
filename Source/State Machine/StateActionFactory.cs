@@ -41,6 +41,7 @@ namespace GameDonkey
 				case EActionType.Rotate: { return new RotateAction(rOwner); }
 				case EActionType.TargetRotation: { return new TargetRotationAction(rOwner); }
 				case EActionType.CameraShake: { return new CameraShakeAction(rOwner); }
+				case EActionType.KillPlayer: { return new KillPlayerAction(rOwner); }
 				default: { Debug.Assert(false); return null; }
 			}
 		}
@@ -85,6 +86,7 @@ namespace GameDonkey
 			else if (strXMLType == "SPFSettings.RotateActionXML") { return EActionType.Rotate; }
 			else if (strXMLType == "SPFSettings.TargetRotationActionXML") { return EActionType.TargetRotation; }
 			else if (strXMLType == "SPFSettings.CameraShakeActionXML") { return EActionType.CameraShake; }
+			else if (strXMLType == "SPFSettings.KillPlayerActionXML") { return EActionType.KillPlayer; }
 			else { Debug.Assert(false); return EActionType.NumTypes; }
 		}
 
@@ -113,6 +115,7 @@ namespace GameDonkey
 				case EActionType.Rotate: { return "SPFSettings.RotateActionXML"; }
 				case EActionType.TargetRotation: { return "SPFSettings.TargetRotationActionXML"; }
 				case EActionType.CameraShake: { return "SPFSettings.CameraShakeActionXML"; }
+				case EActionType.KillPlayer: { return "SPFSettings.KillPlayerActionXML"; }
 				default: { Debug.Assert(false); return ""; }
 			}
 		}

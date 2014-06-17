@@ -91,6 +91,9 @@
     <Compile Include="..\Source\State Machine\Actions\EDirectionType.cs">
       <Link>State Machine\Actions\EDirectionType.cs</Link>
     </Compile>
+    <Compile Include="..\Source\State Machine\Actions\KillPlayerAction.cs">
+      <Link>State Machine\Actions\KillPlayerAction.cs</Link>
+    </Compile>
     <Compile Include="..\Source\State Machine\Actions\RotateAction.cs">
       <Link>State Machine\Actions\RotateAction.cs</Link>
     </Compile>

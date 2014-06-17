@@ -103,6 +103,10 @@ namespace SPFSettings
 		public float ShakeAmount = 0.0f;
 	}
 
+	public class KillPlayerActionXML : BaseActionXML
+	{
+	}
+
 	public class ParticleEffectActionXML : BaseActionXML
 	{
 		public string bone = "";
