@@ -75,28 +75,6 @@ namespace GameDonkey
 			m_fUpdateDelta = 1.0f;
 		}
 
-		/// <summary>
-		/// Constructor for replacing a network player when they leave the game
-		/// </summary>
-		/// <param name="rHuman">the dude to be replaced, copy all his shit</param>
-		public AIObject(PlayerObject rHuman) : base(EObjectType.AI, rHuman)
-		{
-			m_UpdateTimer = new CountdownTimer();
-
-			//get those messages
-			m_iJumpMessage = -1;
-			m_iHighJumpMessage = -1;
-			//m_iJumpMessage = States.StateMachine.GetMessageIndexFromText("Jump");
-			//m_iHighJumpMessage = States.StateMachine.GetMessageIndexFromText("High Jump");
-			Debug.Assert(-1 != m_iJumpMessage);
-			Debug.Assert(-1 != m_iHighJumpMessage);
-
-			//m_bMoveTowards = false;
-
-			//this ai should be really hard since it is replacing a human
-			m_fUpdateDelta = 0.1f;
-		}
-
 		public override void Update(bool bUpdateGravity)
 		{
 			m_UpdateTimer.Update(CharacterClock);

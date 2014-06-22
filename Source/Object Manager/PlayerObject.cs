@@ -6,9 +6,6 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
 using FilenameBuddy;
 
 namespace GameDonkey
@@ -20,25 +17,14 @@ namespace GameDonkey
 	{
 		#region Members
 
-		//WEDDING STUFF
-
-		/// <summary>
-		/// the amount of time the player has been in the air.
-		/// When this is over the TIME_TILL_FALL threshhold, the player's state machine is sent a "Fell" message
-		/// </summary>
-		public float AirDelta { get; protected set; }
-
 		/// <summary>
 		/// Number of times the player has been hit in a row
 		/// </summary>
 		private int m_ComboCounter;
 
-		private const float m_fTimeToFall = 0.5f; //how long the character is in the air before they start to get "Fell" messages
-		private const float m_fTimeForExtraGravity = 3.0f; //how long the character is in the air before they start to accumulate gravity
 		private const float m_fHitPause = 0.2f; //how long hit pause is in this game
 		private const float m_fStrengthMultiplier = 1.0f; //amount to multiply how far characters are hit in this game
 		private const float m_fDamageMultiplier = 2.5f; //amount to multiply how much damage characters do in this game
-		protected const float m_fNeutralFlyingSpeed = 900.0f; //how fast the character has to be moving through the air before they leave neutral state
 
 		public string DeathSound { get; protected set; }
 
@@ -88,20 +74,6 @@ namespace GameDonkey
 		}
 
 		/// <summary>
-		/// Constructor for replacing a network player when they leave the game
-		/// </summary>
-		/// <param name="rHuman">the dude to be replaced, copy all his shit</param>
-		public PlayerObject(EObjectType eType, PlayerObject rHuman)
-			: base(eType, rHuman)
-		{
-			//TODO: copy all the required shit
-			AirDelta = rHuman.AirDelta;
-			Health = rHuman.Health;
-			m_Portrait = rHuman.m_Portrait;
-			DeathSound = rHuman.DeathSound;
-		}
-
-		/// <summary>
 		/// Replace all the base object pointers in this dude to point to a replacement object
 		/// </summary>
 		/// <param name="myBot">the replacement dude</param>
@@ -131,8 +103,6 @@ namespace GameDonkey
 		{
 			base.Reset();
 			Health = 10.0f;
-			AirDelta = 0.0f;
-			m_ComboCounter = 0;
 		}
 
 		public override int DisplayHealth()
@@ -185,6 +155,7 @@ namespace GameDonkey
 		/// </summary>
 		public virtual void UpdateFallMessage(bool bUpdateGravity)
 		{
+			//Overload in child classes!
 		}
 
 		/// <summary>
@@ -260,21 +231,6 @@ namespace GameDonkey
 					}
 				}
 			}
-			//            else if (IsCancellableState(States.CurrentState()))
-			//            {
-			//                //The character is in a state where they cant attack, but we want to queue up for when this state ends
-
-//                if (-1 != iNextMoov)
-			//                {
-			//#if DEBUG
-			//                    string CurrentState = States.GetStateName(States.CurrentState());
-			//                    string MoveName = States.GetMessageName(iNextMoov);
-			//#endif
-
-//                    //add the move to the queue
-			//                    m_QueuedInput.Enqueue(iNextMoov);
-			//                }
-			//            }
 			else
 			{
 				//ok character is in neutral state
@@ -419,17 +375,10 @@ namespace GameDonkey
 			if (0.0f < m_Velocity.Y)
 			{
 				//if the player's velocity is +y, it is set to 0
-				AirDelta = 0.0f;
 				m_Velocity.Y = 0.0f;
 
 				Debug.Assert(m_Position.X != float.NaN);
 				Debug.Assert(m_Position.Y != float.NaN);
-
-				//WEDDING GAME
-
-				//only send a ground hit message if the player was falling, 
-				//this way the player won't "bounce" out of the floor when jumping through
-				//SendStateMessage((int)EMessage.HitGround);
 			}
 		}
 
@@ -718,25 +667,6 @@ namespace GameDonkey
 
 		#endregion //Hit Response
 
-		protected override void Accelerate()
-		{
-			base.Accelerate();
-
-			//Add extra gravity based on how long the character has been in the air
-			if (AirDelta >= m_fTimeForExtraGravity)
-			{
-				//get how long past we are
-				float fGravityAmount = (AirDelta - m_fTimeForExtraGravity) * 600.0f;
-
-				//Get teh acceleration
-				float myAcceleration = (fGravityAmount * CharacterClock.TimeDelta) * Scale;
-				myAcceleration += Velocity.Y;
-
-				//set the Y velocity?
-				m_Velocity.Y = myAcceleration;
-			}
-		}
-
 		public override void KillPlayer()
 		{
 			//set health to 0, that will kill the dude
@@ -744,62 +674,6 @@ namespace GameDonkey
 		}
 
 		#endregion //Methods
-
-		#region Networking
-
-#if NETWORKING
-
-		/// <summary>
-		/// Read this object from a network packet reader.
-		/// </summary>
-		public override void ReadFromNetwork(PacketReader packetReader)
-		{
-			//read in base object stuff
-			base.ReadFromNetwork(packetReader);
-
-			//read in player object specific stuff
-			Health = packetReader.ReadSingle();
-
-			////read in buttons
-			//for (int i = 0; i < (int)EControllerAction.NumControllerActions; i++)
-			//{
-			//    m_bButtonPress[i] = packetReader.ReadBoolean();
-			//}
-
-			////read in directions
-			//for (int i = 0; i < (int)EControllerAction.NumControllerActions; i++)
-			//{
-			//    m_bButtonHeld[i] = packetReader.ReadBoolean();
-			//}
-		}
-
-		/// <summary>
-		/// Write this object to a network packet reader.
-		/// </summary>
-		public override void WriteToNetwork(PacketWriter packetWriter)
-		{
-			//write out base object stuff
-			base.WriteToNetwork(packetWriter);
-
-			//write out player specific stuff
-			packetWriter.Write(Health);
-
-			////write out buttons
-			//for (int i = 0; i < (int)EControllerAction.NumControllerActions; i++)
-			//{
-			//    packetWriter.Write(m_bButtonPress[i]);
-			//}
-
-			////write out directions
-			//for (int i = 0; i < (int)EControllerAction.NumControllerActions; i++)
-			//{
-			//    packetWriter.Write(m_bButtonHeld[i]);
-			//}
-		}
-
-#endif
-
-		#endregion //Networking
 
 		#region File IO
 

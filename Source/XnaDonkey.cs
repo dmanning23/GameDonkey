@@ -142,37 +142,37 @@ namespace GameDonkey
 			get { return m_strMusicFile; }
 		}
 
-		private EmitterTemplate Block
+		protected EmitterTemplate Block
 		{
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.Block]; }
 		}
 
-		private EmitterTemplate HitSpark
+		protected EmitterTemplate HitSpark
 		{
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HitSpark]; }
 		}
 
-		private EmitterTemplate HitCloud
+		protected EmitterTemplate HitCloud
 		{
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HitCloud]; }
 		}
 
-		private EmitterTemplate StunnedBounce
+		protected EmitterTemplate StunnedBounce
 		{
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.StunnedBounce]; }
 		}
 
-		private EmitterTemplate DeathParticles
+		protected EmitterTemplate DeathParticles
 		{
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.Death]; }
 		}
 
-		private EmitterTemplate HeadBop
+		protected EmitterTemplate HeadBop
 		{
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HeadBop]; }
 		}
 
-		private EmitterTemplate WeaponHit
+		protected EmitterTemplate WeaponHit
 		{
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.WeaponHit]; }
 		}
@@ -676,6 +676,8 @@ namespace GameDonkey
 		{
 			Matrix cameraMatrix = GetCameraMatrix();
 
+			RenderBackground();
+
 			RenderLevel(cameraMatrix);
 
 			RenderHUD();
@@ -1156,7 +1158,7 @@ namespace GameDonkey
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);
-			m_Font.LoadContent(Renderer.Content, "ArialBlack24");
+			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
 		}
 
 		/// <summary>
