@@ -1165,51 +1165,12 @@ namespace GameDonkey
 		/// <summary>
 		/// load all a players data into the game
 		/// </summary>
-		/// <param name="rContent">content manager to use to load</param>
 		/// <param name="myColor">color for this player</param>
 		/// <param name="strCharacterFile">relative path for the player data file</param>
 		/// <param name="eIndex">gamepad index for this player.</param>
 		/// <param name="eType">the type of dude to load, accepts human and AI</param>
 		/// <returns></returns>
-		public PlayerQueue LoadSerializedHumanPlayer(ContentManager rXmlContent,
-			Color myColor,
-			Filename strCharacterFile,
-			PlayerIndex eIndex,
-			string strPlayerName)
-		{
-			//create and load a player
-			PlayerQueue rPlayer = CreatePlayerQueue(myColor, m_listPlayers.Count);
-			if (null == rPlayer.LoadSerializedObject(rXmlContent, strCharacterFile, this, EObjectType.Human, 0))
-			{
-				Debug.Assert(false);
-			}
-			m_listPlayers.Add(rPlayer);
-
-			//create a controller for that player
-			InputWrapper rQueue = new InputWrapper(new ControllerWrapper(eIndex, (PlayerIndex.One == eIndex)), MasterClock.GetCurrentTime)
-			{
-				BufferedInputExpire = 0.0f,
-				QueuedInputExpire = 0.05f
-			};
-			if (!rQueue.ReadSerializedFile(rXmlContent, new Filename(@"Move List.xml"), rPlayer.Character.States.GetMessageIndexFromText))
-			{
-				Debug.Assert(false);
-			}
-			rPlayer.InputQueue = rQueue;
-
-			rPlayer.PlayerName = strPlayerName;
-			return rPlayer;
-		}
-
-		/// <summary>
-		/// load all a players data into the game
-		/// </summary>
-		/// <param name="myColor">color for this player</param>
-		/// <param name="strCharacterFile">relative path for the player data file</param>
-		/// <param name="eIndex">gamepad index for this player.</param>
-		/// <param name="eType">the type of dude to load, accepts human and AI</param>
-		/// <returns></returns>
-		public virtual PlayerQueue LoadXmlHumanPlayer(Color myColor,
+		public virtual PlayerQueue LoadHumanPlayer(Color myColor,
 			Filename strCharacterFile,
 			PlayerIndex eIndex,
 			string strPlayerName)
@@ -1261,7 +1222,7 @@ namespace GameDonkey
 				BufferedInputExpire = 0.0f,
 				QueuedInputExpire = 0.05f
 			};
-			if (!rQueue.ReadSerializedFile(rXmlContent, new Filename(@"Move List.xml"), rPlayer.Character.States.GetMessageIndexFromText))
+			if (!rQueue.ReadXmlFile(new Filename(@"MoveList.xml"), rPlayer.Character.States.GetMessageIndexFromText))
 			{
 				Debug.Assert(false);
 			}
@@ -1271,54 +1232,7 @@ namespace GameDonkey
 			return rPlayer;
 		}
 
-		public void LoadSerializedBoard(ContentManager rXmlContent, Filename strBoardFile)
-		{
-			//load the resource
-			SPFSettings.BoardXML myDude = rXmlContent.Load<SPFSettings.BoardXML>(strBoardFile.GetRelPathFileNoExt());
-
-			//grab all the spawn points
-			for (int i = 0; i < myDude.spawnPoints.Count; i++)
-			{
-				m_listSpawnPoints.Add(myDude.spawnPoints[i].location);
-			}
-
-			//grab teh name of teh music resource for this board
-			m_strMusicFile = myDude.music;
-
-			//TODO: load the death noise
-			m_strDeathNoise = myDude.deathNoise;
-			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathNoise));
-
-			//open the background image stuff
-			m_SkyBox = (XNATexture)Renderer.LoadImage(myDude.backgroundTile);
-			m_SkyColor.R = myDude.backgroundR;
-			m_SkyColor.G = myDude.backgroundG;
-			m_SkyColor.B = myDude.backgroundB;
-			m_SkyColor.A = 255;
-
-			m_iNumTiles = myDude.numTiles;
-
-			//grab the world boundaries
-			WorldBoundaries = new Rectangle((-1 * (myDude.boardWidth / 2)),
-				(-1 * (myDude.boardHeight / 2)),
-				myDude.boardWidth,
-				myDude.boardHeight);
-
-			//load all the level objects
-			for (int i = 0; i < myDude.objects.Count; i++)
-			{
-				//load the level object
-				BaseObject rLevelObject = m_LevelObjects.LoadSerializedObject(rXmlContent, new Filename(myDude.objects[i]), this, EObjectType.Level, 0);
-				if (null == rLevelObject)
-				{
-					Debug.Assert(false);
-				}
-			}
-
-			m_LevelObjects.PlayerName = "Board";
-		}
-
-		public bool LoadXmlBoard(Filename strBoardFile)
+		public bool LoadBoard(Filename strBoardFile)
 		{
 			//Open the file.
 			FileStream stream = File.Open(strBoardFile.File, FileMode.Open, FileAccess.Read);
