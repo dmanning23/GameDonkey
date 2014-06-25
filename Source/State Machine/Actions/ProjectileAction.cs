@@ -158,6 +158,7 @@ namespace GameDonkey
 				m_rProjectile = Owner.PlayerQueue.LoadXmlObject(m_strProjectileFileName, rEngine, EObjectType.Projectile, 0);
 				if (null == m_rProjectile)
 				{
+					Debug.Assert(false);
 					return false;
 				}
 
@@ -307,6 +308,7 @@ namespace GameDonkey
 			m_rProjectile = Owner.PlayerQueue.LoadSerializedObject(rXmlContent, m_strProjectileFileName, rEngine, EObjectType.Projectile, 0);
 			if (null == m_rProjectile)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 

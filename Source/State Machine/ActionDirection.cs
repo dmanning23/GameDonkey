@@ -213,6 +213,7 @@ namespace GameDonkey
 					}
 					else
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}

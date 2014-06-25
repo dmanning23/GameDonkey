@@ -70,6 +70,7 @@ namespace GameDonkey
 
 			if ("Item" != rXMLNode.Name)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 
@@ -84,11 +85,13 @@ namespace GameDonkey
 				{
 					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}
 				else
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -121,8 +124,18 @@ namespace GameDonkey
 					{
 						Velocity.ReadXml(childNode);
 					}
+					else if (strName == "velocity")
+					{
+						Velocity.Velocity = strValue.ToVector2();
+					}
+					else if (strName == "useObjectDirection")
+					{
+						bool dir = Convert.ToBoolean(strValue);
+						Velocity.DirectionType = (dir ? EDirectionType.Relative : EDirectionType.Absolute);
+					}
 					else
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}

@@ -97,6 +97,7 @@ namespace GameDonkey
 				{
 					if (!ParseXmlNode(childNode))
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}

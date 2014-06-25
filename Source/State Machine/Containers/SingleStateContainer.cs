@@ -338,6 +338,7 @@ namespace GameDonkey
 			{
 				if (!ReadXmlSingleStateContainer(singleData, rEngine, iMessageOffset, rOwner))
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}

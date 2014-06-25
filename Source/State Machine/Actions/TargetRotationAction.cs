@@ -92,6 +92,7 @@ namespace GameDonkey
 
 			if ("Item" != rXMLNode.Name)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 

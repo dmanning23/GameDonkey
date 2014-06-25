@@ -551,6 +551,7 @@ namespace GameDonkey
 				return true;
 			}
 
+			Debug.Assert(false);
 			return false;
 		}
 
@@ -1337,6 +1338,7 @@ namespace GameDonkey
 			string strElementName = rootNode.Name;
 			if (("XnaContent" != strElementName) || !rootNode.HasChildNodes)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 

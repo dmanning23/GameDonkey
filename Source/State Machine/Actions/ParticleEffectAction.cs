@@ -343,6 +343,7 @@ namespace GameDonkey
 			Debug.Assert(myAction.emitter.Count == 1);
 			if (!Emitter.ReadSerializedObject(myAction.emitter[0], rEngine.Renderer))
 			{
+				Debug.Assert(false);
 				return false;
 			}
 

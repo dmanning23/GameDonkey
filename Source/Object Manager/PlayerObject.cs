@@ -690,6 +690,7 @@ namespace GameDonkey
 			var data = childNode as PlayerObjectData;
 			if (null == data)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 

@@ -73,6 +73,7 @@ namespace GameDonkey
 
 			if ("Item" != rXMLNode.Name)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 
@@ -87,11 +88,13 @@ namespace GameDonkey
 				{
 					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}
 				else
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -122,6 +125,7 @@ namespace GameDonkey
 					}
 					else
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}

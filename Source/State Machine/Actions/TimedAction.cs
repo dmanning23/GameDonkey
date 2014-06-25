@@ -1,4 +1,5 @@
 ﻿using GameTimer;
+using System.Diagnostics;
 
 namespace GameDonkey
 {
@@ -75,6 +76,7 @@ namespace GameDonkey
 
 		public override bool Compare(IBaseAction rInst)
 		{
+			Debug.Assert(false);
 			return false;
 		}
 

@@ -89,6 +89,7 @@ namespace GameDonkey
 
 			if ("Item" != rXMLNode.Name)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 
@@ -103,11 +104,13 @@ namespace GameDonkey
 				{
 					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}
 				else
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -149,11 +152,13 @@ namespace GameDonkey
 						Filename strGarmentFile = new Filename(strValue);
 						if (!LoadGarment(rEngine.Renderer, strGarmentFile))
 						{
+							Debug.Assert(false);
 							return false;
 						}
 					}
 					else
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}
@@ -199,6 +204,7 @@ namespace GameDonkey
 			m_Garment = Owner.MyGarments.LoadGarment(myContent, myAction.garmentFile, rEngine.Renderer);
 			if (m_Garment == null)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 

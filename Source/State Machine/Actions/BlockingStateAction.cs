@@ -108,6 +108,7 @@ namespace GameDonkey
 			{
 				if (!m_listSuccessActions[i].Compare(myAction.m_listSuccessActions[i]))
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -156,6 +157,7 @@ namespace GameDonkey
 				}
 			}
 
+			Debug.Assert(false);
 			return false;
 		}
 
@@ -174,6 +176,7 @@ namespace GameDonkey
 
 			if ("Item" != rXMLNode.Name)
 			{
+				Debug.Assert(false);
 				return false;
 			}
 
@@ -188,11 +191,13 @@ namespace GameDonkey
 				{
 					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}
 				else
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
@@ -206,6 +211,7 @@ namespace GameDonkey
 				{
 					if (!ReadActionAttribute(childNode, rEngine, stateContainer))
 					{
+						Debug.Assert(false);
 						return false;
 					}
 				}
@@ -250,6 +256,7 @@ namespace GameDonkey
 				//Read in all the success actions
 				if (!IBaseAction.ReadXmlListActions(Owner, ref m_listSuccessActions, childNode, rEngine, stateContainer))
 				{
+					Debug.Assert(false);
 					return false;
 				}
 			}
