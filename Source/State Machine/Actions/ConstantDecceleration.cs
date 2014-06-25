@@ -136,6 +136,10 @@ namespace GameDonkey
 					{
 						MinYVelocity = Convert.ToSingle(strValue);
 					}
+					else if (strName == "velocity")
+					{
+						Velocity = strValue.ToVector2();
+					}
 					else
 					{
 						Debug.Assert(false);

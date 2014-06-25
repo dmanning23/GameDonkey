@@ -252,6 +252,15 @@ namespace GameDonkey
 					{
 						Velocity.ReadXml(childNode);
 					}
+					else if (strName == "velocity")
+					{
+						Velocity.Velocity = strValue.ToVector2();
+					}
+					else if (strName == "useObjectDirection")
+					{
+						bool dir = Convert.ToBoolean(strValue);
+						Velocity.DirectionType = (dir ? EDirectionType.Relative : EDirectionType.Absolute);
+					}
 					else
 					{
 						Debug.Assert(false);
