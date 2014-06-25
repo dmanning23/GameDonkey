@@ -132,7 +132,7 @@ namespace GameDonkey
 					else if (strName == "useObjectDirection")
 					{
 						bool dir = Convert.ToBoolean(strValue);
-						Velocity.DirectionType = (dir ? EDirectionType.Relative : EDirectionType.Absolute);
+						Velocity.DirectionType = (dir ? EDirectionType.Controller : EDirectionType.Absolute);
 					}
 					else
 					{
