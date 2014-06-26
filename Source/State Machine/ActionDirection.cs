@@ -213,7 +213,7 @@ namespace GameDonkey
 					}
 					else
 					{
-						Debug.Assert(false);
+						throw new Exception("bad strName in DirectionActionXML: " + strName);
 						return false;
 					}
 				}

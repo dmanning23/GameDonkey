@@ -255,7 +255,14 @@ namespace GameDonkey
 					}
 					else if (strName == "direction")
 					{
-						Velocity.ReadXml(childNode);
+						try
+						{
+							Velocity.ReadXml(childNode);
+						}
+						catch (Exception ex)
+						{
+							Vector2 vect = strValue.ToVector2();
+						}
 					}
 					else if (strName == "StartOffset")
 					{
@@ -279,6 +286,11 @@ namespace GameDonkey
 							Debug.Assert(false);
 							return false;
 						}
+					}
+					else if (strName == "useObjectDirection")
+					{
+						bool dir = Convert.ToBoolean(strValue);
+						Velocity.DirectionType = (dir ? EDirectionType.Controller : EDirectionType.Absolute);
 					}
 					else
 					{

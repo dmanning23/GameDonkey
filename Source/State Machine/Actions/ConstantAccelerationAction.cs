@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Vector2Extensions;
 using StateMachineBuddy;
 using System;
 using System.Diagnostics;
@@ -136,7 +137,24 @@ namespace GameDonkey
 					}
 					else if (strName == "maxVelocity")
 					{
-						MaxVelocity = Convert.ToSingle(strValue);
+						try
+						{
+							MaxVelocity = Convert.ToSingle(strValue);
+						}
+						catch(Exception ex)
+						{
+							Vector2 vect = strValue.ToVector2();
+							MaxVelocity = vect.Length();
+						}
+					}
+					else if (strName == "velocity")
+					{
+						Velocity.Velocity = strValue.ToVector2();
+					}
+					else if (strName == "useObjectDirection")
+					{
+						bool dir = Convert.ToBoolean(strValue);
+						Velocity.DirectionType = (dir ? EDirectionType.Controller : EDirectionType.Absolute);
 					}
 					else
 					{
