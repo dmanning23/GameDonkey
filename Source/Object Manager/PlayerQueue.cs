@@ -388,8 +388,7 @@ namespace GameDonkey
 				}
 			}
 
-			//the specified object was not found in the correct list
-			Debug.Assert(false);
+			//the specified object was not found in the list
 			return false;
 		}
 

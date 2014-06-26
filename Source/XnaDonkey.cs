@@ -7,9 +7,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using FontBuddyLib;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
 using RenderBuddy;
 using ParticleBuddy;
 using FilenameBuddy;
@@ -162,10 +159,10 @@ namespace GameDonkey
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.StunnedBounce]; }
 		}
 
-		protected EmitterTemplate DeathParticles
-		{
-			get { return m_DefaultParticles[(int)EDefaultParticleEffects.Death]; }
-		}
+		//protected EmitterTemplate DeathParticles
+		//{
+		//	get { return m_DefaultParticles[(int)EDefaultParticleEffects.Death]; }
+		//}
 
 		protected EmitterTemplate HeadBop
 		{
@@ -551,7 +548,6 @@ namespace GameDonkey
 				return true;
 			}
 
-			Debug.Assert(false);
 			return false;
 		}
 
@@ -1005,77 +1001,6 @@ namespace GameDonkey
 
 		#endregion //Methods
 
-		#region Networking
-
-#if NETWORKING
-
-		/// <summary>
-		/// Read this object from a network packet reader.
-		/// </summary>
-		public void ReadFromNetwork(PacketReader packetReader)
-		{
-			//read in clocks
-			MasterClock.ReadFromNetwork(packetReader);
-			m_GameTimer.ReadFromNetwork(packetReader);
-		}
-
-		/// <summary>
-		/// Write this object to a network packet reader.
-		/// </summary>
-		public void WriteToNetwork(PacketWriter packetWriter)
-		{
-			//write out clocks
-			MasterClock.WriteToNetwork(packetWriter);
-			m_GameTimer.WriteToNetwork(packetWriter);
-		}
-
-		/// <summary>
-		/// Read the game over data from a network packet reader.
-		/// </summary>
-		public void ReadGameOver(PacketReader packetReader)
-		{
-			//read in game over shit
-			Tie = packetReader.ReadBoolean();
-			GameOver = packetReader.ReadBoolean();
-			string strWinner = packetReader.ReadString();
-
-			if (GameOver && !Tie)
-			{
-				//find that winner
-				for (int i = 0; i < m_listPlayers.Count; i++)
-				{
-					if (m_listPlayers[i].PlayerName == strWinner)
-					{
-						Winner = m_listPlayers[i];
-						break;
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Write game over data to a network packet reader.
-		/// </summary>
-		public void WriteGameOver(PacketWriter packetWriter)
-		{
-			//write out game over shit
-			packetWriter.Write(Tie);
-			packetWriter.Write(GameOver);
-
-			if (GameOver && (null != Winner))
-			{
-				packetWriter.Write(Winner.PlayerName);
-			}
-			else
-			{
-				packetWriter.Write("");
-			}
-		}
-
-#endif
-
-		#endregion //Networking
-
 		#region File IO
 
 		/// <summary>
@@ -1100,8 +1025,8 @@ namespace GameDonkey
 			//load the hit cloud
 			HitCloud.ReadXmlFile(new Filename(@"Particles\Hit Cloud.xml"), Renderer);
 
-			//load the death particle effect
-			DeathParticles.ReadXmlFile(new Filename(@"Particles\Death Particles.xml"), Renderer);
+			////load the death particle effect
+			//DeathParticles.ReadXmlFile(new Filename(@"Particles\Death Particles.xml"), Renderer);
 
 			//load the block particle effect
 			Block.ReadXmlFile(new Filename(@"Particles\Block.xml"), Renderer);
