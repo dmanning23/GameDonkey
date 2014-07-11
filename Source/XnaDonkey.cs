@@ -179,8 +179,6 @@ namespace GameDonkey
 		public bool Tie { get; protected set; }
 		public bool GameOver { get; protected set; }
 
-		public bool DebugGame { get; set; }
-
 		#endregion //Properties
 
 		#region Construction
@@ -332,10 +330,7 @@ namespace GameDonkey
 				}
 
 				//check if anyone has won
-				if (!DebugGame)
-				{
-					CheckForWinner();
-				}
+				CheckForWinner();
 
 				//update the level objects
 				m_LevelObjects.Update(m_GameTimer, true);
@@ -1087,22 +1082,15 @@ namespace GameDonkey
 			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
 		}
 
-		/// <summary>
-		/// load all a players data into the game
-		/// </summary>
-		/// <param name="myColor">color for this player</param>
-		/// <param name="strCharacterFile">relative path for the player data file</param>
-		/// <param name="eIndex">gamepad index for this player.</param>
-		/// <param name="eType">the type of dude to load, accepts human and AI</param>
-		/// <returns></returns>
-		public virtual PlayerQueue LoadHumanPlayer(Color myColor,
+		public virtual PlayerQueue LoadPlayer(Color myColor,
 			Filename strCharacterFile,
 			PlayerIndex eIndex,
-			string strPlayerName)
+			string strPlayerName,
+			EObjectType playerType)
 		{
 			//create and load a player
 			PlayerQueue rPlayer = CreatePlayerQueue(myColor, m_listPlayers.Count);
-			if (null == rPlayer.LoadXmlObject(strCharacterFile, this, EObjectType.Human, 0))
+			if (null == rPlayer.LoadXmlObject(strCharacterFile, this, playerType, 0))
 			{
 				Debug.Assert(false);
 			}
@@ -1122,36 +1110,6 @@ namespace GameDonkey
 
 			//if this is player one, let them use the keyboard
 			rPlayer.InputQueue.Controller.UseKeyboard = (PlayerIndex.One == eIndex);
-
-			rPlayer.PlayerName = strPlayerName;
-			return rPlayer;
-		}
-
-		public PlayerQueue LoadAiPlayer(ContentManager rXmlContent,
-			Color myColor,
-			Filename strCharacterFile,
-			int iDifficulty,
-			string strPlayerName)
-		{
-			//create and load a player
-			PlayerQueue rPlayer = CreatePlayerQueue(myColor, m_listPlayers.Count);
-			if (null == rPlayer.LoadSerializedObject(rXmlContent, strCharacterFile, this, EObjectType.AI, iDifficulty))
-			{
-				Debug.Assert(false);
-			}
-			m_listPlayers.Add(rPlayer);
-
-			//create a controller for that player
-			InputWrapper rQueue = new InputWrapper(null, MasterClock.GetCurrentTime)
-			{
-				BufferedInputExpire = 0.0f,
-				QueuedInputExpire = 0.05f
-			};
-			if (!rQueue.ReadXmlFile(new Filename(@"MoveList.xml"), rPlayer.Character.States.GetMessageIndexFromText))
-			{
-				Debug.Assert(false);
-			}
-			rPlayer.InputQueue = rQueue;
 
 			rPlayer.PlayerName = strPlayerName;
 			return rPlayer;

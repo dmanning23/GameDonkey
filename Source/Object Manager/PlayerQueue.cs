@@ -171,6 +171,11 @@ namespace GameDonkey
 			return new PlayerObject(m_CharacterClock, m_iNextObjectID++);
 		}
 
+		public virtual PlayerObject CreateAiPlayer()
+		{
+			return new PlayerObject(m_CharacterClock, m_iNextObjectID++);
+		}
+
 		public virtual PlayerObjectData CreatePlayerObjectData()
 		{
 			return new PlayerObjectData();
@@ -718,12 +723,14 @@ namespace GameDonkey
 					break;
 				case EObjectType.AI:
 					{
-						AIObject myDude = new AIObject(m_CharacterClock, m_iNextObjectID++);
-						myDude.Difficulty = iDifficulty;
-						myCharacter = myDude;
+						//AIObject myDude = new AIObject(m_CharacterClock, m_iNextObjectID++);
+						//myDude.Difficulty = iDifficulty;
+						//myCharacter = myDude;
+
+						myCharacter = CreateAiPlayer();
 						myData = CreatePlayerObjectData();
 
-						//set as the main characters
+						//set as the main character
 						AddCharacterToList(myCharacter);
 					}
 					break;
