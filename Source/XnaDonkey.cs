@@ -1086,7 +1086,7 @@ namespace GameDonkey
 			Filename strCharacterFile,
 			PlayerIndex eIndex,
 			string strPlayerName,
-			EObjectType playerType)
+			EObjectType playerType = EObjectType.Human)
 		{
 			//create and load a player
 			PlayerQueue rPlayer = CreatePlayerQueue(myColor, m_listPlayers.Count);
