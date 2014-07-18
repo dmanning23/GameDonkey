@@ -141,7 +141,7 @@ namespace GameDonkey
 						{
 							MaxVelocity = Convert.ToSingle(strValue);
 						}
-						catch(Exception ex)
+						catch(Exception)
 						{
 							Vector2 vect = strValue.ToVector2();
 							MaxVelocity = vect.Length();

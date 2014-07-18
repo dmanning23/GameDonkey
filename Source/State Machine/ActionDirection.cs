@@ -214,7 +214,6 @@ namespace GameDonkey
 					else
 					{
 						throw new Exception("bad strName in DirectionActionXML: " + strName);
-						return false;
 					}
 				}
 			}

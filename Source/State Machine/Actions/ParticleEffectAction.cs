@@ -259,7 +259,7 @@ namespace GameDonkey
 						{
 							Velocity.ReadXml(childNode);
 						}
-						catch (Exception ex)
+						catch (Exception)
 						{
 							Vector2 vect = strValue.ToVector2();
 						}
