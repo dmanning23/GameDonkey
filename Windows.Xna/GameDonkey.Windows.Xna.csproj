@@ -179,6 +179,9 @@
     <Compile Include="..\Source\State Machine\Actions\BlockingStateAction.cs">
       <Link>State Machine\Actions\BlockingStateAction.cs</Link>
     </Compile>
+    <Compile Include="..\Source\State Machine\Actions\CameraShakeAction.cs">
+      <Link>State Machine\Actions\CameraShakeAction.cs</Link>
+    </Compile>
     <Compile Include="..\Source\State Machine\Actions\ConstantAccelerationAction.cs">
       <Link>State Machine\Actions\ConstantAccelerationAction.cs</Link>
     </Compile>
@@ -205,6 +208,9 @@
     </Compile>
     <Compile Include="..\Source\State Machine\Actions\EvadeAction.cs">
       <Link>State Machine\Actions\EvadeAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\KillPlayerAction.cs">
+      <Link>State Machine\Actions\KillPlayerAction.cs</Link>
     </Compile>
     <Compile Include="..\Source\State Machine\Actions\ParticleEffectAction.cs">
       <Link>State Machine\Actions\ParticleEffectAction.cs</Link>
@@ -276,10 +282,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\ParticleBuddy\Windows.Xna\ParticleBuddy.Windows.Xna.csproj">
-      <Project>{CBA2A4AF-4D39-40F0-B122-551B8728525C}</Project>
-      <Name>ParticleBuddy.Windows.Xna</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\AnimationLib\Windows.Xna\AnimationLib.Windows.Xna.csproj">
       <Project>{581038DF-A668-46AF-A8DB-0E276AD1A86C}</Project>
       <Name>AnimationLib.Windows.Xna</Name>
@@ -319,6 +321,10 @@
     <ProjectReference Include="..\..\MatrixExtensions\Windows.XNA\MatrixExtensions.Windows.XNA.csproj">
       <Project>{0385A3F2-14F7-4D60-A988-1E32686BE221}</Project>
       <Name>MatrixExtensions.Windows.XNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ParticleBuddy\Windows.Xna\ParticleBuddy.Windows.Xna.csproj">
+      <Project>{CBA2A4AF-4D39-40F0-B122-551B8728525C}</Project>
+      <Name>ParticleBuddy.Windows.Xna</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\RenderBuddy\Windows.XNA\RenderBuddy.Windows.XNA.csproj">
       <Project>{BB375F09-143B-41CB-B38E-FD9317E33F02}</Project>
