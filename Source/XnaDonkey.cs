@@ -159,10 +159,10 @@ namespace GameDonkey
 			get { return m_DefaultParticles[(int)EDefaultParticleEffects.StunnedBounce]; }
 		}
 
-		//protected EmitterTemplate DeathParticles
-		//{
-		//	get { return m_DefaultParticles[(int)EDefaultParticleEffects.Death]; }
-		//}
+		protected EmitterTemplate DeathParticles
+		{
+			get { return m_DefaultParticles[(int)EDefaultParticleEffects.Death]; }
+		}
 
 		protected EmitterTemplate HeadBop
 		{
@@ -1052,30 +1052,6 @@ namespace GameDonkey
 
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
 			m_Renderer.LoadContent(rGraphics);
-
-			////load the background image used for the HUD
-			//m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
-
-			////load the hit spark
-			//HitSpark.ReadXmlFile(new Filename(@"Particles\Hit Spark.xml"), Renderer);
-
-			////load the hit cloud
-			//HitCloud.ReadXmlFile(new Filename(@"Particles\Hit Cloud.xml"), Renderer);
-
-			////load the death particle effect
-			//DeathParticles.ReadXmlFile(new Filename(@"Particles\Death Particles.xml"), Renderer);
-
-			////load the block particle effect
-			//Block.ReadXmlFile(new Filename(@"Particles\Block.xml"), Renderer);
-
-			////load the weapon hit particle effect
-			//WeaponHit.ReadXmlFile(new Filename(@"Particles\Weapon Hit.xml"), Renderer);
-
-			////load the head bop particle effect
-			//HeadBop.ReadXmlFile(new Filename(@"Particles\ceiling bop.xml"), Renderer);
-
-			////load the stunned bounce particle effect
-			//StunnedBounce.ReadXmlFile(new Filename(@"Particles\Stunned Bounce.xml"), Renderer);
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);

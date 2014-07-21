@@ -396,25 +396,8 @@ namespace GameDonkey
 			int iCurrentState = States.CurrentState();
 			if ((int)EState.Stunned == iCurrentState)
 			{
-				//WEDDING GAME
-				//rEngine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
-				//	m_Velocity,
-				//	rGroundHit.Position,
-				//	Color.White);
-
 				//add camera shake
 				rEngine.AddCameraShake(0.2f);
-
-				//TODO: make a sound for hitting boundary while stunned
-			}
-			else
-			{
-				//WEDDING GAME
-				////play the ceiling head bop particle effect
-				//rEngine.PlayParticleEffect(EDefaultParticleEffects.HeadBop,
-				//	Vector2.Zero,
-				//	rGroundHit.Position,
-				//	Color.White);
 			}
 
 			//if the player's velocity is -y, it is set to 0
