@@ -147,7 +147,6 @@ namespace GameDonkey
 			Vector2 Position,
 			Color myColor)
 		{
-			Debug.Assert(false);
 		}
 
 		public virtual void PlaySound(string strCueName)
