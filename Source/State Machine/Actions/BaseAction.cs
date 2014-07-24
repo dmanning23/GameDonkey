@@ -83,20 +83,24 @@ namespace GameDonkey
 			IGameDonkey rEngine,
 			SingleStateContainer stateContainer)
 		{
+#if DEBUG
 			//set up all the actions
 			if (!rParentNode.HasChildNodes)
 			{
 				return true;
 			}
+#endif
 
 			for (XmlNode childNode = rParentNode.FirstChild;
 				null != childNode;
 				childNode = childNode.NextSibling)
 			{
+#if DEBUG
 				if ("Item" != childNode.Name)
 				{
 					return false;
 				}
+#endif
 
 				//should have an attribute Type
 				EActionType eChildType = EActionType.NumTypes;

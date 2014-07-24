@@ -274,6 +274,7 @@ namespace GameDonkey
 
 		public bool ReadXml(XmlNode rXMLNode, BaseObject rOwner, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
+#if DEBUG
 			if ("Item" != rXMLNode.Name)
 			{
 				Debug.Assert(false);
@@ -301,6 +302,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)

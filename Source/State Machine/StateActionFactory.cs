@@ -48,46 +48,52 @@ namespace GameDonkey
 
 		public static EActionType TroikaStringToType(string strType)
 		{
-			if (strType == "CreateAttack") { return EActionType.CreateAttack; }
-			else if (strType == "CreateBlock") { return EActionType.CreateBlock; }
-			else if (strType == "CreateThrow") { return EActionType.CreateThrow; }
-			else if (strType == "Deactivate") { return EActionType.Deactivate; }
-			else if (strType == "Evade") { return EActionType.Evade; }
-			else if (strType == "CreateParticleEffect") { return EActionType.ParticleEffect; }
-			else if (strType == "PlayAnimation") { return EActionType.PlayAnimation; }
-			else if (strType == "PlaySound") { return EActionType.PlaySound; }
-			else if (strType == "AddProjectile") { return EActionType.Projectile; }
-			else if (strType == "SendStateMessage") { return EActionType.SendStateMessage; }
-			else if (strType == "AddVelocity") { return EActionType.SetVelocity; }
-			else if (strType == "Trail") { return EActionType.Trail; }
-			else { Debug.Assert(false); return EActionType.NumTypes; }
+			switch (strType )
+			{
+				case "CreateAttack": { return EActionType.CreateAttack; }
+				case "CreateBlock": { return EActionType.CreateBlock; }
+				case "CreateThrow": { return EActionType.CreateThrow; }
+				case "Deactivate": { return EActionType.Deactivate; }
+				case "Evade": { return EActionType.Evade; }
+				case "CreateParticleEffect": { return EActionType.ParticleEffect; }
+				case "PlayAnimation": { return EActionType.PlayAnimation; }
+				case "PlaySound": { return EActionType.PlaySound; }
+				case "AddProjectile": { return EActionType.Projectile; }
+				case "SendStateMessage": { return EActionType.SendStateMessage; }
+				case "AddVelocity": { return EActionType.SetVelocity; }
+				case "Trail": { return EActionType.Trail; }
+				default: { Debug.Assert(false); return EActionType.NumTypes; }
+			}
 		}
 
 		public static EActionType XMLTypeToType(string strXMLType)
 		{
-			if (strXMLType == "SPFSettings.AddVelocityActionXML") { return EActionType.AddVelocity; }
-			else if (strXMLType == "SPFSettings.ConstantAccelerationActionXML") { return EActionType.ConstantAcceleration; }
-			else if (strXMLType == "SPFSettings.ConstantDeccelerationActionXML") { return EActionType.ConstantDecceleration; }
-			else if (strXMLType == "SPFSettings.CreateAttackActionXML") { return EActionType.CreateAttack; }
-			else if (strXMLType == "SPFSettings.CreateBlockActionXML") { return EActionType.CreateBlock; }
-			else if (strXMLType == "SPFSettings.CreateThrowActionXML") { return EActionType.CreateThrow; }
-			else if (strXMLType == "SPFSettings.DeactivateActionXML") { return EActionType.Deactivate; }
-			else if (strXMLType == "SPFSettings.EvadeActionXML") { return EActionType.Evade; }
-			else if (strXMLType == "SPFSettings.ParticleEffectActionXML") { return EActionType.ParticleEffect; }
-			else if (strXMLType == "SPFSettings.PlayAnimationActionXML") { return EActionType.PlayAnimation; }
-			else if (strXMLType == "SPFSettings.PlaySoundActionXML") { return EActionType.PlaySound; }
-			else if (strXMLType == "SPFSettings.ProjectileActionXML") { return EActionType.Projectile; }
-			else if (strXMLType == "SPFSettings.SendStateMessageActionXML") { return EActionType.SendStateMessage; }
-			else if (strXMLType == "SPFSettings.SetVelocityActionXML") { return EActionType.SetVelocity; }
-			else if (strXMLType == "SPFSettings.TrailActionXML") { return EActionType.Trail; }
-			else if (strXMLType == "SPFSettings.AddGarmentActionXML") { return EActionType.AddGarment; }
-			else if (strXMLType == "SPFSettings.BlockingStateActionXML") { return EActionType.BlockState; }
-			else if (strXMLType == "SPFSettings.CreateHitCircleActionXML") { return EActionType.CreateHitCircle; }
-			else if (strXMLType == "SPFSettings.RotateActionXML") { return EActionType.Rotate; }
-			else if (strXMLType == "SPFSettings.TargetRotationActionXML") { return EActionType.TargetRotation; }
-			else if (strXMLType == "SPFSettings.CameraShakeActionXML") { return EActionType.CameraShake; }
-			else if (strXMLType == "SPFSettings.KillPlayerActionXML") { return EActionType.KillPlayer; }
-			else { Debug.Assert(false); return EActionType.NumTypes; }
+			switch (strXMLType)
+			{
+				case "SPFSettings.AddVelocityActionXML": { return EActionType.AddVelocity; }
+				case "SPFSettings.ConstantAccelerationActionXML": { return EActionType.ConstantAcceleration; }
+				case "SPFSettings.ConstantDeccelerationActionXML": { return EActionType.ConstantDecceleration; }
+				case "SPFSettings.CreateAttackActionXML": { return EActionType.CreateAttack; }
+				case "SPFSettings.CreateBlockActionXML": { return EActionType.CreateBlock; }
+				case "SPFSettings.CreateThrowActionXML": { return EActionType.CreateThrow; }
+				case "SPFSettings.DeactivateActionXML": { return EActionType.Deactivate; }
+				case "SPFSettings.EvadeActionXML": { return EActionType.Evade; }
+				case "SPFSettings.ParticleEffectActionXML": { return EActionType.ParticleEffect; }
+				case "SPFSettings.PlayAnimationActionXML": { return EActionType.PlayAnimation; }
+				case "SPFSettings.PlaySoundActionXML": { return EActionType.PlaySound; }
+				case "SPFSettings.ProjectileActionXML": { return EActionType.Projectile; }
+				case "SPFSettings.SendStateMessageActionXML": { return EActionType.SendStateMessage; }
+				case "SPFSettings.SetVelocityActionXML": { return EActionType.SetVelocity; }
+				case "SPFSettings.TrailActionXML": { return EActionType.Trail; }
+				case "SPFSettings.AddGarmentActionXML": { return EActionType.AddGarment; }
+				case "SPFSettings.BlockingStateActionXML": { return EActionType.BlockState; }
+				case "SPFSettings.CreateHitCircleActionXML": { return EActionType.CreateHitCircle; }
+				case "SPFSettings.RotateActionXML": { return EActionType.Rotate; }
+				case "SPFSettings.TargetRotationActionXML": { return EActionType.TargetRotation; }
+				case "SPFSettings.CameraShakeActionXML": { return EActionType.CameraShake; }
+				case "SPFSettings.KillPlayerActionXML": { return EActionType.KillPlayer; }
+				default: { Debug.Assert(false); return EActionType.NumTypes; }
+			}
 		}
 
 		public static string TypeToXMLString(EActionType eType)
