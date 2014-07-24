@@ -1177,7 +1177,7 @@ namespace GameDonkey
 			//next node is the background tile
 			childNode = childNode.NextSibling;
 			Filename backgroundFile = new Filename(childNode.InnerXml);
-			m_SkyBox = (XNATexture)Renderer.LoadImage(backgroundFile.GetRelPathFileNoExt());
+			m_SkyBox = (XNATexture)Renderer.LoadImage(backgroundFile.ToString());
 
 			//load the color!
 			childNode = childNode.NextSibling;
