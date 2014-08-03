@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F0C8973C-436B-4129-BF9E-1B88CF4BF8BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>GameDonkey.Ouya</RootNamespace>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AssemblyName>GameDonkey.Ouya</AssemblyName>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="..\Source\DefaultParticlEffects.cs">
+      <Link>DefaultParticlEffects.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\GameDonkeyBase.cs">
+      <Link>GameDonkeyBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\GameModes.cs">
+      <Link>GameModes.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\IGameDonkey.cs">
+      <Link>IGameDonkey.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\XML_Objects.cs">
+      <Link>XML_Objects.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\XnaDonkey.cs">
+      <Link>XnaDonkey.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\AIObject.cs">
+      <Link>Object Manager\AIObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\BaseObject.cs">
+      <Link>Object Manager\BaseObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\GarmentManager.cs">
+      <Link>Object Manager\GarmentManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\LevelObject.cs">
+      <Link>Object Manager\LevelObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\LevelObjectQueue.cs">
+      <Link>Object Manager\LevelObjectQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\PlayerObject.cs">
+      <Link>Object Manager\PlayerObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\PlayerQueue.cs">
+      <Link>Object Manager\PlayerQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\ProjectileObject.cs">
+      <Link>Object Manager\ProjectileObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\Data\BaseObjectData.cs">
+      <Link>Object Manager\Data\BaseObjectData.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\Data\LevelObjectData.cs">
+      <Link>Object Manager\Data\LevelObjectData.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\Data\PlayerObjectData.cs">
+      <Link>Object Manager\Data\PlayerObjectData.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Object Manager\Data\ProjectileObjectData.cs">
+      <Link>Object Manager\Data\ProjectileObjectData.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Physics\Helper.cs">
+      <Link>Physics\Helper.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Physics\Hit.cs">
+      <Link>Physics\Hit.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Physics\LevelObjectPhysicsContainer.cs">
+      <Link>Physics\LevelObjectPhysicsContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Physics\PhysicsContainer.cs">
+      <Link>Physics\PhysicsContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Physics\PlayerPhysicsContainer.cs">
+      <Link>Physics\PlayerPhysicsContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\Physics\ProjectilePhysicsContainer.cs">
+      <Link>Physics\ProjectilePhysicsContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\ActionDirection.cs">
+      <Link>State Machine\ActionDirection.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\ActionSort.cs">
+      <Link>State Machine\ActionSort.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\ActionType.cs">
+      <Link>State Machine\ActionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\EMessage.cs">
+      <Link>State Machine\EMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\EState.cs">
+      <Link>State Machine\EState.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\StateActionFactory.cs">
+      <Link>State Machine\StateActionFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\StateActions.cs">
+      <Link>State Machine\StateActions.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\StateActionsList.cs">
+      <Link>State Machine\StateActionsList.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\TimedActionList.cs">
+      <Link>State Machine\TimedActionList.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\AddGarmentAction.cs">
+      <Link>State Machine\Actions\AddGarmentAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\AddVelocityAction.cs">
+      <Link>State Machine\Actions\AddVelocityAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\BaseAction.cs">
+      <Link>State Machine\Actions\BaseAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\BlockingStateAction.cs">
+      <Link>State Machine\Actions\BlockingStateAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\CameraShakeAction.cs">
+      <Link>State Machine\Actions\CameraShakeAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\ConstantAccelerationAction.cs">
+      <Link>State Machine\Actions\ConstantAccelerationAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\ConstantDecceleration.cs">
+      <Link>State Machine\Actions\ConstantDecceleration.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\CreateAttackAction.cs">
+      <Link>State Machine\Actions\CreateAttackAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\CreateBlockAction.cs">
+      <Link>State Machine\Actions\CreateBlockAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\CreateHitCircleAction.cs">
+      <Link>State Machine\Actions\CreateHitCircleAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\CreateThrowAction.cs">
+      <Link>State Machine\Actions\CreateThrowAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\DeactivateAction.cs">
+      <Link>State Machine\Actions\DeactivateAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\EDirectionType.cs">
+      <Link>State Machine\Actions\EDirectionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\EvadeAction.cs">
+      <Link>State Machine\Actions\EvadeAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\KillPlayerAction.cs">
+      <Link>State Machine\Actions\KillPlayerAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\ParticleEffectAction.cs">
+      <Link>State Machine\Actions\ParticleEffectAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\PlayAnimationAction.cs">
+      <Link>State Machine\Actions\PlayAnimationAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\PlaySoundAction.cs">
+      <Link>State Machine\Actions\PlaySoundAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\ProjectileAction.cs">
+      <Link>State Machine\Actions\ProjectileAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\RotateAction.cs">
+      <Link>State Machine\Actions\RotateAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\SendStateMessageAction.cs">
+      <Link>State Machine\Actions\SendStateMessageAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\SetVelocityAction.cs">
+      <Link>State Machine\Actions\SetVelocityAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\TargetRotationAction.cs">
+      <Link>State Machine\Actions\TargetRotationAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\TimedAction.cs">
+      <Link>State Machine\Actions\TimedAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Actions\TrailAction.cs">
+      <Link>State Machine\Actions\TrailAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Containers\ObjectStateContainer.cs">
+      <Link>State Machine\Containers\ObjectStateContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Containers\PlayerObjectStateContainer.cs">
+      <Link>State Machine\Containers\PlayerObjectStateContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Containers\SingleStateAppenderContainer.cs">
+      <Link>State Machine\Containers\SingleStateAppenderContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Containers\SingleStateContainer.cs">
+      <Link>State Machine\Containers\SingleStateContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\State Machine\Containers\StateContainer.cs">
+      <Link>State Machine\Containers\StateContainer.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Ouya.csproj">
+      <Project>{8BEA875D-66D2-4A5F-B137-83D262A3851D}</Project>
+      <Name>MonoGame.Framework.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HadoukInput\Ouya\HadoukInput.Ouya.csproj">
+      <Project>{470E9490-C300-4F2F-9DD2-BC38E28D8A27}</Project>
+      <Name>HadoukInput.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GameTimer\Ouya\GameTimer.Ouya.csproj">
+      <Project>{B5C54D08-EA4C-479B-8A25-09643724056A}</Project>
+      <Name>GameTimer.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Filename\Android\FilenameBuddy.Android.csproj">
+      <Project>{D30C7E1A-CD13-4E46-903E-72FAAD937745}</Project>
+      <Name>FilenameBuddy.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RenderBuddy\Ouya\RenderBuddy.Ouya.csproj">
+      <Project>{98D892D9-5C75-42E4-B478-FF057D7485C3}</Project>
+      <Name>RenderBuddy.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Vector2Extensions\Ouya\Vector2Extensions.Ouya.csproj">
+      <Project>{D2F681A5-57CC-4023-9470-B6A7ED443771}</Project>
+      <Name>Vector2Extensions.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AnimationLib\Ouya\AnimationLib.Ouya.csproj">
+      <Project>{FBD63372-7303-4F72-A770-16A12EB9C154}</Project>
+      <Name>AnimationLib.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DrawListBuddy\Ouya\DrawListBuddy.Ouya.csproj">
+      <Project>{D4F10302-D1D0-4126-B95F-E3A83D78A433}</Project>
+      <Name>DrawListBuddy.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FontBuddy\Ouya\FontBuddyLib.Ouya.csproj">
+      <Project>{782A28A3-66E3-40B6-8651-8F159AF19BA6}</Project>
+      <Name>FontBuddyLib.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ResolutionBuddy\Ouya\ResolutionBuddy.Ouya.csproj">
+      <Project>{3BFACC81-6B4D-462B-91E2-09349A3619AD}</Project>
+      <Name>ResolutionBuddy.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CameraBuddy\Ouya\CameraBuddy.Ouya.csproj">
+      <Project>{59D4AFDD-00FE-4205-92AB-B7CE6A141427}</Project>
+      <Name>CameraBuddy.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CollisionBuddy\Ouya\CollisionBuddy.Ouya.csproj">
+      <Project>{106E118C-6759-4EEA-A340-ED99500ECAB0}</Project>
+      <Name>CollisionBuddy.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MatrixExtensions\Ouya\MatrixExtensions.Ouya.csproj">
+      <Project>{2E31A986-E147-4000-A5E3-28309C9DC601}</Project>
+      <Name>MatrixExtensions.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ParticleBuddy\Ouya\ParticleBuddy.Ouya.csproj">
+      <Project>{603D205F-3809-4FA5-8E38-8AA18CEFED59}</Project>
+      <Name>ParticleBuddy.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StateMachine\Ouya\StateMachineBuddy.Ouya.csproj">
+      <Project>{1B65A271-9F3B-403A-A5AC-EEE5C1F0A34D}</Project>
+      <Name>StateMachineBuddy.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BasicPrimitiveBuddy\Ouya\BasicPrimitiveBuddy.Ouya.csproj">
+      <Project>{CA0A3695-B4CD-4129-9593-AD56D5A63F1E}</Project>
+      <Name>BasicPrimitiveBuddy.Ouya</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
