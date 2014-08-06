@@ -48,9 +48,9 @@ namespace GameDonkey
 			Debug.Assert(null != Owner);
 			Debug.Assert(!AlreadyRun);
 
-			//TODO: execute sound action
+			//execute sound action
 			Debug.Assert(null != m_Engine);
-			//m_Engine.PlaySound(m_strSoundCueName);
+			m_Engine.PlaySound(m_strSoundCueName);
 
 			return base.Execute();
 		}

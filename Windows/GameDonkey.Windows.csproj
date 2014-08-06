@@ -263,6 +263,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\..\AudioBuddy\Windows\AudioBuddy.Windows.csproj">
+      <Project>{84c83c7c-0c90-4bf0-9d0a-b0cbb9802adf}</Project>
+      <Name>AudioBuddy.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\GameTimer\Windows\GameTimer.Windows.csproj">
       <Project>{6B6D4188-5C03-4E16-923B-96FDBC85B91A}</Project>
       <Name>GameTimer.Windows</Name>

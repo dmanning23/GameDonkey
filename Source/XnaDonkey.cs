@@ -1,4 +1,5 @@
 ﻿using System;
+using AudioBuddy;
 using HadoukInput;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -595,9 +596,7 @@ namespace GameDonkey
 
 		public override void PlaySound(string strCueName)
 		{
-#if AUDIO
-			CAudioManager.PlayCue(strCueName);
-#endif
+			AudioManager.PlayCue(strCueName);
 		}
 
 		protected void StopTimers()
