@@ -15,7 +15,7 @@
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <AssemblyName>GameDonkey.Ouya</AssemblyName>
-    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -306,6 +306,10 @@
     <ProjectReference Include="..\..\BasicPrimitiveBuddy\Ouya\BasicPrimitiveBuddy.Ouya.csproj">
       <Project>{CA0A3695-B4CD-4129-9593-AD56D5A63F1E}</Project>
       <Name>BasicPrimitiveBuddy.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AudioBuddy\Ouya\AudioBuddy.Ouya.csproj">
+      <Project>{97036852-3532-45B6-B863-A101E5B46AB6}</Project>
+      <Name>AudioBuddy.Ouya</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
