@@ -1,5 +1,7 @@
 ﻿using AnimationLib;
+using FilenameBuddy;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using System;
@@ -14,7 +16,9 @@ namespace GameDonkey
 	{
 		#region Members
 
-		//the name of the bone to use
+		/// <summary>
+		/// the name of the bone to use
+		/// </summary>
 		private string m_strBoneName;
 
 		/// <summary>
@@ -24,26 +28,18 @@ namespace GameDonkey
 		/// </summary>
 		protected Bone m_rAttackBone;
 
-		//the vector to set another object to when this attack connects
+		/// <summary>
+		/// the vector to set another object to when this attack connects
+		/// </summary>
 		protected Vector2 m_Direction;
-
-		//the amount of damage to deal when this attack connects
-		private float m_fDamage;
-
-		//the time delta of how long the attack is active
-		private float m_fTimeDelta;
 
 		/// <summary>
 		/// The sound to play if this attack hits.
 		/// This sound is only played if the attack is not blocked
 		/// </summary>
-		private string m_strHitSound;
+		public Filename HitSoundName { get; private set; }
 
-		/// <summary>
-		/// The time when this attack is done.
-		/// Set at runtime when the attack is activated
-		/// </summary>
-		private float m_fDoneTime;
+		public SoundEffect HitSound { get; private set; }
 
 		/// <summary>
 		/// A list of actions that will be run if this attack connects (sound effects, particle effects, etc)
@@ -55,16 +51,16 @@ namespace GameDonkey
 
 		#region Properties
 
-		public float TimeDelta
-		{
-			get { return m_fTimeDelta; }
-			set { m_fTimeDelta = value; }
-		}
+		/// <summary>
+		/// the time delta of how long the attack is active
+		/// </summary>
+		public float TimeDelta { get ; set; }
 
-		public float DoneTime
-		{
-			get { return m_fDoneTime; }
-		}
+		/// <summary>
+		/// The time when this attack is done.
+		/// Set at runtime when the attack is activated
+		/// </summary>
+		public float DoneTime { get; protected set; }
 
 		public string BoneName
 		{
@@ -85,16 +81,10 @@ namespace GameDonkey
 			set { m_Direction = value; }
 		}
 
-		public float Strength
-		{
-			get { return m_fDamage; }
-			set { m_fDamage = value; }
-		}
-
-		public string HitSound
-		{
-			get { return m_strHitSound; }
-		}
+		/// <summary>
+		/// the amount of damage to deal when this attack connects
+		/// </summary>
+		public float Damage { get; set ; }
 
 		#endregion //Properties
 
@@ -120,9 +110,9 @@ namespace GameDonkey
 			m_strBoneName = "";
 			m_rAttackBone = null;
 			m_Direction = new Vector2(0.0f);
-			m_fDamage = 0.0f;
-			m_fTimeDelta = 0.0f;
-			m_fDoneTime = 0.0f;
+			Damage = 0.0f;
+			TimeDelta = 0.0f;
+			DoneTime = 0.0f;
 			m_listSuccessActions = new List<IBaseAction>();
 		}
 
@@ -149,7 +139,7 @@ namespace GameDonkey
 			}
 
 			//activate the attack
-			m_fDoneTime = Owner.CharacterClock.CurrentTime + m_fTimeDelta;
+			DoneTime = Owner.CharacterClock.CurrentTime + TimeDelta;
 
 			//add this actionto the list of attacks
 			Owner.AddAttack(this);
@@ -167,9 +157,9 @@ namespace GameDonkey
 			Debug.Assert(m_rAttackBone == myAction.m_rAttackBone);
 			//Debug.Assert(m_Direction.X == myAction.m_Direction.X);
 			//Debug.Assert(m_Direction.Y == myAction.m_Direction.Y);
-			Debug.Assert(m_fDamage == myAction.m_fDamage);
-			Debug.Assert(m_fTimeDelta == myAction.m_fTimeDelta);
-			Debug.Assert(m_fDoneTime == myAction.m_fDoneTime);
+			Debug.Assert(Damage == myAction.Damage);
+			Debug.Assert(TimeDelta == myAction.TimeDelta);
+			Debug.Assert(DoneTime == myAction.DoneTime);
 
 			for (int i = 0; i < m_listSuccessActions.Count; i++)
 			{
@@ -326,25 +316,26 @@ namespace GameDonkey
 			}
 			else if (strName == "damage")
 			{
-				m_fDamage = Convert.ToSingle(strValue);
-				if (0.0f > m_fDamage)
+				Damage = Convert.ToSingle(strValue);
+				if (0.0f > Damage)
 				{
-					Debug.Assert(0.0f <= m_fDamage);
+					Debug.Assert(0.0f <= Damage);
 					return false;
 				}
 			}
 			else if (strName == "timeDelta")
 			{
-				m_fTimeDelta = Convert.ToSingle(strValue);
-				if (0.0f > m_fTimeDelta)
+				TimeDelta = Convert.ToSingle(strValue);
+				if (0.0f > TimeDelta)
 				{
-					Debug.Assert(0.0f <= m_fTimeDelta);
+					Debug.Assert(0.0f <= TimeDelta);
 					return false;
 				}
 			}
 			else if (strName == "hitSound")
 			{
-				m_strHitSound = strValue;
+				HitSoundName = new Filename(strValue);
+				HitSound = rEngine.LoadSound(HitSoundName);
 			}
 			else if (strName == "successActions")
 			{
@@ -374,15 +365,15 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("damage");
-			rXMLFile.WriteString(m_fDamage.ToString());
+			rXMLFile.WriteString(Damage.ToString());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("timeDelta");
-			rXMLFile.WriteString(m_fTimeDelta.ToString());
+			rXMLFile.WriteString(TimeDelta.ToString());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("hitSound");
-			rXMLFile.WriteString(m_strHitSound);
+			rXMLFile.WriteString(HitSoundName.GetRelFilename());
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("successActions");
@@ -406,11 +397,10 @@ namespace GameDonkey
 			BoneName = myAction.boneName;
 
 			m_Direction = myAction.direction;
-			m_fDamage = myAction.damage;
-			m_fTimeDelta = myAction.timeDelta;
-			m_strHitSound = myAction.hitSound;
-			//TODO: verify the sound action
-			//Debug.Assert(null != CAudioManager.GetCue(m_strHitSound));
+			Damage = myAction.damage;
+			TimeDelta = myAction.timeDelta;
+			HitSoundName = new Filename(myAction.hitSound);
+			HitSound = rEngine.LoadSound(HitSoundName);
 			IBaseAction.ReadSerializedListActions(Owner, myAction.successActions, ref m_listSuccessActions, rEngine, rXmlContent, stateContainer);
 
 			return true;

@@ -700,7 +700,7 @@ namespace GameDonkey
 			Debug.Assert(null != rPlayer);
 			Debug.Assert((EObjectType.AI == rPlayer.Type) || (EObjectType.Human == rPlayer.Type));
 
-			if (!rOtherObject.HitFlags[(int)EHitType.AttackHit] || (rAttackAction.Strength > rOtherObject.Hits[(int)EHitType.AttackHit].Strength))
+			if (!rOtherObject.HitFlags[(int)EHitType.AttackHit] || (rAttackAction.Damage > rOtherObject.Hits[(int)EHitType.AttackHit].Strength))
 			{
 				//i just punched the other object
 				rOtherObject.HitFlags[(int)EHitType.AttackHit] = true;
@@ -713,7 +713,7 @@ namespace GameDonkey
 				}
 
 				//the base object should be the player if this object is a projectile
-				rOtherObject.Hits[(int)EHitType.AttackHit].Set(direction, rAttackAction, rAttackAction.Strength, EHitType.AttackHit, rPlayer, FirstCollisionPoint);
+				rOtherObject.Hits[(int)EHitType.AttackHit].Set(direction, rAttackAction, rAttackAction.Damage, EHitType.AttackHit, rPlayer, FirstCollisionPoint);
 
 				//perform all the success actions
 				if (rAttackAction.ExecuteSuccessActions(rOtherObject.Owner))
@@ -751,7 +751,7 @@ namespace GameDonkey
 			}
 
 			//the base object should be the player if this object is a projectile
-			rOtherObject.Hits[(int)EHitType.WeaponHit].Set(direction, rAttackAction, rAttackAction.Strength, EHitType.WeaponHit, rPlayer, FirstCollisionPoint);
+			rOtherObject.Hits[(int)EHitType.WeaponHit].Set(direction, rAttackAction, rAttackAction.Damage, EHitType.WeaponHit, rPlayer, FirstCollisionPoint);
 		}
 
 		/// <summary>
@@ -783,7 +783,7 @@ namespace GameDonkey
 			Debug.Assert(null != rPlayer);
 			Debug.Assert((EObjectType.AI == rPlayer.Type) || (EObjectType.Human == rPlayer.Type));
 
-			if (!rOtherObject.HitFlags[(int)EHitType.BlockHit] || (rAttackAction.Strength > rOtherObject.Hits[(int)EHitType.BlockHit].Strength))
+			if (!rOtherObject.HitFlags[(int)EHitType.BlockHit] || (rAttackAction.Damage > rOtherObject.Hits[(int)EHitType.BlockHit].Strength))
 			{
 				//i just punched the other object
 				rOtherObject.HitFlags[(int)EHitType.BlockHit] = true;
@@ -796,7 +796,7 @@ namespace GameDonkey
 				}
 
 				//the base object should be the player if this object is a projectile
-				rOtherObject.Hits[(int)EHitType.BlockHit].Set(direction, rAttackAction, rAttackAction.Strength, EHitType.AttackHit, rPlayer, FirstCollisionPoint);
+				rOtherObject.Hits[(int)EHitType.BlockHit].Set(direction, rAttackAction, rAttackAction.Damage, EHitType.AttackHit, rPlayer, FirstCollisionPoint);
 
 				//perform all the success actions for the BLOCKING action not the ATTACKING action!
 				rOtherDudesAction.ExecuteSuccessActions();

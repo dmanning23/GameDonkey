@@ -24,9 +24,6 @@ namespace GameDonkey
 		//The direction of the hit
 		private Vector2 m_Direction;
 
-		//the strength of the hit
-		private float m_fStrength;
-
 		//The type of hit
 		private EHitType m_eType;
 
@@ -52,10 +49,7 @@ namespace GameDonkey
 			get { return m_eType; }
 		}
 
-		public float Strength
-		{
-			get { return m_fStrength; }
-		}
+		public float Strength { get; private set; }
 
 		public Vector2 Direction
 		{
@@ -84,13 +78,13 @@ namespace GameDonkey
 		public Hit()
 		{
 			m_Direction = Vector2.Zero;
-			m_fStrength = 0.0f;
+			Strength = 0.0f;
 			m_eType = EHitType.AttackHit;
 			m_rAction = null;
 			m_rAttacker = null;
 		}
 
-		public void Set(Vector2 Direction, IBaseAction rAction, float fStrength, EHitType eType, BaseObject rAttacker, Vector2 rPosition)
+		public void Set(Vector2 Direction, IBaseAction rAction, float strength, EHitType eType, BaseObject rAttacker, Vector2 rPosition)
 		{
 #if DEBUG
 			if (EHitType.PushHit == eType)
@@ -101,7 +95,7 @@ namespace GameDonkey
 #endif
 
 			m_Direction = Direction;
-			m_fStrength = fStrength;
+			Strength = strength;
 			m_eType = eType;
 			m_rAttacker = rAttacker;
 			m_rAction = rAction;

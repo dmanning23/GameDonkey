@@ -51,9 +51,6 @@
     <Compile Include="..\Source\GameDonkeyBase.cs">
       <Link>GameDonkeyBase.cs</Link>
     </Compile>
-    <Compile Include="..\Source\GameModes.cs">
-      <Link>GameModes.cs</Link>
-    </Compile>
     <Compile Include="..\Source\IGameDonkey.cs">
       <Link>IGameDonkey.cs</Link>
     </Compile>
@@ -306,10 +303,6 @@
     <ProjectReference Include="..\..\BasicPrimitiveBuddy\Ouya\BasicPrimitiveBuddy.Ouya.csproj">
       <Project>{CA0A3695-B4CD-4129-9593-AD56D5A63F1E}</Project>
       <Name>BasicPrimitiveBuddy.Ouya</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\AudioBuddy\Ouya\AudioBuddy.Ouya.csproj">
-      <Project>{97036852-3532-45B6-B863-A101E5B46AB6}</Project>
-      <Name>AudioBuddy.Ouya</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

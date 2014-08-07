@@ -1,9 +1,11 @@
 ﻿using GameTimer;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ParticleBuddy;
 using RenderBuddy;
+using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -16,8 +18,6 @@ namespace GameDonkey
 		ParticleEngine ParticleEngine { get; }
 
 		GameClock MasterClock { get; }
-
-		//CGameSoundManager SoundEngine { get; }
 
 		Rectangle WorldBoundaries { get; set; }
 
@@ -66,7 +66,7 @@ namespace GameDonkey
 			Vector2 Position,
 			Color myColor);
 
-		void PlaySound(string strCueName);
+		SoundEffect LoadSound(Filename cueName);
 
 		#endregion //Methods
 	}

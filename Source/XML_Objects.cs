@@ -193,6 +193,7 @@ namespace SPFSettings
 	{
 		public string portrait = "";
 		public string deathSound = "";
+		public string blockSound = "";
 	}
 
 	public class ProjectileObjectXML : BaseObjectXML

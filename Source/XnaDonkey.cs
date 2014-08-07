@@ -1,5 +1,5 @@
 ﻿using System;
-using AudioBuddy;
+using Microsoft.Xna.Framework.Audio;
 using HadoukInput;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -121,11 +121,6 @@ namespace GameDonkey
 		}
 
 		/// <summary>
-		/// The win condition for this game
-		/// </summary>
-		public EGameMode GameMode { get; private set; }
-
-		/// <summary>
 		/// The max amount of time a game will last
 		/// </summary>
 		public float MaxTime { get; private set; }
@@ -180,13 +175,24 @@ namespace GameDonkey
 		public bool Tie { get; protected set; }
 		public bool GameOver { get; protected set; }
 
+		/// <summary>
+		/// dumb thing for loading sound effects.
+		/// </summary>
+		/// <value>The content of the sound.</value>
+		private ContentManager SoundContent { get; set; }
+
 		#endregion //Properties
 
 		#region Construction
 
-		public XnaDonkey(XNARenderer rRenderer)
+		public XnaDonkey(XNARenderer rRenderer, Game game)
 			: base()
 		{
+			if (null != game)
+			{
+				SoundContent = new ContentManager(game.Services, "Content");
+			}
+
 			m_Renderer = rRenderer;
 			m_listPlayers = new List<PlayerQueue>();
 			m_LevelObjects = new LevelObjectQueue();
@@ -210,7 +216,6 @@ namespace GameDonkey
 
 			//game over stuff
 			m_GameTimer = new CountdownTimer();
-			GameMode = EGameMode.Stock;
 			MaxTime = 186.0f;
 			Winner = null;
 			GameOver = false;
@@ -321,14 +326,14 @@ namespace GameDonkey
 			//check for a winner
 			if (!GameOver)
 			{
-				//warn about time almost over?
-				if (EGameMode.Time == GameMode)
-				{
-					if ((m_GameTimer.RemainingTime() < 20.0f) && (fOldTime >= 20.0f))
-					{
-						PlaySound("twenty");
-					}
-				}
+//				//warn about time almost over?
+//				if (EGameMode.Time == GameMode)
+//				{
+//					if ((m_GameTimer.RemainingTime() < 20.0f) && (fOldTime >= 20.0f))
+//					{
+//						PlaySound("twenty");
+//					}
+//				}
 
 				//check if anyone has won
 				CheckForWinner();
@@ -594,11 +599,6 @@ namespace GameDonkey
 			rPlayerQueue.Reset(m_listSpawnPoints[iSpawnIndex]);
 		}
 
-		public override void PlaySound(string strCueName)
-		{
-			AudioManager.PlayCue(strCueName);
-		}
-
 		protected void StopTimers()
 		{
 			m_GameTimer.Stop();
@@ -612,6 +612,18 @@ namespace GameDonkey
 			Color myColor)
 		{
 			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], velocity, position, Vector2.Zero, myColor, false);
+		}
+
+		public override SoundEffect LoadSound(Filename cueName)
+		{
+			if (SoundContent != null)
+			{
+				return SoundContent.Load<SoundEffect>(cueName.GetRelPathFileNoExt());
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		#region Draw

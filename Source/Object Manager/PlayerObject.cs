@@ -1,12 +1,13 @@
 ﻿using System;
+using FilenameBuddy;
 using HadoukInput;
 using GameTimer;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -26,12 +27,22 @@ namespace GameDonkey
 		private const float m_fStrengthMultiplier = 1.0f; //amount to multiply how far characters are hit in this game
 		private const float m_fDamageMultiplier = 2.5f; //amount to multiply how much damage characters do in this game
 
-		public string DeathSound { get; protected set; }
+		/// <summary>
+		/// The sound that gets played when a player dies
+		/// </summary>
+		/// <value>The death sound.</value>
+		public SoundEffect DeathSound { get ; protected set; }
+
+		/// <summary>
+		/// the sound that gets played when a player blocks an attack
+		/// </summary>
+		/// <value>The block sound.</value>
+		public SoundEffect BlockSound { get; protected set; }
 
 		/// <summary>
 		/// texture to hold the portrait for the HUD
 		/// </summary>
-		protected Texture2D m_Portrait;
+		public Texture2D Portrait { get; protected set; }
 
 		/// <summary>
 		/// the direction the thumbstick was held this frame
@@ -46,11 +57,6 @@ namespace GameDonkey
 		/// How much health this character has left
 		/// </summary>
 		public float Health { get; protected set; }
-
-		public Texture2D Portrait
-		{
-			get { return m_Portrait; }
-		}
 
 		public int ComboCounter
 		{
@@ -542,7 +548,11 @@ namespace GameDonkey
 				//play the hit noise
 				CreateAttackAction rAttackAction = rAttack.Action as CreateAttackAction;
 				Debug.Assert(null != rAttackAction);
-				rEngine.PlaySound(rAttackAction.HitSound);
+
+				if (null != rAttackAction.HitSound)
+				{
+					rAttackAction.HitSound.Play();
+				}
 			}
 
 			//clear out the rest of the hits so that the player isn't hit multiple times by the same attack
@@ -645,7 +655,10 @@ namespace GameDonkey
 				new Color(0, 255, 255));
 
 			//play the block noise
-			rEngine.PlaySound("block");
+			if (null != BlockSound)
+			{
+				BlockSound.Play();
+			}
 		}
 
 		#endregion //Hit Response
@@ -677,12 +690,21 @@ namespace GameDonkey
 				return false;
 			}
 
-			//TODO: load player object stuff
+			//load player object stuff
+			if ((null != data.PortraitFile) && (null != rEngine.Renderer.Content))
+			{
+				Portrait = rEngine.Renderer.Content.Load<Texture2D>(data.PortraitFile.GetRelPathFileNoExt());
+			}
 
-			//Debug.Assert(null != rEngine.Renderer.Content);
-			//m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
-			DeathSound = data.DeathSoundFile.ToString();
-			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
+			if (null != data.DeathSoundFile) 
+			{
+				DeathSound = rEngine.LoadSound(data.DeathSoundFile);
+			}
+
+			if (null != data.BlockSoundFile) 
+			{
+				BlockSound = rEngine.LoadSound(data.BlockSoundFile);
+			}
 
 			return base.ParseXmlData(childNode, rEngine, iMessageOffset);
 		}
@@ -718,14 +740,14 @@ namespace GameDonkey
 			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
 			rXmlContent.Unload();
 
-			//get the character portrait, load it from teh renderer content manager
-			Filename strPortraitFile = new Filename(myCharXML.portrait);
-			Debug.Assert(null != rEngine.Renderer.Content);
-			m_Portrait = rEngine.Renderer.Content.Load<Texture2D>(strPortraitFile.GetRelPathFileNoExt());
+			//load player object stuff
+			if (null != rEngine.Renderer.Content)
+			{
+				Portrait = rEngine.Renderer.Content.Load<Texture2D>(myCharXML.portrait);
+			}
 
-			//grab the deathsound
-			DeathSound = myCharXML.deathSound;
-			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathSound));
+			DeathSound = rEngine.LoadSound(new Filename(myCharXML.deathSound));
+			BlockSound = rEngine.LoadSound(new Filename(myCharXML.blockSound));
 
 			//SPARROWHAWKS
 

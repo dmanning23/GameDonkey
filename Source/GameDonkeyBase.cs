@@ -1,4 +1,6 @@
 ﻿using GameTimer;
+using FilenameBuddy;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,11 +28,6 @@ namespace GameDonkey
 		public ParticleEngine ParticleEngine { get; protected set; }
 
 		public GameClock MasterClock { get; protected set; }
-
-		//public CGameSoundManager SoundEngine
-		//{
-		//    get { return m_SoundEngine; }
-		//}
 
 		public Rectangle WorldBoundaries
 		{
@@ -149,9 +146,9 @@ namespace GameDonkey
 		{
 		}
 
-		public virtual void PlaySound(string strCueName)
+		public virtual SoundEffect LoadSound(Filename cueName)
 		{
-			Debug.Assert(false);
+			return null;
 		}
 
 		#endregion //Methods

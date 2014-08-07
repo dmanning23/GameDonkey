@@ -14,6 +14,7 @@ namespace GameDonkey
 
 		public Filename PortraitFile { get; private set; }
 		public Filename DeathSoundFile { get; private set; }
+		public Filename BlockSoundFile { get; private set; }
 
 		#endregion //Members
 
@@ -21,8 +22,6 @@ namespace GameDonkey
 
 		public PlayerObjectData()
 		{
-			PortraitFile = new Filename();
-			DeathSoundFile = new Filename();
 		}
 
 		protected override bool ParseXmlNode(XmlNode childNode)
@@ -36,13 +35,28 @@ namespace GameDonkey
 				case "portrait":
 				{
 					//get the portrait file
-					PortraitFile.SetRelFilename(strValue);
+					if (!string.IsNullOrEmpty(strValue))
+					{
+						PortraitFile = new Filename(strValue);
+					}
 					return true;
 				}
 
 				case "deathSound":
 				{
-					DeathSoundFile.SetRelFilename(strValue);
+					if (!string.IsNullOrEmpty(strValue))
+					{
+						DeathSoundFile = new Filename(strValue);
+					}
+					return true;
+				}
+
+				case "blockSound":
+				{
+					if (!string.IsNullOrEmpty(strValue))
+					{
+						BlockSoundFile = new Filename(strValue);
+					}
 					return true;
 				}
 

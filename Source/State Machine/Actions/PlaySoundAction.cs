@@ -1,7 +1,9 @@
 ﻿using StateMachineBuddy;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Diagnostics;
 using System.Xml;
+using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -9,23 +11,18 @@ namespace GameDonkey
 	{
 		#region Members
 
-		//the filename of the sound file to use
-		string m_strSoundCueName;
+		/// <summary>
+		/// the filename of the sound file to use
+		/// </summary>		/// <value>The name of the sound cue.</value>
+		public Filename SoundCueName { get; set; }
 
-		//the engine, which will be used to play sounds
-		IGameDonkey m_Engine;
+		/// <summary>
+		/// Gets the sound.
+		/// </summary>
+		/// <value>The sound.</value>
+		public SoundEffect Sound { get ; private set; }
 
 		#endregion //Members
-
-		#region Properties
-
-		public string SoundFile
-		{
-			get { return m_strSoundCueName; }
-			set { m_strSoundCueName = value; }
-		}
-
-		#endregion //Properties
 
 		#region Methods
 
@@ -36,7 +33,6 @@ namespace GameDonkey
 		{
 			Debug.Assert(null != rEngine);
 			ActionType = EActionType.PlaySound;
-			m_Engine = rEngine;
 		}
 
 		/// <summary>
@@ -49,8 +45,10 @@ namespace GameDonkey
 			Debug.Assert(!AlreadyRun);
 
 			//execute sound action
-			Debug.Assert(null != m_Engine);
-			m_Engine.PlaySound(m_strSoundCueName);
+			if (null != Sound)
+			{
+				Sound.Play();
+			}
 
 			return base.Execute();
 		}
@@ -61,11 +59,11 @@ namespace GameDonkey
 			
 			Debug.Assert((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time) &&
-				(m_strSoundCueName == myAction.m_strSoundCueName));
+				(SoundCueName.ToString() == myAction.SoundCueName.ToString()));
 			
 			return ((ActionType == myAction.ActionType) &&
 				(Time == myAction.Time) &&
-				(m_strSoundCueName == myAction.m_strSoundCueName));
+				(SoundCueName.ToString() == myAction.SoundCueName.ToString()));
 		}
 
 		#endregion //Methods
@@ -79,8 +77,6 @@ namespace GameDonkey
 		/// <returns></returns>
 		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
-			Debug.Assert(null != m_Engine);
-
 			//read in xml action
 
 			if ("Item" != rXMLNode.Name)
@@ -137,7 +133,8 @@ namespace GameDonkey
 					}
 					else if (strName == "filename")
 					{
-						m_strSoundCueName = strValue;
+						SoundCueName = new Filename(strValue);
+						Sound = rEngine.LoadSound(SoundCueName);
 					}
 					else
 					{
@@ -157,7 +154,7 @@ namespace GameDonkey
 		protected override void WriteActionXml(XmlTextWriter rXMLFile)
 		{
 			rXMLFile.WriteStartElement("filename");
-			rXMLFile.WriteString(m_strSoundCueName);
+			rXMLFile.WriteString(SoundCueName.GetRelFilename());
 			rXMLFile.WriteEndElement();
 		}
 
@@ -167,12 +164,10 @@ namespace GameDonkey
 		/// <param name="myAction">the xml item to read the action from</param>
 		public bool ReadSerialized(SPFSettings.PlaySoundActionXML myAction)
 		{
-			Debug.Assert(null != m_Engine);
-
 			Debug.Assert(myAction.type == ActionType.ToString());
 			ReadSerializedBase(myAction);
 
-			m_strSoundCueName = myAction.filename;
+			SoundCueName = new Filename(myAction.filename);
 			
 			////TODO: verify the sound is there
 			//Debug.Assert(null != CAudioManager.GetCue(m_strSoundCueName));
