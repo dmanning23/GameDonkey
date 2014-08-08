@@ -720,12 +720,12 @@ namespace GameDonkey
 			Filename strAnimationFile = new Filename(myCharXML.animations);
 			m_fHeight = (float)myCharXML.height;
 
-			//try to load the model
-			if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile, rEngine.Renderer))
-			{
-				Debug.Assert(false);
-				return false;
-			}
+			////try to load the model
+			//if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile, rEngine.Renderer))
+			//{
+			//	Debug.Assert(false);
+			//	return false;
+			//}
 			rXmlContent.Unload();
 
 			//load all the garments
@@ -737,7 +737,7 @@ namespace GameDonkey
 			}
 
 			//read in the animations
-			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
+			//AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
 			rXmlContent.Unload();
 
 			//load player object stuff

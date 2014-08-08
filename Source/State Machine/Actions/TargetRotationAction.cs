@@ -88,8 +88,7 @@ namespace GameDonkey
 		/// <returns></returns>
 		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
-			//read in xml action
-
+			#if DEBUG
 			if ("Item" != rXMLNode.Name)
 			{
 				Debug.Assert(false);
@@ -117,6 +116,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)
@@ -129,31 +129,38 @@ namespace GameDonkey
 					string strName = childNode.Name;
 					string strValue = childNode.InnerText;
 
-					if (strName == "type")
+					switch (strName)
 					{
-						Debug.Assert(strValue == ActionType.ToString());
-					}
-					else if (strName == "time")
-					{
-						Time = Convert.ToSingle(strValue);
-						if (0.0f > Time)
+						case "type":
 						{
-							Debug.Assert(0.0f <= Time);
+							Debug.Assert(strValue == ActionType.ToString());
+						}
+						break;
+						case "time":
+						{
+							Time = Convert.ToSingle(strValue);
+							if (0.0f > Time)
+							{
+								Debug.Assert(0.0f <= Time);
+								return false;
+							}
+						}
+						break;
+						case "timeDelta":
+						{
+							TimeDelta = Convert.ToSingle(strValue);
+						}
+						break;
+						case "targetRotation":
+						{
+							TargetRotation.ReadXml(childNode);
+						}
+						break;
+						default:
+						{
+							Debug.Assert(false);
 							return false;
 						}
-					}
-					else if (strName == "timeDelta")
-					{
-						TimeDelta = Convert.ToSingle(strValue);
-					}
-					else if (strName == "targetRotation")
-					{
-						TargetRotation.ReadXml(childNode);
-					}
-					else
-					{
-						Debug.Assert(false);
-						return false;
 					}
 				}
 			}

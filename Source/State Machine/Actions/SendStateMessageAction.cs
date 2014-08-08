@@ -107,8 +107,7 @@ namespace GameDonkey
 		{
 			StateContainer = stateContainer;
 
-			//read in xml action
-
+			#if DEBUG
 			if ("Item" != rXMLNode.Name)
 			{
 				Debug.Assert(false);
@@ -136,6 +135,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)
@@ -148,32 +148,39 @@ namespace GameDonkey
 					string strName = childNode.Name;
 					string strValue = childNode.InnerText;
 
-					if (strName == "type")
+					switch (strName)
 					{
-						Debug.Assert(strValue == ActionType.ToString());
-					}
-					else if (strName == "time")
-					{
-						Time = Convert.ToSingle(strValue);
-						if (0.0f > Time)
+						case "type":
 						{
-							Debug.Assert(0.0f <= Time);
-							return false;
+							Debug.Assert(strValue == ActionType.ToString());
 						}
-					}
-					else if (strName == "message")
-					{
-						MessageName = strValue;
-						if (m_iMessage == -1)
+						break;
+						case "time":
+						{
+							Time = Convert.ToSingle(strValue);
+							if (0.0f > Time)
+							{
+								Debug.Assert(0.0f <= Time);
+								return false;
+							}
+						}
+						break;
+						case "message":
+						{
+							MessageName = strValue;
+							if (m_iMessage == -1)
+							{
+								Debug.Assert(false);
+								return false;
+							}
+						}
+						break;
+						default:
 						{
 							Debug.Assert(false);
 							return false;
 						}
-					}
-					else
-					{
-						Debug.Assert(false);
-						return false;
+						break;
 					}
 				}
 			}

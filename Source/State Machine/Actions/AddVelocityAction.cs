@@ -23,7 +23,8 @@ namespace GameDonkey
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
-		public AddVelocityAction(BaseObject rOwner) : base(rOwner)
+		public AddVelocityAction(BaseObject rOwner)
+			: base(rOwner)
 		{
 			ActionType = EActionType.AddVelocity;
 			Velocity = new ActionDirection();
@@ -48,7 +49,7 @@ namespace GameDonkey
 		public override bool Compare(IBaseAction rInst)
 		{
 			AddVelocityAction myAction = (AddVelocityAction)rInst;
-			
+
 			Debug.Assert(ActionType == myAction.ActionType);
 			Debug.Assert(Time == myAction.Time);
 			Debug.Assert(Velocity.Compare(myAction.Velocity));
@@ -59,7 +60,7 @@ namespace GameDonkey
 		#endregion //Methods
 
 		#region File IO
-		
+
 		/// <summary>
 		/// Read from an xml file
 		/// </summary>
@@ -67,8 +68,7 @@ namespace GameDonkey
 		/// <returns></returns>
 		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
-			//read in xml action
-
+#if DEBUG
 			if ("Item" != rXMLNode.Name)
 			{
 				Debug.Assert(false);
@@ -96,6 +96,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)
@@ -108,36 +109,48 @@ namespace GameDonkey
 					string strName = childNode.Name;
 					string strValue = childNode.InnerText;
 
-					if (strName == "type")
+					switch (strName)
 					{
-						Debug.Assert(strValue == ActionType.ToString());
-					}
-					else if (strName == "time")
-					{
-						Time = Convert.ToSingle(strValue);
-						if (0.0f > Time)
+						case "type":
 						{
-							Debug.Assert(0.0f <= Time);
+							Debug.Assert(strValue == ActionType.ToString());
+						}
+						break;
+
+						case  "time":
+						{
+							Time = Convert.ToSingle(strValue);
+							if (0.0f > Time)
+							{
+								Debug.Assert(0.0f <= Time);
+								return false;
+							}
+						}
+						break;
+
+						case  "direction":
+						{
+							Velocity.ReadXml(childNode);
+						}
+						break;
+
+						case  "velocity":
+						{
+							Velocity.Velocity = strValue.ToVector2();
+						}
+						break;
+
+						case  "useObjectDirection":
+						{
+							bool dir = Convert.ToBoolean(strValue);
+							Velocity.DirectionType = (dir ? EDirectionType.Controller : EDirectionType.Absolute);
+						}
+						break;
+						default: 
+						{
+							Debug.Assert(false);
 							return false;
 						}
-					}
-					else if (strName == "direction")
-					{
-						Velocity.ReadXml(childNode);
-					}
-					else if (strName == "velocity")
-					{
-						Velocity.Velocity = strValue.ToVector2();
-					}
-					else if (strName == "useObjectDirection")
-					{
-						bool dir = Convert.ToBoolean(strValue);
-						Velocity.DirectionType = (dir ? EDirectionType.Controller : EDirectionType.Absolute);
-					}
-					else
-					{
-						Debug.Assert(false);
-						return false;
 					}
 				}
 			}

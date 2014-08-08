@@ -65,8 +65,7 @@ namespace GameDonkey
 		/// <returns></returns>
 		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
-			//read in xml action
-
+			#if DEBUG
 			if ("Item" != rXMLNode.Name)
 			{
 				Debug.Assert(false);
@@ -94,6 +93,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)

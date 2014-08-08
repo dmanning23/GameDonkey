@@ -1429,14 +1429,14 @@ namespace GameDonkey
 				LoadSerializedGarment(rXmlContent, rEngine, strGarmentFile);
 			}
 
-			//try to load all that stuff
-			if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile, rEngine.Renderer))
-			{
-				Debug.Assert(false);
-				return false;
-			}
+			////try to load all that stuff
+			//if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile, rEngine.Renderer))
+			//{
+			//	Debug.Assert(false);
+			//	return false;
+			//}
 			Physics.SortBones(AnimationContainer.Model);
-			AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
+			//AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
 
 			//read in the state container
 			States.ReadSerializedStateContainer(rXmlContent,
@@ -1452,7 +1452,7 @@ namespace GameDonkey
 		{
 			//load the garment
 			Garment myGarment = new Garment();
-			myGarment.ReadSerializedFormat(rXmlContent, strGarmentFile, rEngine.Renderer, AnimationContainer.Model);
+			//myGarment.ReadSerializedFormat(rXmlContent, strGarmentFile, rEngine.Renderer, AnimationContainer.Model);
 
 			//add the garment to the dude
 			myGarment.AddToModel();

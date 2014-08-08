@@ -694,7 +694,12 @@ namespace GameDonkey
 
 		protected virtual void RenderBackground()
 		{
-			Debug.Assert(null != m_SkyBox);
+			//Check if there is any background to draw
+			if (null == m_SkyBox)
+			{
+				return;
+			}
+
 			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, Resolution.TransformationMatrix());
 			if (m_iNumTiles <= 1)
 			{
@@ -1110,6 +1115,7 @@ namespace GameDonkey
 			xmlDoc.Load(stream);
 			XmlNode rootNode = xmlDoc.DocumentElement;
 
+#if DEBUG
 			//make sure it is actually an xml node
 			if (rootNode.NodeType != XmlNodeType.Element)
 			{
@@ -1125,9 +1131,10 @@ namespace GameDonkey
 				Debug.Assert(false);
 				return false;
 			}
-
+#endif
 			//next node is "<Asset Type="SPFSettings.LevelObjectXML">"
 			XmlNode AssetNode = rootNode.FirstChild;
+#if DEBUG
 			if (null == AssetNode)
 			{
 				Debug.Assert(false);
@@ -1143,18 +1150,7 @@ namespace GameDonkey
 				Debug.Assert(false);
 				return false;
 			}
-
-		//public int boardHeight = 0;
-		//public int boardWidth = 0;
-		//public string music = "";
-		//public string deathNoise = "";
-		//public string backgroundTile = "";
-		//public byte backgroundR = 0;
-		//public byte backgroundG = 0;
-		//public byte backgroundB = 0;
-		//public int numTiles = 0;
-		//public List<string> objects = new List<string>();
-		//public List<SpawnPointXML> spawnPoints = new List<SpawnPointXML>();
+#endif
 
 			//First node is the name
 			XmlNode childNode = AssetNode.FirstChild;
@@ -1177,18 +1173,26 @@ namespace GameDonkey
 			//next node is the music
 			childNode = childNode.NextSibling;
 			m_strMusicFile = childNode.InnerXml;
+			if (!string.IsNullOrEmpty(m_strMusicFile))
+			{
+				//TODO: load the music
+			}
 
 			//next node is the death noise
 			childNode = childNode.NextSibling;
 			m_strDeathNoise = childNode.InnerXml;
-			
-			////TODO: load the death noise
-			//Debug.Assert(null != CAudioManager.GetCue(m_strDeathNoise));
+			if (!string.IsNullOrEmpty(m_strMusicFile))
+			{
+				//TODO: load the death noise
+			}
 
 			//next node is the background tile
 			childNode = childNode.NextSibling;
-			Filename backgroundFile = new Filename(childNode.InnerXml);
-			m_SkyBox = (XNATexture)Renderer.LoadImage(backgroundFile.ToString());
+			if (!string.IsNullOrEmpty(childNode.InnerXml))
+			{
+				Filename backgroundFile = new Filename(childNode.InnerXml);
+				m_SkyBox = (XNATexture)Renderer.LoadImage(backgroundFile.ToString());
+			}
 
 			//load the color!
 			childNode = childNode.NextSibling;

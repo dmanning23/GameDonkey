@@ -111,8 +111,7 @@ namespace GameDonkey
 		/// <returns></returns>
 		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
-			//read in xml action
-
+			#if DEBUG
 			if ("Item" != rXMLNode.Name)
 			{
 				Debug.Assert(false);
@@ -140,6 +139,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)
@@ -152,42 +152,49 @@ namespace GameDonkey
 					string strName = childNode.Name;
 					string strValue = childNode.InnerText;
 
-					if (strName == "type")
+					switch (strName)
 					{
-						Debug.Assert(strValue == ActionType.ToString());
-					}
-					else if (strName == "time")
-					{
-						Time = Convert.ToSingle(strValue);
-						if (0.0f > Time)
+						case "type":
 						{
-							Debug.Assert(0.0f <= Time);
-							return false;
+							Debug.Assert(strValue == ActionType.ToString());
 						}
-					}
-					else if (strName == "animation")
-					{
-						AnimationName = strValue;
+						break;
+						case "time":
+						{
+							Time = Convert.ToSingle(strValue);
+							if (0.0f > Time)
+							{
+								Debug.Assert(0.0f <= Time);
+								return false;
+							}
+						}
+						break;
+						case "animation":
+						{
+							AnimationName = strValue;
 
-						if (m_iAnimationIndex < 0)
+							if (m_iAnimationIndex < 0)
+							{
+								Debug.Assert(0 <= m_iAnimationIndex);
+								return false;
+							}
+							if (m_iAnimationIndex >= Owner.AnimationContainer.Animations.Count)
+							{
+								Debug.Assert(m_iAnimationIndex < Owner.AnimationContainer.Animations.Count);
+								return false;
+							}
+						}
+						break;
+						case "playback":
 						{
-							Debug.Assert(0 <= m_iAnimationIndex);
+							m_ePlaybackMode = (EPlayback)Enum.Parse(typeof(EPlayback), strValue);
+						}
+						break;
+						default:
+						{
+							Debug.Assert(false);
 							return false;
 						}
-						if (m_iAnimationIndex >= Owner.AnimationContainer.Animations.Count)
-						{
-							Debug.Assert(m_iAnimationIndex < Owner.AnimationContainer.Animations.Count);
-							return false;
-						}
-					}
-					else if (strName == "playback")
-					{
-						m_ePlaybackMode = (EPlayback)Enum.Parse(typeof(EPlayback), strValue);
-					}
-					else
-					{
-						Debug.Assert(false);
-						return false;
 					}
 				}
 			}

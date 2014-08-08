@@ -187,8 +187,7 @@ namespace GameDonkey
 		/// <returns></returns>
 		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
-			//read in xml action
-
+			#if DEBUG
 			Debug.Assert(null != rEngine);
 			Debug.Assert(null != ParticleEngine);
 
@@ -219,6 +218,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)
@@ -231,71 +231,82 @@ namespace GameDonkey
 					string strName = childNode.Name;
 					string strValue = childNode.InnerText;
 
-					if (strName == "type")
+					switch (strName)
 					{
-						Debug.Assert(strValue == ActionType.ToString());
-					}
-					else if (strName == "time")
-					{
-						Time = Convert.ToSingle(strValue);
-						if (0.0f > Time)
+						case "type":
 						{
-							Debug.Assert(0.0f <= Time);
-							return false;
+							Debug.Assert(strValue == ActionType.ToString());
 						}
-					}
-					else if (strName == "bone")
-					{
-						_boneName = strValue;
-						if (!string.IsNullOrEmpty(_boneName))
+						break;
+						case "time":
 						{
-							_bone = Owner.AnimationContainer.Model.GetBone(_boneName);
-							Debug.Assert(null != _bone);
+							Time = Convert.ToSingle(strValue);
+							if (0.0f > Time)
+							{
+								Debug.Assert(0.0f <= Time);
+								return false;
+							}
 						}
-					}
-					else if (strName == "direction")
-					{
-						try
+						break;
+						case "bone":
 						{
-							Velocity.ReadXml(childNode);
+							_boneName = strValue;
+							if (!string.IsNullOrEmpty(_boneName))
+							{
+								_bone = Owner.AnimationContainer.Model.GetBone(_boneName);
+								Debug.Assert(null != _bone);
+							}
 						}
-						catch (Exception)
+						break;
+						case "direction":
 						{
-							Vector2 vect = strValue.ToVector2();
+							try
+							{
+								Velocity.ReadXml(childNode);
+							}
+							catch (Exception)
+							{
+								Vector2 vect = strValue.ToVector2();
+							}
 						}
-					}
-					else if (strName == "StartOffset")
-					{
-						StartOffset = strValue.ToVector2();
-					}
-					else if (strName == "UseBoneRotation")
-					{
-						UseBoneRotation = Convert.ToBoolean(strValue);
-					}
-					else if (strName == "emitter")
-					{
-						if (!childNode.HasChildNodes)
+						break;
+						case "StartOffset":
 						{
-							//has to have the emiiter xml under here
-							Debug.Assert(false);
-							return false;
+							StartOffset = strValue.ToVector2();
 						}
+						break;
+						case "UseBoneRotation":
+						{
+							UseBoneRotation = Convert.ToBoolean(strValue);
+						}
+						break;
+						case "emitter":
+						{
+							if (!childNode.HasChildNodes)
+							{
+								//has to have the emiiter xml under here
+								Debug.Assert(false);
+								return false;
+							}
 
-						if (!Emitter.ReadXmlObject(childNode.FirstChild, ((null == rEngine) ? null : rEngine.Renderer)))
+							if (!Emitter.ReadXmlObject(childNode.FirstChild, ((null == rEngine) ? null : rEngine.Renderer)))
+							{
+								Debug.Assert(false);
+								return false;
+							}
+						}
+						break;
+						case "useObjectDirection":
+						{
+							bool dir = Convert.ToBoolean(strValue);
+							Velocity.DirectionType = (dir ? EDirectionType.Controller : EDirectionType.Absolute);
+						}
+						break;
+						default:
 						{
 							Debug.Assert(false);
 							return false;
 						}
-					}
-					else if (strName == "useObjectDirection")
-					{
-						bool dir = Convert.ToBoolean(strValue);
-						Velocity.DirectionType = (dir ? EDirectionType.Controller : EDirectionType.Absolute);
-					}
-					else
-					{
-						Debug.Assert(false);
-						return false;
 					}
 				}
 			}

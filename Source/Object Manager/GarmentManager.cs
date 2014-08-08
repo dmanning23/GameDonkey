@@ -241,12 +241,12 @@ namespace GameDonkey
 			}
 			Debug.Assert(null != myGarment);
 
-			//load the garment
-			if (!myGarment.ReadSerializedFormat(myContent,  myFileName, rRenderer, m_rOwner.AnimationContainer.Model))
-			{
-				//something bad happened
-				return null;
-			}
+			////load the garment
+			//if (!myGarment.ReadSerializedFormat(myContent,  myFileName, rRenderer, m_rOwner.AnimationContainer.Model))
+			//{
+			//	//something bad happened
+			//	return null;
+			//}
 
 			//store and return the garment
 			m_listAllGarments.Add(myGarment);

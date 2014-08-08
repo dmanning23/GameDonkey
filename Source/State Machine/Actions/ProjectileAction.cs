@@ -179,8 +179,7 @@ namespace GameDonkey
 		/// <returns></returns>
 		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
-			//read in xml action
-
+			#if DEBUG
 			if ("Item" != rXMLNode.Name)
 			{
 				Debug.Assert(false);
@@ -208,6 +207,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//temp variable to hold the filename
 			string strFileName = "";

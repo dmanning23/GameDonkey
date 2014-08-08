@@ -81,7 +81,7 @@ namespace GameDonkey
 		{
 			Camera = rEngine.Renderer.Camera;
 
-			//read in xml action
+			#if DEBUG
 			if ("Item" != rXMLNode.Name)
 			{
 				Debug.Assert(false);
@@ -109,6 +109,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
+#endif
 
 			//Read in child nodes
 			if (rXMLNode.HasChildNodes)
@@ -121,41 +122,48 @@ namespace GameDonkey
 					string strName = childNode.Name;
 					string strValue = childNode.InnerText;
 
-					if (strName == "type")
+					switch (strName)
 					{
-						Debug.Assert(strValue == ActionType.ToString());
-					}
-					else if (strName == "time")
-					{
-						Time = Convert.ToSingle(strValue);
-						if (0.0f > Time)
+						case "type":
 						{
-							Debug.Assert(0.0f <= Time);
+							Debug.Assert(strValue == ActionType.ToString());
+						}
+						break;
+						case "time":
+						{
+							Time = Convert.ToSingle(strValue);
+							if (0.0f > Time)
+							{
+								Debug.Assert(0.0f <= Time);
+								return false;
+							}
+						}
+						break;
+						case "TimeDelta":
+						{
+							TimeDelta = Convert.ToSingle(strValue);
+							if (0.0f > TimeDelta)
+							{
+								Debug.Assert(0.0f <= TimeDelta);
+								return false;
+							}
+						}
+						break;
+						case "ShakeAmount":
+						{
+							ShakeAmount = Convert.ToSingle(strValue);
+							if (0.0f > ShakeAmount)
+							{
+								Debug.Assert(0.0f <= ShakeAmount);
+								return false;
+							}
+						}
+						break;
+						default:
+						{
+							Debug.Assert(false);
 							return false;
 						}
-					}
-					else if (strName == "TimeDelta")
-					{
-						TimeDelta = Convert.ToSingle(strValue);
-						if (0.0f > TimeDelta)
-						{
-							Debug.Assert(0.0f <= TimeDelta);
-							return false;
-						}
-					}
-					else if (strName == "ShakeAmount")
-					{
-						ShakeAmount = Convert.ToSingle(strValue);
-						if (0.0f > ShakeAmount)
-						{
-							Debug.Assert(0.0f <= ShakeAmount);
-							return false;
-						}
-					}
-					else
-					{
-						Debug.Assert(false);
-						return false;
 					}
 				}
 			}
