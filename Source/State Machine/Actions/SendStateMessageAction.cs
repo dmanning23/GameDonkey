@@ -180,7 +180,6 @@ namespace GameDonkey
 							Debug.Assert(false);
 							return false;
 						}
-						break;
 					}
 				}
 			}

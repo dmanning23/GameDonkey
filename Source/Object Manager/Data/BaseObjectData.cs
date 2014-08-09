@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
+using Microsoft.Xna.Framework;
+#if OUYA
+using Ouya.Console.Api;
+#endif
 
 namespace GameDonkey
 {
@@ -41,7 +45,11 @@ namespace GameDonkey
 			//gonna have to do this the HARD way
 
 			//Open the file.
+			#if ANDROID
+			Stream stream = Game.Activity.Assets.Open(strFileName.File);
+			#else
 			FileStream stream = File.Open(strFileName.File, FileMode.Open, FileAccess.Read);
+			#endif
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(stream);
 			XmlNode rootNode = xmlDoc.DocumentElement;

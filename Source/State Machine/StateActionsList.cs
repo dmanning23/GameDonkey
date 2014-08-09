@@ -1,5 +1,6 @@
 ﻿using FilenameBuddy;
 using GameTimer;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using SPFSettings;
 using StateMachineBuddy;
@@ -142,7 +143,11 @@ namespace GameDonkey
 		public bool ReadXmlStateActions(Filename strFilename, BaseObject rOwner, IGameDonkey rEngine, SingleStateContainer stateContainer)
 		{
 			// Open the file.
+			#if ANDROID
+			Stream stream = Game.Activity.Assets.Open(strFilename.File);
+			#else
 			FileStream stream = File.Open(strFilename.File, FileMode.Open, FileAccess.Read);
+			#endif
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(stream);
 			XmlNode rootNode = xmlDoc.DocumentElement;
