@@ -1,4 +1,6 @@
 ﻿using AnimationLib;
+using XmlBuddy;
+using FilenameBuddy;
 using MatrixExtensions;
 using Microsoft.Xna.Framework;
 using ParticleBuddy;
@@ -289,10 +291,10 @@ namespace GameDonkey
 								return false;
 							}
 
-							if (!Emitter.ReadXmlObject(childNode.FirstChild, ((null == rEngine) ? null : rEngine.Renderer)))
+							XmlFileBuddy.ReadChildNodes(childNode.FirstChild, Emitter.ParseXmlNode);
+							if (null != rEngine)
 							{
-								Debug.Assert(false);
-								return false;
+								Emitter.LoadContent(rEngine.Renderer);
 							}
 						}
 						break;
@@ -337,7 +339,15 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("emitter");
-			Emitter.WriteXmlObject(rXMLFile, false);
+
+			rXMLFile.WriteStartElement("Item");
+			rXMLFile.WriteAttributeString("Type", Emitter.ContentName);
+
+			Emitter.WriteXmlNodes(rXMLFile);
+
+			rXMLFile.WriteEndElement();
+			rXMLFile.WriteEndElement();
+
 			rXMLFile.WriteEndElement();
 		}
 
@@ -364,11 +374,11 @@ namespace GameDonkey
 			StartOffset = myAction.StartOffset;
 			UseBoneRotation = myAction.UseBoneRotation;
 			Debug.Assert(myAction.emitter.Count == 1);
-			if (!Emitter.ReadSerializedObject(myAction.emitter[0], rEngine.Renderer))
-			{
-				Debug.Assert(false);
-				return false;
-			}
+			//if (!Emitter.ReadSerializedObject(myAction.emitter[0], rEngine.Renderer))
+			//{
+			//	Debug.Assert(false);
+			//	return false;
+			//}
 
 			return true;
 		}

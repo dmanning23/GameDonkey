@@ -199,10 +199,6 @@ namespace GameDonkey
 			m_listSpawnPoints = new List<Vector2>();
 
 			m_DefaultParticles = new List<EmitterTemplate>();
-			for (EDefaultParticleEffects i = 0; i < EDefaultParticleEffects.NumDefaultParticleEffects; i++)
-			{
-				m_DefaultParticles.Add(new EmitterTemplate());
-			}
 
 			m_Font = new FontBuddy();
 			CharacterClock = new GameClock();
@@ -1030,30 +1026,26 @@ namespace GameDonkey
 			//load the background image used for the HUD
 			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
 
-			//load the hit spark
-			HitSpark.ReadXmlFile(new Filename(@"Particles\Hit Spark.xml"), Renderer);
-
-			//load the hit cloud
-			HitCloud.ReadXmlFile(new Filename(@"Particles\Hit Cloud.xml"), Renderer);
-
-			////load the death particle effect
-			//DeathParticles.ReadXmlFile(new Filename(@"Particles\Death Particles.xml"), Renderer);
-
-			//load the block particle effect
-			Block.ReadXmlFile(new Filename(@"Particles\Block.xml"), Renderer);
-
-			//load the weapon hit particle effect
-			WeaponHit.ReadXmlFile(new Filename(@"Particles\Weapon Hit.xml"), Renderer);
-
-			//load the head bop particle effect
-			HeadBop.ReadXmlFile(new Filename(@"Particles\ceiling bop.xml"), Renderer);
-
-			//load the stunned bounce particle effect
-			StunnedBounce.ReadXmlFile(new Filename(@"Particles\Stunned Bounce.xml"), Renderer);
+			//Load all teh default particle effects
+			AddParticleEffect(@"Particles\Hit Cloud.xml");
+			AddParticleEffect(@"Particles\Hit Spark.xml");
+			AddParticleEffect(@"Particles\Death Particles.xml");
+			AddParticleEffect(@"Particles\Block.xml");
+			AddParticleEffect(@"Particles\Weapon Hit.xml");
+			AddParticleEffect(@"Particles\Stunned Bounce.xml");
+			AddParticleEffect(@"Particles\ceiling bop.xml");
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);
 			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
+		}
+
+		private void AddParticleEffect(string file)
+		{
+			var emitter = new EmitterTemplate(new Filename(file));
+			emitter.ReadXmlFile();
+			emitter.LoadContent(Renderer);
+			m_DefaultParticles.Add(emitter);
 		}
 
 		/// <summary>

@@ -324,6 +324,10 @@
       <Project>{28342DF0-0089-4A2A-B3D4-6DCD65D6D8E4}</Project>
       <Name>ResolutionBuddy.Windows</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\XmlBuddy\Windows\XmlBuddy.Windows.csproj">
+      <Project>{58b118ee-bd5d-4a5d-8ead-8c039dae553a}</Project>
+      <Name>XmlBuddy.Windows</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
