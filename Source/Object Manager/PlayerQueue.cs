@@ -410,6 +410,17 @@ namespace GameDonkey
 			}
 		}
 
+		/// <summary>
+		/// Check if an object is dead (out of bounds)
+		/// </summary>
+		/// <returns>whether or not the thing is dead</returns>
+		public bool CheckIfDead()
+		{
+			Debug.Assert(null != Character);
+			Debug.Assert((Character.Type == EObjectType.Human) || (Character.Type == EObjectType.AI));
+			return (Character.DisplayHealth() <= 0);
+		}
+
 		public void UpdateInput(InputState rInput)
 		{
 			Character.UpdateInput(InputQueue, rInput);

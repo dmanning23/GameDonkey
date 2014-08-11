@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
 using HadoukInput;
 using System.Collections.Generic;
@@ -294,15 +296,25 @@ namespace GameDonkey
 		/// <param name="rInput"></param>
 		public void UpdateInput(InputState rInput)
 		{
-			for (int i = 0; i < m_listPlayers.Count; i++)
+			List<Task> tasks = new List<Task>();
+			foreach (var player in m_listPlayers)
 			{
-				Debug.Assert(null != m_listPlayers[i]);
-
-				if (null != m_listPlayers[i].InputQueue)
+				Debug.Assert(null != player);
+				if (null != player.InputQueue)
 				{
-					m_listPlayers[i].UpdateInput(rInput);
+					tasks.Add(Task.Factory.StartNew(() => { player.UpdateInput(rInput); }));
 				}
 			}
+			Task.WaitAll(tasks.ToArray());
+
+			//for (int i = 0; i < m_listPlayers.Count; i++)
+			//{
+			//	Debug.Assert(null != m_listPlayers[i]);
+			//	if (null != m_listPlayers[i].InputQueue)
+			//	{
+			//		m_listPlayers[i].UpdateInput(rInput);
+			//	}
+			//}
 		}
 
 		/// <summary>
@@ -340,20 +352,7 @@ namespace GameDonkey
 				//update the level objects
 				m_LevelObjects.Update(m_GameTimer, true);
 
-				//update all the player stuff
-				for (int i = 0; i < m_listPlayers.Count; i++)
-				{
-					Debug.Assert(null != m_listPlayers[i]);
-
-					if (!CheckIfPlayerStockOut(m_listPlayers[i]))
-					{
-						//check if the player is dead
-						CheckIfDead(m_listPlayers[i]);
-
-						//update the characters
-						m_listPlayers[i].Update(CharacterClock, true);
-					}
-				}
+				UpdatePlayers();
 			}
 
 			//TODO: update animation with master clock if game is over
@@ -363,12 +362,7 @@ namespace GameDonkey
 				CollisionDetection();
 			}
 
-			//update all the ragdoll stuff
-			for (int i = 0; i < m_listPlayers.Count; i++)
-			{
-				m_listPlayers[i].UpdateRagdoll(false);
-			}
-			m_LevelObjects.UpdateRagdoll(false);
+			UpdateRagdoll();
 
 			UpdateDrawlists();
 
@@ -404,6 +398,51 @@ namespace GameDonkey
 #endif
 
 			return GameOver;
+		}
+
+		/// <summary>
+		/// update all the player stuff
+		/// </summary>
+		private void UpdatePlayers()
+		{
+			List<Task> tasks = new List<Task>();
+			foreach (var player in m_listPlayers)
+			{
+				Debug.Assert(null != player);
+				tasks.Add(Task.Factory.StartNew(() => { UpdatePlayer(player); }));
+			}
+			Task.WaitAll(tasks.ToArray());
+		}
+
+		/// <summary>
+		/// update a single player
+		/// </summary>
+		/// <param name="PlayerQueue"></param>
+		private void UpdatePlayer(PlayerQueue playerQueue)
+		{
+			Debug.Assert(null != playerQueue);
+			if (!CheckIfPlayerStockOut(playerQueue))
+			{
+				//check if the player is dead
+				CheckIfDead(playerQueue);
+
+				//update the characters
+				playerQueue.Update(CharacterClock, true);
+			}
+		}
+
+		/// <summary>
+		/// update all the ragdoll stuff
+		/// </summary>
+		private void UpdateRagdoll()
+		{
+			List<Task> tasks = new List<Task>();
+			foreach (var player in m_listPlayers)
+			{
+				tasks.Add(Task.Factory.StartNew(() => { player.UpdateRagdoll(false); }));
+			}
+			tasks.Add(Task.Factory.StartNew(() => { m_LevelObjects.UpdateRagdoll(false); }));
+			Task.WaitAll(tasks.ToArray());
 		}
 
 		/// <summary>
@@ -533,22 +572,13 @@ namespace GameDonkey
 		/// Check if an object is dead (out of bounds) and process the death
 		/// </summary>
 		/// <param name="rObject">the object to check for death</param>
-		/// <returns>whether or not the thing is dead</returns>
-		private bool CheckIfDead(PlayerQueue rPlayerQueue)
+		private void CheckIfDead(PlayerQueue rPlayerQueue)
 		{
 			Debug.Assert(null != rPlayerQueue);
-
-			BaseObject rObject = rPlayerQueue.Character;
-			Debug.Assert(null != rObject);
-			Debug.Assert((rObject.Type == EObjectType.Human) || (rObject.Type == EObjectType.AI));
-
-			if (rPlayerQueue.Character.DisplayHealth() <= 0)
+			if (rPlayerQueue.CheckIfDead())
 			{
 				KillPlayer(rPlayerQueue);
-				return true;
 			}
-
-			return false;
 		}
 
 		/// <summary>
@@ -627,15 +657,18 @@ namespace GameDonkey
 
 		#region Draw
 
+		/// <summary>
+		/// update all the drawlists
+		/// </summary>
 		public void UpdateDrawlists()
 		{
-			//update all the drawlists
-			for (int i = 0; i < m_listPlayers.Count; i++)
+			List<Task> tasks = new List<Task>();
+			foreach (var player in m_listPlayers)
 			{
-				m_listPlayers[i].UpdateDrawlists();
+				tasks.Add(Task.Factory.StartNew(() => { player.UpdateDrawlists(); }));
 			}
-
-			m_LevelObjects.UpdateDrawlists();
+			tasks.Add(Task.Factory.StartNew(() => { m_LevelObjects.UpdateDrawlists(); }));
+			Task.WaitAll(tasks.ToArray());
 		}
 
 		/// <summary>
