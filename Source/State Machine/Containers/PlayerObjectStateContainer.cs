@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using GameTimer;
-using System.Diagnostics;
+﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
+using SPFSettings;
 using StateMachineBuddy;
 using System;
-using SPFSettings;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GameDonkey
 {
@@ -466,46 +463,6 @@ namespace GameDonkey
 		}
 
 		#endregion //Methods
-
-		#region Networking
-
-#if NETWORKING
-
-		/// <summary>
-		/// Read this object from a network packet reader.
-		/// </summary>
-		public void ReadFromNetwork(PacketReader packetReader)
-		{
-			int iIndex = packetReader.ReadInt32();
-
-			if (CurrentStateMachine != iIndex)
-			{
-				CurrentStateMachine = iIndex;
-			}
-
-			Debug.Assert(null != m_StateMachines);
-			Debug.Assert(CurrentStateMachine >= 0);
-			Debug.Assert(CurrentStateMachine < m_StateMachines.Count);
-
-			m_StateMachines[CurrentStateMachine].ReadFromNetwork(packetReader);
-		}
-
-		/// <summary>
-		/// Write this object to a network packet reader.
-		/// </summary>
-		public void WriteToNetwork(PacketWriter packetWriter)
-		{
-			Debug.Assert(null != m_StateMachines);
-			Debug.Assert(CurrentStateMachine >= 0);
-			Debug.Assert(CurrentStateMachine < m_StateMachines.Count);
-
-			packetWriter.Write(CurrentStateMachine);
-			m_StateMachines[CurrentStateMachine].WriteToNetwork(packetWriter);
-		}
-
-#endif
-
-		#endregion //Networking
 
 		#region File IO
 

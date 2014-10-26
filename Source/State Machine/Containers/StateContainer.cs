@@ -1,8 +1,5 @@
 ﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
 using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
@@ -134,24 +131,6 @@ namespace GameDonkey
 		GameClock GetStateClock();
 
 		#endregion //Methods
-
-		#region Networking
-
-#if NETWORKING
-
-		/// <summary>
-		/// Read this object from a network packet reader.
-		/// </summary>
-		void ReadFromNetwork(PacketReader packetReader);
-
-		/// <summary>
-		/// Write this object to a network packet reader.
-		/// </summary>
-		void WriteToNetwork(PacketWriter packetWriter);
-
-#endif
-
-		#endregion //Networking
 
 		#region File IO
 

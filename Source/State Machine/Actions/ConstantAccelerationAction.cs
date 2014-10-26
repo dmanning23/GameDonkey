@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Vector2Extensions;
-using StateMachineBuddy;
 using System;
 using System.Diagnostics;
 using System.Xml;

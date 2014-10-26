@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Content;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
 using StateMachineBuddy;
 using FilenameBuddy;
 

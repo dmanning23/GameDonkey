@@ -2,7 +2,6 @@
 using FilenameBuddy;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using StateMachineBuddy;
 using System;
 using System.Diagnostics;
 using System.Xml;

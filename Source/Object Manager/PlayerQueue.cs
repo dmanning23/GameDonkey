@@ -4,9 +4,6 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using GameTimer;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
 using DrawListBuddy;
 using CameraBuddy;
 using RenderBuddy;
@@ -624,95 +621,6 @@ namespace GameDonkey
 		}
 
 		#endregion //Methods
-
-		#region Networking
-
-#if NETWORKING
-
-		public void ReadScoreFromNetwork(PacketReader packetReader)
-		{
-			//read/write point stuff to network?
-			m_iPoints = packetReader.ReadInt32();
-			m_iStock = packetReader.ReadInt32();
-
-			//start the timer
-			m_ScoreTimer.Start(2.0f);
-		}
-
-		public void WriteScoreToNetwork(PacketWriter packetWriter)
-		{
-			//read/write point stuff to network?
-			packetWriter.Write(m_iPoints);
-			packetWriter.Write(m_iStock);
-		}
-
-		/// <summary>
-		/// Read this object from a network packet reader.
-		/// </summary>
-		public virtual void ReadFromNetwork(PacketReader packetReader)
-		{
-			//read in the number of active objects
-			int iNumActiveObjects = packetReader.ReadInt32();
-
-			for (int i = 0; i < iNumActiveObjects; i++)
-			{
-				//read in the id of the object
-				int iQueueID = packetReader.ReadInt32();
-
-				//find that object
-				BaseObject rObject = FindActiveObject(iQueueID);
-				Debug.Assert(null != rObject);
-
-				//read in that objects stuff
-				rObject.ReadFromNetwork(packetReader);
-			}
-
-			//read in the number of inactive objects
-			int iNumInactiveObjects = packetReader.ReadInt32();
-
-			for (int i = 0; i < iNumInactiveObjects; i++)
-			{
-				//read in the id of the object
-				int iQueueID = packetReader.ReadInt32();
-
-				//make sure it is inactive
-				DeactivateObject(iQueueID);
-			}
-		}
-
-		/// <summary>
-		/// Write this object to a network packet reader.
-		/// </summary>
-		public void WriteToNetwork(PacketWriter packetWriter)
-		{
-			//write out the queueID first! (this will be read in by engine)
-			packetWriter.Write(m_iQueueID);
-
-			//write out number of active objects
-			packetWriter.Write(m_listActive.Count);
-
-			for (int i = 0; i < m_listActive.Count; i++)
-			{
-				//write out the queue id
-				packetWriter.Write(m_listActive[i].QueueID);
-
-				//write out the objects data
-				m_listActive[i].WriteToNetwork(packetWriter);
-			}
-
-			//write out the number of inactive objects\
-			packetWriter.Write(m_listInactive.Count);
-
-			for (int i = 0; i < m_listInactive.Count; i++)
-			{
-				//write out the queue id
-				packetWriter.Write(m_listInactive[i].QueueID);
-			}
-		}
-
-#endif
-
-		#endregion //Networking
 
 		#region File IO
 

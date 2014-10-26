@@ -1,12 +1,11 @@
-﻿using GameTimer;
-using FilenameBuddy;
-using Microsoft.Xna.Framework.Audio;
+﻿using FilenameBuddy;
+using GameTimer;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ParticleBuddy;
 using RenderBuddy;
-using System.Diagnostics;
 
 namespace GameDonkey
 {

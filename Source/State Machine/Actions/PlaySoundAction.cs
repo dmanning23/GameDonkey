@@ -1,5 +1,4 @@
-﻿using StateMachineBuddy;
-using Microsoft.Xna.Framework.Audio;
+﻿using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Diagnostics;
 using System.Xml;

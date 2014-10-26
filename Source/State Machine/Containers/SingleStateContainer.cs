@@ -1,14 +1,11 @@
-﻿using System.Diagnostics;
-using SPFSettings;
+﻿using FilenameBuddy;
 using GameTimer;
 using Microsoft.Xna.Framework.Content;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
+using SPFSettings;
 using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
-using FilenameBuddy;
+using System.Diagnostics;
 
 namespace GameDonkey
 {
@@ -288,32 +285,6 @@ namespace GameDonkey
 		}
 
 		#endregion //Methods
-
-		#region Networking
-
-#if NETWORKING
-
-		/// <summary>
-		/// Read this object from a network packet reader.
-		/// </summary>
-		public void ReadFromNetwork(PacketReader packetReader)
-		{
-			StateMachine.ReadFromNetwork(packetReader);
-			m_StateClock.ReadFromNetwork(packetReader);
-		}
-
-		/// <summary>
-		/// Write this object to a network packet reader.
-		/// </summary>
-		public void WriteToNetwork(PacketWriter packetWriter)
-		{
-			StateMachine.WriteToNetwork(packetWriter);
-			m_StateClock.WriteToNetwork(packetWriter);
-		}
-
-#endif
-
-		#endregion //Networking
 
 		#region State Action File IO
 

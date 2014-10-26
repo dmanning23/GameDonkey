@@ -1,7 +1,4 @@
-﻿using StateMachineBuddy;
-using RenderBuddy;
-using CameraBuddy;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Xml;
 

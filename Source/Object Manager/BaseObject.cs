@@ -1,13 +1,9 @@
-﻿using System;
-using HadoukInput;
+﻿using HadoukInput;
 using GameTimer;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
 using StateMachineBuddy;
 using ParticleBuddy;
 using AnimationLib;
@@ -1294,54 +1290,6 @@ namespace GameDonkey
 		#endregion //Tools
 
 		#endregion //Methods
-
-		#region Networking
-
-#if NETWORKING
-
-		/// <summary>
-		/// Read this object from a network packet reader.
-		/// </summary>
-		public virtual void ReadFromNetwork(PacketReader packetReader)
-		{
-			//read in the timer
-			CharacterClock.ReadFromNetwork(packetReader);
-
-			//read in the animation stuff
-			m_AnimationContainer.ReadFromNetwork(packetReader);
-
-			//read in state machine stuff
-			States.ReadFromNetwork(packetReader);
-
-			//read in position stuff
-			m_Position = packetReader.ReadVector2();
-			m_bFlip = packetReader.ReadBoolean();
-			m_Velocity = packetReader.ReadVector2();
-		}
-
-		/// <summary>
-		/// Write this object to a network packet reader.
-		/// </summary>
-		public virtual void WriteToNetwork(PacketWriter packetWriter)
-		{
-			//write out the timer
-			CharacterClock.WriteToNetwork(packetWriter);
-
-			//read in the animation stuff
-			m_AnimationContainer.WriteToNetwork(packetWriter);
-
-			//read in state machine stuff
-			States.WriteToNetwork(packetWriter);
-
-			//read in position stuff
-			packetWriter.Write(m_Position);
-			packetWriter.Write(m_bFlip);
-			packetWriter.Write(m_Velocity);
-		}
-
-#endif
-
-		#endregion //Networking
 
 		#region File IO
 

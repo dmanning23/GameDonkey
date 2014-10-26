@@ -1,10 +1,7 @@
 ﻿using AnimationLib;
 using XmlBuddy;
-using FilenameBuddy;
-using MatrixExtensions;
 using Microsoft.Xna.Framework;
 using ParticleBuddy;
-using StateMachineBuddy;
 using System;
 using System.Diagnostics;
 using System.Xml;

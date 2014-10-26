@@ -308,10 +308,6 @@
       <Project>{679A3FB5-9B58-44D7-B4E4-A0C3B6F641A7}</Project>
       <Name>ParticleBuddy.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\RandomExtensions\Windows\RandomExtensions.Windows.csproj">
-      <Project>{F0BBA30F-66E1-4E2F-BDF6-E17FF317C34E}</Project>
-      <Name>RandomExtensions.Windows</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\StateMachine\Windows\StateMachineBuddy.Windows.csproj">
       <Project>{CD66EEB4-8381-41A8-ABED-372DC31646AC}</Project>
       <Name>StateMachineBuddy.Windows</Name>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using StateMachineBuddy;
 using System;
 using System.Diagnostics;
 using System.Xml;

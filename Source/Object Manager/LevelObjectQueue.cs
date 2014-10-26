@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Diagnostics;
-#if NETWORKING
-using Microsoft.Xna.Framework.Net;
-#endif
 
 namespace GameDonkey
 {
@@ -24,20 +21,5 @@ namespace GameDonkey
 				m_listActive[i].Reset();
 			}
 		}
-
-#if NETWORKING
-
-		/// <summary>
-		/// Read this object from a network packet reader.
-		/// </summary>
-		public override void ReadFromNetwork(PacketReader packetReader)
-		{
-			int iQueueID = packetReader.ReadInt32();
-			Debug.Assert(QueueID == iQueueID);
-
-			base.ReadFromNetwork(packetReader);
-		}
-
-#endif
 	}
 }
