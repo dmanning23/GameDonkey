@@ -130,7 +130,7 @@ namespace GameDonkey
 							return false;
 						}
 					}
-					else if (strName == "filename")
+					else if ((strName == "filename") && !string.IsNullOrEmpty(strValue))
 					{
 						SoundCueName = new Filename(strValue);
 						Sound = rEngine.LoadSound(SoundCueName);
