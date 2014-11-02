@@ -1025,7 +1025,7 @@ namespace GameDonkey
 		protected override void RenderParticleEffects(Matrix cameraMatrix)
 		{
 			//draw all the particles, start another spritebatch for the particles
-			m_Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
+			m_Renderer.SpriteBatchBegin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, cameraMatrix);
 			ParticleEngine.Render(Renderer);
 			m_Renderer.SpriteBatchEnd();
 		}
