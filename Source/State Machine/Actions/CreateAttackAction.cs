@@ -331,7 +331,7 @@ namespace GameDonkey
 					return false;
 				}
 			}
-			else if (strName == "hitSound")
+			else if ((strName == "hitSound") && !string.IsNullOrEmpty(strValue))
 			{
 				HitSoundName = new Filename(strValue);
 				HitSound = rEngine.LoadSound(HitSoundName);
