@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Vector2Extensions;
 
 namespace GameDonkey
 {
@@ -118,10 +119,8 @@ namespace GameDonkey
 
 		public override void Update(bool bUpdateGravity)
 		{
-			Debug.Assert(m_Velocity.X != float.NaN);
-			Debug.Assert(m_Velocity.Y != float.NaN);
-			Debug.Assert(m_Position.X != float.NaN);
-			Debug.Assert(m_Position.Y != float.NaN);
+			Debug.Assert(!m_Velocity.IsNaN());
+			Debug.Assert(!m_Position.IsNaN());
 
 			//update all our clocks
 			Debug.Assert(null != CharacterClock);
