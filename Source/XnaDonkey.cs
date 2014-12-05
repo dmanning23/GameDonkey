@@ -1060,7 +1060,7 @@ namespace GameDonkey
 			m_Renderer.LoadContent(rGraphics);
 
 			//load the background image used for the HUD
-			m_HUDBackground = (XNATexture)Renderer.LoadImage(@"HUDBackground.png");
+			m_HUDBackground = (XNATexture)Renderer.LoadImage(new Filename(@"HUDBackground.png"));
 
 			//Load all teh default particle effects
 			AddParticleEffect(@"Particles\Hit Cloud.xml");
@@ -1223,7 +1223,7 @@ namespace GameDonkey
 			if (!string.IsNullOrEmpty(childNode.InnerXml))
 			{
 				Filename backgroundFile = new Filename(childNode.InnerXml);
-				m_SkyBox = (XNATexture)Renderer.LoadImage(backgroundFile.ToString());
+				m_SkyBox = (XNATexture)Renderer.LoadImage(backgroundFile);
 			}
 
 			//load the color!
