@@ -227,6 +227,11 @@ namespace GameDonkey
 			}
 		}
 
+		public override string ToString()
+		{
+			return StateName;
+		}
+
 		#region Tool Methods
 
 		/// <summary>

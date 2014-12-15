@@ -119,9 +119,6 @@ namespace GameDonkey
 
 		public override void Update(bool bUpdateGravity)
 		{
-			Debug.Assert(!m_Velocity.IsNaN());
-			Debug.Assert(!m_Position.IsNaN());
-
 			//update all our clocks
 			Debug.Assert(null != CharacterClock);
 			m_EvasionTimer.Update(CharacterClock);
