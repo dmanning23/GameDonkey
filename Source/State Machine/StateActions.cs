@@ -370,21 +370,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement(); //Item
 		}
 
-		public void ReadSerialized(SPFSettings.StateActionsXML myActions, BaseObject rOwner, IGameDonkey rEngine, ContentManager rXmlContent, SingleStateContainer stateContainer)
-		{
-			//grab teh state name
-			StateName = myActions.name;
-
-			//verify that the state is in the state machine!
-			Debug.Assert(-1 != stateContainer.GetStateIndexFromText(StateName));
-
-			//set up all the actions
-			IBaseAction.ReadSerializedListActions(rOwner, myActions.actions, ref m_listActions, rEngine, rXmlContent, stateContainer);
-
-			//calculate "active" and "recovery" phases
-			CalculateAttackTime();
-		}
-
 		#endregion //File IO
 	}
 }

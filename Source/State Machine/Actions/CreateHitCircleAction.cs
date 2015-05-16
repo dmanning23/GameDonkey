@@ -133,21 +133,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.CreateHitCircleActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, SingleStateContainer stateContainer)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-
-			m_HitCircle.Radius = myAction.radius;
-			m_StartOffset = myAction.startOffset;
-			m_Velocity = myAction.velocity;
-
-			return base.ReadSerialized(myAction, rEngine, rXmlContent, stateContainer);
-		}
-
 		#endregion //File IO
 	}
 }

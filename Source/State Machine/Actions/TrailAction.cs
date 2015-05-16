@@ -251,31 +251,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.TrailActionXML myAction)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			ReadSerializedBase(myAction);
-
-			m_StartColor.R = myAction.R;
-			m_StartColor.G = myAction.G;
-			m_StartColor.B = myAction.B;
-			m_StartColor.A = myAction.A;
-			m_fTrailLifeDelta = myAction.lifeDelta;
-			m_fSpawnDelta = myAction.spawnDelta;
-			m_fTimeDelta = myAction.timeDelta;
-
-			Debug.Assert(m_fTrailLifeDelta >= 0.0f);
-			Debug.Assert(m_fSpawnDelta >= 0.0f);
-			Debug.Assert(m_fTimeDelta >= 0.0f);
-			Debug.Assert(m_StartColor.A > 0);
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

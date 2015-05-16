@@ -348,38 +348,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.ParticleEffectActionXML myAction, IGameDonkey rEngine)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			ReadSerializedBase(myAction);
-
-			Debug.Assert(null != rEngine);
-			Debug.Assert(null != ParticleEngine);
-
-			_boneName = myAction.bone;
-			if (_boneName != "")
-			{
-				_bone = Owner.AnimationContainer.Model.GetBone(_boneName);
-				Debug.Assert(null != _bone);
-			}
-
-			Velocity.ReadSerialized(myAction.direction);
-			StartOffset = myAction.StartOffset;
-			UseBoneRotation = myAction.UseBoneRotation;
-			Debug.Assert(myAction.emitter.Count == 1);
-			//if (!Emitter.ReadSerializedObject(myAction.emitter[0], rEngine.Renderer))
-			//{
-			//	Debug.Assert(false);
-			//	return false;
-			//}
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

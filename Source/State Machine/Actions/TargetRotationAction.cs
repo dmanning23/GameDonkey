@@ -182,20 +182,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.TargetRotationActionXML myAction)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			TargetRotation.ReadSerialized(myAction.targetRotation);
-			TimeDelta = myAction.timeDelta;
-			ReadSerializedBase(myAction);
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

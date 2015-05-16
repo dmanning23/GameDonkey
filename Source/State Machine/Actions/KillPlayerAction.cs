@@ -129,18 +129,6 @@ namespace GameDonkey
 		{
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.KillPlayerActionXML myAction)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			ReadSerializedBase(myAction);
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

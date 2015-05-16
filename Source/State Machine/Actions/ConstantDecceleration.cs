@@ -177,24 +177,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.ConstantDeccelerationActionXML myAction)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			Velocity = myAction.direction;
-			MinYVelocity = myAction.minYVelocity;
-			ReadSerializedBase(myAction);
-
-			Debug.Assert(Velocity.Y <= 0.0f);
-			Debug.Assert(Velocity.X >= 0.0f);
-			Debug.Assert(MinYVelocity >= 0.0f);
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

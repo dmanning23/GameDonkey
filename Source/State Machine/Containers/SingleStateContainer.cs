@@ -356,39 +356,6 @@ namespace GameDonkey
 			return m_listActions.WriteXml(m_strActionsFile, StateMachine);
 		}
 
-		public void ReadSerializedStateContainer(ContentManager rContent,
-			List<StateContainerXML> childNodes, 
-			IGameDonkey rEngine, 
-			int iMessageOffset, 
-			BaseObject rOwner)
-		{
-			//there should only be one action object in there
-			Debug.Assert(1 == childNodes.Count);
-			ReadSerializedSingleStateContainer(rContent, childNodes[0], rEngine, iMessageOffset, rOwner);
-		}
-
-		public void ReadSerializedSingleStateContainer(ContentManager rContent,
-			StateContainerXML childNode,
-			IGameDonkey rEngine,
-			int iMessageOffset,
-			BaseObject rOwner)
-		{
-			//load the state machine
-			ReadSerializedStateMachine(rContent, StateMachine, new Filename(childNode.stateMachine), iMessageOffset);
-
-			//save that filename for later
-			m_strActionsFile = new Filename(childNode.stateActions);
-
-			//load the state actions
-			Debug.Assert(null != m_listActions);
-			m_listActions.ReadSerializedStateActions(rContent, m_strActionsFile, rOwner, this, rEngine);
-		}
-
-		public virtual void ReadSerializedStateMachine(ContentManager rContent, StateMachine machine, Filename file, int iMessageOffset)
-		{
-			machine.ReadSerializedFile(rContent, file, iMessageOffset);
-		}
-
 		#endregion //Combined File IO
 	}
 }

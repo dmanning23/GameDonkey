@@ -880,8 +880,8 @@ namespace GameDonkey
 				{
 					myDamageColor = Color.Red;
 				}
-				m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.15f, Color.DarkGray, m_Renderer.SpriteBatch);
-				float fCursor = m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.0f, myDamageColor, m_Renderer.SpriteBatch);
+				m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.15f, Color.DarkGray, m_Renderer.SpriteBatch, m_GameTimer);
+				float fCursor = m_Font.Write(strDamage, new Vector2(iCenter, iBottom), Justify.Center, 1.0f, myDamageColor, m_Renderer.SpriteBatch, m_GameTimer);
 
 				////draw the player's score
 
@@ -907,7 +907,7 @@ namespace GameDonkey
 
 				//write the players name
 				float fPortraitCenter = (fHeight * 0.5f) + iLeft;
-				m_Font.Write(m_listPlayers[i].PlayerName, new Vector2(fPortraitCenter, iTop), Justify.Center, 0.7f, Color.White, m_Renderer.SpriteBatch);
+				m_Font.Write(m_listPlayers[i].PlayerName, new Vector2(fPortraitCenter, iTop), Justify.Center, 0.7f, Color.White, m_Renderer.SpriteBatch, m_GameTimer);
 			}
 		}
 
@@ -939,7 +939,7 @@ namespace GameDonkey
 					//draw the time
 					float fPositionY = iBottom + (fHeight * 0.4f);
 					string strTime = m_GameTimer.ToString();
-					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, m_Renderer.SpriteBatch);
+					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, m_Renderer.SpriteBatch, m_GameTimer);
 				}
 			}
 		}
@@ -1037,7 +1037,7 @@ namespace GameDonkey
 		/// <param name="position">where to write the text at</param>
 		public void Write(string strText, Vector2 position)
 		{
-			m_Font.Write(strText, position, Justify.Left, 1.0f, Color.White, m_Renderer.SpriteBatch);
+			m_Font.Write(strText, position, Justify.Left, 1.0f, Color.White, m_Renderer.SpriteBatch, m_GameTimer);
 		}
 
 		#endregion //Draw

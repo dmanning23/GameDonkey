@@ -303,28 +303,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public virtual bool ReadSerialized(SPFSettings.BlockingStateActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, SingleStateContainer stateContainer)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			ReadSerializedBase(myAction);
-
-			TimeDelta = myAction.timeDelta;
-
-			//read in serialized action
-			BoneName = myAction.boneName;
-
-			HitSound = myAction.hitSound;
-			//TODO: verify the sound action
-			//Debug.Assert(null != CAudioManager.GetCue(m_strHitSound));
-			IBaseAction.ReadSerializedListActions(Owner, myAction.successActions, ref m_listSuccessActions, rEngine, rXmlContent, stateContainer);
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

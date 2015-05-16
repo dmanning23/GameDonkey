@@ -138,8 +138,6 @@ namespace GameDonkey
 
 		bool WriteXml();
 
-		void ReadSerializedStateContainer(ContentManager rContent, List<StateContainerXML> childNodes, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner);
-
 		#endregion //File IO
 	}
 }

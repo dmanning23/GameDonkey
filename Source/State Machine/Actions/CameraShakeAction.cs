@@ -184,23 +184,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.CameraShakeActionXML myAction, IGameDonkey rEngine)
-		{
-			Camera = rEngine.Renderer.Camera;
-
-			Debug.Assert(myAction.type == ActionType.ToString());
-			ReadSerializedBase(myAction);
-
-			TimeDelta = myAction.TimeDelta;
-			ShakeAmount = myAction.ShakeAmount;
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

@@ -157,23 +157,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.PlaySoundActionXML myAction)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			ReadSerializedBase(myAction);
-
-			SoundCueName = new Filename(myAction.filename);
-			
-			////TODO: verify the sound is there
-			//Debug.Assert(null != CAudioManager.GetCue(m_strSoundCueName));
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

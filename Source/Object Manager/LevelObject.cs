@@ -113,23 +113,6 @@ namespace GameDonkey
 			return base.ParseXmlData(childNode, rEngine, iMessageOffset);
 		}
 
-		public override bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
-		{
-			SPFSettings.LevelObjectXML myCharXML = rXmlContent.Load<SPFSettings.LevelObjectXML>(strResource.GetRelPathFileNoExt());
-			if (!base.LoadObject(rXmlContent, myCharXML, rEngine, iMessageOffset))
-			{
-				return false;
-			}
-
-			//set the scale
-			Scale = myCharXML.size;
-
-			//set teh position
-			Position = myCharXML.location;
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

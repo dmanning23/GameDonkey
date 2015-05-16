@@ -278,35 +278,6 @@ namespace GameDonkey
 			return true;
 		}
 
-		public void ReadSerializedStateActions(ContentManager rXmlContent,
-			Filename strResource,
-			BaseObject rOwner,
-			SingleStateContainer stateContainer,
-			IGameDonkey rEngine)
-		{
-			//load the resource
-			StateActionListXML myContainer = rXmlContent.Load<StateActionListXML>(strResource.GetRelPathFileNoExt());
-
-			//read in all the states
-			for (int i = 0; i < myContainer.states.Count; i++)
-			{
-				StateActions myActions = new StateActions();
-				myActions.ReadSerialized(myContainer.states[i], rOwner, rEngine, rXmlContent, stateContainer);
-				m_listActions.Add(myActions);
-			}
-			Debug.Assert(stateContainer.NumStates() == m_listActions.Count);
-
-			//make sure every state has a state action!
-#if DEBUG
-			for (int i = 0; i < stateContainer.NumStates(); i++)
-			{
-				string strStateMachineName = stateContainer.GetStateName(i);
-				string strStateActionName = m_listActions[i].StateName;
-				Debug.Assert(strStateMachineName == strStateActionName);
-			}
-#endif
-		}
-
 		#endregion //State Action File IO
 	}
 }

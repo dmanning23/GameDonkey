@@ -295,38 +295,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.ProjectileActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			Debug.Assert(null != Owner);
-			Debug.Assert(null != Owner.PlayerQueue);
-
-			ReadSerializedBase(myAction);
-
-			StartOffset = myAction.startOffset;
-
-			//load the projectile object
-			m_strProjectileFileName.SetRelFilename(myAction.filename);
-
-			//load object into player queue!
-			m_rProjectile = Owner.PlayerQueue.LoadSerializedObject(rXmlContent, m_strProjectileFileName, rEngine, EObjectType.Projectile, 0);
-			if (null == m_rProjectile)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			Velocity.ReadSerialized(myAction.direction);
-
-			Scale = myAction.scale;
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

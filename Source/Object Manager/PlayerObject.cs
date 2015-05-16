@@ -705,59 +705,6 @@ namespace GameDonkey
 			return base.ParseXmlData(childNode, rEngine, iMessageOffset);
 		}
 
-		public override bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
-		{
-			SPFSettings.PlayerObjectXML myCharXML = rXmlContent.Load<SPFSettings.PlayerObjectXML>(strResource.GetRelPathFileNoExt());
-
-			//load the base object stuff
-			Debug.Assert(null != PlayerQueue);
-
-			Filename strModelFile = new Filename(myCharXML.model);
-			Filename strAnimationFile = new Filename(myCharXML.animations);
-			m_fHeight = (float)myCharXML.height;
-
-			////try to load the model
-			//if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile, rEngine.Renderer))
-			//{
-			//	Debug.Assert(false);
-			//	return false;
-			//}
-			rXmlContent.Unload();
-
-			//load all the garments
-			foreach (string strGarment in myCharXML.garments)
-			{
-				//get the garment filename
-				Filename strGarmentFile = new Filename(strGarment);
-				LoadSerializedGarment(rXmlContent, rEngine, strGarmentFile);
-			}
-
-			//read in the animations
-			//AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
-			rXmlContent.Unload();
-
-			//load player object stuff
-			if (null != rEngine.Renderer.Content)
-			{
-				Portrait = rEngine.Renderer.Content.Load<Texture2D>(myCharXML.portrait);
-			}
-
-			DeathSound = rEngine.LoadSound(new Filename(myCharXML.deathSound));
-			BlockSound = rEngine.LoadSound(new Filename(myCharXML.blockSound));
-
-			//SPARROWHAWKS
-
-			//load the ground states
-			States.ReadSerializedStateContainer(rXmlContent,
-				myCharXML.states, 
-				rEngine,
-				iMessageOffset, 
-				this);
-			rXmlContent.Unload();
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

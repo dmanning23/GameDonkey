@@ -197,29 +197,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(ContentManager myContent, SPFSettings.AddGarmentActionXML myAction, IGameDonkey rEngine)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			Debug.Assert(null == m_Garment);
-
-			//load the garment from the garment manager
-			m_Garment = Owner.MyGarments.LoadGarment(myContent, myAction.garmentFile, rEngine.Renderer);
-			if (m_Garment == null)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			TimeDelta = myAction.timeDelta;
-			ReadSerializedBase(myAction);
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }

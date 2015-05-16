@@ -1,6 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using FilenameBuddy;
 using StateMachineBuddy;
-using FilenameBuddy;
 
 namespace GameDonkey
 {
@@ -15,18 +14,9 @@ namespace GameDonkey
 		{
 		}
 
-		#region State Action File IO
-
 		public override bool ReadXmlStateMachine(StateMachine machine, Filename file)
 		{
 			return machine.AppendXmlFile(file);
 		}
-
-		public override void ReadSerializedStateMachine(ContentManager rContent, StateMachine machine, Filename file, int iMessageOffset)
-		{
-			machine.AppendSerializedFile(rContent, file, iMessageOffset);
-		}
-
-		#endregion //Combined File IO
 	}
 }

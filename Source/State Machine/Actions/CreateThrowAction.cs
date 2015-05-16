@@ -166,22 +166,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.CreateThrowActionXML myAction, IGameDonkey rEngine, ContentManager rXmlContent, SingleStateContainer stateContainer)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-
-			m_strThrowMessage = myAction.throwMessage;
-			m_iThrowMessage = Owner.States.GetMessageIndexFromText(m_strThrowMessage);
-			Debug.Assert(m_iThrowMessage >= 0);
-			m_fReleaseTimeDelta = myAction.releaseTimeDelta;
-
-			return base.ReadSerialized(myAction, rEngine, rXmlContent, stateContainer);
-		}
-
 		#endregion //File IO
 	}
 }

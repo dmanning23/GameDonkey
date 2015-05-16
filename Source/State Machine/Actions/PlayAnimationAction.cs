@@ -216,27 +216,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.PlayAnimationActionXML myAction)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			ReadSerializedBase(myAction);
-
-			//read in teh animation
-			AnimationName = myAction.animation;
-			Debug.Assert(0 <= m_iAnimationIndex);
-			Debug.Assert(m_iAnimationIndex < Owner.AnimationContainer.Animations.Count);
-
-			//read in teh playback style
-			m_ePlaybackMode = (EPlayback)Enum.Parse(typeof(EPlayback), myAction.playback);
-
-			return true;
-		}
-
-
 		#endregion //File IO
 	}
 }

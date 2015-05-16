@@ -1353,66 +1353,6 @@ namespace GameDonkey
 			return myGarment;
 		}
 
-		public virtual bool LoadSerializedObject(ContentManager rXmlContent, Filename strResource, IGameDonkey rEngine, int iMessageOffset)
-		{
-			SPFSettings.BaseObjectXML myCharXML = rXmlContent.Load<SPFSettings.BaseObjectXML>(strResource.GetRelPathFileNoExt());
-			return LoadObject(rXmlContent, myCharXML, rEngine, iMessageOffset);
-		}
-
-		public virtual bool LoadObject(ContentManager rXmlContent, SPFSettings.BaseObjectXML myCharXML, IGameDonkey rEngine, int iMessageOffset)
-		{
-			Debug.Assert(null != PlayerQueue);
-
-			Filename strModelFile = new Filename(myCharXML.model);
-			Filename strAnimationFile = new Filename(myCharXML.animations);
-			m_fHeight = (float)myCharXML.height;
-
-			//load all the garments
-			foreach (string strGarment in myCharXML.garments)
-			{
-				//get the garment filename
-				Filename strGarmentFile = new Filename();
-				strGarmentFile.SetRelFilename(strGarment);
-
-				LoadSerializedGarment(rXmlContent, rEngine, strGarmentFile);
-			}
-
-			////try to load all that stuff
-			//if (!AnimationContainer.ReadSerializedModelFormat(rXmlContent, strModelFile, rEngine.Renderer))
-			//{
-			//	Debug.Assert(false);
-			//	return false;
-			//}
-			Physics.SortBones(AnimationContainer.Model);
-			//AnimationContainer.ReadSerializedAnimationFormat(rXmlContent, strAnimationFile);
-
-			//read in the state container
-			States.ReadSerializedStateContainer(rXmlContent,
-				myCharXML.states,
-				rEngine,
-				iMessageOffset,
-				this);
-
-			return true;
-		}
-
-		public Garment LoadSerializedGarment(ContentManager rXmlContent, IGameDonkey rEngine, Filename strGarmentFile)
-		{
-			//load the garment
-			Garment myGarment = new Garment();
-			//myGarment.ReadSerializedFormat(rXmlContent, strGarmentFile, rEngine.Renderer, AnimationContainer.Model);
-
-			//add the garment to the dude
-			myGarment.AddToModel();
-			rXmlContent.Unload();
-
-			//sort all the bones in the physics engine
-			Physics.SortBones(AnimationContainer.Model);
-			Physics.GarmentChange(myGarment);
-
-			return myGarment;
-		}
-
 		#endregion //File IO
 	}
 }

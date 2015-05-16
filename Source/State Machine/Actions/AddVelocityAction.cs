@@ -168,19 +168,6 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 		}
 
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(SPFSettings.AddVelocityActionXML myAction)
-		{
-			Debug.Assert(myAction.type == ActionType.ToString());
-			Velocity.ReadSerialized(myAction.direction);
-			ReadSerializedBase(myAction);
-
-			return true;
-		}
-
 		#endregion //File IO
 	}
 }
