@@ -63,7 +63,7 @@ namespace GameDonkey
 				}
 				else
 				{
-					_bone = Owner.AnimationContainer.Model.GetBone(_boneName);
+					_bone = Owner.AnimationContainer.Skeleton.RootBone.GetBone(_boneName);
 					Debug.Assert(null != _bone);
 				}
 			}
@@ -252,7 +252,7 @@ namespace GameDonkey
 							_boneName = strValue;
 							if (!string.IsNullOrEmpty(_boneName))
 							{
-								_bone = Owner.AnimationContainer.Model.GetBone(_boneName);
+								_bone = Owner.AnimationContainer.Skeleton.RootBone.GetBone(_boneName);
 								Debug.Assert(null != _bone);
 							}
 						}

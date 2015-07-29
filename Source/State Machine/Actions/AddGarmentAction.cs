@@ -192,7 +192,7 @@ namespace GameDonkey
 			rXMLFile.WriteStartElement("garmentFile");
 			if (null != Garment)
 			{
-				rXMLFile.WriteString(Garment.Filename.GetRelFilename());
+				rXMLFile.WriteString(Garment.GarmentFile.GetRelFilename());
 			}
 			rXMLFile.WriteEndElement();
 		}

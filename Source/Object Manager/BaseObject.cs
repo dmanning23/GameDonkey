@@ -1062,7 +1062,7 @@ namespace GameDonkey
 
 		public void RenderPhysics(IRenderer rRenderer)
 		{
-			AnimationContainer.Model.DrawPhysics(rRenderer, true, Color.White);
+			AnimationContainer.Skeleton.RootBone.DrawPhysics(rRenderer, true, Color.White);
 		}
 
 		public void DrawCameraInfo(IRenderer rRenderer)
@@ -1281,7 +1281,7 @@ namespace GameDonkey
 		public void GetAllWeaponBones(List<string> listWeapons)
 		{
 			//get all the weapons from this dude's model
-			AnimationContainer.Model.GetAllWeaponBones(listWeapons);
+			AnimationContainer.Skeleton.RootBone.GetAllWeaponBones(listWeapons);
 
 			//get all the weapons loaded into the garment manager
 			MyGarments.GetAllWeaponBones(listWeapons);
@@ -1304,19 +1304,11 @@ namespace GameDonkey
 		public virtual bool ParseXmlData(BaseObjectData childNode, IGameDonkey rEngine, int iMessageOffset)
 		{
 			//read in the model
-			if (!AnimationContainer.ReadXMLModelFormat(childNode.ModelFile, rEngine.Renderer))
-			{
-				Debug.Assert(false);
-				return false;
-			}
-			Physics.SortBones(AnimationContainer.Model);
+			AnimationContainer.ReadSkeletonXml(childNode.ModelFile, rEngine.Renderer);
+			Physics.SortBones(AnimationContainer.Skeleton.RootBone);
 
 			//read in the animations
-			if (!AnimationContainer.ReadXMLAnimationFormat(childNode.AnimationFile))
-			{
-				Debug.Assert(false);
-				return false;
-			}
+			AnimationContainer.ReadAnimationXml(childNode.AnimationFile);
 
 			//read in the garments
 			foreach (var garmentFile in childNode.GarmentFiles)
@@ -1340,14 +1332,13 @@ namespace GameDonkey
 		public Garment LoadXmlGarment(IGameDonkey rEngine, Filename strGarmentFile)
 		{
 			//load the garment
-			Garment myGarment = new Garment();
-			myGarment.ReadXMLFormat(strGarmentFile, rEngine.Renderer, AnimationContainer.Model);
+			Garment myGarment = new Garment(strGarmentFile, AnimationContainer.Skeleton, rEngine.Renderer);
 
 			//add the garment to the dude
-			myGarment.AddToModel();
+			myGarment.AddToSkeleton();
 
 			//sort all the bones in the physics engine
-			Physics.SortBones(AnimationContainer.Model);
+			Physics.SortBones(AnimationContainer.Skeleton.RootBone);
 			Physics.GarmentChange(myGarment);
 
 			return myGarment;

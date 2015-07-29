@@ -225,7 +225,7 @@ namespace GameDonkey
 			{
 				for (int j = 0; j < Player.ActiveObjects.Count; j++)
 				{
-					Player.ActiveObjects[j].AnimationContainer.Model.DrawPhysics(Renderer, true, Color.White);
+					Player.ActiveObjects[j].AnimationContainer.Skeleton.RootBone.DrawPhysics(Renderer, true, Color.White);
 				}
 			}
 

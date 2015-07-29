@@ -74,7 +74,8 @@ namespace GameDonkey
 		{
 			Debug.Assert(null != Owner);
 			Debug.Assert(null != Owner.AnimationContainer);
-			Debug.Assert(null != Owner.AnimationContainer.Model);
+			Debug.Assert(null != Owner.AnimationContainer.Skeleton);
+			Debug.Assert(null != Owner.AnimationContainer.Skeleton.RootBone);
 			Debug.Assert(!AlreadyRun);
 
 			Owner.AnimationContainer.SetAnimation(m_iAnimationIndex, m_ePlaybackMode);

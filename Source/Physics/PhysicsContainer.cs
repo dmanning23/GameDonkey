@@ -177,7 +177,7 @@ namespace GameDonkey
 			if (rGarment.HasPhysics)
 			{
 				ClearPhysicsLists();
-				SortBones(Owner.AnimationContainer.Model);
+				SortBones(Owner.AnimationContainer.Skeleton.RootBone);
 			}
 		}
 

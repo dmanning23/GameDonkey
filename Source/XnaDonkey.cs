@@ -985,7 +985,7 @@ namespace GameDonkey
 				{
 					for (int j = 0; j < m_listPlayers[i].ActiveObjects.Count; j++)
 					{
-						m_listPlayers[i].ActiveObjects[j].AnimationContainer.Model.DrawPhysics(Renderer, true, Color.White);
+						m_listPlayers[i].ActiveObjects[j].AnimationContainer.Skeleton.RootBone.DrawPhysics(Renderer, true, Color.White);
 					}
 				}
 
@@ -1122,10 +1122,7 @@ namespace GameDonkey
 				BufferedInputExpire = 0.0f,
 				QueuedInputExpire = 0.05f
 			};
-			if (!rQueue.ReadXmlFile(new Filename(@"MoveList.xml"), rPlayer.Character.States.GetMessageIndexFromText))
-			{
-				Debug.Assert(false);
-			}
+			rQueue.ReadXmlFile(new Filename(@"MoveList.xml"), rPlayer.Character.States.GetMessageIndexFromText);
 			rPlayer.InputQueue = rQueue;
 
 			//if this is player one, let them use the keyboard
