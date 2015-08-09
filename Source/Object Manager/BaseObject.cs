@@ -1,6 +1,7 @@
 ﻿using HadoukInput;
 using GameTimer;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -30,7 +31,7 @@ namespace GameDonkey
 	/// </summary>
 	public class BaseObject
 	{
-		#region Members
+		#region Fields
 
 		/// <summary>
 		/// this is a counter for assigning round-robin item ids, this is the next id to use
@@ -103,10 +104,23 @@ namespace GameDonkey
 		/// </summary>
 		protected TrailAction m_rTrailAction;
 
+		private Color _playerColor = Color.White;
+
 		/// <summary>
 		/// The current color of this dude
 		/// </summary>
-		public Color PlayerColor { get; set; }
+		public Color PlayerColor 
+		{
+			get
+			{
+				return _playerColor;
+			}
+			set
+			{
+				_playerColor = value;
+				AnimationContainer.Skeleton.RootBone.SetPrimaryColor(_playerColor);
+			}
+		}
 
 		/// <summary>
 		/// Whether or not an attack has landed during the current state.  Used for combo engine.
@@ -140,7 +154,7 @@ namespace GameDonkey
 		/// </summary>
 		private float _currentRotation = 0.0f;
 
-		#endregion //Members
+		#endregion //Fields
 
 		#region Properties
 
@@ -329,7 +343,7 @@ namespace GameDonkey
 			m_TrailTimer = new CountdownTimer();
 			m_rTrailAction = null;
 			PlayerQueue = null;
-			PlayerColor = Color.White;
+			_playerColor = Color.White;
 			m_bAttackLanded = false;
 			m_QueuedInput = new Queue<int>();
 			m_fHeight = 0.0f;

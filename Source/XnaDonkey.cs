@@ -1,21 +1,20 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Audio;
+﻿using FilenameBuddy;
+using FontBuddyLib;
+using GameTimer;
 using HadoukInput;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using FontBuddyLib;
-using RenderBuddy;
 using ParticleBuddy;
-using FilenameBuddy;
+using RenderBuddy;
 using ResolutionBuddy;
-using GameTimer;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 using Vector2Extensions;
 #if OUYA
@@ -1046,36 +1045,6 @@ namespace GameDonkey
 
 		#region File IO
 
-		/// <summary>
-		/// load all the content in an xna game
-		/// </summary>
-		/// <param name="rContent">content manager</param>
-		public override void LoadSerializedContent(ContentManager rXmlContent, GraphicsDevice rGraphics)
-		{
-			m_LastKeyboardState = Keyboard.GetState();
-
-			//load all the content
-
-			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			m_Renderer.LoadContent(rGraphics);
-
-			//load the background image used for the HUD
-			m_HUDBackground = (XNATexture)Renderer.LoadImage(new Filename(@"HUDBackground.png"));
-
-			//Load all teh default particle effects
-			AddParticleEffect(@"Particles\Hit Cloud.xml");
-			AddParticleEffect(@"Particles\Hit Spark.xml");
-			AddParticleEffect(@"Particles\Death Particles.xml");
-			AddParticleEffect(@"Particles\Block.xml");
-			AddParticleEffect(@"Particles\Weapon Hit.xml");
-			AddParticleEffect(@"Particles\Stunned Bounce.xml");
-			AddParticleEffect(@"Particles\ceiling bop.xml");
-
-			//load up our sprite font
-			Debug.Assert(null != m_Font);
-			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
-		}
-
 		private void AddParticleEffect(string file)
 		{
 			var emitter = new EmitterTemplate(new Filename(file));
@@ -1087,15 +1056,14 @@ namespace GameDonkey
 		/// <summary>
 		/// load all the content in an xna game
 		/// </summary>
-		/// <param name="rContent">content manager</param>
-		public override void LoadXmlContent(GraphicsDevice rGraphics)
+		public override void LoadXmlContent(GraphicsDevice graphics)
 		{
 			m_LastKeyboardState = Keyboard.GetState();
 
 			//load all the content
 
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			m_Renderer.LoadContent(rGraphics);
+			m_Renderer.LoadContent(graphics);
 
 			//load up our sprite font
 			Debug.Assert(null != m_Font);

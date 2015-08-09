@@ -145,19 +145,19 @@ namespace GameDonkey
 		/// <summary>
 		/// standard constructor
 		/// </summary>
-		public PlayerQueue(Color PlayerColor, int iQueueID)
+		public PlayerQueue(Color playerColor, int queueID)
 		{
 			m_listActive = new List<BaseObject>();
 			m_listInactive = new List<BaseObject>();
 			m_listTrailDrawLists = new List<DrawList>();
 			m_rCharacter = null;
 			m_CharacterClock = new HitPauseClock();
-			m_PlayerColor = PlayerColor;
+			m_PlayerColor = playerColor;
 			m_iPoints = 0;
 			m_iStock = 1;
 			InputQueue = null;
 			m_iNextObjectID = 0;
-			m_iQueueID = iQueueID;
+			m_iQueueID = queueID;
 			Debug.Assert(m_iQueueID >= 0);
 
 			m_ScoreTimer = new CountdownTimer();
@@ -701,6 +701,9 @@ namespace GameDonkey
 				m_listInactive.Add(myCharacter);
 			}
 
+			//set the color too
+			myCharacter.PlayerColor = m_PlayerColor;
+
 			return myCharacter;
 		}
 
@@ -708,9 +711,6 @@ namespace GameDonkey
 		{
 			Debug.Assert(null == m_rCharacter);
 			m_rCharacter = rObject;
-
-			//set the color too
-			rObject.PlayerColor = m_PlayerColor;
 		}
 
 		#endregion

@@ -1,13 +1,10 @@
 ﻿using FilenameBuddy;
 using GameTimer;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using ParticleBuddy;
 using RenderBuddy;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.Xna.Framework.Input;
 
 namespace GameDonkey
 {

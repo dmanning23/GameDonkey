@@ -2,7 +2,6 @@
 using GameTimer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ParticleBuddy;
 using RenderBuddy;
@@ -72,14 +71,7 @@ namespace GameDonkey
 		/// <summary>
 		/// load all the content in an xna game
 		/// </summary>
-		/// <param name="rContent"></param>
-		public virtual void LoadSerializedContent(ContentManager rXmlContent, GraphicsDevice rGraphics) { }
-
-		/// <summary>
-		/// load all the content in an xna game
-		/// </summary>
-		/// <param name="rContent"></param>
-		public virtual void LoadXmlContent(GraphicsDevice rGraphics) { }
+		public virtual void LoadXmlContent(GraphicsDevice graphics) { }
 
 		public virtual void Start()
 		{
