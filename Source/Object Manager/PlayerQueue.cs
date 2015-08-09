@@ -528,7 +528,7 @@ namespace GameDonkey
 						m_listActive[i].TrailAction.StartColor,
 						m_listActive[i].Scale);
 
-					m_listActive[i].AnimationContainer.Render(myTrail, m_listActive[i].PlayerColor);
+					m_listActive[i].AnimationContainer.Render(myTrail);
 					m_listTrailDrawLists.Add(myTrail);
 				}
 

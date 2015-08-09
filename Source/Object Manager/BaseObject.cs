@@ -338,7 +338,6 @@ namespace GameDonkey
 			CurrentRotation = 0.0f;
 
 			m_DrawList = new DrawList();
-			m_DrawList.CurrentColor = Color.White;
 			m_DrawList.Scale = m_fScale;
 
 			AccelAction = null;
@@ -1029,7 +1028,7 @@ namespace GameDonkey
 		public virtual void UpdateDrawlist()
 		{
 			m_DrawList.Flush();
-			AnimationContainer.Render(m_DrawList, PlayerColor);
+			AnimationContainer.Render(m_DrawList);
 		}
 
 		/// <summary>
