@@ -263,6 +263,8 @@ namespace GameDonkey
 					m_listActions.Add(actions);
 					actions.WriteXml(rXMLFile);
 				}
+
+				rXMLFile.Flush();
 			}
 			
 			rXMLFile.WriteEndElement(); //XnaContent

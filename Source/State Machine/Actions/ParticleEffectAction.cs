@@ -288,7 +288,7 @@ namespace GameDonkey
 								return false;
 							}
 
-							XmlFileBuddy.ReadChildNodes(childNode.FirstChild, Emitter.ParseXmlNode);
+							XmlFileBuddy.ReadChildNodes(childNode, Emitter.ParseXmlNode);
 							if (null != rEngine)
 							{
 								Emitter.LoadContent(rEngine.Renderer);
@@ -336,15 +336,7 @@ namespace GameDonkey
 			rXMLFile.WriteEndElement();
 
 			rXMLFile.WriteStartElement("emitter");
-
-			rXMLFile.WriteStartElement("Item");
-			rXMLFile.WriteAttributeString("Type", Emitter.ContentName);
-
 			Emitter.WriteXmlNodes(rXMLFile);
-
-			rXMLFile.WriteEndElement();
-			rXMLFile.WriteEndElement();
-
 			rXMLFile.WriteEndElement();
 		}
 
