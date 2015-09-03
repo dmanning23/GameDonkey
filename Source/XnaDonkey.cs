@@ -29,7 +29,7 @@ namespace GameDonkey
 
 		public const float RubberBandLength = 3000.0f;
 
-		private XNARenderer m_Renderer;
+		private XnaRenderer m_Renderer;
 
 		/// <summary>
 		/// list of all the player objects in the game
@@ -60,8 +60,8 @@ namespace GameDonkey
 		protected bool m_bRenderWorldBoundaries;
 		protected bool m_bRenderSpawnPoints;
 
-		private XNATexture m_SkyBox;
-		private XNATexture m_HUDBackground;
+		private XnaTexture m_SkyBox;
+		private XnaTexture m_HUDBackground;
 		private Color m_SkyColor;
 		private int m_iNumTiles;
 
@@ -189,7 +189,7 @@ namespace GameDonkey
 
 		#region Construction
 
-		public XnaDonkey(XNARenderer rRenderer, Game game)
+		public XnaDonkey(XnaRenderer rRenderer, Game game)
 			: base()
 		{
 			if (null != game)
@@ -1188,7 +1188,7 @@ namespace GameDonkey
 			if (!string.IsNullOrEmpty(childNode.InnerXml))
 			{
 				Filename backgroundFile = new Filename(childNode.InnerXml);
-				m_SkyBox = (XNATexture)Renderer.LoadImage(backgroundFile);
+				m_SkyBox = (XnaTexture)Renderer.LoadImage(backgroundFile);
 			}
 
 			//load the color!
