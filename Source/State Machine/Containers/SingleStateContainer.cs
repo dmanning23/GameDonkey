@@ -229,13 +229,13 @@ namespace GameDonkey
 		public int GetStateIndexFromText(string strStateName)
 		{
 			Debug.Assert(null != StateMachine);
-			return StateMachine.GetStateIndexFromText(strStateName);
+			return StateMachine.GetStateFromName(strStateName);
 		}
 
 		public int GetMessageIndexFromText(string strMessageName)
 		{
 			Debug.Assert(null != StateMachine);
-			return StateMachine.GetMessageIndexFromText(strMessageName);
+			return StateMachine.GetMessageFromName(strMessageName);
 		}
 
 		public string GetStateName(int iStateIndex)
