@@ -1,0 +1,1298 @@
+﻿using FilenameBuddy;
+using FontBuddyLib;
+using GameTimer;
+using HadoukInput;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using ParticleBuddy;
+using RenderBuddy;
+using ResolutionBuddy;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using System.Xml;
+using Vector2Extensions;
+
+namespace GameDonkey
+{
+	public class GameDonkey : IGameDonkey
+	{
+		#region Members
+
+		static protected Random _random = new Random(DateTime.Now.Millisecond);
+
+		//debugging flags
+		protected KeyboardState m_LastKeyboardState;
+		protected bool m_bRenderJointSkeleton;
+		protected bool m_bRenderPhysics;
+
+		/// <summary>
+		/// render the dots used to calculate camera position
+		/// </summary>
+		protected bool m_bDrawCameraInfo;
+		protected bool m_bRenderWorldBoundaries;
+		protected bool m_bRenderSpawnPoints;
+
+		private TextureInfo m_SkyBox;
+		private TextureInfo m_HUDBackground;
+		private Color m_SkyColor;
+		private int m_iNumTiles;
+
+		FontBuddy m_Font;
+
+		/// <summary>
+		/// The noise to play when a character falls off the board
+		/// </summary>
+		private string m_strDeathNoise;
+
+		/// <summary>
+		/// The velocity of the center point
+		/// </summary>
+		public Vector2 CenterVelocity { get; set; }
+
+		/// <summary>
+		/// a list of all the default particle effects used int he game
+		/// </summary>
+		private List<EmitterTemplate> m_DefaultParticles;
+
+		#endregion //Members
+
+		#region Properties
+
+		public IRenderer Renderer { get; private set; }
+
+		public ParticleEngine ParticleEngine { get; protected set; }
+
+		public GameClock MasterClock { get; protected set; }
+
+		/// <summary>
+		/// the world boundaries
+		/// </summary>
+		private Rectangle _worldBoundaries;
+		public Rectangle WorldBoundaries
+		{
+			get { return _worldBoundaries; }
+			set
+			{
+				_worldBoundaries = value;
+
+				//make the camera rect a little bit smaller so we can see more of the ground
+				Renderer.Camera.WorldBoundary = new Rectangle(_worldBoundaries.X, _worldBoundaries.Y, _worldBoundaries.Width, _worldBoundaries.Height + 100);
+			}
+		}
+
+		public PlayerQueue Character
+		{
+			get { return Players[0]; }
+		}
+
+		/// <summary>
+		/// list of all the player objects in the game
+		/// </summary>
+		public List<PlayerQueue> Players { get; private set; }
+
+		/// <summary>
+		/// player queue for updating level objects
+		/// </summary>
+		public PlayerQueue LevelObjects { get; private set; }
+
+		/// <summary>
+		/// the spawn points for characters
+		/// </summary>
+		protected List<Vector2> SpawnPoints { get; set; }
+
+		/// <summary>
+		/// The max amount of time a game will last
+		/// </summary>
+		public float MaxTime { get; private set; }
+
+		/// <summary>
+		/// Timer used to countdown to end of game
+		/// </summary>
+		public CountdownTimer GameTimer { get; private set; }
+
+		/// <summary>
+		/// Clock used to update all the characters & board objects
+		/// </summary>
+		public GameClock CharacterClock { get; protected set; }
+
+		/// <summary>
+		/// the music resource for the current board
+		/// </summary>
+		public string Music { get; private set; }
+
+		protected EmitterTemplate Block
+		{
+			get { return m_DefaultParticles[(int)EDefaultParticleEffects.Block]; }
+		}
+
+		protected EmitterTemplate HitSpark
+		{
+			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HitSpark]; }
+		}
+
+		protected EmitterTemplate HitCloud
+		{
+			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HitCloud]; }
+		}
+
+		protected EmitterTemplate StunnedBounce
+		{
+			get { return m_DefaultParticles[(int)EDefaultParticleEffects.StunnedBounce]; }
+		}
+
+		protected EmitterTemplate DeathParticles
+		{
+			get { return m_DefaultParticles[(int)EDefaultParticleEffects.Death]; }
+		}
+
+		protected EmitterTemplate HeadBop
+		{
+			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HeadBop]; }
+		}
+
+		protected EmitterTemplate WeaponHit
+		{
+			get { return m_DefaultParticles[(int)EDefaultParticleEffects.WeaponHit]; }
+		}
+
+		//Game over stuff!!!
+		public PlayerQueue Winner { get; protected set; }
+		public bool Tie { get; protected set; }
+		public bool GameOver { get; protected set; }
+
+		/// <summary>
+		/// dumb thing for loading sound effects.
+		/// </summary>
+		/// <value>The content of the sound.</value>
+		public ContentManager ContentManager { get; private set; }
+
+		#endregion //Properties
+
+		#region Construction
+
+		public GameDonkey(IRenderer renderer, Game game)
+			: base()
+		{
+			ParticleEngine = new ParticleEngine();
+			MasterClock = new GameClock();
+
+			if (null != game)
+			{
+				ContentManager = new ContentManager(game.Services, "Content");
+			}
+
+			Renderer = renderer;
+			Players = new List<PlayerQueue>();
+			LevelObjects = new LevelObjectQueue();
+			SpawnPoints = new List<Vector2>();
+
+			m_DefaultParticles = new List<EmitterTemplate>();
+
+			m_Font = new FontBuddy();
+			CharacterClock = new GameClock();
+
+			//debugging stuff
+			m_bRenderJointSkeleton = false;
+			m_bRenderPhysics = false;
+			m_bDrawCameraInfo = false;
+			m_bRenderWorldBoundaries = false;
+			m_bRenderSpawnPoints = false;
+
+			//game over stuff
+			GameTimer = new CountdownTimer();
+			MaxTime = 186.0f;
+			Winner = null;
+			GameOver = false;
+			Tie = false;
+
+			m_SkyBox = null;
+			m_HUDBackground = null;
+			m_SkyColor = Color.White;
+			m_iNumTiles = 1;
+		}
+
+		/// <summary>
+		/// factory method
+		/// </summary>
+		/// <param name="myColor"></param>
+		/// <param name="iQueueID"></param>
+		/// <returns></returns>
+		public virtual PlayerQueue CreatePlayerQueue(Color color, int queueID)
+		{
+			return new PlayerQueue(color, queueID);
+		}
+
+		/// <summary>
+		/// load all the content in a windows forms game
+		/// </summary>
+		public virtual void LoadContent()
+		{
+			WorldBoundaries = new Rectangle();
+		}
+
+		public virtual void UnloadContent()
+		{
+			ContentManager.Dispose();
+			ContentManager = null;
+		}
+
+		public void Start()
+		{
+			MasterClock.Start();
+			MasterClock.TimeDelta = 0.0f;
+
+			//speed up the character clock
+			SetClockSpeed(1.0f);
+
+			//reset the game timer
+			GameTimer.Start(MaxTime);
+			CharacterClock.Start();
+
+			//reset teh level objects
+			LevelObjects.Reset();
+
+			//reset the players
+			Debug.Assert(SpawnPoints.Count > 0);
+			int spawnIndex = 0;
+			for (int i = 0; i < Players.Count; i++)
+			{
+				Debug.Assert(null != Players[i]);
+
+				if (null != Players[i].InputQueue)
+				{
+					Debug.Assert(null != Players[i].InputQueue.Controller);
+					Players[i].InputQueue.Controller.ResetController();
+				}
+				Players[i].Reset(SpawnPoints[spawnIndex]);
+
+				//increment to the next spawn point
+				if (spawnIndex < (SpawnPoints.Count - 1))
+				{
+					++spawnIndex;
+				}
+				else
+				{
+					spawnIndex = 0;
+				}
+			}
+
+			//force the camera to fit the whole scene
+			for (int i = 0; i < Players.Count; i++)
+			{
+				Players[i].AddToCamera(Renderer.Camera);
+			}
+
+			Renderer.Camera.ForceToScreen();
+		}
+
+		public SoundEffect LoadSound(Filename cueName)
+		{
+			if (ContentManager != null)
+			{
+				return ContentManager.Load<SoundEffect>(cueName.GetRelPathFileNoExt());
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		#endregion //Construction
+
+		#region Methods
+
+		public virtual void AddCameraShake(float shakeAmount)
+		{
+			Renderer.Camera.AddCameraShake(shakeAmount);
+		}
+
+		/// <summary>
+		/// Change the speed of the character clock
+		/// </summary>
+		/// <param name="fSpeed">multiplier to speed up/slow down the character clock</param>
+		public void SetClockSpeed(float speed)
+		{
+			CharacterClock.TimerSpeed = speed;
+		}
+
+		/// <summary>
+		/// this is a hack put in just for local testing.
+		/// In the real game, each individual player queue will be updated in the network game loop.
+		/// </summary>
+		/// <param name="rInput"></param>
+		public void UpdateInput(InputState input)
+		{
+			var tasks = new List<Task>();
+			foreach (var player in Players)
+			{
+				Debug.Assert(null != player);
+				if (null != player.InputQueue)
+				{
+					tasks.Add(Task.Factory.StartNew(() => { player.UpdateInput(input); }));
+				}
+			}
+			Task.WaitAll(tasks.ToArray());
+		}
+
+		/// <summary>
+		/// update the game engine.  
+		/// This function is overridden in child classes.  
+		/// The server class checks for game over and updates the client class
+		/// The client class will not check for game over.
+		/// </summary>
+		/// <returns>bool: whether or not this update resulted in a game over situation</returns>
+		protected bool Update()
+		{
+			//update the camera stuff
+			Renderer.Camera.Update(MasterClock);
+
+			//update all our clocks
+			float fOldTime = GameTimer.RemainingTime();
+			GameTimer.Update(MasterClock);
+			CharacterClock.Update(GameTimer);
+
+			//check for a winner
+			if (!GameOver)
+			{
+//				//warn about time almost over?
+//				if (EGameMode.Time == GameMode)
+//				{
+//					if ((GameTimer.RemainingTime() < 20.0f) && (fOldTime >= 20.0f))
+//					{
+//						PlaySound("twenty");
+//					}
+//				}
+
+				//check if anyone has won
+				CheckForWinner();
+
+				//update the level objects
+				LevelObjects.Update(GameTimer, true);
+
+				UpdatePlayers();
+			}
+
+			//TODO: update animation with master clock if game is over
+
+			if (!GameOver)
+			{
+				CollisionDetection();
+			}
+
+			UpdateRagdoll();
+
+			UpdateDrawlists();
+
+			//update the particle engine!!
+			ParticleEngine.Update(MasterClock);
+
+			//update everything else!
+			UpdateStuff();
+
+			//debugging stuff!!!
+#if DEBUG
+			KeyboardState currentState = Keyboard.GetState();
+			if (currentState.IsKeyDown(Keys.Y) && m_LastKeyboardState.IsKeyUp(Keys.Y))
+			{
+				m_bRenderSpawnPoints = !m_bRenderSpawnPoints;
+			}
+			if (currentState.IsKeyDown(Keys.U) && m_LastKeyboardState.IsKeyUp(Keys.U))
+			{
+				m_bRenderJointSkeleton = !m_bRenderJointSkeleton;
+			}
+			if (currentState.IsKeyDown(Keys.I) && m_LastKeyboardState.IsKeyUp(Keys.I))
+			{
+				m_bRenderPhysics = !m_bRenderPhysics;
+			}
+			if (currentState.IsKeyDown(Keys.O) && m_LastKeyboardState.IsKeyUp(Keys.O))
+			{
+				m_bDrawCameraInfo = !m_bDrawCameraInfo;
+			}
+			if (currentState.IsKeyDown(Keys.P) && m_LastKeyboardState.IsKeyUp(Keys.P))
+			{
+				m_bRenderWorldBoundaries = !m_bRenderWorldBoundaries;
+			}
+#endif
+
+			return GameOver;
+		}
+
+		/// <summary>
+		/// update the game engine
+		/// </summary>
+		/// <param name="rGameTime">current gametime</param>
+		/// <returns>bool: true if the game is over, false if it isn't</returns>
+		public bool Update(GameTime time)
+		{
+			MasterClock.Update(time);
+			return Update();
+		}
+
+		/// <summary>
+		/// update the game engine
+		/// </summary>
+		/// <param name="rTime">current gametime</param>
+		/// <returns>bool: true if the game is over, false if it isn't</returns>
+		public bool Update(TimeUpdater time)
+		{
+			MasterClock.Update(time);
+			return Update();
+		}
+
+		/// <summary>
+		/// update all the player stuff
+		/// </summary>
+		private void UpdatePlayers()
+		{
+			List<Task> tasks = new List<Task>();
+			foreach (var player in Players)
+			{
+				Debug.Assert(null != player);
+				tasks.Add(Task.Factory.StartNew(() => { UpdatePlayer(player); }));
+			}
+			Task.WaitAll(tasks.ToArray());
+		}
+
+		/// <summary>
+		/// update a single player
+		/// </summary>
+		/// <param name="PlayerQueue"></param>
+		private void UpdatePlayer(PlayerQueue playerQueue)
+		{
+			Debug.Assert(null != playerQueue);
+			if (!CheckIfPlayerStockOut(playerQueue))
+			{
+				//check if the player is dead
+				CheckIfDead(playerQueue);
+
+				//update the characters
+				playerQueue.Update(CharacterClock, true);
+			}
+		}
+
+		/// <summary>
+		/// update all the ragdoll stuff
+		/// </summary>
+		private void UpdateRagdoll()
+		{
+			List<Task> tasks = new List<Task>();
+			foreach (var player in Players)
+			{
+				tasks.Add(Task.Factory.StartNew(() => { player.UpdateRagdoll(false); }));
+			}
+			tasks.Add(Task.Factory.StartNew(() => { LevelObjects.UpdateRagdoll(false); }));
+			Task.WaitAll(tasks.ToArray());
+		}
+
+		/// <summary>
+		/// Update enything else in a child class
+		/// </summary>
+		protected virtual void UpdateStuff()
+		{
+		}
+
+		/// <summary>
+		/// check for collisions and respond!
+		/// </summary>
+		protected virtual void CollisionDetection()
+		{
+			for (int i = 0; i < Players.Count; i++)
+			{
+				//check for collisions between players
+				for (int j = i + 1; j < Players.Count; j++)
+				{
+					Players[i].CheckCollisions(Players[j]);
+				}
+
+				//check for collisions with level objects
+				Players[i].CheckCollisions(LevelObjects);
+
+				//check for world collisions
+				Players[i].CheckWorldCollisions(WorldBoundaries);
+			}
+
+			//respond to hits!
+			for (int i = 0; i < Players.Count; i++)
+			{
+				Players[i].RespondToHits(this);
+			}
+			LevelObjects.RespondToHits(this);
+		}
+
+		protected virtual bool CheckForWinner()
+		{
+			//check if only one player remains
+			int numPlayers = 0;
+			for (int i = 0; i < Players.Count; i++)
+			{
+				if (!CheckIfPlayerStockOut(Players[i]))
+				{
+					numPlayers++;
+				}
+			}
+
+			//there can be only one winner!
+			if (1 >= numPlayers)
+			{
+				StopTimers();
+				GameOver = true;
+
+				//find the winner!
+				for (int i = 0; i < Players.Count; i++)
+				{
+					if (!CheckIfPlayerStockOut(Players[i]))
+					{
+						Winner = Players[i];
+					}
+				}
+
+				if (0 == numPlayers)
+				{
+					//all the players died the same exact frame
+					Tie = true;
+				}
+			}
+			else
+			{
+				CheckForTimeOver();
+			}
+
+			return GameOver;
+		}
+
+		/// <summary>
+		/// Check if time has run out and determine a winner if it has.
+		/// Called from the CheckForWinner method
+		/// </summary>
+		protected virtual void CheckForTimeOver()
+		{
+			//check for time over
+			Debug.Assert(0.0f < MaxTime);
+			if ((null == Winner) && (GameTimer.RemainingTime() <= 0.0f))
+			{
+				//find winner
+				int currentMaxStock = 0;
+				for (int i = 0; i < Players.Count; i++)
+				{
+					if (Players[i].Stock >= currentMaxStock)
+					{
+						//found someone with the max points, but is it a tie?
+						if ((Winner != null) && (Winner != Players[i]))
+						{
+							if (Winner.Stock == Players[i].Stock)
+							{
+								Tie = true;
+							}
+						}
+
+						//TODO: whenever a winner is found, set their animation to the win animation
+
+						Winner = Players[i];
+						currentMaxStock = Winner.Stock;
+					}
+				}
+
+				StopTimers();
+				GameOver = true;
+			}
+		}
+
+		/// <summary>
+		/// Check if a player has run out of stock
+		/// </summary>
+		/// <param name="rPlayerQueue">the player queue to check</param>
+		/// <returns>true if the player has run out of stock</returns>
+		protected virtual bool CheckIfPlayerStockOut(PlayerQueue playerQueue)
+		{
+			return (0 >= playerQueue.Stock);
+		}
+
+		/// <summary>
+		/// Check if an object is dead (out of bounds) and process the death
+		/// </summary>
+		/// <param name="rObject">the object to check for death</param>
+		private void CheckIfDead(PlayerQueue playerQueue)
+		{
+			Debug.Assert(null != playerQueue);
+			if (playerQueue.CheckIfDead())
+			{
+				KillPlayer(playerQueue);
+			}
+		}
+
+		/// <summary>
+		/// Play the death particle effect
+		///	Respawn the player
+		/// Do the correct score calculation
+		/// Play the players death sound
+		/// </summary>
+		/// <param name="rPlayerQueue">the player to kill</param>
+		protected virtual void KillPlayer(PlayerQueue playerQueue)
+		{
+			Debug.Assert(SpawnPoints.Count > 0);
+			Debug.Assert(null != playerQueue);
+
+			BaseObject rObject = playerQueue.Character;
+			Debug.Assert(null != rObject);
+			Debug.Assert((rObject.Type == EObjectType.Human) || (rObject.Type == EObjectType.AI));
+
+			//TODO: play the death particle effect
+			//PlayParticleEffect(EDefaultParticleEffects.Death,
+			//	Vector2.Zero,
+			//	rObject.Position,
+			//	rObject.PlayerColor);
+
+			//TODO: Play death squish, and the players death sound
+			//PlaySound(m_strDeathNoise);
+			//PlaySound(rObject.DeathSound);
+
+			//Do the correct score calculation
+			playerQueue.SubtractStock();
+
+			if (!CheckIfPlayerStockOut(playerQueue))
+			{
+				RespawnPlayer(playerQueue);
+			}
+			else
+			{
+				playerQueue.Character.Reset();
+				playerQueue.DeactivateAllObjects();
+			}
+		}
+
+		private void RespawnPlayer(PlayerQueue playerQueue)
+		{
+			//respawn the player
+			int spawnIndex = _random.Next(SpawnPoints.Count);
+			playerQueue.Reset(SpawnPoints[spawnIndex]);
+		}
+
+		protected void StopTimers()
+		{
+			GameTimer.Stop();
+			CharacterClock.Paused = true;
+		}
+
+		public void PlayParticleEffect(
+			EDefaultParticleEffects eEffect,
+			Vector2 velocity,
+			Vector2 position,
+			Color color)
+		{
+			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], velocity, position, Vector2.Zero, color, false);
+		}
+
+		#region Draw
+
+		/// <summary>
+		/// update all the drawlists
+		/// </summary>
+		public void UpdateDrawlists()
+		{
+			List<Task> tasks = new List<Task>();
+			foreach (var player in Players)
+			{
+				tasks.Add(Task.Factory.StartNew(() => { player.UpdateDrawlists(); }));
+			}
+			tasks.Add(Task.Factory.StartNew(() => { LevelObjects.UpdateDrawlists(); }));
+			Task.WaitAll(tasks.ToArray());
+		}
+
+		/// <summary>
+		/// update the camera before rendering
+		/// </summary>
+		public void UpdateCameraMatrix()
+		{
+			//set up the camera
+			if (GameOver && !Tie)
+			{
+				//only show the winner!
+				Debug.Assert(null != Winner);
+				Winner.AddToCamera(Renderer.Camera);
+			}
+			else
+			{
+				for (int i = 0; i < Players.Count; i++)
+				{
+					Players[i].AddToCamera(Renderer.Camera);
+				}
+			}
+
+			//draw the background before the camera is set
+			//DrawBackground();
+
+			//Get the camera matrix we are gonna use
+			Renderer.Camera.BeginScene(false);
+		}
+
+		/// <summary>
+		/// get the gameplay matrix
+		/// </summary>
+		/// <returns></returns>
+		public Matrix GetCameraMatrix()
+		{
+			return Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
+		}
+
+		public void Render()
+		{
+			Matrix cameraMatrix = GetCameraMatrix();
+
+			RenderBackground();
+
+			RenderLevel(cameraMatrix);
+
+			RenderHUD();
+
+			RenderCharacterTrails(cameraMatrix);
+
+			RenderCharacters(cameraMatrix);
+
+			RenderParticleEffects(cameraMatrix);
+		}
+
+		protected virtual void RenderBackground()
+		{
+			//Check if there is any background to draw
+			if (null == m_SkyBox)
+			{
+				return;
+			}
+
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, Resolution.TransformationMatrix());
+			if (m_iNumTiles <= 1)
+			{
+				//just cover the whole screen with the skybox
+				Renderer.SpriteBatch.Draw(m_SkyBox.Texture, Resolution.ScreenArea, m_SkyColor);
+			}
+			else
+			{
+				//get the size of each tile
+				int tileSize = Resolution.ScreenArea.Width / m_iNumTiles;
+
+				//get the number of rows 
+				int numRows = Resolution.ScreenArea.Height / tileSize;
+
+				//display all the whole tiles
+				Rectangle tileRect = new Rectangle();
+				tileRect.X = 0;
+				tileRect.Y = 0;
+				tileRect.Height = tileSize;
+				tileRect.Width = tileSize;
+				for (int i = 0; i < numRows; i++)
+				{
+					for (int j = 0; j < m_iNumTiles; j++)
+					{
+						//draw one tile and move to the next column
+						Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, m_SkyColor);
+						tileRect.X += tileSize;
+					}
+
+					//reset the column to 0 and move to the next row
+					tileRect.X = 0;
+					tileRect.Y += tileSize;
+				}
+
+				//Draw the bottom row, which is cut off :(
+				Rectangle sourceRect = m_SkyBox.Texture.Bounds;
+				tileRect.Height = Resolution.ScreenArea.Height - (tileSize * numRows);
+				sourceRect.Height = ((tileRect.Height * sourceRect.Height) / tileSize);
+				for (int i = 0; i < m_iNumTiles; i++)
+				{
+					Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, sourceRect, m_SkyColor);
+					tileRect.X += tileSize;
+				}
+			}
+			Renderer.SpriteBatchEnd();
+		}
+
+		protected void RenderLevel(Matrix cameraMatrix)
+		{
+			//draw the level
+			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
+			LevelObjects.Render(Renderer, true);
+#if DEBUG
+			//draw the world boundaries in debug mode?
+			if (m_bRenderWorldBoundaries)
+			{
+				Renderer.Primitive.Rectangle(WorldBoundaries, Color.Red);
+			}
+
+			//draw the spawn points for debug mode
+			if (m_bRenderSpawnPoints)
+			{
+				for (int i = 0; i < SpawnPoints.Count; i++)
+				{
+					Renderer.Primitive.Circle(SpawnPoints[i], 10, Color.Red);
+				}
+			}
+#endif
+			Renderer.SpriteBatchEnd();
+		}
+
+		/// <summary>
+		/// draw the hud
+		/// </summary>
+		protected virtual void RenderHUD()
+		{
+			//draw the hud
+			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, Resolution.TransformationMatrix());
+
+			RenderPlayerHUD();
+
+			RenderClockHUD();
+
+			//TEST
+
+			//CPlayerObject myDude = Players[1].Character as CPlayerObject;
+			//Write(myDude.ComboCounter.ToString(), new Vector2(200, 100));
+
+			Renderer.SpriteBatchEnd();
+		}
+
+		protected void RenderPlayerHUD()
+		{
+			float height;
+			int top;
+			int bottom;
+			float screenHeight;
+			float screenWidth;
+			float centerWidth;
+			GetScreenHUD(out height, out top, out bottom, out screenHeight, out screenWidth, out centerWidth);
+
+			//parse through the list of players
+			for (int i = 0; i < Players.Count; i++)
+			{
+				//Get the left point
+				var left = (int)(((screenWidth / (Players.Count + 1)) * (i + 1)) - (height * .5f));
+				left = Resolution.TitleSafeArea.X + left;
+
+				//draw that circle background 
+				var color = Players[i].Character.PlayerColor;
+				color.A = 200;
+
+				Debug.Assert(null != Renderer);
+				Debug.Assert(null != Renderer.SpriteBatch);
+				if (null != m_HUDBackground)
+				{
+					Renderer.SpriteBatch.Draw(
+						m_HUDBackground.Texture,
+						new Rectangle(left, top, (int)height, (int)height),
+						color);
+				}
+
+				//draw the players picture
+				PlayerObject player = Players[i].Character as PlayerObject;
+				if (null != player &&
+					null != player.Portrait)
+				{
+					Renderer.SpriteBatch.Draw(
+						player.Portrait,
+						new Rectangle(left, top, (int)height, (int)height),
+						Color.White);
+				}
+
+				int center = (int)(left + (height * .5f));
+
+				//draw the players health
+				int health = Players[i].Character.DisplayHealth();
+				if (CheckIfPlayerStockOut(Players[i]))
+				{
+					health = 0;
+				}
+
+				Color damageColor = Color.White;
+				string strDamage = health.ToString();
+				if (health < 25)
+				{
+					damageColor = Color.Red;
+				}
+				m_Font.Write(strDamage, new Vector2(center, bottom), Justify.Center, 1.15f, Color.DarkGray, Renderer.SpriteBatch, GameTimer);
+				float fCursor = m_Font.Write(strDamage, new Vector2(center, bottom), Justify.Center, 1.0f, damageColor, Renderer.SpriteBatch, GameTimer);
+
+				////draw the player's score
+
+				////get the number to draw, either points or stock
+				//int iPlayerScore = Players[i].Points;
+				//if (EGameMode.Stock == m_eGameMode)
+				//{
+				//    iPlayerScore = m_iStock - Players[i].Stock;
+				//}
+
+				//Color ScoreColor = Color.White;
+				//if (Players[i].ScoreTimer.RemainingTime() > 0.0f)
+				//{
+				//    ScoreColor = Color.Red;
+				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.8f, ScoreColor, Renderer.SpriteBatch);
+				//}
+				//else
+				//{
+				//    //just draw regular color
+				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.65f, Color.DarkGray, Renderer.SpriteBatch);
+				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.5f, ScoreColor, Renderer.SpriteBatch);
+				//}
+
+				//write the players name
+				float fPortraitCenter = (height * 0.5f) + left;
+				m_Font.Write(Players[i].PlayerName, new Vector2(fPortraitCenter, top), Justify.Center, 0.7f, Color.White, Renderer.SpriteBatch, GameTimer);
+			}
+		}
+
+		protected void RenderClockHUD()
+		{
+			float fHeight;
+			int iTop;
+			int iBottom;
+			float fScreenHeight;
+			float fScreenWidth;
+			float fCenterWidth;
+			GetScreenHUD(out fHeight, out iTop, out iBottom, out fScreenHeight, out fScreenWidth, out fCenterWidth);
+
+			//if the game mode is time, draw the clock
+			Debug.Assert(MaxTime > 0.0f);
+			if (GameTimer.RemainingTime() <= (MaxTime - 5.0f))
+			{
+				//check if the round is about to end
+				Color TimeColor = new Color(0.35f, 0.35f, 0.35f, 0.1f);
+				if (GameTimer.RemainingTime() <= 20.0f)
+				{
+					TimeColor = new Color(1.0f, 0.0f, 0.0f, .5f);
+				}
+
+				if (!GameOver && (GameTimer.RemainingTime() > 0.0f))
+				{
+					Debug.Assert(null == Winner);
+
+					//draw the time
+					float fPositionY = iBottom + (fHeight * 0.4f);
+					string strTime = GameTimer.ToString();
+					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, Renderer.SpriteBatch, GameTimer);
+				}
+			}
+		}
+
+		protected void RenderCharacterTrails(Matrix cameraMatrix)
+		{
+			//render all the character trails, start another spritebatch
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
+			for (int i = 0; i < Players.Count; i++)
+			{
+				Players[i].Render(Renderer, false);
+			}
+			Renderer.SpriteBatchEnd();
+		}
+
+		public static void GetScreenHUD(out float height, out int top, out int bottom, out float screenHeight, out float screenWidth, out float centerWidth)
+		{
+			//um, the width and height of the player pictures
+			screenHeight = Resolution.TitleSafeArea.Height;
+			screenWidth = Resolution.TitleSafeArea.Width;
+
+			height = (screenHeight * 0.17f);
+			top = (int)(Resolution.TitleSafeArea.Top * 1.05f);
+			if (0 == top)
+			{
+				top = (int)(height * 0.1f);
+			}
+			bottom = top + (int)height;
+			centerWidth = (screenWidth * 0.5f) + Resolution.TitleSafeArea.Left;
+		}
+
+		protected void RenderCharacters(Matrix cameraMatrix)
+		{
+			//render all the players
+			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
+			for (int i = 0; i < Players.Count; i++)
+			{
+				Players[i].Render(Renderer, true);
+
+#if DEBUG
+				//draw debug info?
+				if (m_bRenderPhysics)
+				{
+					for (int j = 0; j < Players[i].ActiveObjects.Count; j++)
+					{
+						Players[i].ActiveObjects[j].AnimationContainer.Skeleton.RootBone.DrawPhysics(Renderer, true, Color.White);
+					}
+				}
+
+				//draw the push box for each character?
+				if (m_bRenderJointSkeleton)
+				{
+					for (int j = 0; j < Players[i].ActiveObjects.Count; j++)
+					{
+						Renderer.Primitive.Circle(Players[i].Character.Position,
+												  (int)(Players[i].Character.MinDistance()),
+												  Color.White);
+					}
+				}
+#endif
+
+				////draw bones, ragdoll
+				//Players[i].Character.AnimationContainer.Model.RenderJointSkeleton(Renderer);
+				//Players[i].Character.AnimationContainer.Model.RenderOutline(Renderer, 1.0f);
+				//Players[i].Character.AnimationContainer.Model.DrawSkeleton(Renderer, true, Color.White);
+				//Players[i].Character.AnimationContainer.Model.DrawJoints(Renderer, true, Color.Red);
+			}
+
+#if DEBUG
+			if (m_bDrawCameraInfo)
+			{
+				for (int i = 0; i < Players.Count; i++)
+				{
+					Players[i].DrawCameraInfo(Renderer);
+				}
+
+				Renderer.DrawCameraInfo();
+			}
+#endif
+			Renderer.SpriteBatchEnd();
+		}
+
+		protected void RenderParticleEffects(Matrix cameraMatrix)
+		{
+			//draw all the particles, start another spritebatch for the particles
+			Renderer.SpriteBatchBegin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, cameraMatrix);
+			ParticleEngine.Render(Renderer.SpriteBatch);
+			Renderer.SpriteBatchEnd();
+		}
+
+		/// <summary>
+		/// write some text on the screen for debugging purposes
+		/// </summary>
+		/// <param name="strText">the text to write</param>
+		/// <param name="position">where to write the text at</param>
+		public void Write(string text, Vector2 position)
+		{
+			m_Font.Write(text, position, Justify.Left, 1.0f, Color.White, Renderer.SpriteBatch, GameTimer);
+		}
+
+		#endregion //Draw
+
+		#endregion //Methods
+
+		#region File IO
+
+		private void AddParticleEffect(ContentManager content, string file)
+		{
+			var emitter = new EmitterTemplate(new Filename(file));
+			emitter.ReadXmlFile(content);
+			emitter.LoadContent(content);
+			m_DefaultParticles.Add(emitter);
+		}
+
+		private void AddParticleEffect(string file)
+		{
+			var emitter = new EmitterTemplate(new Filename(file));
+			emitter.ReadXmlFile();
+			emitter.LoadContent(ContentManager);
+			m_DefaultParticles.Add(emitter);
+		}
+
+		/// <summary>
+		/// load all the content in an xna game
+		/// </summary>
+		public virtual void LoadXmlContent(GraphicsDevice graphics)
+		{
+			m_LastKeyboardState = Keyboard.GetState();
+
+			//load all the content
+
+			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
+			Renderer.LoadContent(graphics);
+
+			//load up our sprite font
+			Debug.Assert(null != m_Font);
+			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
+		}
+
+		public virtual PlayerQueue LoadPlayer(Color color,
+			Filename characterFile,
+			PlayerIndex index,
+			string playerName,
+			EObjectType playerType = EObjectType.Human,
+			ContentManager content = null)
+		{
+			//create and load a player
+			PlayerQueue player = CreatePlayerQueue(color, Players.Count);
+			if (null == player.LoadXmlObject(characterFile, this, playerType, 0, content))
+			{
+				Debug.Assert(false);
+			}
+			Players.Add(player);
+
+			//create a controller for that player
+			InputWrapper queue = new InputWrapper(new ControllerWrapper(index, (PlayerIndex.One == index)), MasterClock.GetCurrentTime)
+			{
+				BufferedInputExpire = 0.0f,
+				QueuedInputExpire = 0.05f
+			};
+			queue.ReadXmlFile(new Filename(@"MoveList.xml"), player.Character.States.GetMessageIndexFromText, content);
+			player.InputQueue = queue;
+
+			//if this is player one, let them use the keyboard
+			player.InputQueue.Controller.UseKeyboard = (PlayerIndex.One == index);
+
+			player.PlayerName = playerName;
+			return player;
+		}
+
+		public bool LoadBoard(Filename boardFile, ContentManager content)
+		{
+			if (null == content)
+			{
+				//Open the file.
+#if ANDROID
+				using (var stream = Game.Activity.Assets.Open(strBoardFile.File))
+#else
+				using (var stream = File.Open(boardFile.File, FileMode.Open, FileAccess.Read))
+#endif
+				{
+					XmlDocument xmlDoc = new XmlDocument();
+					xmlDoc.Load(stream);
+					return LoadBoardXmlDocument(xmlDoc, content);
+				}
+			}
+			else
+			{
+				var xmlContent = content.Load<string>(boardFile.GetRelPathFileNoExt());
+				XmlDocument xmlDoc = new XmlDocument();
+				xmlDoc.LoadXml(xmlContent);
+				return LoadBoardXmlDocument(xmlDoc, content);
+			}
+		}
+
+		protected bool LoadBoardXmlDocument(XmlDocument xmlDoc, ContentManager content)
+		{
+			XmlNode rootNode = xmlDoc.DocumentElement;
+
+#if DEBUG
+			//make sure it is actually an xml node
+			if (rootNode.NodeType != XmlNodeType.Element)
+			{
+				//should be an xml node!!!
+				Debug.Assert(false);
+				return false;
+			}
+
+			//eat up the name of that xml node
+			string strElementName = rootNode.Name;
+			if (("XnaContent" != strElementName) || !rootNode.HasChildNodes)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+#endif
+			//next node is "<Asset Type="SPFSettings.LevelObjectXML">"
+			XmlNode AssetNode = rootNode.FirstChild;
+#if DEBUG
+			if (null == AssetNode)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+			if (!AssetNode.HasChildNodes)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+			if ("Asset" != AssetNode.Name)
+			{
+				Debug.Assert(false);
+				return false;
+			}
+#endif
+
+			//First node is the name
+			XmlNode childNode = AssetNode.FirstChild;
+			LevelObjects.PlayerName = childNode.InnerXml;
+
+			//next node is the height
+			childNode = childNode.NextSibling;
+			int iHeight = Convert.ToInt32(childNode.InnerXml);
+
+			//nect node is the width
+			childNode = childNode.NextSibling;
+			int iWidth = Convert.ToInt32(childNode.InnerXml);
+
+			////grab the world boundaries
+			WorldBoundaries = new Rectangle((-1 * (iWidth / 2)),
+				(-1 * (iHeight / 2)),
+				iWidth,
+				iHeight);
+
+			//next node is the music
+			childNode = childNode.NextSibling;
+			Music = childNode.InnerXml;
+			if (!string.IsNullOrEmpty(Music))
+			{
+				//TODO: load the music
+			}
+
+			//next node is the death noise
+			childNode = childNode.NextSibling;
+			m_strDeathNoise = childNode.InnerXml;
+			if (!string.IsNullOrEmpty(m_strDeathNoise))
+			{
+				//TODO: load the death noise
+			}
+
+			//next node is the background tile
+			childNode = childNode.NextSibling;
+			if (!string.IsNullOrEmpty(childNode.InnerXml))
+			{
+				Filename backgroundFile = new Filename(childNode.InnerXml);
+				m_SkyBox = Renderer.LoadImage(backgroundFile);
+			}
+
+			//load the color!
+			childNode = childNode.NextSibling;
+			m_SkyColor.R = Convert.ToByte(childNode.InnerXml);
+			childNode = childNode.NextSibling;
+			m_SkyColor.G = Convert.ToByte(childNode.InnerXml);
+			childNode = childNode.NextSibling;
+			m_SkyColor.B = Convert.ToByte(childNode.InnerXml);
+			m_SkyColor.A = 255;
+
+			//next node is the number of tiles
+			childNode = childNode.NextSibling;
+			m_iNumTiles = Convert.ToInt32(childNode.InnerXml);
+
+			//load all the level objects
+			childNode = childNode.NextSibling;
+			for (XmlNode levelNode = childNode.FirstChild;
+				null != levelNode;
+				levelNode = levelNode.NextSibling)
+			{
+				//load the level object
+				Filename myLevelObjectFile = new Filename(levelNode.InnerXml);
+				BaseObject rLevelObject = LevelObjects.LoadXmlObject(myLevelObjectFile, this, EObjectType.Level, 0, content);
+				if (null == rLevelObject)
+				{
+					Debug.Assert(false);
+				}
+			}
+
+			//spawn points
+			childNode = childNode.NextSibling;
+			for (XmlNode spawnNode = childNode.FirstChild;
+				null != spawnNode;
+				spawnNode = spawnNode.NextSibling)
+			{
+				Debug.Assert(spawnNode.HasChildNodes);
+				XmlNode locationNode = spawnNode.FirstChild;
+				SpawnPoints.Add(Vector2Ext.ToVector2(locationNode.InnerXml));
+			}
+
+			return true;
+		}
+
+		#endregion //File IO
+	}
+}

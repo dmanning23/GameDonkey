@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{A242C23A-06C6-4462-941A-49B5CF426F00}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>GameDonkey.SharedProject</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DefaultParticleEffects.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IGameDonkey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\AddGarmentActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\AddVelocityActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\BaseActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\BlockingStateActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\CameraShakeActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\ConstantAccelerationActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\ConstantDeccelertaionActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\CreateAttackActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\CreateBlockActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\CreateHitCircleActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\CreateThrowActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\DeactivateActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\DirectionActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\EvadeActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\KillPlayerActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\ParticleEffectActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\PlayAnimationActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\PlaySoundActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\ProjectileActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\RotateActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\SendStateMessageActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\SetVelocityActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\StateActionListModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\StateActionsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\TargetRotationActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\TrailActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Board\BoardModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Board\LevelObjectModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Board\SpawnPointModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Characters\StateContainerModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Characters\BaseObjectModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Characters\PlayerObjectModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Characters\ProjectileObjectModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\EMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\EState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\AIObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\BaseObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\GarmentManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\LevelObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\LevelObjectQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\PlayerObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\PlayerQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\ProjectileObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\Data\BaseObjectData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\Data\LevelObjectData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\Data\PlayerObjectData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\Data\ProjectileObjectData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Physics\Helper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Physics\Hit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Physics\LevelObjectPhysicsContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Physics\PhysicsContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Physics\PlayerPhysicsContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Physics\ProjectilePhysicsContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\ActionDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\ActionSort.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\ActionType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateActionFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateActions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateActionsList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\TimedActionList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\AddGarmentAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\AddVelocityAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\BaseAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\BlockingStateAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CameraShakeAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\ConstantAccelerationAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\ConstantDecceleration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CreateAttackAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CreateBlockAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CreateHitCircleAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CreateThrowAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\DeactivateAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\EDirectionType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\EvadeAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\KillPlayerAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\ParticleEffectAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\PlayAnimationAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\PlaySoundAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\ProjectileAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\RotateAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\SendStateMessageAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\SetVelocityAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\TargetRotationAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\TimedAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\TrailAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\ObjectStateContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\PlayerObjectStateContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\SingleStateAppenderContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\SingleStateContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\StateContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDonkey.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,33 @@
+﻿{
+  "dependencies": {
+    "AnimationLib": "1.0.10",
+    "CameraBuddy": "1.0.1",
+    "CollisionBuddy": "1.0.1",
+    "DrawlistBuddy": "1.0.2",
+    "FilenameBuddy": "1.0.3",
+    "FontBuddy": "1.0.8",
+    "GameTimer": "1.0.1",
+    "HadoukInput": "1.0.3",
+    "MatrixExtensions": "1.0.1",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
+    "MonoGame.Framework.WindowsUniversal": "3.5.1.1679",
+    "ParticleBuddy": "1.0.9",
+    "RenderBuddy": "1.0.9",
+    "StateMachineBuddy": "1.0.0",
+    "System.Xml.ReaderWriter": "4.3.0",
+    "System.Xml.XmlDocument": "4.3.0",
+    "Vector2Extensions": "1.0.1",
+    "XmlBuddy": "1.0.13"
+  },
+  "frameworks": {
+    "uap10.0": {}
+  },
+  "runtimes": {
+    "win10-arm": {},
+    "win10-arm-aot": {},
+    "win10-x86": {},
+    "win10-x86-aot": {},
+    "win10-x64": {},
+    "win10-x64-aot": {}
+  }
+}
