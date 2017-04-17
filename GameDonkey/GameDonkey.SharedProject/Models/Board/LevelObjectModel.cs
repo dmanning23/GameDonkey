@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This object stores all the information to load a level object

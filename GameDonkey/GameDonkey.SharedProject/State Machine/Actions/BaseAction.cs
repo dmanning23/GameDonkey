@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// The base interface for state machine actions

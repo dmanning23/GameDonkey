@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Xml;
 using Microsoft.Xna.Framework.Content;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public class DeactivateAction : BaseAction
 	{

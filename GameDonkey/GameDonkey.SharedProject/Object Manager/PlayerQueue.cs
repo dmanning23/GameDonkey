@@ -9,7 +9,7 @@ using CameraBuddy;
 using RenderBuddy;
 using FilenameBuddy;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// this class is for queueing up players, fireballs, etc.

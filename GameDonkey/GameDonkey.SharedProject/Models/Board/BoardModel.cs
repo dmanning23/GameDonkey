@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This object describes all the items needed for a board

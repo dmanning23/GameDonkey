@@ -5,7 +5,7 @@ using System.Xml;
 using FilenameBuddy;
 using Microsoft.Xna.Framework.Content;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public class PlaySoundAction : BaseAction
 	{

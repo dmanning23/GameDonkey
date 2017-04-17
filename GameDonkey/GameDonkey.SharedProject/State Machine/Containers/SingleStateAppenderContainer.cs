@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This a state container with one state machine

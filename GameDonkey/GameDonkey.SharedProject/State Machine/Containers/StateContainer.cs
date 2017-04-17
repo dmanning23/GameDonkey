@@ -4,7 +4,7 @@ using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// An interface for state machine and all the state actions for that machine.

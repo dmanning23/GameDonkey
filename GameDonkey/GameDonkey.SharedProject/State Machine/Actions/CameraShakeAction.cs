@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Xml;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public class CameraShakeAction : BaseAction
 	{

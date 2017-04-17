@@ -1,5 +1,5 @@
 ﻿
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// These are all the different ways to get a direcion for an action

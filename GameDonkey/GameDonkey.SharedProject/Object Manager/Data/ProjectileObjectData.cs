@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This class is used to load projectile data from xml for the tools

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// physics container specific to projectiles

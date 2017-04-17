@@ -1,5 +1,5 @@
 ﻿
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// list of all the common messages between all sparrow hawk state machines

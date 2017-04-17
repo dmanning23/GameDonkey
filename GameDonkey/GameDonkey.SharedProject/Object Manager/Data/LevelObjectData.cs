@@ -3,7 +3,7 @@ using System;
 using System.Xml;
 using Vector2Extensions;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This class is used to load level object data from xml for the tools

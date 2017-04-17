@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// this thing does a lot of sorting between different enums and state action objects, etc.

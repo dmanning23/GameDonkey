@@ -11,7 +11,7 @@
 
 [assembly: global::Android.Runtime.ResourceDesignerAttribute("GameDonkey.Android.Resource", IsApplication=false)]
 
-namespace GameDonkey.Android
+namespace GameDonkeyLib.Android
 {
 	
 	

@@ -12,7 +12,7 @@ using StateMachineBuddy;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// All the different types of thing a base object can be

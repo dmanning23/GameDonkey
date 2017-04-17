@@ -6,7 +6,7 @@ using RenderBuddy;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This is a class to make it easier to add/remove garments from a baseobject

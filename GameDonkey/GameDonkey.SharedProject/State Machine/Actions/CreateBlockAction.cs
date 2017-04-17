@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Xml;
 using Microsoft.Xna.Framework.Content;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This action makes a character temporarily invulnerable

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ParticleBuddy;
 using RenderBuddy;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public interface IGameDonkey
 	{

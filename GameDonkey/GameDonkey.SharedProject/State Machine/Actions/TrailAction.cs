@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
 using System.Xml;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public class TrailAction : BaseAction
 	{

@@ -5,7 +5,7 @@ using System.Xml;
 using Vector2Extensions;
 using MatrixExtensions;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This is a class to wrap up getting a direction for directional actions.

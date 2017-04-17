@@ -1,5 +1,5 @@
 ﻿
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// All the different default particle effects that can be played

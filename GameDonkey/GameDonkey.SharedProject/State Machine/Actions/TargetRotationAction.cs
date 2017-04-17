@@ -5,7 +5,7 @@ using System.Xml;
 using Vector2Extensions;
 using Microsoft.Xna.Framework.Content;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public class TargetRotationAction : TimedAction
 	{

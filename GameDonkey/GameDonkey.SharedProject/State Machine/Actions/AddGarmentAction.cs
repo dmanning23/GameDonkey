@@ -6,7 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Xml;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This action adds a garment for either a set amount of time, or when the state ends.

@@ -6,7 +6,7 @@ using StateMachineBuddy;
 using System;
 using System.Diagnostics;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public class LevelObject : BaseObject
 	{

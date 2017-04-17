@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Xml;
 using Vector2Extensions;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public class CreateAttackAction : BaseAction
 	{

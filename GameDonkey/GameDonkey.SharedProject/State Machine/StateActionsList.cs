@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// A list of all the state actions for a single state machine.

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Diagnostics;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// Manages physics for player objects

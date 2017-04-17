@@ -1,7 +1,7 @@
 ﻿using GameTimer;
 using System.Diagnostics;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This is like an interface for an action that is timed.

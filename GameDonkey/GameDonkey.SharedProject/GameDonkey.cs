@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Vector2Extensions;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	public class GameDonkey : IGameDonkey
 	{

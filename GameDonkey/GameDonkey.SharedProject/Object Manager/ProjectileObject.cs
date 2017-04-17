@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using System.Diagnostics;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// class for managing projectiles and how they interact with the player character

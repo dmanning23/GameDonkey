@@ -1,6 +1,6 @@
 ﻿using StateMachineBuddy;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This is a single state container that can be used by an object

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// class for sorting actions in a 

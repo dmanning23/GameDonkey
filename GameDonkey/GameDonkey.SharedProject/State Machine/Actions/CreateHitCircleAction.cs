@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Xml;
 using Vector2Extensions;
 
-namespace GameDonkey
+namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This is an attack action that uses a unattached circle instead of a bone
