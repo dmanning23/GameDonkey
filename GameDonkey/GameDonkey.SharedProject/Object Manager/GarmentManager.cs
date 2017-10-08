@@ -4,7 +4,6 @@ using GameTimer;
 using Microsoft.Xna.Framework.Content;
 using RenderBuddy;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -19,7 +18,7 @@ namespace GameDonkeyLib
 		/// A list of all the garments loaded from all the add garment actions
 		/// Used so that actions can share garments, instead of loading an instance of the same garment for each action
 		/// </summary>
-		private List<Garment> ListAllGarments { get; set; }
+		private List<Garment> AllGarments { get; set; }
 
 		/// <summary>
 		/// The base object that owns this dude
@@ -36,9 +35,8 @@ namespace GameDonkeyLib
 		/// <param name="owner">the object that owns this guy.  Cannot be null</param>
 		public GarmentManager(BaseObject owner)
 		{
-			Debug.Assert(null != owner);
 			Owner = owner;
-			ListAllGarments = new List<Garment>();
+			AllGarments = new List<Garment>();
 		}
 
 		/// <summary>
@@ -48,8 +46,6 @@ namespace GameDonkeyLib
 		/// <param name="clock"></param>
 		public override void AddAction(AddGarmentAction action, GameClock clock)
 		{
-			Debug.Assert(null != action);
-
 			//Store the garment
 			base.AddAction(action, clock);
 
@@ -72,19 +68,19 @@ namespace GameDonkeyLib
 		public override void Reset()
 		{
 			//remove all the garments from the model
-			bool bHasPhysics = false; //flag to check if any physics need to be updated
-			foreach (AddGarmentAction curAction in CurrentActions)
+			var hasPhysics = false; //flag to check if any physics need to be updated
+			foreach (AddGarmentAction garmentAction in CurrentActions)
 			{
-				curAction.Garment.RemoveFromSkeleton();
+				garmentAction.Garment.RemoveFromSkeleton();
 
-				if (curAction.Garment.HasPhysics)
+				if (garmentAction.Garment.HasPhysics)
 				{
-					bHasPhysics = true;
+					hasPhysics = true;
 				}
 			}
 
 			//clear the physics if required
-			if (bHasPhysics)
+			if (hasPhysics)
 			{
 				Owner.Physics.ClearPhysicsLists();
 				Owner.Physics.SortBones(Owner.AnimationContainer.Skeleton.RootBone);
@@ -100,36 +96,35 @@ namespace GameDonkeyLib
 		/// <param name="clock"></param>
 		public override void Update(GameClock clock)
 		{
-			bool bHasPhysics = false; //flag to check if any physics need to be updated
+			var hasPhysics = false; //flag to check if any physics need to be updated
 
 			//remove any finished actions from the list
-			int iCurrent = 0;
-			while (iCurrent < CurrentActions.Count)
+			var i = 0;
+			while (i < CurrentActions.Count)
 			{
-				AddGarmentAction myGarmentAction = CurrentActions[iCurrent];
-				Debug.Assert(null != myGarmentAction);
+				var garmentAction = CurrentActions[i];
 
 				//checked if this action has expired...
-				if (!myGarmentAction.ActiveForWholeState &&
-					(myGarmentAction.DoneTime <= clock.CurrentTime))
+				if (!garmentAction.ActiveForWholeState &&
+					(garmentAction.DoneTime <= clock.CurrentTime))
 				{
 					//remove teh garment
-					if (myGarmentAction.Garment.HasPhysics)
+					if (garmentAction.Garment.HasPhysics)
 					{
-						bHasPhysics = true;
+						hasPhysics = true;
 					}
 
-					myGarmentAction.Garment.RemoveFromSkeleton();
-					CurrentActions.RemoveAt(iCurrent);
+					garmentAction.Garment.RemoveFromSkeleton();
+					CurrentActions.RemoveAt(i);
 				}
 				else
 				{
-					iCurrent++;
+					i++;
 				}
 			}
 
 			//clear the physics if required
-			if (bHasPhysics)
+			if (hasPhysics)
 			{
 				Owner.Physics.ClearPhysicsLists();
 				Owner.Physics.SortBones(Owner.AnimationContainer.Skeleton.RootBone);
@@ -144,9 +139,9 @@ namespace GameDonkeyLib
 		/// <param name="listWeapons"></param>
 		public void GetAllWeaponBones(List<string> listWeapons)
 		{
-			foreach (Garment curGarment in ListAllGarments)
+			foreach (var garment in AllGarments)
 			{
-				curGarment.GetAllWeaponBones(listWeapons);
+				garment.GetAllWeaponBones(listWeapons);
 			}
 		}
 
@@ -163,7 +158,7 @@ namespace GameDonkeyLib
 		/// <returns>the matching object if found, otherwise null</returns>
 		private Garment CheckForXmlGarment(Filename garmentFile)
 		{
-			foreach (Garment garment in ListAllGarments)
+			foreach (var garment in AllGarments)
 			{
 				if (garment.GarmentFile.File == garmentFile.File)
 				{
@@ -178,22 +173,21 @@ namespace GameDonkeyLib
 		public Garment LoadGarment(Filename garmentFile, IRenderer renderer, ContentManager content)
 		{
 			//first check if the garment is already loaded
-			Garment myGarment = CheckForXmlGarment(garmentFile);
-			if (null != myGarment)
+			var garment = CheckForXmlGarment(garmentFile);
+			if (null != garment)
 			{
 				//found a garment already loaded
-				return myGarment;
+				return garment;
 			}
 			else
 			{
 				//create a new one
-				myGarment = new Garment(content, garmentFile, Owner.AnimationContainer.Skeleton, renderer);
+				garment = new Garment(content, garmentFile, Owner.AnimationContainer.Skeleton, renderer);
 			}
-			Debug.Assert(null != myGarment);
 
 			//store and return the garment
-			ListAllGarments.Add(myGarment);
-			return myGarment;
+			AllGarments.Add(garment);
+			return garment;
 		}
 
 		#endregion //File IO

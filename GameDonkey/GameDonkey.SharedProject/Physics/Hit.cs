@@ -1,74 +1,58 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
 	//The different types of hits
 	public enum EHitType
 	{
-		AttackHit,	//an object got attacked by another object
-		GroundHit,	//an object's feet hit the ground
-		PushHit,	//an object hit another object and should be pushed away
-		WeaponHit,	//an object's attacking weapon hit another object's attacking weapon
-		BlockHit,	//an object's attacking weapon hit another object's blocking weapon
-		CeilingHit,	//an object hit the ceiling
-		LeftWallHit,	//an object hit the left wall
-		RightWallHit,	//an object hit the right wall
+		AttackHit,  //an object got attacked by another object
+		GroundHit,  //an object's feet hit the ground
+		PushHit,    //an object hit another object and should be pushed away
+		WeaponHit,  //an object's attacking weapon hit another object's attacking weapon
+		BlockHit,   //an object's attacking weapon hit another object's blocking weapon
+		CeilingHit, //an object hit the ceiling
+		LeftWallHit,    //an object hit the left wall
+		RightWallHit,   //an object hit the right wall
 		NumHits
 	};
 
 	public class Hit
 	{
-		#region Members
+		#region Properties
 
 		//The direction of the hit
-		private Vector2 m_Direction;
+		private Vector2 _direction;
 
 		//The type of hit
-		private EHitType m_eType;
+		public EHitType HitType { get; private set; }
 
 		//teh guy that did the hitting
-		private BaseObject m_rAttacker;
+		public BaseObject Attacker { get; private set; }
 
 		/// <summary>
 		/// if this is an attack action, this will point to the attack
 		/// </summary>
-		private BaseAction m_rAction;
+		public BaseAction AttackAction { get; private set; }
 
 		/// <summary>
 		/// world coordinates of where the hit happened
 		/// </summary>
-		private Vector2 m_Position;
+		private Vector2 _position;
 
-		#endregion //Members
+		#endregion //Properties
 
 		#region Properties
-
-		public EHitType HitType
-		{
-			get { return m_eType; }
-		}
 
 		public float Strength { get; private set; }
 
 		public Vector2 Direction
 		{
-			get { return m_Direction; }
-		}
-
-		public BaseAction Action
-		{
-			get { return m_rAction; }
-		}
-
-		public BaseObject Attacker
-		{
-			get { return m_rAttacker; }
+			get { return _direction; }
 		}
 
 		public Vector2 Position
 		{
-			get { return m_Position; }
+			get { return _position; }
 		}
 
 		#endregion //Properties
@@ -77,29 +61,21 @@ namespace GameDonkeyLib
 
 		public Hit()
 		{
-			m_Direction = Vector2.Zero;
+			_direction = Vector2.Zero;
 			Strength = 0.0f;
-			m_eType = EHitType.AttackHit;
-			m_rAction = null;
-			m_rAttacker = null;
+			HitType = EHitType.AttackHit;
+			AttackAction = null;
+			Attacker = null;
 		}
 
-		public void Set(Vector2 Direction, BaseAction rAction, float strength, EHitType eType, BaseObject rAttacker, Vector2 rPosition)
+		public void Set(Vector2 direction, BaseAction attackAction, float strength, EHitType hitType, BaseObject attacker, Vector2 position)
 		{
-#if DEBUG
-			if (EHitType.PushHit == eType)
-			{
-				float fLength = Direction.Length();
-				Debug.Assert(Direction.Length() <= 2.0f);
-			}
-#endif
-
-			m_Direction = Direction;
+			_direction = direction;
 			Strength = strength;
-			m_eType = eType;
-			m_rAttacker = rAttacker;
-			m_rAction = rAction;
-			m_Position = rPosition;
+			HitType = hitType;
+			Attacker = attacker;
+			AttackAction = attackAction;
+			_position = position;
 		}
 
 		#endregion //Methods

@@ -5,6 +5,7 @@ using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace GameDonkeyLib
 {
@@ -18,6 +19,13 @@ namespace GameDonkeyLib
 		#region Members
 
 		/// <summary>
+		/// the filename where the state actions go
+		/// </summary>
+		private Filename StateContainerFilename;
+
+		private Filename StateMachineFilename;
+
+		/// <summary>
 		/// Occurs when the state changes in the state machine.
 		/// </summary>
 		public event EventHandler<StateChangeEventArgs> StateChangedEvent;
@@ -27,17 +35,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		public StateMachine StateMachine { get; private set; }
 
-		private StateActionsList m_listActions;
-
-		/// <summary>
-		/// This clock times how long the character has been in the current state
-		/// </summary>
-		protected GameClock m_StateClock;
-
-		/// <summary>
-		/// the filename where the state actions go
-		/// </summary>
-		private Filename m_strActionsFile;
+		private StateMachineActions Actions;
 
 		/// <summary>
 		/// Flag for whether or not we want to change bewteen state machines.
@@ -56,16 +54,16 @@ namespace GameDonkeyLib
 		public int NumContainers
 		{
 			get
-			{ 
+			{
 				//Single state container, get it?
-				return 1; 
+				return 1;
 			}
 		}
 
 		/// <summary>
 		/// Get a list of all the containers in this dude.
 		/// </summary>
-		public List<IStateContainer> Containers 
+		public List<IStateContainer> StateContainers
 		{
 			get
 			{
@@ -81,7 +79,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// The index of the state machine currently being used
 		/// </summary>
-		public int CurrentStateMachine 
+		public int CurrentStateMachine
 		{
 			get
 			{
@@ -94,45 +92,129 @@ namespace GameDonkeyLib
 			}
 		}
 
-		#endregion //Properties
+		public int CurrentState
+		{
+			get
+			{
+				return StateMachine.CurrentState;
+			}
+		}
 
-		#region Methods
+		public int PrevState
+		{
+			get
+			{
+				return StateMachine.PrevState;
+			}
+		}
+
+		public int NumStates
+		{
+			get
+			{
+				return StateMachine.NumStates;
+			}
+		}
+
+		public int NumMessages
+		{
+			get
+			{
+				return StateMachine.NumMessages;
+			}
+		}
 
 		/// <summary>
-		/// contructor
+		/// This clock times how long the character has been in the current state
 		/// </summary>
-		/// <param name="myStateMachine">the state machine this dude will use</param>
-		public SingleStateContainer(StateMachine myStateMachine, string containerName)
+		public GameClock StateClock { get; protected set; }
+
+		public string CurrentStateText
 		{
-			StateMachine = myStateMachine;
-			m_listActions = new StateActionsList();
-			m_StateClock = new GameClock();
+			get
+			{
+				return StateMachine.CurrentStateText;
+			}
+		}
+
+		#endregion //Properties
+
+		#region Initialization
+
+		public SingleStateContainer(StateMachine stateMachine, string containerName)
+		{
+			StateMachine = stateMachine;
+			Actions = new StateMachineActions();
+			StateClock = new GameClock();
 
 			//This container only signs up for the reset event
 			StateMachine.ResetEvent += this.StateChange;
 			Name = containerName;
+
+			StateContainerFilename = new Filename();
+			StateMachineFilename = new Filename();
 		}
+
+		public void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content)
+		{
+			//Get that first node
+			var stateContainerModel = baseObjectmodel.States.FirstOrDefault();
+
+			//grab the filenames
+			StateContainerFilename = new Filename(stateContainerModel.StateActionsFilename);
+			StateMachineFilename = new Filename(stateContainerModel.StateMachineFilename);
+
+			//load the state machine
+			StateMachine.MessageOffset = messageOffset;
+			LoadStateMachine(StateMachine, StateMachineFilename, content);
+
+			//Create the statecontainer model and load it
+			var singleStateContainerModel = new SingleStateContainerModel(StateContainerFilename);
+			singleStateContainerModel.ReadXmlFile(content);
+
+			//load the actions into the statemachine actions
+			LoadContainer(singleStateContainerModel, owner);
+
+			//load the action content
+			Actions.LoadContent(engine, this, content);
+		}
+
+		protected virtual void LoadContainer(SingleStateContainerModel stateContainerModel, BaseObject owner)
+		{
+			//load into the statemachineactions object
+			Actions.LoadStateActions(stateContainerModel, owner);
+		}
+
+		public virtual void LoadStateMachine(StateMachine machine, Filename file, ContentManager content)
+		{
+			machine.LoadXml(file, content);
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
+
 
 		public void Reset()
 		{
-			Debug.Assert(null != StateMachine);
 			StateMachine.ResetToInitialState();
 		}
 
 		/// <summary>
 		/// method to send a message
 		/// </summary>
-		/// <param name="iMessage">message to send to the state machine, 
+		/// <param name="message">message to send to the state machine, 
 		/// should be offset by the message offset of this dude</param>
 		/// <returns>bool: did it change states?</returns>
-		public void SendStateMessage(int iMessage)
+		public void SendStateMessage(int message)
 		{
-			StateMachine.SendStateMessage(iMessage);
+			StateMachine.SendStateMessage(message);
 		}
 
-		public void ForceStateChange(int iState)
+		public void ForceStateChange(int state)
 		{
-			StateMachine.ForceState(iState);
+			StateMachine.ForceState(state);
 		}
 
 		/// <summary>
@@ -142,11 +224,11 @@ namespace GameDonkeyLib
 		public void StateChange(object sender, StateChangeEventArgs eventArgs)
 		{
 			//set the new state actions to 'not run'
-			m_listActions.StateChange(eventArgs.NewState);
+			Actions.StateChange(eventArgs.NewState);
 
 			//restart the state clock
-			m_StateClock.Start();
-			m_StateClock.TimeDelta = 0.0f;
+			StateClock.Start();
+			StateClock.TimeDelta = 0.0f;
 
 			//fire off the event if anyone is listening
 			if (null != StateChangedEvent)
@@ -160,13 +242,12 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="fPrevTime">the last time that the object executed actions</param>
 		/// <param name="fCurTime">the time in seconds that the object has been in this state</param>
-		public void ExecuteActions(GameClock rGameClock)
+		public void ExecuteActions(GameClock gameClock)
 		{
-			m_StateClock.Update(rGameClock);
+			StateClock.Update(gameClock);
 
 			//execute the correct action container
-			Debug.Assert(StateMachine.CurrentState >= 0);
-			m_listActions.ExecuteActions(m_StateClock, StateMachine.CurrentState);
+			Actions.ExecuteActions(StateClock, StateMachine.CurrentState);
 		}
 
 		/// <summary>
@@ -175,19 +256,17 @@ namespace GameDonkeyLib
 		/// <returns></returns>
 		public bool IsCurrentStateAttack()
 		{
-			Debug.Assert(StateMachine.CurrentState >= 0);
 			return IsStateAttack(StateMachine.CurrentState);
 		}
 
 		/// <summary>
 		/// Check if a state is an attack state
 		/// </summary>
-		/// <param name="iState">The state to check if is an attack state</param>
+		/// <param name="state">The state to check if is an attack state</param>
 		/// <returns>bool: whether or not the requested state has an attack</returns>
-		public bool IsStateAttack(int iState)
+		public bool IsStateAttack(int state)
 		{
-			Debug.Assert(iState >= 0);
-			return m_listActions.IsStateAttack(iState);
+			return Actions.IsStateAttack(state);
 		}
 
 		/// <summary>
@@ -197,85 +276,43 @@ namespace GameDonkeyLib
 		/// The move should be queued until it finishes.</returns>
 		public bool IsAttackActive()
 		{
-			Debug.Assert(StateMachine.CurrentState >= 0);
-
 			//check if the current state is an attack state, and if an attack is active
-			return m_listActions.IsAttackActive(m_StateClock, StateMachine.CurrentState);
+			return Actions.IsAttackActive(StateClock, StateMachine.CurrentState);
 		}
 
 		/// <summary>
 		/// Replace all the base object pointers in this dude to point to a replacement object
 		/// </summary>
-		/// <param name="myBot">the replacement dude</param>
-		public void ReplaceOwner(BaseObject myBot)
+		/// <param name="bot">the replacement dude</param>
+		public void ReplaceOwner(BaseObject bot)
 		{
 			//replace in all the state actions
-			m_listActions.ReplaceOwner(myBot);
+			Actions.ReplaceOwner(bot);
 		}
 
-		public int CurrentState()
+		public int GetStateIndexFromText(string stateName)
 		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.CurrentState;
+			return StateMachine.GetStateFromName(stateName);
 		}
 
-		public int PrevState()
+		public int GetMessageIndexFromText(string messageName)
 		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.PrevState;
+			return StateMachine.GetMessageFromName(messageName);
 		}
 
-		public int GetStateIndexFromText(string strStateName)
+		public string GetStateName(int stateIndex)
 		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.GetStateFromName(strStateName);
+			return StateMachine.GetStateName(stateIndex);
 		}
 
-		public int GetMessageIndexFromText(string strMessageName)
+		public string GetMessageName(int messageIndex)
 		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.GetMessageFromName(strMessageName);
+			return StateMachine.GetMessageName(messageIndex);
 		}
 
-		public string GetStateName(int iStateIndex)
+		public StateActions GetStateActions(int stateIndex)
 		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.GetStateName(iStateIndex);
-		}
-
-		public string GetMessageName(int iMessageIndex)
-		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.GetMessageName(iMessageIndex);
-		}
-
-		public int NumStates()
-		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.NumStates;
-		}
-
-		public int NumMessages()
-		{
-			Debug.Assert(null != StateMachine);
-			return StateMachine.NumMessages;
-		}
-
-		public StateActions GetStateActions(int iStateIndex)
-		{
-			Debug.Assert(0 <= iStateIndex);
-			Debug.Assert(iStateIndex < NumStates());
-			return m_listActions.GetStateActions(iStateIndex);
-		}
-
-		public GameClock GetStateClock()
-		{
-			return m_StateClock;
-		}
-
-		public string CurrentStateText()
-		{
-			return StateMachine.CurrentStateText;
+			return Actions.GetStateActions(stateIndex);
 		}
 
 		public override string ToString()
@@ -284,81 +321,5 @@ namespace GameDonkeyLib
 		}
 
 		#endregion //Methods
-
-		#region State Action File IO
-
-		/// <summary>
-		/// Read the list of state contiainers:
-		/// <states>
-		///		<Item Type="SPFSettings.StateContainerXML">
-		///			<stateMachine>state machine.xml</stateMachine>
-		///			<stateContainer>state actions.xml</stateContainer>
-		///		</Item>
-		///	</states>
-		/// </summary>
-		/// <param name="xmlData"></param>
-		/// <param name="rEngine"></param>
-		/// <param name="iMessageOffset"></param>
-		/// <param name="rOwner"></param>
-		/// <returns></returns>
-		public bool ReadXmlStateContainer(BaseObjectData xmlData, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner, ContentManager content)
-		{
-			//Get that first node
-			foreach (var singleData in xmlData.StateContainers)
-			{
-				if (!ReadXmlSingleStateContainer(singleData, rEngine, iMessageOffset, rOwner, content))
-				{
-					Debug.Assert(false);
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		/// <summary>
-		/// Read in a single state container
-		///	<Item Type="SPFSettings.StateContainerXML">
-		///		<stateMachine>state machine.xml</stateMachine>
-		///		<stateContainer>state actions.xml</stateContainer>
-		///	</Item>
-		/// </summary>
-		/// <param name="rXMLNode"></param>
-		/// <param name="rEngine"></param>
-		/// <param name="iMessageOffset"></param>
-		/// <param name="rOwner"></param>
-		/// <returns></returns>
-		public bool ReadXmlSingleStateContainer(StateContainerXML rXMLNode, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner, ContentManager content)
-		{
-			//load the state machine
-			if (!ReadXmlStateMachine(StateMachine, new Filename(rXMLNode.stateMachine), content))
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			//get the state action xml node
-
-			//load the state actions
-			Debug.Assert(null != m_listActions);
-			m_strActionsFile = new Filename(rXMLNode.stateActions);
-			return m_listActions.ReadXmlStateActions(m_strActionsFile, rOwner, rEngine, this, content);
-		}
-
-		public virtual bool ReadXmlStateMachine(StateMachine machine, Filename file, ContentManager content)
-		{
-			return machine.ReadXmlFile(file, content);
-		}
-
-		public bool WriteXml()
-		{
-#if !WINDOWS_UWP
-			return m_listActions.WriteXml(m_strActionsFile, StateMachine);
-#else
-			return true;
-#endif
-		}
-
-		#endregion //Combined File IO
 	}
 }

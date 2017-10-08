@@ -15,13 +15,13 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// how fast players will pop out of a level object, pixels/second
 		/// </summary>
-		private const float m_fMoveSpeed = 1750.0f;
+		private const float MoveSpeed = 1750.0f;
 
 		#endregion //Members
 
 		#region Methods
 
-		public LevelObject(HitPauseClock rClock, int iQueueID) : base(EObjectType.Level, rClock, iQueueID)
+		public LevelObject(HitPauseClock clock, int queueID) : base(GameObjectType.Level, clock, queueID)
 		{
 		}
 
@@ -32,28 +32,26 @@ namespace GameDonkeyLib
 			States.StateChangedEvent += this.StateChanged;
 		}
 
-		public override void CollisionResponse(IPhysicsContainer rOtherObject,
-			CreateAttackAction rAttackAction,
-			Vector2 FirstCollisionPoint,
-			Vector2 SecondCollisionPoint)
+		public override void CollisionResponse(BasePhysicsContainer otherObject,
+			CreateAttackAction attackAction,
+			Vector2 firstCollisionPoint,
+			Vector2 secondCollisionPoint)
 		{
-			Debug.Assert(null != Physics);
-			Debug.Assert(null != rOtherObject);
 
 			//get a vector from the level object to the object
-			Vector2 LevelToObject = FirstCollisionPoint - SecondCollisionPoint;
+			var levelToObject = firstCollisionPoint - secondCollisionPoint;
 
 			//set how far to move the other object
-			float fMoveSpeed = LevelToObject.Length();
-			if (fMoveSpeed <= 0.0f)
+			var moveSpeed = levelToObject.Length();
+			if (moveSpeed <= 0.0f)
 			{
 				return;
 			}
 
-			if (LevelToObject.Y > 0.0f)
+			if (levelToObject.Y > 0.0f)
 			{
 				//set the distance to diameter of the circle minus the current y
-				fMoveSpeed += (CharacterClock.TimeDelta * m_fMoveSpeed);
+				moveSpeed += (CharacterClock.TimeDelta * MoveSpeed);
 			}
 			//if (fMoveSpeed > (CharacterClock.TimeDelta * m_fMoveSpeed))
 			//{
@@ -61,24 +59,22 @@ namespace GameDonkeyLib
 			//}
 
 			//add a "ground hit" to the other object?
-			LevelToObject.Y = -1.0f * Math.Abs(LevelToObject.Y);
-			LevelToObject.Normalize();
-			if (!rOtherObject.HitFlags[(int)EHitType.GroundHit] || (fMoveSpeed > rOtherObject.Hits[(int)EHitType.GroundHit].Strength))
+			levelToObject.Y = -1.0f * Math.Abs(levelToObject.Y);
+			levelToObject.Normalize();
+			if (!otherObject.HitFlags[(int)EHitType.GroundHit] || (moveSpeed > otherObject.Hits[(int)EHitType.GroundHit].Strength))
 			{
-				Debug.Assert(null != rOtherObject.Hits[(int)EHitType.GroundHit]);
-
-				rOtherObject.HitFlags[(int)EHitType.GroundHit] = true;
-				rOtherObject.Hits[(int)EHitType.GroundHit].Set(
-					LevelToObject,
+				otherObject.HitFlags[(int)EHitType.GroundHit] = true;
+				otherObject.Hits[(int)EHitType.GroundHit].Set(
+					levelToObject,
 					null,
-					fMoveSpeed,
+					moveSpeed,
 					EHitType.GroundHit,
 					null,
-					FirstCollisionPoint);
+					firstCollisionPoint);
 			}
 		}
 
-		protected override void RespondToGroundHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToGroundHit(Hit groundHit, IGameDonkey engine)
 		{
 			//should never get here
 			Debug.Assert(false);
@@ -93,15 +89,15 @@ namespace GameDonkeyLib
 		/// Override in child classes to read object-specific node types.
 		/// </summary>
 		/// <param name="childNode">the xml data to read</param>
-		/// <param name="rEngine">the engine we are using to load</param>
-		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
+		/// <param name="engine">the engine we are using to load</param>
+		/// <param name="messageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public override bool ParseXmlData(BaseObjectData childNode, IGameDonkey rEngine, int iMessageOffset, ContentManager content = null)
+		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content = null)
 		{
-			var data = childNode as LevelObjectData;
+			var data = model as LevelObjectModel;
 			if (null == data)
 			{
-				return false;
+				throw new Exception("must pass LevelObjectModel to LevelObject.ParseXmlData");
 			}
 
 			//set the scale
@@ -110,7 +106,7 @@ namespace GameDonkeyLib
 			//set teh position
 			Position = data.Position;
 
-			return base.ParseXmlData(childNode, rEngine, iMessageOffset, content);
+			base.ParseXmlData(model, engine, messageOffset, content);
 		}
 
 		#endregion //File IO

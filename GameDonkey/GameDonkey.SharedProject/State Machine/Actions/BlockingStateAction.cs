@@ -1,9 +1,6 @@
 ﻿using AnimationLib;
 using Microsoft.Xna.Framework.Content;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Xml;
 
 namespace GameDonkeyLib
 {
@@ -13,57 +10,71 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class BlockingStateAction : TimedAction
 	{
-		#region Members
-
-		//the name of the bone to use
-		protected string m_strBoneName;
-
-		//The bone this attack uses
-		public Bone AttackBone { get; private set; }
-
-		/// <summary>
-		/// The sound to play when this action blocks an attack
-		/// </summary>
-		public string HitSound { get; private set; }
-
-		/// <summary>
-		/// A list of actions that will be run if this action blocks an attack (sound effects, particle effects, etc)
-		/// </summary>
-		protected List<BaseAction> m_listSuccessActions;
-
-		#endregion //Members
-
 		#region Properties
 
+		/// <summary>
+		/// the name of the bone to use
+		/// </summary>
+		protected string _boneName;
 		public string BoneName
 		{
-			get { return m_strBoneName; }
+			get { return _boneName; }
 			set
 			{
-				Debug.Assert(null != Owner);
-				m_strBoneName = value;
+				_boneName = value;
 
 				//if the bone name is changed, it means the bone needs to be reset too...
 				AttackBone = null;
 			}
 		}
 
-		#endregion //Properties
-
-		#region Methods
+		/// <summary>
+		/// The bone this attack uses
+		/// </summary>
+		public Bone AttackBone { get; private set; }
 
 		/// <summary>
-		/// Standard constructor
+		/// A list of actions that will be run if this action blocks an attack (sound effects, particle effects, etc)
 		/// </summary>
-		public BlockingStateAction(BaseObject rOwner)
-			: base(rOwner)
+		protected List<BaseAction> SuccessActions;
+
+		#endregion //Properties
+
+		#region Initialization
+
+		public BlockingStateAction(BaseObject owner) :
+			base(owner, EActionType.BlockState)
 		{
-			ActionType = EActionType.BlockState;
-			m_strBoneName = "";
-			AttackBone = null;
-			HitSound = "";
-			m_listSuccessActions = new List<BaseAction>();
+			SuccessActions = new List<BaseAction>();
 		}
+
+		public BlockingStateAction(BaseObject owner, BlockingStateActionModel actionModel) :
+			base(owner, actionModel, actionModel.TimeDelta)
+		{
+			SuccessActions = new List<BaseAction>();
+			for (int i = 0; i < actionModel.SuccessActions.Count; i++)
+			{
+				var stateAction = StateActionFactory.CreateStateAction(actionModel.SuccessActions[i], owner);
+				SuccessActions.Add(stateAction);
+			}
+		}
+
+		public BlockingStateAction(BaseObject owner, BaseActionModel actionModel) :
+			this(owner, actionModel as BlockingStateActionModel)
+		{
+		}
+
+		public override void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
+		{
+			for (int i = 0; i < SuccessActions.Count; i++)
+			{
+				SuccessActions[i].LoadContent(engine, stateContainer, content);
+			}
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		/// <summary>
 		/// execute this action (overridden in all child classes)
@@ -71,48 +82,22 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
-			Debug.Assert(null != Owner);
-			Debug.Assert(null != Owner.CharacterClock);
-			Debug.Assert(!AlreadyRun);
-
 			//Check if the bone is set, if not try and find it...
 			if (null == AttackBone)
 			{
-				AttackBone = Owner.Physics.FindWeapon(m_strBoneName);
+				AttackBone = Owner.Physics.FindWeapon(BoneName);
 			}
 
 			//reset teh success actions
-			for (int i = 0; i < m_listSuccessActions.Count; i++)
+			for (int i = 0; i < SuccessActions.Count; i++)
 			{
-				m_listSuccessActions[i].AlreadyRun = false;
+				SuccessActions[i].AlreadyRun = false;
 			}
 
 			//add this action to the list of block states
 			Owner.CurrentBlocks.AddAction(this, Owner.CharacterClock);
 
 			return base.Execute();
-		}
-
-		public override bool Compare(BaseAction rInst)
-		{
-			BlockingStateAction myAction = rInst as BlockingStateAction;
-			Debug.Assert(null != myAction);
-
-			Debug.Assert(ActionType == myAction.ActionType);
-			Debug.Assert(m_strBoneName == myAction.m_strBoneName);
-			//Debug.Assert(m_Direction.X == myAction.m_Direction.X);
-			//Debug.Assert(m_Direction.Y == myAction.m_Direction.Y);
-
-			for (int i = 0; i < m_listSuccessActions.Count; i++)
-			{
-				if (!m_listSuccessActions[i].Compare(myAction.m_listSuccessActions[i]))
-				{
-					Debug.Assert(false);
-					return false;
-				}
-			}
-
-			return true;
 		}
 
 		public virtual PhysicsCircle GetCircle()
@@ -125,19 +110,16 @@ namespace GameDonkeyLib
 			}
 
 			//get the current image
-			Image rMyImage = AttackBone.GetCurrentImage();
+			var image = AttackBone.GetCurrentImage();
 
 			//hit bones and images must have one circle
-			if ((null == rMyImage) || (rMyImage.Circles.Count < 1))
+			if ((null == image) || (image.Circles.Count < 1))
 			{
 				return null;
 			}
 
 			//get the circle
-			PhysicsCircle rMyCircle = rMyImage.Circles[0];
-			Debug.Assert(null != rMyCircle);
-
-			return rMyCircle;
+			return image.Circles[0]; ;
 		}
 
 		/// <summary>
@@ -146,165 +128,18 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not a state change occurred while this dude was running</returns>
 		public bool ExecuteSuccessActions()
 		{
-			//TODO: play the loaded "blocked" sound
-
-			for (int i = 0; i < m_listSuccessActions.Count; i++)
+			var result = false;
+			for (int i = 0; i < SuccessActions.Count; i++)
 			{
-				if (m_listSuccessActions[i].Execute())
+				if (SuccessActions[i].Execute())
 				{
-					return true;
+					result = true;
 				}
 			}
 
-			Debug.Assert(false);
-			return false;
+			return result;
 		}
 
 		#endregion //Methods
-
-		#region File IO
-
-		/// <summary>
-		/// Read from an xml file
-		/// </summary>
-		/// <param name="rXMLNode">the xml node to read from</param>
-		/// <returns></returns>
-		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer, ContentManager content)
-		{
-			#if DEBUG
-			if ("Item" != rXMLNode.Name)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			//should have an attribute Type
-			XmlNamedNodeMap mapAttributes = rXMLNode.Attributes;
-			for (int i = 0; i < mapAttributes.Count; i++)
-			{
-				//will only have the name attribute
-				string strName = mapAttributes.Item(i).Name;
-				string strValue = mapAttributes.Item(i).Value;
-				if ("Type" == strName)
-				{
-					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-				}
-				else
-				{
-					Debug.Assert(false);
-					return false;
-				}
-			}
-#endif
-
-			//Read in child nodes
-			if (rXMLNode.HasChildNodes)
-			{
-				for (XmlNode childNode = rXMLNode.FirstChild;
-					null != childNode;
-					childNode = childNode.NextSibling)
-				{
-					if (!ReadActionAttribute(childNode, rEngine, stateContainer, content))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
-		protected virtual bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, SingleStateContainer stateContainer, ContentManager content)
-		{
-			//what is in this node?
-			string strName = childNode.Name;
-			string strValue = childNode.InnerText;
-
-			switch (strName)
-			{
-				case "type":
-				{
-					Debug.Assert(strValue == ActionType.ToString());
-				}
-				break;
-
-				case "time":
-				{
-					Time = Convert.ToSingle(strValue);
-					if (0.0f > Time)
-					{
-						Debug.Assert(0.0f <= Time);
-						return false;
-					}
-				}
-				break;
-
-				case "timeDelta":
-				{
-					TimeDelta = Convert.ToSingle(strValue);
-				}
-				break;
-
-				case "boneName":
-				{
-					BoneName = strValue;
-				}
-				break;
-
-				case "hitSound":
-				{
-					HitSound = strValue;
-				}
-				break;
-
-				case "successActions":
-				{
-					//Read in all the success actions
-					if (!BaseAction.ReadXmlListActions(Owner, ref m_listSuccessActions, childNode, rEngine, stateContainer, content))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-				}
-				break;
-			}
-
-			return true;
-		}
-
-#if !WINDOWS_UWP
-		/// <summary>
-		/// overloaded in child classes to write out action specific stuff
-		/// </summary>
-		/// <param name="rXMLFile"></param>
-		protected override void WriteActionXml(XmlTextWriter rXMLFile)
-		{
-			rXMLFile.WriteStartElement("timeDelta");
-			rXMLFile.WriteString(TimeDelta.ToString());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("boneName");
-			rXMLFile.WriteString(m_strBoneName);
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("hitSound");
-			rXMLFile.WriteString(HitSound);
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("successActions");
-			for (int i = 0; i < m_listSuccessActions.Count; i++)
-			{
-				m_listSuccessActions[i].WriteXml(rXMLFile);
-			}
-			rXMLFile.WriteEndElement();
-		}
-#endif
-
-		#endregion //File IO
 	}
 }

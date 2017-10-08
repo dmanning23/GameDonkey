@@ -12,12 +12,7 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class ActionDirection
 	{
-		#region Members
-
-		/// <summary>
-		/// The direction to use
-		/// </summary>
-		public Vector2 m_Velocity;
+		#region Properties
 
 		/// <summary>
 		/// Whether or not we want this action to use the left thumbstick to get its direction.
@@ -25,33 +20,34 @@ namespace GameDonkeyLib
 		public EDirectionType DirectionType { get; set; }
 
 		/// <summary>
+		/// The direction to use
+		/// </summary>
+		private Vector2 _velocity;
+
+		/// <summary>
 		/// The length of the velocity to add to the character.
 		/// This is only used if the thumbstick flag is true
 		/// </summary>
-		private float m_fVelocityLength;
-
-		#endregion //Members
-
-		#region Properties
+		private float _velocityLength;
 
 		public Vector2 Velocity
 		{
-			get { return m_Velocity; }
+			get { return _velocity; }
 			set
 			{
-				m_Velocity = value;
-				m_fVelocityLength = m_Velocity.Length();
+				_velocity = value;
+				_velocityLength = _velocity.Length();
 			}
 		}
 
 		public float VelocityLength
 		{
-			get { return m_fVelocityLength; }
+			get { return _velocityLength; }
 		}
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		/// <summary>
 		/// Standard constructor
@@ -63,190 +59,126 @@ namespace GameDonkeyLib
 		}
 
 		/// <summary>
+		/// Standard constructor
+		/// </summary>
+		public ActionDirection(DirectionActionModel direction)
+		{
+			Velocity = new Vector2(direction.Velocity.X, direction.Velocity.Y); ;
+			DirectionType = direction.DirectionType;
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
+		/// <summary>
 		/// execute this action (overridden in all child classes)
 		/// </summary>
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
-		public Vector2 GetDirection(BaseObject rOwner)
+		public Vector2 GetDirection(BaseObject owner)
 		{
-			Debug.Assert(null != rOwner);
+			Debug.Assert(null != owner);
 
 			switch (DirectionType)
 			{
 				case EDirectionType.Controller:
 				{
-					return ControllerDirection(rOwner) * rOwner.Scale;
+					return ControllerDirection(owner) * owner.Scale;
 				}
 
 				case EDirectionType.NegController:
 				{
-					return NegControllerDirection(rOwner) * rOwner.Scale;
+					return NegControllerDirection(owner) * owner.Scale;
 				}
 
 				case EDirectionType.Velocity:
 				{
-					return VelocityDirection(rOwner) * rOwner.Scale;
+					return VelocityDirection(owner) * owner.Scale;
 				}
 
 				case EDirectionType.Relative:
 				{
-					return RelativeDirection(rOwner) * rOwner.Scale;
+					return RelativeDirection(owner) * owner.Scale;
 				}
 
 				default: //absolute
 				{
-					return AbsoluteDirection(rOwner) * rOwner.Scale;
+					return AbsoluteDirection(owner) * owner.Scale;
 				}
 			}
 		}
 
-		private Vector2 ControllerDirection(BaseObject rOwner)
+		private Vector2 ControllerDirection(BaseObject owner)
 		{
-			if (rOwner.Direction() != Vector2.Zero)
+			if (owner.Direction() != Vector2.Zero)
 			{
 				//use the thumbstick direction from the object
-				return rOwner.Direction() * VelocityLength;
+				return owner.Direction() * VelocityLength;
 			}
-			else if (rOwner.Velocity != Vector2.Zero)
+			else if (owner.Velocity != Vector2.Zero)
 			{
 				//use teh direction the object is travelling
-				return VelocityDirection(rOwner);
+				return VelocityDirection(owner);
 			}
 			else
 			{
 				//use the velocity from this action
-				return RelativeDirection(rOwner);
+				return RelativeDirection(owner);
 			}
 		}
 
-		private Vector2 NegControllerDirection(BaseObject rOwner)
+		private Vector2 NegControllerDirection(BaseObject owner)
 		{
-			if (rOwner.Direction() != Vector2.Zero)
+			if (owner.Direction() != Vector2.Zero)
 			{
 				//use the opposite thumbstick direction from the object
-				return rOwner.Direction() * -VelocityLength;
+				return owner.Direction() * -VelocityLength;
 			}
-			else if (rOwner.Velocity != Vector2.Zero)
+			else if (owner.Velocity != Vector2.Zero)
 			{
 				//use teh direction the object is travelling, but flip the X
-				return -1.0f * VelocityDirection(rOwner);
+				return -1.0f * VelocityDirection(owner);
 			}
 			else
 			{
 				//use the velocity from this action
-				return -1.0f * RelativeDirection(rOwner);
+				return -1.0f * RelativeDirection(owner);
 			}
 		}
 
-		private Vector2 VelocityDirection(BaseObject rOwner)
+		private Vector2 VelocityDirection(BaseObject owner)
 		{
-			if (rOwner.Velocity != Vector2.Zero)
+			if (owner.Velocity != Vector2.Zero)
 			{
 				//use teh direction the object is travelling
-				Vector2 direction = rOwner.Velocity;
+				var direction = owner.Velocity;
 				direction.Normalize();
 				return direction * VelocityLength;
 			}
 			else
 			{
 				//use teh direction based on where the character is pointing
-				return RelativeDirection(rOwner);
+				return RelativeDirection(owner);
 			}
 		}
 
-		private Vector2 RelativeDirection(BaseObject rOwner)
+		private Vector2 RelativeDirection(BaseObject owner)
 		{
 			//use teh direction based on where the character is pointing
-			Vector2 myDirection = Velocity;
-			Matrix rotation = MatrixExt.Orientation(rOwner.CurrentRotation);
-			myDirection.X = (rOwner.Flip ? -Velocity.X : Velocity.X);
-			return MatrixExt.Multiply(rotation, myDirection);
+			var direction = Velocity;
+			var rotation = MatrixExt.Orientation(owner.CurrentRotation);
+			direction.X = (owner.Flip ? -Velocity.X : Velocity.X);
+			return MatrixExt.Multiply(rotation, direction);
 		}
 
-		private Vector2 AbsoluteDirection(BaseObject rOwner)
+		private Vector2 AbsoluteDirection(BaseObject owner)
 		{
 			//use the velocity from this action
-			Vector2 myDirection = Velocity;
-			myDirection.X = (rOwner.Flip ? -Velocity.X : Velocity.X);
-			return myDirection;
-		}
-
-		public bool Compare(ActionDirection rInst)
-		{
-			Debug.Assert(Velocity == rInst.Velocity);
-			Debug.Assert(DirectionType == rInst.DirectionType);
-			Debug.Assert(VelocityLength == rInst.VelocityLength);
-
-			return true;
+			var direction = Velocity;
+			direction.X = (owner.Flip ? -Velocity.X : Velocity.X);
+			return direction;
 		}
 
 		#endregion //Methods
-
-		#region File IO
-
-		/// <summary>
-		/// Read from an xml file
-		/// </summary>
-		/// <param name="rXMLNode">the xml node to read from</param>
-		/// <returns></returns>
-		public bool ReadXml(XmlNode rXMLNode)
-		{
-			//Read in child nodes
-			if (rXMLNode.HasChildNodes)
-			{
-				for (XmlNode childNode = rXMLNode.FirstChild;
-					null != childNode;
-					childNode = childNode.NextSibling)
-				{
-					//what is in this node?
-					string strName = childNode.Name;
-					string strValue = childNode.InnerText;
-
-					if (strName == "velocity")
-					{
-						Velocity = strValue.ToVector2();
-					}
-					else if (strName == "directionType")
-					{
-						DirectionType = (EDirectionType)Enum.Parse(typeof(EDirectionType), strValue);
-					}
-					else
-					{
-						throw new Exception("bad strName in DirectionActionXML: " + strName);
-					}
-				}
-			}
-
-			return true;
-		}
-
-#if !WINDOWS_UWP
-		/// <summary>
-		/// overloaded in child classes to write out action specific stuff
-		/// </summary>
-		/// <param name="rXMLFile"></param>
-		public void WriteXml(XmlTextWriter rXMLFile)
-		{
-			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(Velocity.StringFromVector());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("directionType");
-			rXMLFile.WriteString(DirectionType.ToString());
-			rXMLFile.WriteEndElement();
-		}
-#endif
-
-		/// <summary>
-		/// Read from a serialized file
-		/// </summary>
-		/// <param name="myAction">the xml item to read the action from</param>
-		public bool ReadSerialized(DirectionActionModel myAction)
-		{
-			Velocity = myAction.velocity;
-			DirectionType = (EDirectionType)Enum.Parse(typeof(EDirectionType), myAction.directionType);
-			return true;
-		}
-
-		#endregion //File IO
 	}
 }

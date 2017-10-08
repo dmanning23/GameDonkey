@@ -1,12 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FilenameBuddy;
+using System;
+using System.Xml;
 
 namespace GameDonkeyLib
 {
-	public class AddGarmentActionModel : BaseActionModel
+	public class AddGarmentActionModel : BaseActionModel, ITimedActionModel, IHasFilenameActionModel
 	{
-		public float timeDelta = 0.0f;
-		public string garmentFile = "";
+		#region Properties
+
+		public override EActionType ActionType
+		{
+			get
+			{
+				return EActionType.AddGarment;
+			}
+		}
+
+		public Filename Filename { get; private set; }
+		public TimedActionModel TimeDelta { get; private set; }
+
+		#endregion //Properties
+
+		#region Methods
+
+		public AddGarmentActionModel()
+		{
+			Filename = new Filename();
+			TimeDelta = new TimedActionModel();
+		}
+
+		public override bool Compare(BaseActionModel inst)
+		{
+			if (!base.Compare(inst))
+			{
+				return false;
+			}
+
+			var stateAction = inst as AddGarmentActionModel;
+			if (null == stateAction)
+			{
+				return false;
+			}
+
+			if (!TimeDelta.Compare(stateAction.TimeDelta))
+			{
+				return false;
+			}
+
+			if (!Filename.Compare(stateAction.Filename))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public override void ParseXmlNode(XmlNode node)
+		{
+			//what is in this node?
+			var name = node.Name;
+			var value = node.InnerText;
+
+			switch (name)
+			{
+				case "Filename":
+					{
+						Filename.SetRelFilename(value);
+					}
+					break;
+				case "TimeDelta":
+					{
+						TimeDelta.ParseXmlNode(node);
+					}
+					break;
+				default:
+					{
+						base.ParseXmlNode(node);
+					}
+					break;
+			}
+		}
+
+#if !WINDOWS_UWP
+
+		protected override void WriteActionXml(XmlTextWriter xmlWriter)
+		{
+			xmlWriter.WriteAttributeString("Filename", Filename.GetRelFilename());
+			TimeDelta.WriteXmlNodes(xmlWriter);
+		}
+
+#endif
+
+		#endregion //Methods
 	}
 }

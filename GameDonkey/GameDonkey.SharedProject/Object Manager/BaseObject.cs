@@ -15,17 +15,6 @@ using System.Diagnostics;
 namespace GameDonkeyLib
 {
 	/// <summary>
-	/// All the different types of thing a base object can be
-	/// </summary>
-	public enum EObjectType
-	{
-		Human,
-		AI,
-		Level,
-		Projectile
-	}
-
-	/// <summary>
 	/// this is a game token, either player or projectile
 	/// </summary>
 	public class BaseObject
@@ -35,32 +24,74 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// this is a counter for assigning round-robin item ids, this is the next id to use
 		/// </summary>
-		private static uint g_iIDCounter;
+		private static uint _idCounter;
+
+		/// <summary>
+		/// Whether or not an attack has landed during the current state.  Used for combo engine.
+		/// </summary>
+		protected bool _attackLanded;
+
+		protected Queue<int> _queuedInput;
+
+		#endregion //Fields
+
+		#region Properties
+
+		#region Required Data Structures
 
 		/// <summary>
 		/// the global id of this instance of a base object
 		/// </summary>
-		private uint m_iGlobalID;
+		public uint Id { get; private set; }
 
 		/// <summary>
 		/// the id of this base object in teh player queue that owns it
 		/// </summary>
-		private int m_iQueueID;
+		public int QueueId { get; private set; }
 
 		/// <summary>
 		/// The type of thing this is
 		/// </summary>
-		private EObjectType m_eType;
+		public GameObjectType OjectType { get; private set; }
+
+		/// <summary>
+		/// the animation container for this dude
+		/// </summary>
+		public AnimationContainer AnimationContainer { get; private set; }
+
+		/// <summary>
+		/// The state machine and state actions for this dude
+		/// </summary>
+		public IStateContainer States { get; set; }
+
+		/// <summary>
+		/// The player queue that owns this object
+		/// </summary>
+		public PlayerQueue PlayerQueue { get; set; }
+
+		/// <summary>
+		/// thing for managing all the collisions, hits for this dude
+		/// </summary>
+		public BasePhysicsContainer Physics { get; set; }
+
+		/// <summary>
+		/// drawlists used to draw the main character
+		/// </summary>
+		protected DrawList DrawList { get; set; }
+
+		/// <summary>
+		/// the garment manager for this guy, used to make life easier
+		/// </summary>
+		public GarmentManager Garments { get; protected set; }
+
+		#endregion //Required Data Structures
+
+		#region State Data
 
 		/// <summary>
 		/// Reference to a clock that synchronizes all the different clocks in the dude
 		/// </summary>
 		public HitPauseClock CharacterClock { get; protected set; }
-
-		/// <summary>
-		/// the garment manager for this guy, used to make life easier
-		/// </summary>
-		public GarmentManager MyGarments { get; protected set; }
 
 		/// <summary>
 		/// List of this dude's currently active attacks
@@ -75,92 +106,12 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// If this timer is running, it means attacks don't hit
 		/// </summary>
-		protected CountdownTimer m_BlockTimer;
+		protected CountdownTimer BlockTimer { get; set; }
 
 		/// <summary>
 		/// evasion timer, if this is running it means there are no push collsions
 		/// </summary>
-		protected CountdownTimer m_EvasionTimer;
-
-		/// <summary>
-		/// this dude's position
-		/// </summary>
-		protected Vector2 m_Position;
-
-		/// <summary>
-		/// the velocity vector of this object
-		/// </summary>
-		protected Vector2 m_Velocity;
-
-		/// <summary>
-		/// When this timer runs out, 
-		/// check the CharacterTrail object to see if we should drop another character image
-		/// </summary>
-		protected CountdownTimer m_TrailTimer;
-
-		/// <summary>
-		/// pointer to the current "character trail" object
-		/// </summary>
-		protected TrailAction m_rTrailAction;
-
-		private Color _playerColor = Color.White;
-
-		/// <summary>
-		/// The current color of this dude
-		/// </summary>
-		public Color PlayerColor 
-		{
-			get
-			{
-				return _playerColor;
-			}
-			set
-			{
-				_playerColor = value;
-				AnimationContainer.Skeleton.RootBone.SetPrimaryColor(_playerColor);
-			}
-		}
-
-		/// <summary>
-		/// Whether or not an attack has landed during the current state.  Used for combo engine.
-		/// </summary>
-		protected bool m_bAttackLanded;
-
-		protected Queue<int> m_QueuedInput;
-
-		/// <summary>
-		/// How tall this character is (pixels)
-		/// </summary>
-		protected float m_fHeight;
-
-		/// <summary>
-		/// How big to draw, do physics at
-		/// </summary>
-		protected float m_fScale;
-
-		/// <summary>
-		/// drawlists used to draw the main character
-		/// </summary>
-		protected DrawList m_DrawList;
-
-		/// <summary>
-		/// The last player to attack this guy.  Used to calculate points when someone dies.
-		/// </summary>
-		protected PlayerQueue m_rLastAttacker;
-
-		/// <summary>
-		/// The rotation of this dude
-		/// </summary>
-		private float _currentRotation = 0.0f;
-
-		#endregion //Fields
-
-		#region Properties
-
-		public CountdownTimer EvasionTimer
-		{
-			get { return m_EvasionTimer; }
-		}
+		public CountdownTimer EvasionTimer { get; protected set; }
 
 		/// <summary>
 		/// pointer to the current "throw" action (this dude is being thrown)
@@ -168,95 +119,23 @@ namespace GameDonkeyLib
 		public CreateThrowAction CurrentThrow { get; set; }
 
 		/// <summary>
-		/// the animation container for this dude
+		/// When this timer runs out, 
+		/// check the CharacterTrail object to see if we should drop another character image
 		/// </summary>
-		public AnimationContainer AnimationContainer { get; private set; }
+		public CountdownTimer TrailTimer { get; private set; }
 
 		/// <summary>
-		/// The state machine and state actions for this dude
+		/// pointer to the current "character trail" object
 		/// </summary>
-		public IStateContainer States { get; set; }
-
-		public virtual Vector2 Position
-		{
-			get
-			{
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
-				return m_Position;
-			}
-			set
-			{
-				m_Position = value;
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
-			}
-		}
-
-		/// <summary>
-		/// this dude's orientation
-		/// </summary>
-		public bool Flip { get; set; }
-
-		public Vector2 Velocity
-		{
-			get { return m_Velocity; }
-			set { m_Velocity = value; }
-		}
-
-		public CountdownTimer TrailTimer
-		{
-			get { return m_TrailTimer; }
-		}
-
+		protected TrailAction _trailAction;
 		public TrailAction TrailAction
 		{
-			get { return m_rTrailAction; }
+			get { return _trailAction; }
 			set
 			{
-				m_rTrailAction = value;
-				Debug.Assert(null != m_rTrailAction);
-				m_TrailTimer.Start(m_rTrailAction.SpawnDelta);
-			}
-		}
-
-		/// <summary>
-		/// The player queue that owns this object
-		/// </summary>
-		public PlayerQueue PlayerQueue { get; set; }
-
-		public uint GlobalID
-		{
-			get { return m_iGlobalID; }
-		}
-
-		public int QueueID
-		{
-			get { return m_iQueueID; }
-		}
-
-		/// <summary>
-		/// thing for managing all the collisions, hits for this dude
-		/// </summary>
-		public IPhysicsContainer Physics { get; set; }
-
-		public EObjectType Type
-		{
-			get { return m_eType; }
-		}
-
-		public float Height
-		{
-			get { return (m_fHeight * m_fScale); }
-		}
-
-		public float Scale
-		{
-			get { return m_fScale; }
-			set
-			{
-				m_fScale = value;
-				m_DrawList.Scale = m_fScale;
+				_trailAction = value;
+				Debug.Assert(null != _trailAction);
+				TrailTimer.Start(_trailAction.SpawnDelta);
 			}
 		}
 
@@ -271,6 +150,98 @@ namespace GameDonkeyLib
 		public ConstantDeccelerationAction DeccelAction { get; set; }
 
 		/// <summary>
+		/// The last player to attack this guy.  Used to calculate points when someone dies.
+		/// </summary>
+		public PlayerQueue LastAttacker { get; protected set; }
+
+		/// <summary>
+		/// a list of all the current particle effect emitters launched from state actions
+		/// Used to kill particle emitters when state changes
+		/// </summary>
+		public List<Emitter> Emitters { get; private set; }
+
+		#endregion //State Data
+
+		#region Positional Data
+
+		/// <summary>
+		/// How tall this character is (pixels)
+		/// </summary>
+		protected float _height;
+		public float Height
+		{
+			get { return (_height * _scale); }
+		}
+
+		/// <summary>
+		/// How big to draw, do physics at
+		/// </summary>
+		protected float _scale;
+		public float Scale
+		{
+			get { return _scale; }
+			set
+			{
+				_scale = value;
+				DrawList.Scale = _scale;
+			}
+		}
+
+		/// <summary>
+		/// The current color of this dude
+		/// </summary>
+		private Color _playerColor;
+		public Color PlayerColor
+		{
+			get
+			{
+				return _playerColor;
+			}
+			set
+			{
+				_playerColor = value;
+				AnimationContainer.Skeleton.RootBone.SetPrimaryColor(_playerColor);
+			}
+		}
+
+		/// <summary>
+		/// this dude's position
+		/// </summary>
+		protected Vector2 _position;
+		public virtual Vector2 Position
+		{
+			get
+			{
+				return _position;
+			}
+			set
+			{
+				_position = value;
+			}
+		}
+
+		/// <summary>
+		/// this dude's orientation
+		/// </summary>
+		public bool Flip { get; set; }
+
+		/// <summary>
+		/// the velocity vector of this object
+		/// </summary>
+		protected Vector2 _velocity;
+		public Vector2 Velocity
+		{
+			get
+			{
+				return _velocity;
+			}
+			set
+			{
+				_velocity = value;
+			}
+		}
+
+		/// <summary>
 		/// rotation to apply to this dude for the current state
 		/// stored in radians/second
 		/// </summary>
@@ -279,7 +250,8 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// The current rotation of this dude.
 		/// </summary>
-		public float CurrentRotation 
+		private float _currentRotation = 0.0f;
+		public float CurrentRotation
 		{
 			get
 			{
@@ -296,16 +268,7 @@ namespace GameDonkeyLib
 			return CurrentRotation;
 		}
 
-		public PlayerQueue LastAttacker
-		{
-			get { return m_rLastAttacker; }
-		}
-
-        /// <summary>
-        /// a list of all the current particle effect emitters launched from state actions
-        /// Used to kill particle emitters when state changes
-        /// </summary>
-		public List<Emitter> Emitters { get; private set; }
+		#endregion //Positional Data
 
 		#endregion //Properties
 
@@ -316,58 +279,96 @@ namespace GameDonkeyLib
 		/// </summary>
 		static BaseObject()
 		{
-			g_iIDCounter = 0;
+			_idCounter = 0;
 		}
 
 		/// <summary>
 		/// hello, standard constructor!
 		/// </summary>
 		/// <param name="eType">the type of this object</param>
-		/// <param name="rClock">a character clock.</param>
-		public BaseObject(EObjectType eType, HitPauseClock rClock, int iQueueID)
+		/// <param name="clock">a character clock.</param>
+		public BaseObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId)
 		{
-			m_eType = eType;
-			m_iGlobalID = BaseObject.g_iIDCounter++;
-			m_iQueueID = iQueueID;
+			OjectType = gameObjectType;
+			Id = BaseObject._idCounter++;
+			QueueId = queueId;
 			CurrentAttacks = new List<CreateAttackAction>();
 			CurrentBlocks = new TimedActionList<BlockingStateAction>();
-			m_BlockTimer = new CountdownTimer();
-			m_EvasionTimer = new CountdownTimer();
+			BlockTimer = new CountdownTimer();
+			EvasionTimer = new CountdownTimer();
 			CurrentThrow = null;
 			AnimationContainer = new AnimationContainer();
 			States = null;
-			m_Position = new Vector2(0.0f);
+			Position = new Vector2(0.0f);
 			Flip = false;
-			m_Velocity = new Vector2(0.0f);
-			m_TrailTimer = new CountdownTimer();
-			m_rTrailAction = null;
+			Velocity = new Vector2(0.0f);
+			TrailTimer = new CountdownTimer();
+			TrailAction = null;
 			PlayerQueue = null;
 			_playerColor = Color.White;
-			m_bAttackLanded = false;
-			m_QueuedInput = new Queue<int>();
-			m_fHeight = 0.0f;
-			m_fScale = 1.0f;
+			_attackLanded = false;
+			_queuedInput = new Queue<int>();
+			_height = 0.0f;
 			RotationPerSecond = 0.0f;
 			CurrentRotation = 0.0f;
 
-			m_DrawList = new DrawList();
-			m_DrawList.Scale = m_fScale;
+			DrawList = new DrawList();
+			Scale = 1f;
 
 			AccelAction = null;
 			DeccelAction = null;
 
-			Debug.Assert(null != rClock);
-			CharacterClock = rClock;
+			Debug.Assert(null != clock);
+			CharacterClock = clock;
 
-			m_rLastAttacker = null;
+			LastAttacker = null;
 
-			MyGarments = new GarmentManager(this);
+			Garments = new GarmentManager(this);
 			Emitters = new List<Emitter>();
 
 			Init();
+		}
 
-			Debug.Assert(null != Physics);
-			Debug.Assert(null != States);
+		/// <summary>
+		/// Constructor for replacing a network player when they leave the game
+		/// </summary>
+		/// <param name="rHuman">the dude to be replaced, copy all his shit</param>
+		public BaseObject(GameObjectType gamGameObjectType, BaseObject human)
+		{
+			//grab all this shit
+			OjectType = gamGameObjectType;
+			Id = human.Id;
+			QueueId = human.QueueId;
+			CurrentAttacks = human.CurrentAttacks;
+			CurrentBlocks = human.CurrentBlocks;
+			BlockTimer = human.BlockTimer;
+			EvasionTimer = human.EvasionTimer;
+			CurrentThrow = human.CurrentThrow;
+			AnimationContainer = human.AnimationContainer;
+			if (null != States)
+			{
+				States.StateChangedEvent -= this.StateChanged;
+			}
+			States = human.States;
+			States.StateChangedEvent += this.StateChanged;
+			Position = human.Position;
+			Flip = human.Flip;
+			Velocity = human.Velocity;
+			TrailTimer = human.TrailTimer;
+			TrailAction = human.TrailAction;
+			PlayerQueue = human.PlayerQueue;
+			PlayerColor = human.PlayerColor;
+			Physics = human.Physics;
+			_attackLanded = human._attackLanded;
+			_queuedInput = human._queuedInput;
+			_height = human._height;
+			_scale = human._scale;
+			DrawList = human.DrawList;
+			AccelAction = human.AccelAction;
+			DeccelAction = human.DeccelAction;
+			CharacterClock = human.CharacterClock;
+			LastAttacker = human.LastAttacker;
+			Garments = human.Garments;
 		}
 
 		protected virtual void Init()
@@ -375,48 +376,6 @@ namespace GameDonkeyLib
 			Physics = new PlayerPhysicsContainer(this);
 			States = new ObjectStateContainer(new StateMachine());
 			States.StateChangedEvent += this.StateChanged;
-		}
-
-		/// <summary>
-		/// Constructor for replacing a network player when they leave the game
-		/// </summary>
-		/// <param name="rHuman">the dude to be replaced, copy all his shit</param>
-		public BaseObject(EObjectType eType, BaseObject rHuman)
-		{
-			//grab all this shit
-			m_eType = eType;
-			m_iGlobalID = rHuman.m_iGlobalID;
-			m_iQueueID = rHuman.m_iQueueID;
-			CurrentAttacks = rHuman.CurrentAttacks;
-			CurrentBlocks = rHuman.CurrentBlocks;
-			m_BlockTimer = rHuman.m_BlockTimer;
-			m_EvasionTimer = rHuman.m_EvasionTimer;
-			CurrentThrow = rHuman.CurrentThrow;
-			AnimationContainer = rHuman.AnimationContainer;
-			if (null != States)
-			{
-				States.StateChangedEvent -= this.StateChanged;
-			}
-			States = rHuman.States;
-			States.StateChangedEvent += this.StateChanged;
-			m_Position = rHuman.m_Position;
-			Flip = rHuman.Flip;
-			m_Velocity = rHuman.m_Velocity;
-			m_TrailTimer = rHuman.m_TrailTimer;
-			m_rTrailAction = rHuman.m_rTrailAction;
-			PlayerQueue = rHuman.PlayerQueue;
-			PlayerColor = rHuman.PlayerColor;
-			Physics = rHuman.Physics;
-			m_bAttackLanded = rHuman.m_bAttackLanded;
-			m_QueuedInput = rHuman.m_QueuedInput;
-			m_fHeight = rHuman.m_fHeight;
-			m_fScale = rHuman.m_fScale;
-			m_DrawList = rHuman.m_DrawList;
-			AccelAction = rHuman.AccelAction;
-			DeccelAction = rHuman.DeccelAction;
-			CharacterClock = rHuman.CharacterClock;
-			m_rLastAttacker = rHuman.m_rLastAttacker;
-			MyGarments = rHuman.MyGarments;
 		}
 
 		/// <summary>
@@ -434,29 +393,22 @@ namespace GameDonkeyLib
 		/// </summary>
 		public virtual void Reset()
 		{
-			Debug.Assert(null != CurrentAttacks);
 			CurrentAttacks.Clear();
 			CurrentBlocks.Reset();
-			Debug.Assert(null != m_BlockTimer);
-			m_BlockTimer.Stop();
-			Debug.Assert(null != m_EvasionTimer);
-			m_EvasionTimer.Stop();
+			BlockTimer.Stop();
+			EvasionTimer.Stop();
 			CurrentThrow = null;
-			Debug.Assert(null != States);
 			States.Reset();
-			m_Velocity = Vector2.Zero;
-			Debug.Assert(null != m_TrailTimer);
-			m_TrailTimer.Stop();
-			m_rTrailAction = null;
-			Debug.Assert(null != Physics);
+			Velocity = Vector2.Zero;
+			TrailTimer.Stop();
+			TrailAction = null;
 			Physics.Reset();
-			m_bAttackLanded = false;
-			Debug.Assert(null != m_QueuedInput);
-			m_QueuedInput.Clear();
+			_attackLanded = false;
+			_queuedInput.Clear();
 			AccelAction = null;
 			DeccelAction = null;
-			m_rLastAttacker = null;
-			MyGarments.Reset();
+			LastAttacker = null;
+			Garments.Reset();
 			RotationPerSecond = 0.0f;
 			CurrentRotation = 0.0f;
 		}
@@ -466,16 +418,15 @@ namespace GameDonkeyLib
 			return 0;
 		}
 
-		public virtual void Update(bool bUpdateGravity)
+		public virtual void Update()
 		{
 			//update all our clocks
-			Debug.Assert(null != CharacterClock);
-			m_EvasionTimer.Update(CharacterClock);
-			m_BlockTimer.Update(CharacterClock);
-			m_TrailTimer.Update(CharacterClock);
+			EvasionTimer.Update(CharacterClock);
+			BlockTimer.Update(CharacterClock);
+			TrailTimer.Update(CharacterClock);
 
 			//update the garments of this dude
-			MyGarments.Update(CharacterClock);
+			Garments.Update(CharacterClock);
 
 			//update the state actions of this dude
 			States.ExecuteActions(CharacterClock);
@@ -483,9 +434,6 @@ namespace GameDonkeyLib
 			UpdateEmitters();
 
 			UpdateAnimation();
-
-			Debug.Assert(m_Position.X != float.NaN);
-			Debug.Assert(m_Position.Y != float.NaN);
 		}
 
 		/// <summary>
@@ -494,7 +442,7 @@ namespace GameDonkeyLib
 		public virtual void UpdateAnimation()
 		{
 			//update the animations
-			AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
+			AnimationContainer.Update(CharacterClock, Position, Flip, CurrentRotation, false);
 		}
 
 		/// <summary>
@@ -505,10 +453,10 @@ namespace GameDonkeyLib
 			int i = 0;
 			while (i < Emitters.Count)
 			{
-                Emitter curEmitter = Emitters[i];
+				var curEmitter = Emitters[i];
 				if (curEmitter.IsDead())
 				{
-                    Emitters.RemoveAt(i);
+					Emitters.RemoveAt(i);
 				}
 				else
 				{
@@ -522,9 +470,9 @@ namespace GameDonkeyLib
 		/// For human players, this means getting info from the controller.
 		/// For AI players, this means reacting to info in the list of "bad guys"
 		/// </summary>
-		/// <param name="rController">the controller for this player (bullshit and ignored for AI)</param>
+		/// <param name="controller">the controller for this player (bullshit and ignored for AI)</param>
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public virtual void GetPlayerInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
+		public virtual void GetPlayerInput(InputWrapper controller, List<PlayerQueue> listBadGuys)
 		{
 		}
 
@@ -541,9 +489,9 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// update an input wrapper
 		/// </summary>
-		/// <param name="rController"></param>
-		/// <param name="rInput"></param>
-		public virtual void UpdateInput(InputWrapper rController, InputState rInput)
+		/// <param name="controller"></param>
+		/// <param name="input"></param>
+		public virtual void UpdateInput(InputWrapper controller, InputState input)
 		{
 		}
 
@@ -561,28 +509,27 @@ namespace GameDonkeyLib
 			ApplyRotation();
 		}
 
-		public void UpdateRagdoll(bool bIgnoreRagdoll)
+		public void UpdateRagdoll()
 		{
-			AnimationContainer.UpdateRagdoll(Scale);
+			AnimationContainer.UpdateRagdoll();
 		}
 
 		/// <summary>
 		/// Add an attack to this dude's list of active attacks
 		/// </summary>
-		/// <param name="rAction">the attack action to perform</param>
-		public void AddAttack(CreateAttackAction rAction)
+		/// <param name="attackAction">the attack action to perform</param>
+		public void AddAttack(CreateAttackAction attackAction)
 		{
-			Debug.Assert(null != CurrentAttacks);
-			CurrentAttacks.Add(rAction);
+			CurrentAttacks.Add(attackAction);
 		}
 
 		/// <summary>
 		/// set the block action of this object
 		/// </summary>
-		/// <param name="rAction">the block action to perform</param>
-		public void AddBlock(CreateBlockAction rAction)
+		/// <param name="blockAction">the block action to perform</param>
+		public void AddBlock(CreateBlockAction blockAction)
 		{
-			m_BlockTimer.Start(rAction.TimeDelta);
+			BlockTimer.Start(blockAction.TimeDelta);
 		}
 
 		/// <summary>
@@ -590,7 +537,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		protected void ClearBlocks()
 		{
-			m_BlockTimer.Stop();
+			BlockTimer.Stop();
 		}
 
 		/// <summary>
@@ -598,18 +545,16 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="iMessage">the message to send to the state machine</param>
 		/// <returns>bool: whether or not this dude changed states</returns>
-		public void SendStateMessage(int iMessage)
+		public void SendStateMessage(int message)
 		{
 			//send the message to the state machine
-			Debug.Assert(null != States);
-			States.SendStateMessage(iMessage);
+			States.SendStateMessage(message);
 		}
 
-		public void ForceStateChange(int iState)
+		public void ForceStateChange(int state)
 		{
 			//force the state change in the state machine
-			Debug.Assert(null != States);
-			States.ForceStateChange(iState);
+			States.ForceStateChange(state);
 		}
 
 		/// <summary>
@@ -618,7 +563,7 @@ namespace GameDonkeyLib
 		protected virtual void StateChanged(object sender, StateChangeEventArgs eventArgs)
 		{
 			//was this a turn around message?
-			if (States.CurrentState() == (int)EState.TurningAround)
+			if (States.CurrentState == (int)EState.TurningAround)
 			{
 				Flip = !Flip;
 			}
@@ -635,8 +580,8 @@ namespace GameDonkeyLib
 			EvasionTimer.Stop();
 
 			//clear the trail action
-			m_TrailTimer.Stop();
-			m_rTrailAction = null;
+			TrailTimer.Stop();
+			TrailAction = null;
 
 			//clear the accel & deccel
 			AccelAction = null;
@@ -644,87 +589,65 @@ namespace GameDonkeyLib
 			RotationPerSecond = 0.0f;
 
 			//remove any state specific garments
-			MyGarments.Reset();
+			Garments.Reset();
 
 			//make sure to update this dude, 
 			//because projectiles are activated in the player's update loop and placed in front of them in the update loop
 			if (this is ProjectileObject)
 			{
-				AnimationContainer.Update(CharacterClock, m_Position, Flip, Scale, CurrentRotation, false);
+				AnimationContainer.Update(CharacterClock, Position, Flip, CurrentRotation, false);
 			}
-			m_bAttackLanded = false;
+			_attackLanded = false;
 
 			//kill all the particle effects and clear out that list
-            foreach (Emitter curEmitter in Emitters)
+			foreach (var emitter in Emitters)
 			{
-				curEmitter.EmitterTimer.Stop();
+				emitter.EmitterTimer.Stop();
 			}
-            Emitters.Clear();
+			Emitters.Clear();
 		}
 
-		public virtual void CheckCollisions(BaseObject rBadGuy)
+		public virtual void CheckCollisions(BaseObject badGuy)
 		{
-			Debug.Assert(null != Physics);
-
 			//make sure not to check collisions against ourselves
-			if (GlobalID != rBadGuy.GlobalID)
+			if (Id != badGuy.Id)
 			{
-				Physics.CheckCollisions(rBadGuy.Physics);
+				Physics.CheckCollisions(badGuy.Physics);
 			}
 		}
 
-		public virtual void CheckWorldCollisions(Rectangle rWorldBoundaries)
+		public virtual void CheckWorldCollisions(Rectangle worldBoundaries)
 		{
-			Debug.Assert(null != Physics);
-			Physics.CheckWorldCollisions(Velocity, rWorldBoundaries);
+			Physics.CheckWorldCollisions(Velocity, worldBoundaries);
 		}
-
-		//public void CheckCollisions(List<CBullet> rBadGuys, Rectangle WorldBoundaries)
-		//{
-		//    for (int i = 0; i < rBadGuys.Count; i++)
-		//    {
-		//        Physics.CheckCollisions(rBadGuys[i]);
-		//    }
-
-		//    //check for world collisions
-		//    Physics.CheckWorldCollisions(WorldBoundaries, Velocity);
-		//}
 
 		#region Collision Responses
 
-		public virtual void CollisionResponse(IPhysicsContainer rOtherObject,
-			CreateAttackAction rAttackAction,
-			Vector2 FirstCollisionPoint,
-			Vector2 SecondCollisionPoint)
+		public virtual void CollisionResponse(BasePhysicsContainer otherObject,
+			CreateAttackAction attackAction,
+			Vector2 firstCollisionPoint,
+			Vector2 secondCollisionPoint)
 		{
-			Debug.Assert(null != rOtherObject);
-			Debug.Assert(EObjectType.Level != rOtherObject.Owner.Type);
-			Debug.Assert(null != rAttackAction);
-			Debug.Assert(null != Physics);
-			Debug.Assert(m_iGlobalID == rAttackAction.Owner.m_iGlobalID);
-
 			//set "attack landed" flag for this state for combo engine
-			BaseObject rPlayer = AttackLanded();
-			Debug.Assert(null != rPlayer);
-			Debug.Assert((EObjectType.AI == rPlayer.Type) || (EObjectType.Human == rPlayer.Type));
+			var player = AttackLanded();
 
-			if (!rOtherObject.HitFlags[(int)EHitType.AttackHit] || (rAttackAction.Damage > rOtherObject.Hits[(int)EHitType.AttackHit].Strength))
+			if (!otherObject.HitFlags[(int)EHitType.AttackHit] || (attackAction.Damage > otherObject.Hits[(int)EHitType.AttackHit].Strength))
 			{
 				//i just punched the other object
-				rOtherObject.HitFlags[(int)EHitType.AttackHit] = true;
+				otherObject.HitFlags[(int)EHitType.AttackHit] = true;
 
 				//am I facing left or right?
-				Vector2 direction = rAttackAction.Direction;
+				var direction = attackAction.Direction;
 				if (Flip)
 				{
 					direction.X *= -1.0f;
 				}
 
 				//the base object should be the player if this object is a projectile
-				rOtherObject.Hits[(int)EHitType.AttackHit].Set(direction, rAttackAction, rAttackAction.Damage, EHitType.AttackHit, rPlayer, FirstCollisionPoint);
+				otherObject.Hits[(int)EHitType.AttackHit].Set(direction, attackAction, attackAction.Damage, EHitType.AttackHit, this, firstCollisionPoint);
 
 				//perform all the success actions
-				if (rAttackAction.ExecuteSuccessActions(rOtherObject.Owner))
+				if (attackAction.ExecuteSuccessActions(otherObject.Owner))
 				{
 					//if a state change occurred while the success actions were running, the attack list will be empty
 					CurrentAttacks.Clear();
@@ -732,132 +655,108 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public virtual void WeaponCollisionResponse(IPhysicsContainer rOtherObject,
-			CreateAttackAction rAttackAction,
-			Vector2 FirstCollisionPoint,
-			Vector2 SecondCollisionPoint)
+		public virtual void WeaponCollisionResponse(BasePhysicsContainer otherObject,
+			CreateAttackAction attackAction,
+			Vector2 firstCollisionPoint,
+			Vector2 secondCollisionPoint)
 		{
-			Debug.Assert(null != rOtherObject);
-			Debug.Assert(EObjectType.Level != rOtherObject.Owner.Type);
-			Debug.Assert(null != rAttackAction);
-			Debug.Assert(null != Physics);
-			Debug.Assert(m_iGlobalID == rAttackAction.Owner.m_iGlobalID);
-
 			//set "attack landed" flag for this state for combo engine
-			BaseObject rPlayer = AttackLanded();
-			Debug.Assert(null != rPlayer);
-			Debug.Assert((EObjectType.AI == rPlayer.Type) || (EObjectType.Human == rPlayer.Type));
+			var rPlayer = AttackLanded();
 
 			//my weapon just collided with that other dude's weapon
-			rOtherObject.HitFlags[(int)EHitType.WeaponHit] = true;
+			otherObject.HitFlags[(int)EHitType.WeaponHit] = true;
 
 			//am I facing left or right?
-			Vector2 direction = rAttackAction.Direction;
+			var direction = attackAction.Direction;
 			if (Flip)
 			{
 				direction.X *= -1.0f;
 			}
 
 			//the base object should be the player if this object is a projectile
-			rOtherObject.Hits[(int)EHitType.WeaponHit].Set(direction, rAttackAction, rAttackAction.Damage, EHitType.WeaponHit, rPlayer, FirstCollisionPoint);
+			otherObject.Hits[(int)EHitType.WeaponHit].Set(direction, attackAction, attackAction.Damage, EHitType.WeaponHit, rPlayer, firstCollisionPoint);
 		}
 
 		/// <summary>
 		/// i just attacked another dude but he blocked it
 		/// </summary>
-		/// <param name="rOtherObject"></param>
-		/// <param name="rAttackAction"></param>
-		/// <param name="FirstCollisionPoint"></param>
-		/// <param name="SecondCollisionPoint"></param>
-		public virtual void BlockResponse(IPhysicsContainer rOtherObject,
-			CreateAttackAction rAttackAction,
-			BlockingStateAction rOtherDudesAction,
-			Vector2 FirstCollisionPoint,
-			Vector2 SecondCollisionPoint)
+		/// <param name="otherObject"></param>
+		/// <param name="attackAction"></param>
+		/// <param name="firstCollisionPoint"></param>
+		/// <param name="secondCollisionPoint"></param>
+		public virtual void BlockResponse(BasePhysicsContainer otherObject,
+			CreateAttackAction attackAction,
+			BlockingStateAction otherDudesAction,
+			Vector2 firstCollisionPoint,
+			Vector2 secondCollisionPoint)
 		{
-			Debug.Assert(null != rOtherObject);
-			Debug.Assert(EObjectType.Level != rOtherObject.Owner.Type);
-			Debug.Assert(null != rAttackAction);
-			Debug.Assert(null != Physics);
-
-			//that better be my attack
-			Debug.Assert(m_iGlobalID == rAttackAction.Owner.m_iGlobalID);
-
-			//that better be the other dude's block
-			Debug.Assert(rOtherObject.Owner.m_iGlobalID == rOtherDudesAction.Owner.m_iGlobalID);
-
 			//set "attack landed" flag for this state for combo engine
-			BaseObject rPlayer = AttackLanded();
-			Debug.Assert(null != rPlayer);
-			Debug.Assert((EObjectType.AI == rPlayer.Type) || (EObjectType.Human == rPlayer.Type));
+			var player = AttackLanded();
 
-			if (!rOtherObject.HitFlags[(int)EHitType.BlockHit] || (rAttackAction.Damage > rOtherObject.Hits[(int)EHitType.BlockHit].Strength))
+			if (!otherObject.HitFlags[(int)EHitType.BlockHit] || (attackAction.Damage > otherObject.Hits[(int)EHitType.BlockHit].Strength))
 			{
 				//i just punched the other object
-				rOtherObject.HitFlags[(int)EHitType.BlockHit] = true;
+				otherObject.HitFlags[(int)EHitType.BlockHit] = true;
 
 				//am I facing left or right?
-				Vector2 direction = rAttackAction.Direction;
+				var direction = attackAction.Direction;
 				if (Flip)
 				{
 					direction.X *= -1.0f;
 				}
 
 				//the base object should be the player if this object is a projectile
-				rOtherObject.Hits[(int)EHitType.BlockHit].Set(direction, rAttackAction, rAttackAction.Damage, EHitType.AttackHit, rPlayer, FirstCollisionPoint);
+				otherObject.Hits[(int)EHitType.BlockHit].Set(direction, attackAction, attackAction.Damage, EHitType.AttackHit, player, firstCollisionPoint);
 
 				//perform all the success actions for the BLOCKING action not the ATTACKING action!
-				rOtherDudesAction.ExecuteSuccessActions();
+				otherDudesAction.ExecuteSuccessActions();
 			}
 		}
 
 		#endregion //Collision Responses
 
-		public void RemoveAttack(int iAttackIndex)
+		public void RemoveAttack(int attackIndex)
 		{
-			Debug.Assert(iAttackIndex >= 0);
-			if (iAttackIndex < CurrentAttacks.Count)
+			if (attackIndex < CurrentAttacks.Count)
 			{
-				CurrentAttacks.RemoveAt(iAttackIndex);
+				CurrentAttacks.RemoveAt(attackIndex);
 			}
 		}
 
 		#region Hit Response
 
-		public virtual void HitResponse(IGameDonkey rEngine)
+		public virtual void HitResponse(IGameDonkey engine)
 		{
-			Debug.Assert(null != Physics);
-
 			//do boundary hits here in the base class
 			if (Physics.HitFlags[(int)EHitType.GroundHit])
 			{
-				RespondToGroundHit(Physics.Hits[(int)EHitType.GroundHit], rEngine);
+				RespondToGroundHit(Physics.Hits[(int)EHitType.GroundHit], engine);
 			}
 			else if (Physics.HitFlags[(int)EHitType.CeilingHit])
 			{
-				RespondToCeilingHit(Physics.Hits[(int)EHitType.CeilingHit], rEngine);
+				RespondToCeilingHit(Physics.Hits[(int)EHitType.CeilingHit], engine);
 			}
 
 			if (Physics.HitFlags[(int)EHitType.LeftWallHit])
 			{
-				RespondToLeftWallHit(Physics.Hits[(int)EHitType.LeftWallHit], rEngine);
+				RespondToLeftWallHit(Physics.Hits[(int)EHitType.LeftWallHit], engine);
 			}
 			else if (Physics.HitFlags[(int)EHitType.RightWallHit])
 			{
-				RespondToRightWallHit(Physics.Hits[(int)EHitType.RightWallHit], rEngine);
+				RespondToRightWallHit(Physics.Hits[(int)EHitType.RightWallHit], engine);
 			}
 
 			//remove finished attacks from the list
-			int iAttackIndex = 0;
-			while (iAttackIndex < CurrentAttacks.Count)
+			int i = 0;
+			while (i < CurrentAttacks.Count)
 			{
-				if (CurrentAttacks[iAttackIndex].DoneTime <= CharacterClock.CurrentTime)
+				if (CurrentAttacks[i].DoneTime <= CharacterClock.CurrentTime)
 				{
-					CurrentAttacks.RemoveAt(iAttackIndex);
+					CurrentAttacks.RemoveAt(i);
 				}
 				else
 				{
-					iAttackIndex++;
+					i++;
 				}
 			}
 
@@ -867,58 +766,47 @@ namespace GameDonkeyLib
 			if (null != CurrentThrow)
 			{
 				//okay, being thrown so don't add velocity
-				m_Position = CurrentThrow.Bone.Position;
+				Position = CurrentThrow.AttackBone.Position;
 				Flip = !CurrentThrow.Owner.Flip;
 			}
 			else
 			{
 				//no throw, just add the velocity to the position
-				m_Position += m_Velocity * CharacterClock.TimeDelta;
+				Position += Velocity * CharacterClock.TimeDelta;
 			}
 
 			Physics.Reset();
 		}
 
-		protected virtual void RespondToGroundHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected virtual void RespondToGroundHit(Hit groundHit, IGameDonkey engine)
 		{
 			//TODO: override this in projectile and kill the projectile when it hits a wall
 
 			//TOOD: override in level object and do nothing
 
-			Debug.Assert(EHitType.GroundHit == rGroundHit.HitType);
-
 			//move the player UP out of the floor
-			m_Position.Y += (rGroundHit.Strength * rGroundHit.Direction.Y);
+			_position.Y +=(groundHit.Strength * groundHit.Direction.Y);
 
 			//if the player's velocity is +y, it is set to 0
-			if (0.0f < m_Velocity.Y)
+			if (0f < Velocity.Y)
 			{
-				m_Velocity.Y = 0.0f;
-
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
+				_velocity.Y = 0f;
 			}
 		}
 
-		protected virtual void RespondToCeilingHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected virtual void RespondToCeilingHit(Hit groundHit, IGameDonkey engine)
 		{
 			//TODO: override this in projectile and kill the projectile when it hits a wall
 
 			//TOOD: override in level object and do nothing
 
-			Debug.Assert(null != Physics);
-			Debug.Assert(EHitType.CeilingHit == rGroundHit.HitType);
-
 			//move the player down out of the ceiling
-			m_Position.Y += (rGroundHit.Strength * rGroundHit.Direction.Y);
+			_position.Y += (groundHit.Strength * groundHit.Direction.Y);
 
 			//if the player's velocity is -y, it is set to 0
-			if (0.0f > m_Velocity.Y)
+			if (0f > Velocity.Y)
 			{
-				m_Velocity.Y = 0.0f;
-
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
+				_velocity.Y = 0f;
 			}
 		}
 
@@ -928,19 +816,13 @@ namespace GameDonkeyLib
 
 			//TOOD: override in level object and do nothing
 
-			Debug.Assert(null != Physics);
-			Debug.Assert(EHitType.LeftWallHit == rGroundHit.HitType);
-
-			//move the player UP out of the floor
-			m_Position.X += (rGroundHit.Strength * rGroundHit.Direction.X);
+			//move the player right out of the wall
+			_position.X += (rGroundHit.Strength * rGroundHit.Direction.X);
 
 			//if the player's velocity is -X, it is set to 0
-			if (m_Velocity.X < 0.0f)
+			if (Velocity.X < 0f)
 			{
-				m_Velocity.X = 0.0f;
-
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
+				_velocity.X = 0f;
 			}
 		}
 
@@ -950,19 +832,13 @@ namespace GameDonkeyLib
 
 			//TOOD: override in level object and do nothing
 
-			Debug.Assert(null != Physics);
-			Debug.Assert(EHitType.RightWallHit == rGroundHit.HitType);
-
-			//move the player UP out of the floor
-			m_Position.X += (rGroundHit.Strength * rGroundHit.Direction.X);
+			//move the player left out of the wall
+			_position.X += (rGroundHit.Strength * rGroundHit.Direction.X);
 
 			//if the player's velocity is +X, it is set to 0
-			if (0 < m_Velocity.X)
+			if (0f < Velocity.X)
 			{
-				m_Velocity.X = 0.0f;
-
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
+				_velocity.X = 0f;
 			}
 		}
 
@@ -971,26 +847,26 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// add all the data for this dude to the camera
 		/// </summary>
-		/// <param name="rCamera"></param>
-		public virtual void AddToCamera(Camera rCamera)
+		/// <param name="camera"></param>
+		public virtual void AddToCamera(Camera camera)
 		{
 			//get half the height
-			int iHalfHeight = (int)(m_fHeight * 0.68f);
+			var halfHeight = (int)(_height * 0.68f);
 
 			//add left/right points
-			rCamera.AddPoint(new Vector2(Position.X - iHalfHeight, Position.Y));
-			rCamera.AddPoint(new Vector2(Position.X + iHalfHeight, Position.Y));
+			camera.AddPoint(new Vector2(Position.X - halfHeight, Position.Y));
+			camera.AddPoint(new Vector2(Position.X + halfHeight, Position.Y));
 
 			//add the bottom point
-			rCamera.AddPoint(new Vector2(Position.X, Position.Y + (int)(m_fHeight * 0.65f)));
+			camera.AddPoint(new Vector2(Position.X, Position.Y + (int)(_height * 0.65f)));
 
 			//add the top
-			rCamera.AddPoint(new Vector2(Position.X, Position.Y - (int)(m_fHeight * 0.77f)));
+			camera.AddPoint(new Vector2(Position.X, Position.Y - (int)(_height * 0.77f)));
 		}
 
 		public virtual bool IsBlocking()
 		{
-			return (m_BlockTimer.RemainingTime() > 0.0f);
+			return (BlockTimer.RemainingTime > 0.0f);
 		}
 
 		/// <summary>
@@ -1000,9 +876,7 @@ namespace GameDonkeyLib
 		/// <returns>The player who landed the attack.</returns>
 		public virtual BaseObject AttackLanded()
 		{
-			Debug.Assert(EObjectType.Projectile != Type);
-			Debug.Assert(EObjectType.Level != Type);
-			m_bAttackLanded = true;
+			_attackLanded = true;
 			return this;
 		}
 
@@ -1015,23 +889,23 @@ namespace GameDonkeyLib
 		public bool DoesNeedCharacterTrail()
 		{
 			//if there is no trail object, we definitly don't need this
-			if (null != m_rTrailAction)
+			if (null != TrailAction)
 			{
 				//check if the trail is still active
-				if (CharacterClock.CurrentTime <= m_rTrailAction.DoneTime)
+				if (CharacterClock.CurrentTime <= TrailAction.DoneTime)
 				{
 					//check if the trail timer has expired
-					if (m_TrailTimer.RemainingTime() <= 0.0f)
+					if (TrailTimer.RemainingTime <= 0.0f)
 					{
 						//eureka, we need a new trail!
-						m_TrailTimer.Start(m_rTrailAction.SpawnDelta);
+						TrailTimer.Start(TrailAction.SpawnDelta);
 						return true;
 					}
 				}
 				else
 				{
 					//if the trail is expired, set the pointer to 0 to save a cycle next time around
-					m_rTrailAction = null;
+					TrailAction = null;
 				}
 			}
 
@@ -1040,57 +914,57 @@ namespace GameDonkeyLib
 
 		public virtual void UpdateDrawlist()
 		{
-			m_DrawList.Flush();
-			AnimationContainer.Render(m_DrawList);
+			DrawList.Flush();
+			AnimationContainer.Render(DrawList);
 		}
 
 		/// <summary>
 		/// Do the actual drawing of the dude
 		/// </summary>
-		/// <param name="rRenderer"></param>
-		public virtual void Render(IRenderer rRenderer)
+		/// <param name="renderer"></param>
+		public virtual void Render(IRenderer renderer)
 		{
-			m_DrawList.Render(rRenderer);
+			DrawList.Render(renderer);
 		}
 
-		public void RenderAttacks(IRenderer rRenderer)
+		public void RenderAttacks(IRenderer renderer)
 		{
-			for (int i = 0; i < CurrentAttacks.Count; i++)
+			for (var i = 0; i < CurrentAttacks.Count; i++)
 			{
 				if (null != CurrentAttacks[i].GetCircle())
 				{
-					CurrentAttacks[i].GetCircle().Render(rRenderer, Color.Red);
+					CurrentAttacks[i].GetCircle().Render(renderer, Color.Red);
 				}
 			}
 
-			for (int i = 0; i < CurrentBlocks.CurrentActions.Count; i++)
+			for (var i = 0; i < CurrentBlocks.CurrentActions.Count; i++)
 			{
 				if (null != CurrentBlocks.CurrentActions[i].GetCircle())
 				{
-					CurrentBlocks.CurrentActions[i].GetCircle().Render(rRenderer, Color.Green);
+					CurrentBlocks.CurrentActions[i].GetCircle().Render(renderer, Color.Green);
 				}
 			}
 		}
 
-		public void RenderPhysics(IRenderer rRenderer)
+		public void RenderPhysics(IRenderer renderer)
 		{
-			AnimationContainer.Skeleton.RootBone.DrawPhysics(rRenderer, true, Color.White);
+			AnimationContainer.Skeleton.RootBone.DrawPhysics(renderer, true, Color.White);
 		}
 
-		public void DrawCameraInfo(IRenderer rRenderer)
+		public void DrawCameraInfo(IRenderer renderer)
 		{
 			//get half the height
-			int iHalfHeight = (int)(m_fHeight / 2.0f);
+			var halfHeight = (int)(_height / 2.0f);
 
 			//add left/right points
-			rRenderer.Primitive.Point(new Vector2(Position.X - iHalfHeight, Position.Y), Color.Red);
-			rRenderer.Primitive.Point(new Vector2(Position.X + iHalfHeight, Position.Y), Color.Red);
+			renderer.Primitive.Point(new Vector2(Position.X - halfHeight, Position.Y), Color.Red);
+			renderer.Primitive.Point(new Vector2(Position.X + halfHeight, Position.Y), Color.Red);
 
 			//add the bottom point
-			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y + (int)(m_fHeight * 0.55f)), Color.Red);
+			renderer.Primitive.Point(new Vector2(Position.X, Position.Y + (int)(_height * 0.55f)), Color.Red);
 
 			//add the top
-			rRenderer.Primitive.Point(new Vector2(Position.X, Position.Y - (int)(m_fHeight * 0.8f)), Color.Red);
+			renderer.Primitive.Point(new Vector2(Position.X, Position.Y - (int)(_height * 0.8f)), Color.Red);
 		}
 
 		#endregion //Rendering
@@ -1104,10 +978,10 @@ namespace GameDonkeyLib
 			}
 
 			//Get teh acceleration
-			Vector2 myAcceleration = (AccelAction.GetMyVelocity() * CharacterClock.TimeDelta);
+			var acceleration = (AccelAction.GetVelocity() * CharacterClock.TimeDelta);
 
 			//Add the acceleration to the velocity
-			Velocity += myAcceleration;
+			Velocity += acceleration;
 
 			//Are we going too fast?
 			if (Velocity.LengthSquared() > (AccelAction.MaxVelocity * AccelAction.MaxVelocity))
@@ -1115,23 +989,23 @@ namespace GameDonkeyLib
 				//Find the amount to pull the velocity back... 
 
 				//Get the length of the acceleration
-				float fAccelLength = myAcceleration.Length();
+				var accelLength = acceleration.Length();
 
 				//Get the delta of how much speed we need to shed
-				float fVelocityDif = Velocity.Length() - AccelAction.MaxVelocity;
+				var velocityDif = Velocity.Length() - AccelAction.MaxVelocity;
 
 				//If it is less than the amount of accleration added, use the delta
-				if (fAccelLength > fVelocityDif)
+				if (accelLength > velocityDif)
 				{
-					fVelocityDif = fAccelLength;
+					velocityDif = accelLength;
 				}
 
 				//Get the opposite direction from the accleration
-				Vector2 oppositeDir = Velocity * -1.0f;
+				var oppositeDir = Velocity * -1.0f;
 				oppositeDir.Normalize();
 
 				//Multiply speed delta by the unit vector of the opposite direction
-				Vector2 decel = fVelocityDif * oppositeDir;
+				var decel = velocityDif * oppositeDir;
 
 				//add to the velocity
 				Velocity += decel;
@@ -1147,43 +1021,43 @@ namespace GameDonkeyLib
 			}
 
 			//Get teh acceleration
-			Vector2 myDecceleration = (DeccelAction.Velocity * CharacterClock.TimeDelta);
+			var decceleration = (DeccelAction.GetVelocity() * CharacterClock.TimeDelta);
 
 			//set the y velocity
-			if (m_Velocity.Y <= DeccelAction.MinYVelocity)
+			if (Velocity.Y <= DeccelAction.MinYVelocity)
 			{
 				//
-				myDecceleration.Y += m_Velocity.Y;
+				decceleration.Y += Velocity.Y;
 
 				//only deccelerate to minY
-				m_Velocity.Y = MathHelper.Clamp(myDecceleration.Y, m_Velocity.Y, DeccelAction.MinYVelocity);
+				_velocity.Y = MathHelper.Clamp(decceleration.Y, Velocity.Y, DeccelAction.MinYVelocity);
 			}
 			else
 			{
 				//moving left -x, flip the Y decceleration
-				myDecceleration.Y *= -1.0f;
-				myDecceleration.Y += m_Velocity.Y;
+				decceleration.Y *= -1.0f;
+				decceleration.Y += Velocity.Y;
 
 				//only deccelerate to minY
-				m_Velocity.Y = MathHelper.Clamp(myDecceleration.Y, DeccelAction.MinYVelocity, m_Velocity.Y);
+				_velocity.Y = MathHelper.Clamp(decceleration.Y, DeccelAction.MinYVelocity, Velocity.Y);
 			}
 
 			//set the X velocity
-			if (m_Velocity.X <= 0.0f)
+			if (Velocity.X <= 0.0f)
 			{
 				//moving left -x, flip the x decceleration
-				myDecceleration.X *= -1.0f;
-				myDecceleration.X += m_Velocity.X;
+				decceleration.X *= -1.0f;
+				decceleration.X += Velocity.X;
 
 				//only deccelerate to 0
-				m_Velocity.X = MathHelper.Clamp(myDecceleration.X, m_Velocity.X, 0.0f);
+				_velocity.X = MathHelper.Clamp(decceleration.X, Velocity.X, 0.0f);
 			}
 			else
 			{
-				myDecceleration.X += m_Velocity.X;
+				decceleration.X += Velocity.X;
 
 				//only deccelerate to 0
-				m_Velocity.X = MathHelper.Clamp(myDecceleration.X, 0.0f, m_Velocity.X);
+				_velocity.X = MathHelper.Clamp(decceleration.X, 0.0f, Velocity.X);
 			}
 		}
 
@@ -1216,35 +1090,35 @@ namespace GameDonkeyLib
 			if (CurrentAttacks.Count > 0)
 			{
 				//get teh distance to the nearest attack
-				float fMinDistance = 0.0f;
-				for (int i = 0; i < CurrentAttacks.Count; i++)
+				var minDistance = 0f;
+				for (var i = 0; i < CurrentAttacks.Count; i++)
 				{
 					if (null != CurrentAttacks[i].GetCircle())
 					{
 						//get the distance along the x axis to the edge of the attack
-						float fAttackDistance = CurrentAttacks[i].GetCircle().GetXDistance(Position);
-						if ((fAttackDistance > fMinDistance) && (fAttackDistance != 0.0f))
+						var attackDistance = CurrentAttacks[i].GetCircle().GetXDistance(Position);
+						if ((attackDistance > minDistance) && (attackDistance != 0.0f))
 						{
-							fMinDistance = fAttackDistance;
+							minDistance = attackDistance;
 						}
 					}
 				}
 
 				//get the distance to the nearest block
-				for (int i = 0; i < CurrentBlocks.CurrentActions.Count; i++)
+				for (var i = 0; i < CurrentBlocks.CurrentActions.Count; i++)
 				{
 					if (null != CurrentAttacks[i].GetCircle())
 					{
 						//get the distance along the x axis to the edge of the attack
-						float fAttackDistance = CurrentBlocks.CurrentActions[i].GetCircle().GetXDistance(Position);
-						if ((fAttackDistance > fMinDistance) && (fAttackDistance != 0.0f))
+						var attackDistance = CurrentBlocks.CurrentActions[i].GetCircle().GetXDistance(Position);
+						if ((attackDistance > minDistance) && (attackDistance != 0.0f))
 						{
-							fMinDistance = fAttackDistance;
+							minDistance = attackDistance;
 						}
 					}
 				}
 
-				return fMinDistance;
+				return minDistance;
 			}
 			else
 			{
@@ -1259,10 +1133,10 @@ namespace GameDonkeyLib
 		/// <returns>float, part of the height or the distance to the edge of the nearest attack</returns>
 		public float MaxDistance()
 		{
-			float fMaxDistance = Height * 0.55f;
+			float maxDistance = Height * 0.55f;
 
 			//no attacks, return the forward edge of the character
-			return fMaxDistance;
+			return maxDistance;
 		}
 
 		/// <summary>
@@ -1296,7 +1170,7 @@ namespace GameDonkeyLib
 			AnimationContainer.Skeleton.RootBone.GetAllWeaponBones(listWeapons);
 
 			//get all the weapons loaded into the garment manager
-			MyGarments.GetAllWeaponBones(listWeapons);
+			Garments.GetAllWeaponBones(listWeapons);
 		}
 
 		#endregion //Tools
@@ -1309,42 +1183,37 @@ namespace GameDonkeyLib
 		/// Given an xml node, parse the contents.
 		/// Override in child classes to read object-specific node types.
 		/// </summary>
-		/// <param name="childNode">the xml data to read</param>
-		/// <param name="rEngine">the engine we are using to load</param>
-		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
+		/// <param name="model">the xml data to read</param>
+		/// <param name="engine">the engine we are using to load</param>
+		/// <param name="messageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public virtual bool ParseXmlData(BaseObjectData childNode, IGameDonkey rEngine, int iMessageOffset, ContentManager content)
+		public virtual void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content)
 		{
 			//read in the model
-			AnimationContainer.ReadSkeletonXml(childNode.ModelFile, rEngine.Renderer, content);
+			AnimationContainer.ReadSkeletonXml(model.Model, engine.Renderer, content);
 			Physics.SortBones(AnimationContainer.Skeleton.RootBone);
 
 			//read in the animations
-			AnimationContainer.ReadAnimationXml(childNode.AnimationFile, content);
+			AnimationContainer.ReadAnimationXml(model.Animations, content);
 
 			//read in the garments
-			foreach (var garmentFile in childNode.GarmentFiles)
+			foreach (var garmentFile in model.Garments)
 			{
 				//Load up the garment.
-				var myGarment = LoadXmlGarment(rEngine, garmentFile, content);
-				Debug.Assert(null != myGarment);
+				var myGarment = LoadXmlGarment(engine, garmentFile, content);
 			}
 
 			//read in the states
-			if (!States.ReadXmlStateContainer(childNode, rEngine, iMessageOffset, this, content))
-			{
-				return false;
-			}
+			States.LoadContent(model, this, engine, messageOffset, content);
 
 			//read in the height
-			m_fHeight = childNode.Height;
-			return true;
+			_height = model.Height;
 		}
 
-		public Garment LoadXmlGarment(IGameDonkey rEngine, Filename strGarmentFile, ContentManager content)
+		public Garment LoadXmlGarment(IGameDonkey engine, Filename garmentFile, ContentManager content)
 		{
 			//load the garment
-			Garment myGarment = new Garment(content, strGarmentFile, AnimationContainer.Skeleton, rEngine.Renderer);
+			var myGarment = new Garment(content, garmentFile, AnimationContainer.Skeleton, engine.Renderer);
 
 			//add the garment to the dude
 			myGarment.AddToSkeleton();

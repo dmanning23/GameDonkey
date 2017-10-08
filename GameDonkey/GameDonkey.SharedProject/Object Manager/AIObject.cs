@@ -3,7 +3,6 @@ using HadoukInput;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -15,19 +14,19 @@ namespace GameDonkeyLib
 		/// Used to update the AI on a schedule instead of every frame.
 		/// by making time length longer, AI will be easier, short time makes the AI harder
 		/// </summary>
-		private CountdownTimer m_UpdateTimer;
+		private CountdownTimer UpdateTimer { get; set; }
 
 		//hard coded messages
-		private int m_iJumpMessage;
-		private int m_iHighJumpMessage;
+		private int JumpMessage { get; set; }
+		private int HighJumpMessage { get; set; }
 
 		////whether or not the AI should move towards the target
 		//private bool m_bMoveTowards;
 
 		//how often the update loop should be run on this dude
-		private float m_fUpdateDelta;
+		private float UpdateDelta { get; set; }
 
-		static private Random g_Random = new Random(DateTime.Now.Millisecond);
+		static private Random _random = new Random(DateTime.Now.Millisecond);
 
 		#endregion //Members
 
@@ -45,16 +44,16 @@ namespace GameDonkeyLib
 			{
 				switch (value)
 				{
-					case 9: { m_fUpdateDelta = 0.1f; } break;
-					case 8: { m_fUpdateDelta = 0.2f; } break;
-					case 7: { m_fUpdateDelta = 0.3f; } break;
-					case 6: { m_fUpdateDelta = 0.4f; } break;
-					case 5: { m_fUpdateDelta = 0.55f; } break;
-					case 4: { m_fUpdateDelta = 0.7f; } break;
-					case 3: { m_fUpdateDelta = 0.85f; } break;
-					case 2: { m_fUpdateDelta = 1.0f; } break;
-					case 1: { m_fUpdateDelta = 1.5f; } break;
-					default: { m_fUpdateDelta = -1.0f; } break;
+					case 9: { UpdateDelta = 0.1f; } break;
+					case 8: { UpdateDelta = 0.2f; } break;
+					case 7: { UpdateDelta = 0.3f; } break;
+					case 6: { UpdateDelta = 0.4f; } break;
+					case 5: { UpdateDelta = 0.55f; } break;
+					case 4: { UpdateDelta = 0.7f; } break;
+					case 3: { UpdateDelta = 0.85f; } break;
+					case 2: { UpdateDelta = 1.0f; } break;
+					case 1: { UpdateDelta = 1.5f; } break;
+					default: { UpdateDelta = -1.0f; } break;
 				}
 			}
 		}
@@ -63,22 +62,22 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public AIObject(HitPauseClock rClock, int iQueueID) : base(EObjectType.AI, rClock, iQueueID)
+		public AIObject(HitPauseClock clock, int queueId) : base(GameObjectType.AI, clock, queueId)
 		{
-			m_UpdateTimer = new CountdownTimer();
+			UpdateTimer = new CountdownTimer();
 
-			m_iJumpMessage = -1;
-			m_iHighJumpMessage = -1;
+			JumpMessage = -1;
+			HighJumpMessage = -1;
 
 			//m_bMoveTowards = false;
 
-			m_fUpdateDelta = 1.0f;
+			UpdateDelta = 1.0f;
 		}
 
-		public override void Update(bool bUpdateGravity)
+		public override void Update()
 		{
-			m_UpdateTimer.Update(CharacterClock);
-			base.Update(bUpdateGravity);
+			UpdateTimer.Update(CharacterClock);
+			base.Update();
 		}
 
 		/// <summary>
@@ -86,43 +85,41 @@ namespace GameDonkeyLib
 		/// For human players, this means getting info from the controller.
 		/// For AI players, this means reacting to info in the list of "bad guys"
 		/// </summary>
-		/// <param name="rController">the controller for this player (bullshit and ignored for AI)</param>
+		/// <param name="controller">the controller for this player (bullshit and ignored for AI)</param>
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public override void GetPlayerInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
+		public override void GetPlayerInput(InputWrapper controller, List<PlayerQueue> listBadGuys)
 		{
-			Debug.Assert(null != listBadGuys);
-
 			//check if we should update the AI
-			if ((0.0f >= m_UpdateTimer.RemainingTime()) && (0.0f <= m_fUpdateDelta))
+			if ((0.0f >= UpdateTimer.RemainingTime) && (0.0f <= UpdateDelta))
 			{
 				//restart the timer and run the AI update loop
-				m_UpdateTimer.Start(m_fUpdateDelta);
+				UpdateTimer.Start(UpdateDelta);
 
 				//loop through the "bad guys" and select a target
-				BaseObject rBadGuy = null;
-				Vector2 BadGuyDistance = Vector2.Zero;
-				for (int i = 0; i < listBadGuys.Count; i++)
+				BaseObject badGuy = null;
+				var badGuyDistance = Vector2.Zero;
+				for (var i = 0; i < listBadGuys.Count; i++)
 				{
 					//first make sure this isn't me!
-					if (GlobalID == listBadGuys[i].Character.GlobalID)
+					if (Id == listBadGuys[i].Character.Id)
 					{
 						continue;
 					}
 
 					//go through ALL the active objects in the player queue so AI will react correctly to projectiles
-					for (int j = 0; j < listBadGuys[i].ActiveObjects.Count; j++)
+					for (var j = 0; j < listBadGuys[i].Active.Count; j++)
 					{
 						//get the distance to this dude
-						Vector2 distance = listBadGuys[i].ActiveObjects[j].Position - Position;
-						if ((null == rBadGuy) || (BadGuyDistance.LengthSquared() > distance.LengthSquared()))
+						var distance = listBadGuys[i].Active[j].Position - Position;
+						if ((null == badGuy) || (badGuyDistance.LengthSquared() > distance.LengthSquared()))
 						{
-							rBadGuy = listBadGuys[i].ActiveObjects[j];
-							BadGuyDistance = distance;
+							badGuy = listBadGuys[i].Active[j];
+							badGuyDistance = distance;
 						}
 					}
 				}
 
-				if (null == rBadGuy)
+				if (null == badGuy)
 				{
 					//if AI wins a stock match, there won't be any bad guys
 					return;
@@ -131,7 +128,7 @@ namespace GameDonkeyLib
 				//react to the target
 
 				//do i need to turn around?
-				if (BadGuyDistance.X <= 0.0f)
+				if (badGuyDistance.X <= 0.0f)
 				{
 					//the bad guy is to the left of me
 					if (!Flip)
@@ -154,20 +151,20 @@ namespace GameDonkeyLib
 				//m_bMoveTowards = false;
 
 				//shoudl i move towards the target?
-				if ((BadGuyDistance.X > HalfHeight) || (BadGuyDistance.X < (-1.0 * HalfHeight)))
+				if ((badGuyDistance.X > HalfHeight) || (badGuyDistance.X < (-1.0 * HalfHeight)))
 				{
 					//the bad guy is to the left or right, move towards the target
 					//m_bMoveTowards = true;
 				}
 
 				//the target is far away, but is it above me?
-				if (BadGuyDistance.Y < (-2.0f * HalfHeight))
+				if (badGuyDistance.Y < (-2.0f * HalfHeight))
 				{
 					////teh bad guy is waaay above me, super jump at them
 					//Debug.Assert(-1 != m_iHighJumpMessage);
 					//SendAttackMessage(m_iHighJumpMessage);
 				}
-				else if (BadGuyDistance.Y < (-1.0f * HalfHeight))
+				else if (badGuyDistance.Y < (-1.0f * HalfHeight))
 				{
 					////jump at the target
 					//Debug.Assert(-1 != m_iJumpMessage);
@@ -175,12 +172,12 @@ namespace GameDonkeyLib
 				}
 
 				//how far away is the target?
-				if (BadGuyDistance.LengthSquared() <= (Height * Height))
+				if (badGuyDistance.LengthSquared() <= (Height * Height))
 				{
 					//the target must be close!
 
 					//is the target attacking?
-					if (rBadGuy.States.IsCurrentStateAttack())
+					if (badGuy.States.IsCurrentStateAttack())
 					{
 						//select a defensive option
 						SelectDefensiveOption();
@@ -247,7 +244,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		public override void CheckHardCodedStates()
 		{
-			int iCurrentState = States.CurrentState();
+			int currentState = States.CurrentState;
 
 			////check if forward button is held down, add forward movement to the player 
 			//if (m_bMoveTowards)
@@ -299,39 +296,39 @@ namespace GameDonkeyLib
 		/// <returns>int: number bewteen 1 and 10 signifying the difficulty of the AI</returns>
 		public int ConvertAIToInt()
 		{
-			if ((m_fUpdateDelta >= 0.0f) && (m_fUpdateDelta < 0.2f))
+			if ((UpdateDelta >= 0.0f) && (UpdateDelta < 0.2f))
 			{
 				return 9;
 			}
-			else if ((m_fUpdateDelta >= 0.2f) && (m_fUpdateDelta < 0.3f))
+			else if ((UpdateDelta >= 0.2f) && (UpdateDelta < 0.3f))
 			{
 				return 8;
 			}
-			else if ((m_fUpdateDelta >= 0.3f) && (m_fUpdateDelta < 0.4f))
+			else if ((UpdateDelta >= 0.3f) && (UpdateDelta < 0.4f))
 			{
 				return 7;
 			}
-			else if ((m_fUpdateDelta >= 0.4f) && (m_fUpdateDelta < 0.55f))
+			else if ((UpdateDelta >= 0.4f) && (UpdateDelta < 0.55f))
 			{
 				return 6;
 			}
-			else if ((m_fUpdateDelta >= 0.55f) && (m_fUpdateDelta < 0.7f))
+			else if ((UpdateDelta >= 0.55f) && (UpdateDelta < 0.7f))
 			{
 				return 5;
 			}
-			else if ((m_fUpdateDelta >= 0.7f) && (m_fUpdateDelta < 0.85f))
+			else if ((UpdateDelta >= 0.7f) && (UpdateDelta < 0.85f))
 			{
 				return 4;
 			}
-			else if ((m_fUpdateDelta >= 0.85f) && (m_fUpdateDelta < 1.0f))
+			else if ((UpdateDelta >= 0.85f) && (UpdateDelta < 1.0f))
 			{
 				return 3;
 			}
-			else if ((m_fUpdateDelta >= 1.0f) && (m_fUpdateDelta < 1.5f))
+			else if ((UpdateDelta >= 1.0f) && (UpdateDelta < 1.5f))
 			{
 				return 2;
 			}
-			else if ((m_fUpdateDelta >= 1.5f) && (m_fUpdateDelta < 2.0))
+			else if ((UpdateDelta >= 1.5f) && (UpdateDelta < 2.0))
 			{
 				return 1;
 			}
@@ -344,112 +341,112 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Change the ai difficulty
 		/// </summary>
-		/// <param name="bIncrease">whether to increase or decrease the AI difficulty</param>
-		public void ChangeAIDifficulty(bool bIncrease)
+		/// <param name="increase">whether to increase or decrease the AI difficulty</param>
+		public void ChangeAIDifficulty(bool increase)
 		{
-			if (m_fUpdateDelta <= 0.1f)
+			if (UpdateDelta <= 0.1f)
 			{
-				if (bIncrease)
+				if (increase)
 				{
 				}
 				else
 				{
-					m_fUpdateDelta = 0.2f;
+					UpdateDelta = 0.2f;
 				}
 			}
-			else if ((m_fUpdateDelta >= 0.2f) && (m_fUpdateDelta < 0.3f))
+			else if ((UpdateDelta >= 0.2f) && (UpdateDelta < 0.3f))
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 0.1f;
+					UpdateDelta = 0.1f;
 				}
 				else
 				{
-					m_fUpdateDelta = 0.3f;
+					UpdateDelta = 0.3f;
 				}
 			}
-			else if ((m_fUpdateDelta >= 0.3f) && (m_fUpdateDelta < 0.4f))
+			else if ((UpdateDelta >= 0.3f) && (UpdateDelta < 0.4f))
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 0.2f;
+					UpdateDelta = 0.2f;
 				}
 				else
 				{
-					m_fUpdateDelta = 0.4f;
+					UpdateDelta = 0.4f;
 				}
 			}
-			else if ((m_fUpdateDelta >= 0.4f) && (m_fUpdateDelta < 0.55f))
+			else if ((UpdateDelta >= 0.4f) && (UpdateDelta < 0.55f))
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 0.3f;
+					UpdateDelta = 0.3f;
 				}
 				else
 				{
-					m_fUpdateDelta = 0.55f;
+					UpdateDelta = 0.55f;
 				}
 			}
-			else if ((m_fUpdateDelta >= 0.55f) && (m_fUpdateDelta < 0.7f))
+			else if ((UpdateDelta >= 0.55f) && (UpdateDelta < 0.7f))
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 0.4f;
+					UpdateDelta = 0.4f;
 				}
 				else
 				{
-					m_fUpdateDelta = 0.7f;
+					UpdateDelta = 0.7f;
 				}
 			}
-			else if ((m_fUpdateDelta >= 0.7f) && (m_fUpdateDelta < 0.85f))
+			else if ((UpdateDelta >= 0.7f) && (UpdateDelta < 0.85f))
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 0.55f;
+					UpdateDelta = 0.55f;
 				}
 				else
 				{
-					m_fUpdateDelta = 0.85f;
+					UpdateDelta = 0.85f;
 				}
 			}
-			else if ((m_fUpdateDelta >= 0.85f) && (m_fUpdateDelta < 1.0f))
+			else if ((UpdateDelta >= 0.85f) && (UpdateDelta < 1.0f))
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 0.7f;
+					UpdateDelta = 0.7f;
 				}
 				else
 				{
-					m_fUpdateDelta = 1.0f;
+					UpdateDelta = 1.0f;
 				}
 			}
-			else if ((m_fUpdateDelta >= 1.0f) && (m_fUpdateDelta < 1.5f))
+			else if ((UpdateDelta >= 1.0f) && (UpdateDelta < 1.5f))
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 0.85f;
+					UpdateDelta = 0.85f;
 				}
 				else
 				{
-					m_fUpdateDelta = 1.5f;
+					UpdateDelta = 1.5f;
 				}
 			}
-			else if ((m_fUpdateDelta >= 1.5f) && (m_fUpdateDelta < 2.0f))
+			else if ((UpdateDelta >= 1.5f) && (UpdateDelta < 2.0f))
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 1.0f;
+					UpdateDelta = 1.0f;
 				}
 				else
 				{
-					m_fUpdateDelta = 2.0f;
+					UpdateDelta = 2.0f;
 				}
 			}
 			else
 			{
-				if (bIncrease)
+				if (increase)
 				{
-					m_fUpdateDelta = 1.5f;
+					UpdateDelta = 1.5f;
 				}
 				else
 				{

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using CameraBuddy;
+using DrawListBuddy;
+using FilenameBuddy;
+using GameTimer;
 using HadoukInput;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using GameTimer;
-using DrawListBuddy;
-using CameraBuddy;
 using RenderBuddy;
-using FilenameBuddy;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -16,124 +16,78 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class PlayerQueue
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// The ID of this queue, used to send AIs over the network
 		/// </summary>
-		private int m_iQueueID;
+		public int QueueId { get; private set; }
 
 		//the player queue ID that can be used by the player queue to identify objects
-		protected int m_iNextObjectID;
+		protected int _nextObjectId;
 
 		//the list of active objects
-		protected List<BaseObject> m_listActive;
+		public List<BaseObject> Active { get; private set; }
 
 		//the list of inactive objects
-		protected List<BaseObject> m_listInactive;
+		public List<BaseObject> Inactive { get; private set; }
 
 		/// <summary>
 		/// drawlists used for character trails
 		/// </summary>
-		protected List<DrawList> m_listTrailDrawLists;
+		protected List<DrawList> TrailDrawLists { get; set; }
 
-		//this is the id of the player's characters
-		protected BaseObject m_rCharacter;
-
-		//the color of the characters in this player queue
-		private Color m_PlayerColor;
+		/// <summary>
+		/// this is the player's character
+		/// </summary>
+		public BaseObject Character { get; protected set; }
 
 		/// <summary>
 		/// This clock synchronizes the clocks between all the dudes this guy contains
 		/// </summary>
-		protected HitPauseClock m_CharacterClock;
+		public HitPauseClock CharacterClock { get; protected set; }
 
 		/// <summary>
 		/// the number of points this player has
 		/// </summary>
-		private int m_iPoints;
+		public int Points { get; private set; }
 
 		/// <summary>
 		/// the number of stock this player has.  This starts at 0 and gets incremented every time the player dies.
 		/// </summary>
-		private int m_iStock;
+		public int Stock { get; private set; }
 
 		/// <summary>
 		/// This timer gets started for a few seconds every time the player scores.  Used to color the hud.
 		/// </summary>
-		private CountdownTimer m_ScoreTimer;
+		private CountdownTimer ScoreTimer { get; set; }
 
 		/// <summary>
 		/// The player's name, either their gamertag, "AI", or name of the level
 		/// </summary>
-		private string m_strPlayerName;
-
-		#endregion //Members
-
-		#region Properties
-
-		public BaseObject Character
-		{
-			get { return m_rCharacter; }
-		}
-
-		public int Points
-		{
-			get { return m_iPoints; }
-		}
-
-		public int Stock
-		{
-			get { return m_iStock; }
-		}
+		public string PlayerName { get; set; }
 
 		public InputWrapper InputQueue { get; set; }
 
-		public List<BaseObject> ActiveObjects
-		{
-			get { return m_listActive; }
-		}
-
-		public int QueueID
-		{
-			get { return m_iQueueID; }
-		}
-
-		public string PlayerName
-		{
-			get { return m_strPlayerName; }
-			set { m_strPlayerName = value; }
-		}
-
-		public CountdownTimer ScoreTimer
-		{
-			get { return m_ScoreTimer; }
-		}
-
-		public Color PlayerColor
-		{
-			get { return m_PlayerColor; }
-		}
-
-		public HitPauseClock CharacterClock
-		{
-			get { return m_CharacterClock; }
-		}
+		/// <summary>
+		/// the color of the characters in this player queue
+		/// </summary>
+		public Color PlayerColor { get; private set; }
 
 		public float Scale
 		{
 			set
 			{
 				//set active stuff
-				foreach (BaseObject rObject in m_listActive)
+				foreach (var gameObject in Active)
 				{
-					rObject.Scale = value;
+					gameObject.Scale = value;
 				}
 
 				//set inactive stuff
-				foreach (BaseObject rObject in m_listInactive)
+				foreach (var gameObject in Inactive)
 				{
-					rObject.Scale = value;
+					gameObject.Scale = value;
 				}
 			}
 		}
@@ -145,37 +99,36 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// standard constructor
 		/// </summary>
-		public PlayerQueue(Color playerColor, int queueID)
+		public PlayerQueue(Color playerColor, int queueId)
 		{
-			m_listActive = new List<BaseObject>();
-			m_listInactive = new List<BaseObject>();
-			m_listTrailDrawLists = new List<DrawList>();
-			m_rCharacter = null;
-			m_CharacterClock = new HitPauseClock();
-			m_PlayerColor = playerColor;
-			m_iPoints = 0;
-			m_iStock = 1;
+			Active = new List<BaseObject>();
+			Inactive = new List<BaseObject>();
+			TrailDrawLists = new List<DrawList>();
+			Character = null;
+			CharacterClock = new HitPauseClock();
+			PlayerColor = playerColor;
+			Points = 0;
+			Stock = 1;
 			InputQueue = null;
-			m_iNextObjectID = 0;
-			m_iQueueID = queueID;
-			Debug.Assert(m_iQueueID >= 0);
+			_nextObjectId = 0;
+			QueueId = queueId;
 
-			m_ScoreTimer = new CountdownTimer();
+			ScoreTimer = new CountdownTimer();
 		}
 
 		public virtual PlayerObject CreateHumanPlayer()
 		{
-			return new PlayerObject(m_CharacterClock, m_iNextObjectID++);
+			return new PlayerObject(CharacterClock, _nextObjectId++);
 		}
 
 		public virtual PlayerObject CreateAiPlayer()
 		{
-			return new PlayerObject(m_CharacterClock, m_iNextObjectID++);
+			return new PlayerObject(CharacterClock, _nextObjectId++);
 		}
 
-		public virtual PlayerObjectData CreatePlayerObjectData()
+		public virtual PlayerObjectModel CreatePlayerObjectModel(Filename filename)
 		{
-			return new PlayerObjectData();
+			return new PlayerObjectModel(filename);
 		}
 
 		/// <summary>
@@ -183,28 +136,25 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="rObject">the object to activate</param>
 		/// <returns>true if the object was spawned, false if the object is already active</returns>
-		public bool ActivateObject(BaseObject rObject)
+		public bool ActivateObject(BaseObject gameObject)
 		{
 			//find the object in the inactive list
-			for (int i = 0; i < m_listInactive.Count; i++)
+			for (var i = 0; i < Inactive.Count; i++)
 			{
-				Debug.Assert(null != m_listInactive[i]);
-				if (m_listInactive[i].GlobalID == rObject.GlobalID)
+				if (Inactive[i].Id == gameObject.Id)
 				{
 					//remove from the incative list and add to active
-					Debug.Assert(false == CheckListForObject(rObject, true));
-					m_listActive.Add(m_listInactive[i]);
-					m_listInactive.RemoveAt(i);
+					Active.Add(Inactive[i]);
+					Inactive.RemoveAt(i);
 
 					//reset the thing back to it's start state
-					rObject.Reset();
+					gameObject.Reset();
 
 					return true;
 				}
 			}
 
 			//that object must already be in the active list
-			Debug.Assert(true == CheckListForObject(rObject, true));
 			return false;
 		}
 
@@ -213,27 +163,26 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="rObject">the object to activate</param>
 		/// <returns>reference to the object if the object was spawned, null if the object is already active</returns>
-		public BaseObject ActivateObject(int iQueueID)
+		public BaseObject ActivateObject(int queueID)
 		{
 			//find the object in the inactive list
-			for (int i = 0; i < m_listInactive.Count; i++)
+			for (var i = 0; i < Inactive.Count; i++)
 			{
-				Debug.Assert(null != m_listInactive[i]);
-				if (m_listInactive[i].QueueID == iQueueID)
+				if (Inactive[i].QueueId == queueID)
 				{
-					BaseObject rObject = m_listInactive[i];
+					BaseObject gameObject = Inactive[i];
 
 					//remove from the incative list and add to active
-					m_listActive.Add(m_listInactive[i]);
-					m_listInactive.RemoveAt(i);
+					Active.Add(Inactive[i]);
+					Inactive.RemoveAt(i);
 
 					//reset the thing back to it's start state
-					rObject.Reset();
+					gameObject.Reset();
 
 					//run the animation container so all the bones will be in the correct position when it updates
-					rObject.AnimationContainer.Update(m_CharacterClock, rObject.Position, rObject.Flip, rObject.Scale, 0.0f, true);
+					gameObject.AnimationContainer.Update(CharacterClock, gameObject.Position, gameObject.Flip, 0.0f, true);
 
-					return rObject;
+					return gameObject;
 				}
 			}
 
@@ -244,61 +193,57 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Find an object by its queue id so it can be updated
 		/// </summary>
-		/// <param name="iQueueID"></param>
+		/// <param name="queueID"></param>
 		/// <returns></returns>
-		protected BaseObject FindActiveObject(int iQueueID)
+		protected BaseObject FindActiveObject(int queueID)
 		{
 			//check the active objects
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				if (m_listActive[i].QueueID == iQueueID)
+				if (Active[i].QueueId == queueID)
 				{
 					//found it, that was easy enough
-					return m_listActive[i];
+					return Active[i];
 				}
 			}
 
 			//it must be inactive, look through that list
-			return ActivateObject(iQueueID);
+			return ActivateObject(queueID);
 		}
 
 		/// <summary>
 		/// Take an object out of the active list, put it in the inactive list
 		/// </summary>
-		/// <param name="rObject">the object to deactivate</param>
-		public void DeactivateObject(BaseObject rObject)
+		/// <param name="gameObject">the object to deactivate</param>
+		public void DeactivateObject(BaseObject gameObject)
 		{
 			//go through the active list, look for that object
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				if (m_listActive[i].GlobalID == rObject.GlobalID)
+				if (Active[i].Id == gameObject.Id)
 				{
 					//pop into the inactive list, remove from the active list
-					Debug.Assert(false == CheckListForObject(rObject, false));
-					m_listInactive.Add(m_listActive[i]);
-					m_listActive.RemoveAt(i);
+					Inactive.Add(Active[i]);
+					Active.RemoveAt(i);
 					return;
 				}
 			}
-
-			//if it gets here, something fucked up!!!
-			Debug.Assert(false);
 		}
 
 		/// <summary>
 		/// Take an object out of the active list, put it in the inactive list
 		/// </summary>
-		/// <param name="iQueueID">the queue id of the object to deactivate</param>
-		protected void DeactivateObject(int iQueueID)
+		/// <param name="queueID">the queue id of the object to deactivate</param>
+		protected void DeactivateObject(int queueID)
 		{
 			//go through the active list, look for that object
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				if (m_listActive[i].QueueID == iQueueID)
+				if (Active[i].QueueId == queueID)
 				{
 					//pop into the inactive list, remove from the active list
-					m_listInactive.Add(m_listActive[i]);
-					m_listActive.RemoveAt(i);
+					Inactive.Add(Active[i]);
+					Active.RemoveAt(i);
 					return;
 				}
 			}
@@ -306,42 +251,36 @@ namespace GameDonkeyLib
 
 		public void DeactivateAllObjects()
 		{
-			Debug.Assert(null != m_listInactive);
-			Debug.Assert(null != m_listActive);
-			while (m_listActive.Count > 0)
+			while (Active.Count > 0)
 			{
 				//put the first obect in the inactive list and remove from active
-				BaseObject rDude = m_listActive[0];
-				Debug.Assert(null != rDude);
-				m_listInactive.Add(rDude);
-				m_listActive.RemoveAt(0);
+				var gameObject = Active[0];
+				Inactive.Add(gameObject);
+				Active.RemoveAt(0);
 
 				//reset the thing back to it's start state
-				Debug.Assert(null != rDude.States);
-				rDude.States.Reset();
+				gameObject.States.Reset();
 			}
 
 			//clear out the trails too
-			m_listTrailDrawLists.Clear();
+			TrailDrawLists.Clear();
 		}
 
 		/// <summary>
 		/// reset and reposition the all the objects
 		/// </summary>
-		/// <param name="rSpawnPoint">the location to place the main object</param>
-		public virtual void Reset(Vector2 rSpawnPoint)
+		/// <param name="spawnPoint">the location to place the main object</param>
+		public virtual void Reset(Vector2 spawnPoint)
 		{
-			Debug.Assert(null != m_rCharacter);
-			m_rCharacter.Flip = (rSpawnPoint.X >= 0.0f);
-			m_rCharacter.Position = rSpawnPoint;
-			m_rCharacter.Velocity = Vector2.Zero;
+			Character.Flip = (spawnPoint.X >= 0f);
+			Character.Position = spawnPoint;
+			Character.Velocity = Vector2.Zero;
 
 			//make sure all the objects are inactivated
 			DeactivateAllObjects();
 
 			//okay, we only want the first character active
-			Debug.Assert(null != m_rCharacter);
-			ActivateObject(m_rCharacter);
+			ActivateObject(Character);
 		}
 
 		/// <summary>
@@ -353,25 +292,23 @@ namespace GameDonkeyLib
 			DeactivateAllObjects();
 
 			//okay, we only want the first character active
-			Debug.Assert(null != m_rCharacter);
-			ActivateObject(m_rCharacter);
+			ActivateObject(Character);
 		}
 
 		/// <summary>
 		/// Check whether an object is in one of the lists or not
 		/// </summary>
-		/// <param name="rObject">the object to look for</param>
-		/// <param name="bActiveList">wether to check the active or inactive list</param>
+		/// <param name="gameObject">the object to look for</param>
+		/// <param name="activeList">wether to check the active or inactive list</param>
 		/// <returns>bool: whether or not the requested object was found in the specified list</returns>
-		public bool CheckListForObject(BaseObject rObject, bool bActiveList)
+		public bool CheckListForObject(BaseObject gameObject, bool activeList)
 		{
-			if (bActiveList)
+			if (activeList)
 			{
 				//check the active list
-				for (int i = 0; i < m_listActive.Count; i++)
+				for (var i = 0; i < Active.Count; i++)
 				{
-					Debug.Assert(null != m_listActive[i]);
-					if (m_listActive[i].GlobalID == rObject.GlobalID)
+					if (Active[i].Id == gameObject.Id)
 					{
 						return true;
 					}
@@ -380,10 +317,9 @@ namespace GameDonkeyLib
 			else
 			{
 				//check the inactive list
-				for (int i = 0; i < m_listInactive.Count; i++)
+				for (var i = 0; i < Inactive.Count; i++)
 				{
-					Debug.Assert(null != m_listInactive[i]);
-					if (m_listInactive[i].GlobalID == rObject.GlobalID)
+					if (Inactive[i].Id == gameObject.Id)
 					{
 						return true;
 					}
@@ -394,16 +330,16 @@ namespace GameDonkeyLib
 			return false;
 		}
 
-		public void Update(GameClock rClock, bool bUpdateGravity)
+		public void Update(GameClock clock)
 		{
 			//update the clock
-			m_CharacterClock.Update(rClock);
-			m_ScoreTimer.Update(rClock);
+			CharacterClock.Update(clock);
+			ScoreTimer.Update(clock);
 
 			//update all the active objects in this dude
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].Update(bUpdateGravity);
+				Active[i].Update();
 			}
 		}
 
@@ -413,82 +349,73 @@ namespace GameDonkeyLib
 		/// <returns>whether or not the thing is dead</returns>
 		public bool CheckIfDead()
 		{
-			Debug.Assert(null != Character);
-			Debug.Assert((Character.Type == EObjectType.Human) || (Character.Type == EObjectType.AI));
 			return (Character.DisplayHealth() <= 0);
 		}
 
-		public void UpdateInput(InputState rInput)
+		public void UpdateInput(InputState input)
 		{
-			Character.UpdateInput(InputQueue, rInput);
+			Character.UpdateInput(InputQueue, input);
 		}
 
-		public void GetPlayerInput(List<PlayerQueue> listBadGuys)
+		public void GetPlayerInput(List<PlayerQueue> badGuys)
 		{
-			Debug.Assert(null != InputQueue);
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].GetPlayerInput(InputQueue, listBadGuys);
+				Active[i].GetPlayerInput(InputQueue, badGuys);
 			}
 		}
 
-		public void GetPlayerAttackInput(List<PlayerQueue> listBadGuys)
+		public void GetPlayerAttackInput(List<PlayerQueue> badGuys)
 		{
-			Debug.Assert(null != InputQueue);
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].GetPlayerAttackInput(InputQueue, listBadGuys);
+				Active[i].GetPlayerAttackInput(InputQueue, badGuys);
 			}
 		}
 
 		public void CheckHardCodedStates()
 		{
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].CheckHardCodedStates();
+				Active[i].CheckHardCodedStates();
 			}
 		}
 
-		public void UpdateRagdoll(bool bIgnoreRagdoll)
+		public void UpdateRagdoll()
 		{
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].UpdateRagdoll(bIgnoreRagdoll);
+				Active[i].UpdateRagdoll();
 			}
 		}
 
-		public void CheckCollisions(PlayerQueue rOtherGuy)
+		public void CheckCollisions(PlayerQueue otherGuy)
 		{
 			//check for collisions
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				for (int j = 0; j < rOtherGuy.m_listActive.Count; j++)
+				for (var j = 0; j < otherGuy.Active.Count; j++)
 				{
-#if DEBUG
-					uint iMyID = m_listActive[i].GlobalID;
-					uint iHisID = rOtherGuy.m_listActive[j].GlobalID;
-					Debug.Assert(iMyID != iHisID);
-#endif
-					m_listActive[i].CheckCollisions(rOtherGuy.m_listActive[j]);
+					Active[i].CheckCollisions(otherGuy.Active[j]);
 				}
 			}
 		}
 
-		public void CheckWorldCollisions(Rectangle rWorldBroundaries)
+		public void CheckWorldCollisions(Rectangle worldBroundaries)
 		{
 			//check for collisions
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].CheckWorldCollisions(rWorldBroundaries);
+				Active[i].CheckWorldCollisions(worldBroundaries);
 			}
 		}
 
-		public void RespondToHits(IGameDonkey rEngine)
+		public void RespondToHits(IGameDonkey engine)
 		{
 			//respond to any hits that may have occured resulting from collisions.
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].HitResponse(rEngine);
+				Active[i].HitResponse(engine);
 			}
 		}
 
@@ -499,81 +426,78 @@ namespace GameDonkeyLib
 		public void UpdateDrawlists()
 		{
 			//update all the trail drawlists
-			int iDrawlistIndex = 0;
-			while (iDrawlistIndex < m_listTrailDrawLists.Count)
+			var drawlistIndex = 0;
+			while (drawlistIndex < TrailDrawLists.Count)
 			{
-				if (m_listTrailDrawLists[iDrawlistIndex].Update(m_CharacterClock))
+				if (TrailDrawLists[drawlistIndex].Update(CharacterClock))
 				{
 					//this drawlist is expired
-					m_listTrailDrawLists.RemoveAt(iDrawlistIndex);
+					TrailDrawLists.RemoveAt(drawlistIndex);
 				}
 				else
 				{
-					iDrawlistIndex++;
+					drawlistIndex++;
 				}
 			}
 
 			//add drawlists for all the active items
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
 				//add a character trail, if we need it
-				if (m_listActive[i].DoesNeedCharacterTrail())
+				if (Active[i].DoesNeedCharacterTrail())
 				{
-					Debug.Assert(null != m_listActive[i].TrailAction);
-
 					//add a trail right in front of the main dude
-					DrawList myTrail = new DrawList();
-					Debug.Assert(null != myTrail);
-					myTrail.Set(m_listActive[i].TrailAction.TrailLifeDelta,
-						m_listActive[i].TrailAction.StartColor,
-						m_listActive[i].Scale);
+					var trailDrawList = new DrawList();
+					trailDrawList.Set(Active[i].TrailAction.TrailLifeDelta,
+						Active[i].TrailAction.StartColor,
+						Active[i].Scale);
 
-					m_listActive[i].AnimationContainer.Render(myTrail);
-					m_listTrailDrawLists.Add(myTrail);
+					Active[i].AnimationContainer.Render(trailDrawList);
+					TrailDrawLists.Add(trailDrawList);
 				}
 
 				//add the main drawlist for the character
-				m_listActive[i].UpdateDrawlist();
+				Active[i].UpdateDrawlist();
 			}
 		}
 
-		public void AddToCamera(Camera rCamera)
+		public void AddToCamera(Camera camera)
 		{
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].AddToCamera(rCamera);
+				Active[i].AddToCamera(camera);
 			}
 		}
 
-		public void DrawCameraInfo(IRenderer rRenderer)
+		public void DrawCameraInfo(IRenderer renderer)
 		{
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].DrawCameraInfo(rRenderer);
+				Active[i].DrawCameraInfo(renderer);
 			}
 		}
 
 		/// <summary>
 		/// render one of the lists of drawlists
 		/// </summary>
-		/// <param name="rRenderer">renderer to render to</param>
-		/// <param name="bMain">whether to render the main list or the list of trails</param>
-		public void Render(IRenderer rRenderer, bool bMain)
+		/// <param name="renderer">renderer to render to</param>
+		/// <param name="renderMain">whether to render the main list or the list of trails</param>
+		public void Render(IRenderer renderer, bool renderMain)
 		{
-			if (bMain)
+			if (renderMain)
 			{
 				//render all the main drawlists
-				for (int i = 0; i < m_listActive.Count; i++)
+				for (var i = 0; i < Active.Count; i++)
 				{
-					m_listActive[i].Render(rRenderer);
+					Active[i].Render(renderer);
 				}
 			}
 			else
 			{
 				//render all the trail drawlists
-				for (int i = 0; i < m_listTrailDrawLists.Count; i++)
+				for (var i = 0; i < TrailDrawLists.Count; i++)
 				{
-					m_listTrailDrawLists[i].Render(rRenderer);
+					TrailDrawLists[i].Render(renderer);
 				}
 			}
 		}
@@ -581,18 +505,18 @@ namespace GameDonkeyLib
 		private int GetNextMessageOffset()
 		{
 			//go through all the current objects and add up the number of messages
-			int iNumMessages = 0;
-			for (int i = 0; i < m_listActive.Count; i++)
+			int numMessages = 0;
+			for (var i = 0; i < Active.Count; i++)
 			{
-				iNumMessages += m_listActive[i].States.NumMessages();
+				numMessages += Active[i].States.NumMessages;
 			}
 
-			for (int i = 0; i < m_listInactive.Count; i++)
+			for (var i = 0; i < Inactive.Count; i++)
 			{
-				iNumMessages += m_listInactive[i].States.NumMessages();
+				numMessages += Inactive[i].States.NumMessages;
 			}
 
-			return iNumMessages;
+			return numMessages;
 		}
 
 		/// <summary>
@@ -600,23 +524,23 @@ namespace GameDonkeyLib
 		/// </summary>
 		public void SubtractStock()
 		{
-			m_iStock--;
-			m_ScoreTimer.Start(3.0f);
+			Stock--;
+			ScoreTimer.Start(3.0f);
 		}
 
-		public void RenderPhysics(IRenderer rRenderer)
+		public void RenderPhysics(IRenderer renderer)
 		{
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].RenderPhysics(rRenderer);
+				Active[i].RenderPhysics(renderer);
 			}
 		}
 
-		public void RenderAttacks(IRenderer rRenderer)
+		public void RenderAttacks(IRenderer renderer)
 		{
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (var i = 0; i < Active.Count; i++)
 			{
-				m_listActive[i].RenderAttacks(rRenderer);
+				Active[i].RenderAttacks(renderer);
 			}
 		}
 
@@ -624,46 +548,46 @@ namespace GameDonkeyLib
 
 		#region File IO
 
-		public BaseObject LoadXmlObject(Filename fileName, IGameDonkey engine, EObjectType objectType, int difficulty, ContentManager content)
+		public BaseObject LoadXmlObject(Filename fileName, IGameDonkey engine, GameObjectType objectType, int difficulty, ContentManager content)
 		{
 			//try to load all that stuff
-			BaseObject myCharacter;
-			BaseObjectData myData;
+			BaseObject gameObject;
+			BaseObjectModel gameObjectModel;
 			switch (objectType)
 			{
-				case EObjectType.Human:
+				case GameObjectType.Human:
 					{
-						myCharacter = CreateHumanPlayer();
-						myData = CreatePlayerObjectData();
+						gameObject = CreateHumanPlayer();
+						gameObjectModel = CreatePlayerObjectModel(fileName);
 
 						//set as the main character
-						AddCharacterToList(myCharacter);
+						AddCharacterToList(gameObject);
 					}
 					break;
-				case EObjectType.AI:
+				case GameObjectType.AI:
 					{
 						//AIObject myDude = new AIObject(m_CharacterClock, m_iNextObjectID++);
 						//myDude.Difficulty = iDifficulty;
 						//myCharacter = myDude;
 
-						myCharacter = CreateAiPlayer();
-						myData = CreatePlayerObjectData();
+						gameObject = CreateAiPlayer();
+						gameObjectModel = CreatePlayerObjectModel(fileName);
 
 						//set as the main character
-						AddCharacterToList(myCharacter);
+						AddCharacterToList(gameObject);
 					}
 					break;
-				case EObjectType.Projectile:
+				case GameObjectType.Projectile:
 					{
-						Debug.Assert(null != m_rCharacter);
-						myCharacter = new ProjectileObject(m_CharacterClock, m_rCharacter, m_iNextObjectID++);
-						myData = new ProjectileObjectData();
+						Debug.Assert(null != Character);
+						gameObject = new ProjectileObject(CharacterClock, Character, _nextObjectId++);
+						gameObjectModel = new ProjectileObjectModel(fileName);
 					}
 					break;
-				case EObjectType.Level:
+				case GameObjectType.Level:
 					{
-						myCharacter = new LevelObject(m_CharacterClock, m_iNextObjectID++);
-						myData = new LevelObjectData();
+						gameObject = new LevelObject(CharacterClock, _nextObjectId++);
+						gameObjectModel = new LevelObjectModel(fileName);
 					}
 					break;
 				default:
@@ -674,43 +598,34 @@ namespace GameDonkeyLib
 			}
 
 			//get the message offset
-			int iMessageOffset = GetNextMessageOffset();
+			int messageOffset = GetNextMessageOffset();
 
 			//load the object data
-			if (!myData.LoadObject(fileName, content))
-			{
-				Debug.Assert(false);
-				return null;
-			}
+			gameObjectModel.ReadXmlFile(content);
 
 			//load the object data into the thing
-			myCharacter.PlayerQueue = this;
-			if (!myCharacter.ParseXmlData(myData, engine, iMessageOffset, content))
-			{
-				Debug.Assert(false);
-				return null;
-			}
+			gameObject.PlayerQueue = this;
+			gameObject.ParseXmlData(gameObjectModel, engine, messageOffset, content);
 
 			//add to the correct list
-			if (objectType == EObjectType.Level)
+			if (objectType == GameObjectType.Level)
 			{
-				m_listActive.Add(myCharacter);
+				Active.Add(gameObject);
 			}
 			else
 			{
-				m_listInactive.Add(myCharacter);
+				Inactive.Add(gameObject);
 			}
 
 			//set the color too
-			myCharacter.PlayerColor = m_PlayerColor;
+			gameObject.PlayerColor = PlayerColor;
 
-			return myCharacter;
+			return gameObject;
 		}
 
-		protected virtual void AddCharacterToList(BaseObject rObject)
+		protected virtual void AddCharacterToList(BaseObject gameObject)
 		{
-			Debug.Assert(null == m_rCharacter);
-			m_rCharacter = rObject;
+			Character = gameObject;
 		}
 
 		#endregion

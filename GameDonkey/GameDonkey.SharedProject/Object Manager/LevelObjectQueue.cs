@@ -11,14 +11,14 @@ namespace GameDonkeyLib
 
 		public override void Reset()
 		{
-			Debug.Assert(null == m_rCharacter);
-			Debug.Assert(0 == m_listInactive.Count);
+			Debug.Assert(null == Character);
+			Debug.Assert(0 == Inactive.Count);
 
 			//reset all the level objects
-			for (int i = 0; i < m_listActive.Count; i++)
+			for (int i = 0; i < Active.Count; i++)
 			{
 				//reset the thing back to it's start state
-				m_listActive[i].Reset();
+				Active[i].Reset();
 			}
 		}
 	}

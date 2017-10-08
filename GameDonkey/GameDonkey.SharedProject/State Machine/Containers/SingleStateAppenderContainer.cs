@@ -11,13 +11,15 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class SingleStateAppenderContainer : SingleStateContainer
 	{
-		public SingleStateAppenderContainer(StateMachine myStateMachine, string containerName) : base(myStateMachine, containerName)
+
+		public SingleStateAppenderContainer(StateMachine stateMachine, string containerName) :
+			base(stateMachine, containerName)
 		{
 		}
 
-		public override bool ReadXmlStateMachine(StateMachine machine, Filename file, ContentManager content)
+		public override void LoadStateMachine(StateMachine machine, Filename file, ContentManager content)
 		{
-			return machine.AppendXmlFile(file, content);
+			machine.AppendXml(file, content);
 		}
 	}
 }

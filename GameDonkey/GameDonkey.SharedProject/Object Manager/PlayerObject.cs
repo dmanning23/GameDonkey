@@ -17,16 +17,16 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class PlayerObject : BaseObject
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// Number of times the player has been hit in a row
 		/// </summary>
-		private int m_ComboCounter;
+		public int ComboCounter { get; private set; }
 
-		private const float m_fHitPause = 0.2f; //how long hit pause is in this game
-		private const float m_fStrengthMultiplier = 1.0f; //amount to multiply how far characters are hit in this game
-		private const float m_fDamageMultiplier = 2.5f; //amount to multiply how much damage characters do in this game
+		private const float _hitPause = 0.2f; //how long hit pause is in this game
+		private const float _strengthMultiplier = 1.0f; //amount to multiply how far characters are hit in this game
+		private const float _damageMultiplier = 2.5f; //amount to multiply how much damage characters do in this game
 
 		/// <summary>
 		/// The sound that gets played when a player dies
@@ -48,34 +48,25 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the direction the thumbstick was held this frame
 		/// </summary>
-		protected Vector2 m_ThumbstickDirection;
-
-		#endregion //Members
-
-		#region Properties
+		protected Vector2 ThumbstickDirection;
 
 		/// <summary>
 		/// How much health this character has left
 		/// </summary>
 		public float Health { get; protected set; }
 
-		public int ComboCounter
-		{
-			get { return m_ComboCounter; }
-		}
-
 		#endregion //Properties
 
 		#region Methods
 
-		public PlayerObject(HitPauseClock rClock, int iQueueID)
-			: base(EObjectType.Human, rClock, iQueueID)
+		public PlayerObject(HitPauseClock clock, int queueId)
+			: base(GameObjectType.Human, clock, queueId)
 		{
 			//init is called by the base class, which will set everything up
 		}
 
-		public PlayerObject(EObjectType eType, HitPauseClock rClock, int iQueueID)
-			: base(eType, rClock, iQueueID)
+		public PlayerObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId)
+			: base(gameObjectType, clock, queueId)
 		{
 			//init is called by the base class, which will set everything up
 		}
@@ -95,7 +86,7 @@ namespace GameDonkeyLib
 
 		protected override void Init()
 		{
-			m_ThumbstickDirection = Vector2.Zero;
+			ThumbstickDirection = Vector2.Zero;
 			States = new PlayerObjectStateContainer();
 			States.StateChangedEvent += this.StateChanged;
 			Physics = new PlayerPhysicsContainer(this);
@@ -117,18 +108,17 @@ namespace GameDonkeyLib
 			return (int)(Health * 10.0f);
 		}
 
-		public override void Update(bool bUpdateGravity)
+		public override void Update()
 		{
 			//update all our clocks
-			Debug.Assert(null != CharacterClock);
-			m_EvasionTimer.Update(CharacterClock);
-			m_BlockTimer.Update(CharacterClock);
-			m_TrailTimer.Update(CharacterClock);
+			EvasionTimer.Update(CharacterClock);
+			BlockTimer.Update(CharacterClock);
+			TrailTimer.Update(CharacterClock);
 
-			UpdateFallMessage(bUpdateGravity);
+			UpdateFallMessage();
 
 			//update the garments of this dude
-			MyGarments.Update(CharacterClock);
+			Garments.Update(CharacterClock);
 
 			//update the state actions of this dude
 			States.ExecuteActions(CharacterClock);
@@ -144,18 +134,18 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// update an input wrapper
 		/// </summary>
-		/// <param name="rController"></param>
-		/// <param name="rInput"></param>
-		public override void UpdateInput(InputWrapper rController, InputState rInput)
+		/// <param name="controller"></param>
+		/// <param name="input"></param>
+		public override void UpdateInput(InputWrapper controller, InputState input)
 		{
-			rController.Update(rInput, Flip);
+			controller.Update(input, Flip);
 		}
 
 		/// <summary>
 		/// Check if the character should be sent a "fall" message
 		/// Overload this in your child class
 		/// </summary>
-		public virtual void UpdateFallMessage(bool bUpdateGravity)
+		public virtual void UpdateFallMessage()
 		{
 			//Overload in child classes!
 		}
@@ -174,16 +164,16 @@ namespace GameDonkeyLib
 		/// For human players, this means getting info from the controller.
 		/// For AI players, this means reacting to info in the list of "bad guys"
 		/// </summary>
-		/// <param name="rController">the controller for this player (bullshit and ignored for AI)</param>
+		/// <param name="controller">the controller for this player (bullshit and ignored for AI)</param>
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public override void GetPlayerInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
+		public override void GetPlayerInput(InputWrapper controller, List<PlayerQueue> listBadGuys)
 		{
 			//get the thumbstick direction
-			m_ThumbstickDirection = rController.Controller.Thumbsticks.LeftThumbstick.Direction;
+			ThumbstickDirection = controller.Controller.Thumbsticks.LeftThumbstick.Direction;
 
 			//get the next moov from the input
-			int iNextMoov = rController.GetNextMove();
-			SendAttackMessage(iNextMoov);
+			int nextMoov = controller.GetNextMove();
+			SendAttackMessage(nextMoov);
 		}
 
 		/// <summary>
@@ -195,14 +185,14 @@ namespace GameDonkeyLib
 		/// <returns></returns>
 		override public Vector2 Direction()
 		{
-			return m_ThumbstickDirection;
+			return ThumbstickDirection;
 		}
 
 		/// <summary>
 		/// This is used to send attack moves from the input queue to the state machine, through the combo engine
 		/// </summary>
 		/// <param name="iMessage"></param>
-		protected virtual void SendAttackMessage(int iNextMoov)
+		protected virtual void SendAttackMessage(int nextMoov)
 		{
 			//am i currently in an attack state? 
 			if (States.IsCurrentStateAttack())
@@ -212,24 +202,23 @@ namespace GameDonkeyLib
 				{
 					//wait until the attack ends
 
-					if (-1 != iNextMoov)
+					if (-1 != nextMoov)
 					{
 						//add the move to the queue
-						m_QueuedInput.Enqueue(iNextMoov);
+						_queuedInput.Enqueue(nextMoov);
 					}
 				}
 
 				//did that attack connect to a bad guy?
-				else if (m_bAttackLanded)
+				else if (_attackLanded)
 				{
 					//ok, the current attack is not active and there is queued input
 
-					while (0 < m_QueuedInput.Count)
+					while (0 < _queuedInput.Count)
 					{
 						//send the queued input to the state machine!
-						iNextMoov = m_QueuedInput.Dequeue();
-						Debug.Assert(-1 != iNextMoov);
-						SendStateMessage(iNextMoov);
+						nextMoov = _queuedInput.Dequeue();
+						SendStateMessage(nextMoov);
 					}
 				}
 			}
@@ -237,25 +226,23 @@ namespace GameDonkeyLib
 			{
 				//ok character is in neutral state
 
-				if (iNextMoov > -1)
+				if (nextMoov > -1)
 				{
 					//ok not in an attack state, no queued input
-					SendStateMessage(iNextMoov);
+					SendStateMessage(nextMoov);
 				}
-				else if (-1 == iNextMoov)
+				else if (-1 == nextMoov)
 				{
 					//clear out the queued input
-					m_QueuedInput.Clear();
+					_queuedInput.Clear();
 				}
 			}
 		}
 
 		#region Hit Response
 
-		public override void HitResponse(IGameDonkey rEngine)
+		public override void HitResponse(IGameDonkey engine)
 		{
-			Debug.Assert(null != Physics);
-
 			//iterate through the hits, parsing as we go
 			for (EHitType i = 0; i < EHitType.NumHits; i++)
 			{
@@ -265,11 +252,8 @@ namespace GameDonkeyLib
 					{
 						case EHitType.AttackHit:
 						{
-							Debug.Assert(null != Physics.Hits[(int)i]);
-							Debug.Assert(null != Physics.Hits[(int)i].Action);
-
 							//is this a grab or an attack?
-							if (EActionType.CreateThrow == Physics.Hits[(int)i].Action.ActionType)
+							if (EActionType.CreateThrow == Physics.Hits[(int)i].AttackAction.ActionType)
 							{
 								//process grab hit
 								RespondToGrab(Physics.Hits[(int)i]);
@@ -277,9 +261,7 @@ namespace GameDonkeyLib
 							else
 							{
 								//process attack hit
-								Debug.Assert((EActionType.CreateAttack == Physics.Hits[(int)i].Action.ActionType) ||
-									(EActionType.CreateHitCircle == Physics.Hits[(int)i].Action.ActionType));
-								RespondToAttack(Physics.Hits[(int)i], rEngine);
+								RespondToAttack(Physics.Hits[(int)i], engine);
 							}
 						}
 						break;
@@ -301,13 +283,13 @@ namespace GameDonkeyLib
 
 						case EHitType.WeaponHit:
 						{
-							RespondToWeaponHit(Physics.Hits[(int)i], rEngine);
+							RespondToWeaponHit(Physics.Hits[(int)i], engine);
 						}
 						break;
 
 						case EHitType.BlockHit:
 						{
-							RespondToBlockedAttack(Physics.Hits[(int)i], rEngine);
+							RespondToBlockedAttack(Physics.Hits[(int)i], engine);
 						}
 						break;
 
@@ -331,7 +313,7 @@ namespace GameDonkeyLib
 					SendStateMessage((int)EMessage.Done);
 
 					//set the velocity
-					Vector2 throwVelocity = CurrentThrow.ReleaseDirection * m_fStrengthMultiplier;
+					var throwVelocity = CurrentThrow.Direction * _strengthMultiplier;
 
 					//flip the direction?
 					if (!Flip)
@@ -346,208 +328,176 @@ namespace GameDonkeyLib
 				}
 			}
 
-			base.HitResponse(rEngine);
+			base.HitResponse(engine);
 		}
 
-		protected override void RespondToGroundHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToGroundHit(Hit groundHit, IGameDonkey engine)
 		{
-			Debug.Assert(null != Physics);
-			Debug.Assert(EHitType.GroundHit == rGroundHit.HitType);
-
 			//move the player UP out of the floor
-			m_Position.Y += (rGroundHit.Strength * rGroundHit.Direction.Y);
+			_position.Y += (groundHit.Strength * groundHit.Direction.Y);
 
-			EState iCurrentState = (EState)States.CurrentState();
-			if (EState.Stunned == iCurrentState)
+			EState currentState = (EState)States.CurrentState;
+			if (EState.Stunned == currentState)
 			{
 				//if the player is stunned, bounce them up in the air
-				m_Velocity.Y = -1.0f * Math.Abs(m_Velocity.Y);
+				_velocity.Y = -1.0f * Math.Abs(Velocity.Y);
 
-				rEngine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
-					m_Velocity,
-					rGroundHit.Position,
+				engine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
+					Velocity,
+					groundHit.Position,
 					Color.White);
 
 				//add camera shake
-				rEngine.AddCameraShake(0.2f);
+				engine.AddCameraShake(0.2f);
 
 				//TODO: make a sound for hitting boundary while stunned
 			}
 
-			if (0.0f < m_Velocity.Y)
+			if (0.0f < Velocity.Y)
 			{
 				//if the player's velocity is +y, it is set to 0
-				m_Velocity.Y = 0.0f;
-
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
+				_velocity.Y = 0.0f;
 			}
 		}
 
-		protected override void RespondToCeilingHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToCeilingHit(Hit groundHit, IGameDonkey engine)
 		{
-			Debug.Assert(null != Physics);
-			Debug.Assert(EHitType.CeilingHit == rGroundHit.HitType);
-
 			//move the player down out of the ceiling
-			m_Position.Y += (rGroundHit.Strength * rGroundHit.Direction.Y);
+			_position.Y += (groundHit.Strength * groundHit.Direction.Y);
 
 			//always bounce the player out of a ceiling hit
-			m_Velocity.Y = -1.0f * m_Velocity.Y;
+			_velocity.Y = -1.0f * Velocity.Y;
 
-			int iCurrentState = States.CurrentState();
+			int iCurrentState = States.CurrentState;
 			if ((int)EState.Stunned == iCurrentState)
 			{
 				//add camera shake
-				rEngine.AddCameraShake(0.2f);
+				engine.AddCameraShake(0.2f);
 			}
 
 			//if the player's velocity is -y, it is set to 0
-			if (m_Velocity.Y < 0.0f)
+			if (Velocity.Y < 0.0f)
 			{
-				m_Velocity.Y = 0.0f;
-
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
+				_velocity.Y = 0.0f;
 			}
 		}
 
-		protected override void RespondToLeftWallHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToLeftWallHit(Hit groundHit, IGameDonkey engine)
 		{
-			Debug.Assert(null != Physics);
-			Debug.Assert(EHitType.LeftWallHit == rGroundHit.HitType);
-
 			//move the player UP out of the floor
-			m_Position.X += (rGroundHit.Strength * rGroundHit.Direction.X);
+			_position.X += (groundHit.Strength * groundHit.Direction.X);
 
-			EState iCurrentState = (EState)States.CurrentState();
+			EState iCurrentState = (EState)States.CurrentState;
 			if (EState.Stunned == iCurrentState)
 			{
 				//if the player is stunned, bounce them up in the air
-				m_Velocity.X = -1.0f * m_Velocity.X;
+				_velocity.X = -1.0f * Velocity.X;
 
-				rEngine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
-					m_Velocity,
-					rGroundHit.Position,
+				engine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
+					Velocity,
+					groundHit.Position,
 					Color.White);
 
 				//add camera shake
-				rEngine.AddCameraShake(0.2f);
+				engine.AddCameraShake(0.2f);
 
 				//TODO: make a sound for hitting boundary while stunned
 			}
 
 			//if the player's velocity is -X, it is set to 0
-			if (m_Velocity.X < 0.0f)
+			if (Velocity.X < 0.0f)
 			{
-				m_Velocity.X = 0.0f;
-
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
+				_velocity.X = 0.0f;
 			}
 		}
 
-		protected override void RespondToRightWallHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected override void RespondToRightWallHit(Hit groundHit, IGameDonkey engine)
 		{
-			Debug.Assert(null != Physics);
-			Debug.Assert(EHitType.RightWallHit == rGroundHit.HitType);
-
 			//move the player UP out of the floor
-			m_Position.X += (rGroundHit.Strength * rGroundHit.Direction.X);
+			_position.X += (groundHit.Strength * groundHit.Direction.X);
 
-			EState iCurrentState = (EState)States.CurrentState();
+			EState iCurrentState = (EState)States.CurrentState;
 			if (EState.Stunned == iCurrentState)
 			{
 				//if the player is stunned, bounce them up in the air
-				m_Velocity.X = -1.0f * m_Velocity.X;
+				_velocity.X = -1.0f * Velocity.X;
 
-				rEngine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
-					m_Velocity,
-					rGroundHit.Position,
+				engine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
+					Velocity,
+					groundHit.Position,
 					Color.White);
 
 				//add camera shake
-				rEngine.AddCameraShake(0.2f);
+				engine.AddCameraShake(0.2f);
 
 				//TODO: make a sound for hitting boundary while stunned
 			}
 
 			//if the player's velocity is +X, it is set to 0
-			if (0 < m_Velocity.X)
+			if (0 < Velocity.X)
 			{
-				m_Velocity.X = 0.0f;
-
-				Debug.Assert(m_Position.X != float.NaN);
-				Debug.Assert(m_Position.Y != float.NaN);
+				_velocity.X = 0.0f;
 			}
 		}
 
-		private void RespondToAttack(Hit rAttack, IGameDonkey rEngine)
+		private void RespondToAttack(Hit attack, IGameDonkey engine)
 		{
-			Debug.Assert(EHitType.AttackHit == rAttack.HitType);
-			Debug.Assert(null != rAttack);
-			Debug.Assert(null != rAttack.Attacker);
-			Debug.Assert(null != rAttack.Action);
-			Debug.Assert(rAttack.Strength >= 0.0f);
-
 			//set this dude's last attacker to the other dude
-			m_rLastAttacker = rAttack.Attacker.PlayerQueue;
-			Debug.Assert(null != m_rLastAttacker);
+			LastAttacker = attack.Attacker.PlayerQueue;
 
 			if (IsBlocking())
 			{
 				//do a block!
-				RespondToBlockedAttack(rAttack, rEngine);
+				RespondToBlockedAttack(attack, engine);
 			}
-			else if (EvasionTimer.RemainingTime() <= 0.0f) //make sure the character is not evading
+			else if (EvasionTimer.RemainingTime <= 0.0f) //make sure the character is not evading
 			{
 				//if the player is already stunned, restart his state timer
-				if (States.CurrentState() == (int)EState.Stunned)
+				if (States.CurrentState == (int)EState.Stunned)
 				{
 					States.ForceStateChange((int)EState.Stunned);
 				}
 
 				//add the damage
-				Health -= (m_fDamageMultiplier * rAttack.Strength);
+				Health -= (_damageMultiplier * attack.Strength);
 
 				//add the velocity
-				Velocity = AttackedVector(rAttack);
+				Velocity = AttackedVector(attack);
 
 				//send the state message
 				SendStateMessage((int)EMessage.Hit);
 
 				//do a hit pause
-				CharacterClock.AddHitPause(m_fHitPause);
-				rAttack.Attacker.CharacterClock.AddHitPause(m_fHitPause);
+				CharacterClock.AddHitPause(_hitPause);
+				attack.Attacker.CharacterClock.AddHitPause(_hitPause);
 
 				//add camera shake
-				rEngine.AddCameraShake(0.25f);
+				engine.AddCameraShake(0.25f);
 
 				//add the hit spark
-				rEngine.PlayParticleEffect(EDefaultParticleEffects.HitSpark,
+				engine.PlayParticleEffect(EDefaultParticleEffects.HitSpark,
 					Vector2.Zero,
-					rAttack.Position,
-					rAttack.Attacker.PlayerQueue.PlayerColor);
+					attack.Position,
+					attack.Attacker.PlayerQueue.PlayerColor);
 
 				//add a hit cloud
-				rEngine.PlayParticleEffect(EDefaultParticleEffects.HitCloud,
+				engine.PlayParticleEffect(EDefaultParticleEffects.HitCloud,
 					Vector2.Zero,
-					rAttack.Position,
+					attack.Position,
 					Color.Yellow);
 
 				//shoot particles out of teh characters butt
-				rEngine.PlayParticleEffect(EDefaultParticleEffects.HitCloud,
+				engine.PlayParticleEffect(EDefaultParticleEffects.HitCloud,
 					Velocity * 1.5f,
-					rAttack.Position,
+					attack.Position,
 					Color.Yellow);
 
 				//play the hit noise
-				CreateAttackAction rAttackAction = rAttack.Action as CreateAttackAction;
-				Debug.Assert(null != rAttackAction);
+				var attackAction = attack.AttackAction as CreateAttackAction;
 
-				if (null != rAttackAction.HitSound)
+				if (null != attackAction.HitSound)
 				{
-					rAttackAction.HitSound.Play();
+					attackAction.HitSound.Play();
 				}
 			}
 
@@ -555,28 +505,28 @@ namespace GameDonkeyLib
 			Physics.Reset();
 		}
 
-		private Vector2 AttackedVector(Hit rAttack)
+		private Vector2 AttackedVector(Hit attack)
 		{
-			Vector2 HitDirection = rAttack.Direction * m_fStrengthMultiplier;
+			var HitDirection = attack.Direction * _strengthMultiplier;
 
 			//if this player is already stunned, strengthen the hit
-			if (States.CurrentState() == (int)EState.Stunned)
+			if (States.CurrentState == (int)EState.Stunned)
 			{
 				//This player was already stunned, increment the combo counter
-				m_ComboCounter++;
+				ComboCounter++;
 
 				//add the combo multiplier to the hit direction
-				float fMultiplier = 1.0f + (0.3f * m_ComboCounter);
-				HitDirection *= fMultiplier;
+				float multiplier = 1.0f + (0.3f * ComboCounter);
+				HitDirection *= multiplier;
 			}
 			else
 			{
 				//this player was not stunned, reset the combo counter
-				m_ComboCounter = 0;
+				ComboCounter = 0;
 			}
 
 			//add the attacking player's velocity to the hit direction
-			HitDirection += (rAttack.Attacker.Velocity * 0.5f);
+			HitDirection += (attack.Attacker.Velocity * 0.5f);
 
 			return HitDirection;
 		}
@@ -585,69 +535,59 @@ namespace GameDonkeyLib
 		/// I got grabbed by a bad guy
 		/// </summary>
 		/// <param name="rGrab">hit with all the grab info</param>
-		private void RespondToGrab(Hit rGrab)
+		private void RespondToGrab(Hit grab)
 		{
-			Debug.Assert(EHitType.AttackHit == rGrab.HitType);
-			Debug.Assert(null != rGrab.Action);
-
 			//TODO: does any grab logic need to be performed?
 		}
 
-		private void RespondToPushHit(Hit rPush)
+		private void RespondToPushHit(Hit push)
 		{
-			Debug.Assert(EHitType.PushHit == rPush.HitType);
-
 			//push away from all push hits!
-			Vector2 deltaVect = rPush.Direction * rPush.Strength;
+			var deltaVect = push.Direction * push.Strength;
 			deltaVect.Y = 0.0f;
 			Position += deltaVect;
 		}
 
-		private void RespondToWeaponHit(Hit rWeaponHit, IGameDonkey rEngine)
+		private void RespondToWeaponHit(Hit weaponHit, IGameDonkey engine)
 		{
-			Debug.Assert(EHitType.WeaponHit == rWeaponHit.HitType);
-			Debug.Assert(null != rWeaponHit);
-			Debug.Assert(null != rWeaponHit.Attacker);
-
 			//set this dude's last attacker to the other dude
-			m_rLastAttacker = rWeaponHit.Attacker.PlayerQueue;
-			Debug.Assert(null != m_rLastAttacker);
+			LastAttacker = weaponHit.Attacker.PlayerQueue;
 
 			//if this player has over 100% damage, double the strength of the hit
-			Vector2 HitDirection = AttackedVector(rWeaponHit) * 0.5f;
+			var hitDirection = AttackedVector(weaponHit) * 0.5f;
 
 			//add the velocity
-			Velocity = HitDirection;
+			Velocity = hitDirection;
 
 			//do a hit pause
-			CharacterClock.AddHitPause(m_fHitPause);
-			rWeaponHit.Attacker.CharacterClock.AddHitPause(m_fHitPause);
+			CharacterClock.AddHitPause(_hitPause);
+			weaponHit.Attacker.CharacterClock.AddHitPause(_hitPause);
 
 			//add camera shake
-			rEngine.AddCameraShake(0.08f);
+			engine.AddCameraShake(0.08f);
 
 			//do a special hit spark for weapon clash
-			rEngine.PlayParticleEffect(EDefaultParticleEffects.WeaponHit,
+			engine.PlayParticleEffect(EDefaultParticleEffects.WeaponHit,
 					Velocity * 1.5f,
-					rWeaponHit.Position,
+					weaponHit.Position,
 					Color.White);
 		}
 
-		private void RespondToBlockedAttack(Hit rAttack, IGameDonkey rEngine)
+		private void RespondToBlockedAttack(Hit attack, IGameDonkey engine)
 		{
 			//do a block!
 
 			//add the velocity
-			Velocity = AttackedVector(rAttack) * 0.9f;
+			Velocity = AttackedVector(attack) * 0.9f;
 
 			//do a hit pause
-			CharacterClock.AddHitPause(m_fHitPause * 0.8f);
-			rAttack.Attacker.CharacterClock.AddHitPause(m_fHitPause * 0.8f);
+			CharacterClock.AddHitPause(_hitPause * 0.8f);
+			attack.Attacker.CharacterClock.AddHitPause(_hitPause * 0.8f);
 
 			//play the particle effect
-			rEngine.PlayParticleEffect(EDefaultParticleEffects.Block,
-				new Vector2((rAttack.Attacker.Flip ? -400.0f : 400.0f), 0.0f),
-				rAttack.Position,
+			engine.PlayParticleEffect(EDefaultParticleEffects.Block,
+				new Vector2((attack.Attacker.Flip ? -400.0f : 400.0f), 0.0f),
+				attack.Position,
 				new Color(0, 255, 255));
 
 			//play the block noise
@@ -674,35 +614,34 @@ namespace GameDonkeyLib
 		/// Override in child classes to read object-specific node types.
 		/// </summary>
 		/// <param name="childNode">the xml data to read</param>
-		/// <param name="rEngine">the engine we are using to load</param>
-		/// <param name="iMessageOffset">the message offset of this object's state machine</param>
+		/// <param name="engine">the engine we are using to load</param>
+		/// <param name="messageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public override bool ParseXmlData(BaseObjectData childNode, IGameDonkey rEngine, int iMessageOffset, ContentManager content)
+		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content)
 		{
-			var data = childNode as PlayerObjectData;
+			var data = model as PlayerObjectModel;
 			if (null == data)
 			{
-				Debug.Assert(false);
-				return false;
+				throw new Exception("must pass PlayerObjectModel to PlayerObject.ParseXmlData");
 			}
 
 			//load player object stuff
-			if ((null != data.PortraitFile) && (null != rEngine.Renderer.Content))
+			if ((null != data.Portrait) && (null != engine.Renderer.Content))
 			{
-				Portrait = rEngine.Renderer.Content.Load<Texture2D>(data.PortraitFile.GetRelPathFileNoExt());
+				Portrait = engine.Renderer.Content.Load<Texture2D>(data.Portrait.GetRelPathFileNoExt());
 			}
 
-			if (null != data.DeathSoundFile) 
+			if (null != data.DeathSound) 
 			{
-				DeathSound = rEngine.LoadSound(data.DeathSoundFile);
+				DeathSound = engine.LoadSound(data.DeathSound);
 			}
 
-			if (null != data.BlockSoundFile) 
+			if (null != data.BlockSound) 
 			{
-				BlockSound = rEngine.LoadSound(data.BlockSoundFile);
+				BlockSound = engine.LoadSound(data.BlockSound);
 			}
 
-			return base.ParseXmlData(childNode, rEngine, iMessageOffset, content);
+			base.ParseXmlData(model, engine, messageOffset, content);
 		}
 
 		#endregion //File IO

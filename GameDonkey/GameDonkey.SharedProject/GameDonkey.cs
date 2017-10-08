@@ -27,38 +27,23 @@ namespace GameDonkeyLib
 		static protected Random _random = new Random(DateTime.Now.Millisecond);
 
 		//debugging flags
-		protected KeyboardState m_LastKeyboardState;
-		protected bool m_bRenderJointSkeleton;
-		protected bool m_bRenderPhysics;
+		protected KeyboardState _lastKeyboardState;
+		protected bool _renderJointSkeleton;
+		protected bool _renderPhysics;
 
 		/// <summary>
 		/// render the dots used to calculate camera position
 		/// </summary>
-		protected bool m_bDrawCameraInfo;
-		protected bool m_bRenderWorldBoundaries;
-		protected bool m_bRenderSpawnPoints;
+		protected bool _drawCameraInfo;
+		protected bool _renderWorldBoundaries;
+		protected bool _renderSpawnPoints;
 
-		private TextureInfo m_SkyBox;
-		private TextureInfo m_HUDBackground;
-		private Color m_SkyColor;
-		private int m_iNumTiles;
+		private TextureInfo _skyBox;
+		private TextureInfo _hudBackground;
+		private Color _skyColor;
+		private int _numTiles;
 
 		FontBuddy m_Font;
-
-		/// <summary>
-		/// The noise to play when a character falls off the board
-		/// </summary>
-		private string m_strDeathNoise;
-
-		/// <summary>
-		/// The velocity of the center point
-		/// </summary>
-		public Vector2 CenterVelocity { get; set; }
-
-		/// <summary>
-		/// a list of all the default particle effects used int he game
-		/// </summary>
-		private List<EmitterTemplate> m_DefaultParticles;
 
 		#endregion //Members
 
@@ -128,37 +113,37 @@ namespace GameDonkeyLib
 
 		protected EmitterTemplate Block
 		{
-			get { return m_DefaultParticles[(int)EDefaultParticleEffects.Block]; }
+			get { return DefaultParticles[(int)EDefaultParticleEffects.Block]; }
 		}
 
 		protected EmitterTemplate HitSpark
 		{
-			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HitSpark]; }
+			get { return DefaultParticles[(int)EDefaultParticleEffects.HitSpark]; }
 		}
 
 		protected EmitterTemplate HitCloud
 		{
-			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HitCloud]; }
+			get { return DefaultParticles[(int)EDefaultParticleEffects.HitCloud]; }
 		}
 
 		protected EmitterTemplate StunnedBounce
 		{
-			get { return m_DefaultParticles[(int)EDefaultParticleEffects.StunnedBounce]; }
+			get { return DefaultParticles[(int)EDefaultParticleEffects.StunnedBounce]; }
 		}
 
 		protected EmitterTemplate DeathParticles
 		{
-			get { return m_DefaultParticles[(int)EDefaultParticleEffects.Death]; }
+			get { return DefaultParticles[(int)EDefaultParticleEffects.Death]; }
 		}
 
 		protected EmitterTemplate HeadBop
 		{
-			get { return m_DefaultParticles[(int)EDefaultParticleEffects.HeadBop]; }
+			get { return DefaultParticles[(int)EDefaultParticleEffects.HeadBop]; }
 		}
 
 		protected EmitterTemplate WeaponHit
 		{
-			get { return m_DefaultParticles[(int)EDefaultParticleEffects.WeaponHit]; }
+			get { return DefaultParticles[(int)EDefaultParticleEffects.WeaponHit]; }
 		}
 
 		//Game over stuff!!!
@@ -171,6 +156,21 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <value>The content of the sound.</value>
 		public ContentManager ContentManager { get; private set; }
+
+		/// <summary>
+		/// The noise to play when a character falls off the board
+		/// </summary>
+		private string DeathNoise { get; set; }
+
+		/// <summary>
+		/// The velocity of the center point
+		/// </summary>
+		public Vector2 CenterVelocity { get; set; }
+
+		/// <summary>
+		/// a list of all the default particle effects used int he game
+		/// </summary>
+		private List<EmitterTemplate> DefaultParticles { get; set; }
 
 		#endregion //Properties
 
@@ -192,17 +192,17 @@ namespace GameDonkeyLib
 			LevelObjects = new LevelObjectQueue();
 			SpawnPoints = new List<Vector2>();
 
-			m_DefaultParticles = new List<EmitterTemplate>();
+			DefaultParticles = new List<EmitterTemplate>();
 
 			m_Font = new FontBuddy();
 			CharacterClock = new GameClock();
 
 			//debugging stuff
-			m_bRenderJointSkeleton = false;
-			m_bRenderPhysics = false;
-			m_bDrawCameraInfo = false;
-			m_bRenderWorldBoundaries = false;
-			m_bRenderSpawnPoints = false;
+			_renderJointSkeleton = false;
+			_renderPhysics = false;
+			_drawCameraInfo = false;
+			_renderWorldBoundaries = false;
+			_renderSpawnPoints = false;
 
 			//game over stuff
 			GameTimer = new CountdownTimer();
@@ -211,10 +211,10 @@ namespace GameDonkeyLib
 			GameOver = false;
 			Tie = false;
 
-			m_SkyBox = null;
-			m_HUDBackground = null;
-			m_SkyColor = Color.White;
-			m_iNumTiles = 1;
+			_skyBox = null;
+			_hudBackground = null;
+			_skyColor = Color.White;
+			_numTiles = 1;
 		}
 
 		/// <summary>
@@ -353,7 +353,7 @@ namespace GameDonkeyLib
 			Renderer.Camera.Update(MasterClock);
 
 			//update all our clocks
-			float fOldTime = GameTimer.RemainingTime();
+			float fOldTime = GameTimer.RemainingTime;
 			GameTimer.Update(MasterClock);
 			CharacterClock.Update(GameTimer);
 
@@ -373,7 +373,7 @@ namespace GameDonkeyLib
 				CheckForWinner();
 
 				//update the level objects
-				LevelObjects.Update(GameTimer, true);
+				LevelObjects.Update(GameTimer);
 
 				UpdatePlayers();
 			}
@@ -472,7 +472,7 @@ namespace GameDonkeyLib
 				CheckIfDead(playerQueue);
 
 				//update the characters
-				playerQueue.Update(CharacterClock, true);
+				playerQueue.Update(CharacterClock);
 			}
 		}
 
@@ -484,9 +484,9 @@ namespace GameDonkeyLib
 			List<Task> tasks = new List<Task>();
 			foreach (var player in Players)
 			{
-				tasks.Add(Task.Factory.StartNew(() => { player.UpdateRagdoll(false); }));
+				tasks.Add(Task.Factory.StartNew(() => { player.UpdateRagdoll(); }));
 			}
-			tasks.Add(Task.Factory.StartNew(() => { LevelObjects.UpdateRagdoll(false); }));
+			tasks.Add(Task.Factory.StartNew(() => { LevelObjects.UpdateRagdoll(); }));
 			Task.WaitAll(tasks.ToArray());
 		}
 
@@ -574,7 +574,7 @@ namespace GameDonkeyLib
 		{
 			//check for time over
 			Debug.Assert(0.0f < MaxTime);
-			if ((null == Winner) && (GameTimer.RemainingTime() <= 0.0f))
+			if ((null == Winner) && (GameTimer.RemainingTime <= 0.0f))
 			{
 				//find winner
 				int currentMaxStock = 0;
@@ -635,12 +635,7 @@ namespace GameDonkeyLib
 		/// <param name="rPlayerQueue">the player to kill</param>
 		protected virtual void KillPlayer(PlayerQueue playerQueue)
 		{
-			Debug.Assert(SpawnPoints.Count > 0);
-			Debug.Assert(null != playerQueue);
-
-			BaseObject rObject = playerQueue.Character;
-			Debug.Assert(null != rObject);
-			Debug.Assert((rObject.Type == EObjectType.Human) || (rObject.Type == EObjectType.AI));
+			var playerCharacter = playerQueue.Character;
 
 			//TODO: play the death particle effect
 			//PlayParticleEffect(EDefaultParticleEffects.Death,
@@ -685,7 +680,7 @@ namespace GameDonkeyLib
 			Vector2 position,
 			Color color)
 		{
-			ParticleEngine.PlayParticleEffect(m_DefaultParticles[(int)eEffect], velocity, position, Vector2.Zero, color, false);
+			ParticleEngine.PlayParticleEffect(DefaultParticles[(int)eEffect], velocity, position, Vector2.Zero, color, false);
 		}
 
 		#region Draw
@@ -760,21 +755,21 @@ namespace GameDonkeyLib
 		protected virtual void RenderBackground()
 		{
 			//Check if there is any background to draw
-			if (null == m_SkyBox)
+			if (null == _skyBox)
 			{
 				return;
 			}
 
 			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, Resolution.TransformationMatrix());
-			if (m_iNumTiles <= 1)
+			if (_numTiles <= 1)
 			{
 				//just cover the whole screen with the skybox
-				Renderer.SpriteBatch.Draw(m_SkyBox.Texture, Resolution.ScreenArea, m_SkyColor);
+				Renderer.SpriteBatch.Draw(_skyBox.Texture, Resolution.ScreenArea, _skyColor);
 			}
 			else
 			{
 				//get the size of each tile
-				int tileSize = Resolution.ScreenArea.Width / m_iNumTiles;
+				int tileSize = Resolution.ScreenArea.Width / _numTiles;
 
 				//get the number of rows 
 				int numRows = Resolution.ScreenArea.Height / tileSize;
@@ -787,10 +782,10 @@ namespace GameDonkeyLib
 				tileRect.Width = tileSize;
 				for (int i = 0; i < numRows; i++)
 				{
-					for (int j = 0; j < m_iNumTiles; j++)
+					for (int j = 0; j < _numTiles; j++)
 					{
 						//draw one tile and move to the next column
-						Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, m_SkyColor);
+						Renderer.SpriteBatch.Draw(_skyBox.Texture, tileRect, _skyColor);
 						tileRect.X += tileSize;
 					}
 
@@ -800,12 +795,12 @@ namespace GameDonkeyLib
 				}
 
 				//Draw the bottom row, which is cut off :(
-				Rectangle sourceRect = m_SkyBox.Texture.Bounds;
+				Rectangle sourceRect = _skyBox.Texture.Bounds;
 				tileRect.Height = Resolution.ScreenArea.Height - (tileSize * numRows);
 				sourceRect.Height = ((tileRect.Height * sourceRect.Height) / tileSize);
-				for (int i = 0; i < m_iNumTiles; i++)
+				for (int i = 0; i < _numTiles; i++)
 				{
-					Renderer.SpriteBatch.Draw(m_SkyBox.Texture, tileRect, sourceRect, m_SkyColor);
+					Renderer.SpriteBatch.Draw(_skyBox.Texture, tileRect, sourceRect, _skyColor);
 					tileRect.X += tileSize;
 				}
 			}
@@ -879,10 +874,10 @@ namespace GameDonkeyLib
 
 				Debug.Assert(null != Renderer);
 				Debug.Assert(null != Renderer.SpriteBatch);
-				if (null != m_HUDBackground)
+				if (null != _hudBackground)
 				{
 					Renderer.SpriteBatch.Draw(
-						m_HUDBackground.Texture,
+						_hudBackground.Texture,
 						new Rectangle(left, top, (int)height, (int)height),
 						color);
 				}
@@ -956,16 +951,16 @@ namespace GameDonkeyLib
 
 			//if the game mode is time, draw the clock
 			Debug.Assert(MaxTime > 0.0f);
-			if (GameTimer.RemainingTime() <= (MaxTime - 5.0f))
+			if (GameTimer.RemainingTime <= (MaxTime - 5.0f))
 			{
 				//check if the round is about to end
 				Color TimeColor = new Color(0.35f, 0.35f, 0.35f, 0.1f);
-				if (GameTimer.RemainingTime() <= 20.0f)
+				if (GameTimer.RemainingTime <= 20.0f)
 				{
 					TimeColor = new Color(1.0f, 0.0f, 0.0f, .5f);
 				}
 
-				if (!GameOver && (GameTimer.RemainingTime() > 0.0f))
+				if (!GameOver && (GameTimer.RemainingTime > 0.0f))
 				{
 					Debug.Assert(null == Winner);
 
@@ -1084,7 +1079,7 @@ namespace GameDonkeyLib
 			var emitter = new EmitterTemplate(new Filename(file));
 			emitter.ReadXmlFile(content);
 			emitter.LoadContent(content);
-			m_DefaultParticles.Add(emitter);
+			DefaultParticles.Add(emitter);
 		}
 
 		private void AddParticleEffect(string file)
@@ -1092,7 +1087,7 @@ namespace GameDonkeyLib
 			var emitter = new EmitterTemplate(new Filename(file));
 			emitter.ReadXmlFile();
 			emitter.LoadContent(ContentManager);
-			m_DefaultParticles.Add(emitter);
+			DefaultParticles.Add(emitter);
 		}
 
 		/// <summary>
@@ -1100,7 +1095,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		public virtual void LoadXmlContent(GraphicsDevice graphics)
 		{
-			m_LastKeyboardState = Keyboard.GetState();
+			_lastKeyboardState = Keyboard.GetState();
 
 			//load all the content
 
@@ -1116,7 +1111,7 @@ namespace GameDonkeyLib
 			Filename characterFile,
 			PlayerIndex index,
 			string playerName,
-			EObjectType playerType = EObjectType.Human,
+			GameObjectType playerType = GameObjectType.Human,
 			ContentManager content = null)
 		{
 			//create and load a player
@@ -1237,8 +1232,8 @@ namespace GameDonkeyLib
 
 			//next node is the death noise
 			childNode = childNode.NextSibling;
-			m_strDeathNoise = childNode.InnerXml;
-			if (!string.IsNullOrEmpty(m_strDeathNoise))
+			DeathNoise = childNode.InnerXml;
+			if (!string.IsNullOrEmpty(DeathNoise))
 			{
 				//TODO: load the death noise
 			}
@@ -1248,21 +1243,21 @@ namespace GameDonkeyLib
 			if (!string.IsNullOrEmpty(childNode.InnerXml))
 			{
 				Filename backgroundFile = new Filename(childNode.InnerXml);
-				m_SkyBox = Renderer.LoadImage(backgroundFile);
+				_skyBox = Renderer.LoadImage(backgroundFile);
 			}
 
 			//load the color!
 			childNode = childNode.NextSibling;
-			m_SkyColor.R = Convert.ToByte(childNode.InnerXml);
+			_skyColor.R = Convert.ToByte(childNode.InnerXml);
 			childNode = childNode.NextSibling;
-			m_SkyColor.G = Convert.ToByte(childNode.InnerXml);
+			_skyColor.G = Convert.ToByte(childNode.InnerXml);
 			childNode = childNode.NextSibling;
-			m_SkyColor.B = Convert.ToByte(childNode.InnerXml);
-			m_SkyColor.A = 255;
+			_skyColor.B = Convert.ToByte(childNode.InnerXml);
+			_skyColor.A = 255;
 
 			//next node is the number of tiles
 			childNode = childNode.NextSibling;
-			m_iNumTiles = Convert.ToInt32(childNode.InnerXml);
+			_numTiles = Convert.ToInt32(childNode.InnerXml);
 
 			//load all the level objects
 			childNode = childNode.NextSibling;
@@ -1272,7 +1267,7 @@ namespace GameDonkeyLib
 			{
 				//load the level object
 				Filename myLevelObjectFile = new Filename(levelNode.InnerXml);
-				BaseObject rLevelObject = LevelObjects.LoadXmlObject(myLevelObjectFile, this, EObjectType.Level, 0, content);
+				BaseObject rLevelObject = LevelObjects.LoadXmlObject(myLevelObjectFile, this, GameObjectType.Level, 0, content);
 				if (null == rLevelObject)
 				{
 					Debug.Assert(false);

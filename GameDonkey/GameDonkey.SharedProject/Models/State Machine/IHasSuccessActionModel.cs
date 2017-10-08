@@ -4,8 +4,8 @@ using System.Text;
 
 namespace GameDonkeyLib
 {
-	public class ProjectileObjectXML : BaseObjectXML
+	public interface IHasSuccessActionModel
 	{
-		public bool weaponhits = false;
+		List<BaseActionModel> SuccessActions { get; }
 	}
 }

@@ -32,17 +32,14 @@ namespace GameDonkeyLib
 		/// Add an action to the list, set the done time
 		/// Shoudl be called from the action's Execute
 		/// </summary>
-		/// <param name="rAction">action to add</param>
-		public virtual void AddAction(T rAction, GameClock rClock)
+		/// <param name="action">action to add</param>
+		public virtual void AddAction(T action, GameClock clock)
 		{
-			Debug.Assert(null != rAction);
-			Debug.Assert(null != rClock);
-
 			//set the done time
-			rAction.SetDoneTime(rClock);
+			action.SetDoneTime(clock);
 
 			//store the action
-			CurrentActions.Add(rAction);
+			CurrentActions.Add(action);
 		}
 
 		/// <summary>
@@ -60,22 +57,22 @@ namespace GameDonkeyLib
 		/// Checks if any actions are ready to be removed
 		/// shoudl be called from base object's update
 		/// </summary>
-		/// <param name="rClock"></param>
-		public virtual void Update(GameClock rClock)
+		/// <param name="clock"></param>
+		public virtual void Update(GameClock clock)
 		{
 			//remove any finished actions from the list
-			int iCurrent = 0;
-			while (iCurrent < CurrentActions.Count)
+			int i = 0;
+			while (i < CurrentActions.Count)
 			{
 				//checked if this action has expired...
-				if (!CurrentActions[iCurrent].ActiveForWholeState &&
-					(CurrentActions[iCurrent].DoneTime <= rClock.CurrentTime))
+				if (!CurrentActions[i].ActiveForWholeState &&
+					(CurrentActions[i].DoneTime <= clock.CurrentTime))
 				{
-					CurrentActions.RemoveAt(iCurrent);
+					CurrentActions.RemoveAt(i);
 				}
 				else
 				{
-					iCurrent++;
+					i++;
 				}
 			}
 		}

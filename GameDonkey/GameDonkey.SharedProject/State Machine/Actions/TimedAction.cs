@@ -1,5 +1,4 @@
 ﻿using GameTimer;
-using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -8,76 +7,59 @@ namespace GameDonkeyLib
 	/// </summary>
 	public abstract class TimedAction : BaseAction
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// the time delta how long the action is active
 		/// put -1 in here to activate it until the state ends
 		/// </summary>
-		private float m_fTimeDelta;
+		private float _timeDelta;
+		public float TimeDelta
+		{
+			get { return _timeDelta; }
+			set
+			{
+				ActiveForWholeState = (value == -1.0f);
+				_timeDelta = value;
+			}
+		}
 
 		/// <summary>
 		/// The time when this action is done.
 		/// Set at runtime when the action is activated
 		/// </summary>
-		private float m_fDoneTime;
+		public float DoneTime { get; set; }
 
 		/// <summary>
 		/// Flag whether or not to activate for the whole state
 		/// If TimeDelta is set to -1, this will be true;
 		/// </summary>
-		private bool m_bActiveForWholeState;
-
-		#endregion
-
-		#region Properties
-
-		public float TimeDelta
-		{
-			get { return m_fTimeDelta; }
-			set
-			{
-				m_bActiveForWholeState = (value == -1.0f);
-				m_fTimeDelta = value;
-			}
-		}
-
-		public float DoneTime
-		{
-			get { return m_fDoneTime; }
-			private set { m_fDoneTime = value; }
-		}
-
-		public bool ActiveForWholeState
-		{
-			get { return m_bActiveForWholeState; }
-		}
+		public bool ActiveForWholeState { get; private set; }
 
 		#endregion //properties
 
 		#region Methods
 
-		public TimedAction(BaseObject rOwner) : base(rOwner)
+		public TimedAction(BaseObject owner, EActionType actionType) : base(owner, actionType)
 		{
-			TimeDelta = -1.0f;
-			DoneTime = 0.0f;
+			TimeDelta = -1f;
+			DoneTime = 0f;
+		}
+
+		protected TimedAction(BaseObject owner, BaseActionModel actionModel, TimedActionModel timeActionModel) : this(owner, actionModel.ActionType)
+		{
+			TimeDelta = timeActionModel.TimeDelta;
 		}
 
 		/// <summary>
 		/// Set the done time of this action.
 		/// Should be called during the Execute method of the child class
 		/// </summary>
-		/// <param name="rClock"></param>
-		public void SetDoneTime(GameClock rClock)
+		/// <param name="clock"></param>
+		public void SetDoneTime(GameClock clock)
 		{
 			//activate the attack
-			DoneTime = rClock.CurrentTime + m_fTimeDelta;
-		}
-
-		public override bool Compare(BaseAction rInst)
-		{
-			Debug.Assert(false);
-			return false;
+			DoneTime = clock.CurrentTime + TimeDelta;
 		}
 
 		#endregion

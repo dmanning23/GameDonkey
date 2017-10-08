@@ -30,7 +30,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Get a list of all the containers in this dude.
 		/// </summary>
-		List<IStateContainer> Containers { get; }
+		List<IStateContainer> StateContainers { get; }
 
 		/// <summary>
 		/// Get the name of this state container
@@ -53,6 +53,18 @@ namespace GameDonkeyLib
 		/// </summary>
 		bool IgnoreStateMachineChange { get; set; }
 
+		int CurrentState { get; }
+
+		int PrevState { get; }
+
+		int NumStates { get; }
+
+		int NumMessages { get; }
+
+		string CurrentStateText { get; }
+
+		GameClock StateClock { get; }
+
 		#endregion //Properties
 
 		#region Methods
@@ -62,11 +74,11 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// method to send a message
 		/// </summary>
-		/// <param name="iMessage">message to send to the state machine, 
+		/// <param name="message">message to send to the state machine, 
 		/// should be offset by the message offset of this dude</param>
-		void SendStateMessage(int iMessage);
+		void SendStateMessage(int message);
 
-		void ForceStateChange(int iState);
+		void ForceStateChange(int state);
 
 		/// <summary>
 		/// The states have changed, go through and set all the actions of the new state to "not run"
@@ -77,9 +89,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Execute the actions for the current state
 		/// </summary>
-		/// <param name="fPrevTime">the last time that the object executed actions</param>
-		/// <param name="fCurTime">the time in seconds that the object has been in this state</param>
-		void ExecuteActions(GameClock rGameClock);
+		void ExecuteActions(GameClock clock);
 
 		/// <summary>
 		/// Check whether or not the current state is an attack state
@@ -90,9 +100,9 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Check if a state is an attack state
 		/// </summary>
-		/// <param name="iState">The state to check if is an attack state</param>
+		/// <param name="state">The state to check if is an attack state</param>
 		/// <returns>bool: whether or not the requested state has an attack</returns>
-		bool IsStateAttack(int iState);
+		bool IsStateAttack(int state);
 
 		/// <summary>
 		/// Check if an attack is active in this state.  Used to queue moves during a combo.
@@ -104,39 +114,21 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Replace all the base object pointers in this dude to point to a replacement object
 		/// </summary>
-		/// <param name="myBot">the replacement dude</param>
-		void ReplaceOwner(BaseObject myBot);
+		/// <param name="bot">the replacement dude</param>
+		void ReplaceOwner(BaseObject bot);
 
-		int CurrentState();
+		int GetStateIndexFromText(string stateName);
 
-		int PrevState();
+		int GetMessageIndexFromText(string messageName);
 
-		int GetStateIndexFromText(string strStateName);
+		string GetStateName(int stateIndex);
 
-		int GetMessageIndexFromText(string strMessageName);
+		string GetMessageName(int messageIndex);
 
-		string GetStateName(int iStateIndex);
+		StateActions GetStateActions(int stateIndex);
 
-		string GetMessageName(int iMessageIndex);
-
-		int NumStates();
-
-		int NumMessages();
-
-		string CurrentStateText();
-
-		StateActions GetStateActions(int iStateIndex);
-
-		GameClock GetStateClock();
-
+		void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content);
+		
 		#endregion //Methods
-
-		#region File IO
-
-		bool ReadXmlStateContainer(BaseObjectData xmlData, IGameDonkey rEngine, int iMessageOffset, BaseObject rOwner, ContentManager content);
-
-		bool WriteXml();
-
-		#endregion //File IO
 	}
 }

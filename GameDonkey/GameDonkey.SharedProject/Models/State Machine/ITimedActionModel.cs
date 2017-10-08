@@ -4,9 +4,8 @@ using System.Text;
 
 namespace GameDonkeyLib
 {
-	public class StateContainerXML
+	public interface ITimedActionModel
 	{
-		public string stateMachine = "";
-		public string stateActions = "";
+		TimedActionModel TimeDelta { get; }
 	}
 }

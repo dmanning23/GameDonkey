@@ -1,45 +1,67 @@
 ﻿using AnimationLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using System;
-using System.Diagnostics;
-using System.Xml;
-using Vector2Extensions;
 
 namespace GameDonkeyLib
 {
 	/// <summary>
 	/// This is an attack action that uses a unattached circle instead of a bone
 	/// </summary>
-	class CreateHitCircleAction : CreateAttackAction
+	public class CreateHitCircleAction : CreateAttackAction
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// this dudes hit circle that will be floating around
 		/// </summary>
-		protected PhysicsCircle m_HitCircle;
+		protected PhysicsCircle HitCircle;
 
 		/// <summary>
 		/// the offset from the attached bone location to start this circle at
 		/// </summary>
-		protected Vector2 m_StartOffset;
+		protected Vector2 StartOffset;
 
 		/// <summary>
 		/// speed and direction of this circle
 		/// </summary>
-		protected Vector2 m_Velocity;
+		protected Vector2 Velocity;
 
-		#endregion //Members
+		#endregion //Properties
+
+		#region Initialization
+
+		public CreateHitCircleAction(BaseObject owner) :
+			base(owner, EActionType.CreateHitCircle)
+		{
+			HitCircle = new PhysicsCircle();
+			StartOffset = Vector2.Zero;
+			Velocity = Vector2.Zero;
+		}
+
+		public CreateHitCircleAction(BaseObject owner, CreateHitCircleActionModel actionModel) :
+			base(owner, actionModel)
+		{
+			HitCircle = new PhysicsCircle()
+			{
+				Radius = actionModel.Radius,
+			};
+			StartOffset = actionModel.StartOffset;
+			Velocity = actionModel.Velocity;
+		}
+
+		public CreateHitCircleAction(BaseObject owner, BaseActionModel actionModel) :
+			this(owner, actionModel as CreateHitCircleActionModel)
+		{
+		}
+
+		public override void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
+		{
+			base.LoadContent(engine, stateContainer, content);
+		}
+
+		#endregion //Initialization
 
 		#region Methods
-
-		public CreateHitCircleAction(BaseObject rOwner) : base(rOwner, EActionType.CreateHitCircle)
-		{
-			m_HitCircle = new PhysicsCircle();
-			m_StartOffset = Vector2.Zero;
-			m_Velocity = Vector2.Zero;
-		}
 
 		/// <summary>
 		/// execute this action (overridden in all child classes)
@@ -50,91 +72,35 @@ namespace GameDonkeyLib
 			//set the circle location
 
 			//get the bone location
-			Debug.Assert(null != m_rAttackBone);
-			Vector2 myLocation = m_rAttackBone.AnchorPosition;
+			var myLocation = AttackBone.AnchorPosition;
 
 			//get the start offset
-			Vector2 myOffset = m_StartOffset;
+			var myOffset = StartOffset;
 			if (Owner.Flip)
 			{
 				myOffset.X *= -1.0f;
 			}
 
 			//set the circle location
-			m_HitCircle.Reset(myLocation - myOffset);
+			HitCircle.Reset(myLocation - myOffset);
 
 			return base.Execute();
-		}
-
-		public override bool Compare(BaseAction rInst)
-		{
-			return base.Compare(rInst);
 		}
 
 		public override void Update()
 		{
 			//add the velocity
-			Vector2 myPosition = m_HitCircle.Pos + ((m_Velocity * Owner.Scale) * Owner.CharacterClock.TimeDelta);
+			var myPosition = HitCircle.Pos + ((Velocity * Owner.Scale) * Owner.CharacterClock.TimeDelta);
 
 			//update the circle location
-			m_HitCircle.Update(myPosition, Owner.Scale);
+			HitCircle.Update(myPosition);
 		}
 
 		public override PhysicsCircle GetCircle()
 		{
-			return m_HitCircle;
+			return HitCircle;
 		}
 
 		#endregion //Methods
-
-		#region File IO
-
-		protected override bool ReadActionAttribute(XmlNode childNode, IGameDonkey rEngine, SingleStateContainer stateContainer, ContentManager content)
-		{
-			//what is in this node?
-			string strName = childNode.Name;
-			string strValue = childNode.InnerText;
-
-			if (strName == "radius")
-			{
-				//set the radius of that circle
-				m_HitCircle.Radius = Convert.ToSingle(strValue);
-			}
-			else if (strName == "startOffset")
-			{
-				m_StartOffset = strValue.ToVector2();
-			}
-			else if (strName == "velocity")
-			{
-				m_Velocity = strValue.ToVector2();
-			}
-
-			return base.ReadActionAttribute(childNode, rEngine, stateContainer, content);
-		}
-
-#if !WINDOWS_UWP
-		/// <summary>
-		/// overloaded in child classes to write out action specific stuff
-		/// </summary>
-		/// <param name="rXMLFile"></param>
-		protected override void WriteActionXml(XmlTextWriter rXMLFile)
-		{
-			base.WriteXml(rXMLFile);
-
-			rXMLFile.WriteStartElement("radius");
-			rXMLFile.WriteString(m_HitCircle.Radius.ToString());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("startOffset");
-			rXMLFile.WriteString(m_StartOffset.StringFromVector());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("velocity");
-			rXMLFile.WriteString(m_Velocity.StringFromVector());
-			rXMLFile.WriteEndElement();
-		}
-#endif
-
-		#endregion //File IO
 	}
 }

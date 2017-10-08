@@ -3,25 +3,22 @@ using FilenameBuddy;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System;
-using System.Diagnostics;
-using System.Xml;
-using Vector2Extensions;
 
 namespace GameDonkeyLib
 {
 	public class ProjectileAction : BaseAction
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// the projectile to add
 		/// </summary>
-		private BaseObject m_rProjectile;
+		private BaseObject Projectile;
 
 		/// <summary>
 		/// the filename of the projectile data.xml file to use
 		/// </summary>
-		private Filename m_strProjectileFileName;
+		public Filename FileName { get; protected set; }
 
 		/// <summary>
 		/// the offset from the bone to start the particle effect from
@@ -38,46 +35,61 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// How much to scale the projectile.  Read in from the xml file, not the "runtime scale"
 		/// </summary>
-		private float m_fScale;
-
-		#endregion //Members
-
-		#region Properties
-
-		public Filename Filename
-		{
-			get { return m_strProjectileFileName; }
-		}
-
+		private float _scale;
 		public float Scale
 		{
-			get { return m_fScale; }
+			get { return _scale; }
 			set
 			{
-				m_fScale = value;
-				if (null != m_rProjectile)
+				_scale = value;
+				if (null != Projectile)
 				{
-					m_rProjectile.Scale = m_fScale * Owner.Scale;
+					Projectile.Scale = Scale * Owner.Scale;
 				}
 			}
 		}
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
-		/// <summary>
-		/// Standard constructor
-		/// </summary>
-		public ProjectileAction(BaseObject rOwner) : base(rOwner)
+		public ProjectileAction(BaseObject owner) :
+			base(owner, EActionType.Projectile)
 		{
-			ActionType = EActionType.Projectile;
-			m_rProjectile = null;
-			m_strProjectileFileName = new Filename();
-			StartOffset = new Vector2(0.0f);
-			m_fScale = 1.0f;
 			Velocity = new ActionDirection();
+			FileName = new Filename();
+			StartOffset = Vector2.Zero;
+			Scale = 1f;
 		}
+
+		public ProjectileAction(BaseObject owner, ProjectileActionModel actionModel) :
+			base(owner, actionModel)
+		{
+			Velocity = new ActionDirection(actionModel.Direction);
+			FileName = new Filename(actionModel.Filename);
+			StartOffset = new Vector2(actionModel.StartOffset.X, actionModel.StartOffset.Y);
+			Scale = actionModel.Scale;
+		}
+
+		public ProjectileAction(BaseObject owner, BaseActionModel actionModel) :
+			this(owner, actionModel as ProjectileActionModel)
+		{
+		}
+
+		public override void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
+		{
+			//try to load the file into the particle effect
+			if ((null != engine) && !String.IsNullOrEmpty(FileName.File))
+			{
+				//load object into player queue!
+				Projectile = Owner.PlayerQueue.LoadXmlObject(FileName, engine, GameObjectType.Projectile, 0, content);
+				Projectile.Scale = Scale * Owner.Scale;
+			}
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		/// <summary>
 		/// execute this action (overridden in all child classes)
@@ -85,218 +97,42 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
-			Debug.Assert(null != Owner);
-			Debug.Assert(null != Owner.PlayerQueue);
-			
-			Debug.Assert(!AlreadyRun);
-
-			if (null == m_rProjectile)
+			if (null == Projectile)
 			{
 				//boo... you need to have a projectile loaded
 				return true;
 			}
 
 			//activate the projectile
-			bool bActivated = Owner.PlayerQueue.ActivateObject(m_rProjectile);
+			bool bActivated = Owner.PlayerQueue.ActivateObject(Projectile);
 
 			//if it was activated (wont be activated if already active)
 			if (bActivated)
 			{
 				//get the start position for the projectile
-				Vector2 ProjectilePosition = StartOffset * m_rProjectile.Scale;
+				var ProjectilePosition = StartOffset * Projectile.Scale;
 				ProjectilePosition.Y = Owner.Position.Y + ProjectilePosition.Y;
 				ProjectilePosition.X = Owner.Position.X + (Owner.Flip ? -ProjectilePosition.X : ProjectilePosition.X);
 
 				//set the position
-				m_rProjectile.Position = ProjectilePosition;
-				m_rProjectile.Flip = Owner.Flip;
+				Projectile.Position = ProjectilePosition;
+				Projectile.Flip = Owner.Flip;
 
-				m_rProjectile.Velocity = (Velocity.GetDirection(Owner) / Owner.Scale) * m_rProjectile.Scale;
+				Projectile.Velocity = (Velocity.GetDirection(Owner) / Owner.Scale) * Projectile.Scale;
 
 				//run the animation container so all the bones will be in the correct position when it updates
 				//This way, any particle effects created will be in correct location.
-				m_rProjectile.AnimationContainer.SetAnimation(0, EPlayback.Loop);
-				m_rProjectile.AnimationContainer.Update(Owner.PlayerQueue.CharacterClock, 
-					m_rProjectile.Position, 
-					m_rProjectile.Flip, 
-					m_rProjectile.Scale, 
-					0.0f, 
+				Projectile.AnimationContainer.SetAnimation(0, EPlayback.Loop);
+				Projectile.AnimationContainer.Update(Owner.PlayerQueue.CharacterClock,
+					Projectile.Position,
+					Projectile.Flip,
+					0.0f,
 					true);
 			}
-
-			//goddamit, make sure that worked!!!
-			Debug.Assert(Owner.PlayerQueue.CheckListForObject(m_rProjectile, true));
-			Debug.Assert(!Owner.PlayerQueue.CheckListForObject(m_rProjectile, false));
 
 			return base.Execute();
 		}
 
-		public override bool Compare(BaseAction rInst)
-		{
-			ProjectileAction myAction = (ProjectileAction)rInst;
-
-			Debug.Assert(ActionType == myAction.ActionType);
-			Debug.Assert(Time == myAction.Time);
-			Debug.Assert(m_strProjectileFileName.File == myAction.m_strProjectileFileName.File);
-			//Debug.Assert(m_StartOffset.X == myAction.m_StartOffset.X);
-			//Debug.Assert(m_StartOffset.Y == myAction.m_StartOffset.Y);
-			Debug.Assert(Velocity.Compare(myAction.Velocity));
-
-			return true;
-		}
-
-		public bool SetFilename(string strBitmapFile, IGameDonkey rEngine, ContentManager content)
-		{
-			//grab the filename
-			m_strProjectileFileName.SetRelFilename(strBitmapFile);
-
-			//try to load the file into the particle effect
-			if ((null != rEngine) && !String.IsNullOrEmpty(strBitmapFile))
-			{
-				//load object into player queue!
-				m_rProjectile = Owner.PlayerQueue.LoadXmlObject(m_strProjectileFileName, rEngine, EObjectType.Projectile, 0, content);
-				if (null == m_rProjectile)
-				{
-					Debug.Assert(false);
-					return false;
-				}
-
-				m_rProjectile.Scale = Scale * Owner.Scale;
-			}
-
-			return true;
-		}
-
 		#endregion //Methods
-
-		#region File IO
-
-		/// <summary>
-		/// Read from an xml file
-		/// </summary>
-		/// <param name="rXMLNode">the xml node to read from</param>
-		/// <returns></returns>
-		public override bool ReadXml(XmlNode rXMLNode, IGameDonkey rEngine, SingleStateContainer stateContainer, ContentManager content)
-		{
-			#if DEBUG
-			if ("Item" != rXMLNode.Name)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-
-			//should have an attribute Type
-			XmlNamedNodeMap mapAttributes = rXMLNode.Attributes;
-			for (int i = 0; i < mapAttributes.Count; i++)
-			{
-				//will only have the name attribute
-				string strName = mapAttributes.Item(i).Name;
-				string strValue = mapAttributes.Item(i).Value;
-				if ("Type" == strName)
-				{
-					if (ActionType != StateActionFactory.XMLTypeToType(strValue))
-					{
-						Debug.Assert(false);
-						return false;
-					}
-				}
-				else
-				{
-					Debug.Assert(false);
-					return false;
-				}
-			}
-#endif
-
-			//temp variable to hold the filename
-			string strFileName = "";
-
-			//Read in child nodes
-			if (rXMLNode.HasChildNodes)
-			{
-				for (XmlNode childNode = rXMLNode.FirstChild;
-					null != childNode;
-					childNode = childNode.NextSibling)
-				{
-					//what is in this node?
-					string strName = childNode.Name;
-					string strValue = childNode.InnerText;
-
-					if (strName == "type")
-					{
-						Debug.Assert(strValue == ActionType.ToString());
-					}
-					else if (strName == "time")
-					{
-						Time = Convert.ToSingle(strValue);
-						if (0.0f > Time)
-						{
-							Debug.Assert(0.0f <= Time);
-							return false;
-						}
-					}
-					else if (strName == "filename")
-					{
-						strFileName = strValue;
-					}
-					else if (strName == "startOffset")
-					{
-						StartOffset = strValue.ToVector2();
-					}
-					else if (strName == "scale")
-					{
-						Scale = Convert.ToSingle(strValue);
-					}
-					else if (strName == "direction")
-					{
-						Velocity.ReadXml(childNode);
-					}
-					else if (strName == "velocity")
-					{
-						Velocity.Velocity = strValue.ToVector2();
-					}
-					else if (strName == "useObjectDirection")
-					{
-						bool dir = Convert.ToBoolean(strValue);
-						Velocity.DirectionType = (dir ? EDirectionType.Relative : EDirectionType.Absolute);
-					}
-					else
-					{
-						Debug.Assert(false);
-						return false;
-					}
-				}
-			}
-
-			//load the projectile object
-			return SetFilename(strFileName, rEngine, content);
-		}
-
-#if !WINDOWS_UWP
-		/// <summary>
-		/// overloaded in child classes to write out action specific stuff
-		/// </summary>
-		/// <param name="rXMLFile"></param>
-		protected override void WriteActionXml(XmlTextWriter rXMLFile)
-		{
-			rXMLFile.WriteStartElement("filename");
-			rXMLFile.WriteString(m_strProjectileFileName.GetRelFilename());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("startOffset");
-			rXMLFile.WriteString(StartOffset.StringFromVector());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("scale");
-			rXMLFile.WriteString(m_fScale.ToString());
-			rXMLFile.WriteEndElement();
-
-			rXMLFile.WriteStartElement("direction");
-			Velocity.WriteXml(rXMLFile);
-			rXMLFile.WriteEndElement();
-		}
-#endif
-
-		#endregion //File IO
 	}
 }

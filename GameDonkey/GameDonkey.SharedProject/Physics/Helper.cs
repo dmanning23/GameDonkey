@@ -1,3 +1,4 @@
+using MathNet.Numerics;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -5,12 +6,6 @@ namespace GameDonkeyLib
 {
 	public static class Helper
 	{
-		public static float RagdollGravity()
-		{
-			//gravity is positive in this game since y axis is flipped
-			return 9.8f * 150.0f; //add some number cuz shit is fucked up
-		}
-
 		public static float Gravity()
 		{
 			//gravity is positive in this game since y axis is flipped
@@ -41,31 +36,31 @@ namespace GameDonkeyLib
 			return fAngle;
 		}
 
-		public static float ClampAngle(float fAngle)
+		public static float ClampAngle(float angle)
 		{
 			//keep the angle between -180 and 180
-			while (-MathHelper.Pi > fAngle)
+			while (-MathHelper.Pi > angle)
 			{
-				fAngle += MathHelper.TwoPi;
+				angle += MathHelper.TwoPi;
 			}
 
-			while (MathHelper.Pi < fAngle)
+			while (MathHelper.Pi < angle)
 			{
-				fAngle -= MathHelper.TwoPi;
+				angle -= MathHelper.TwoPi;
 			}
 
-			return fAngle;
+			return angle;
 		}
 
-		public static int SecondsToFrames(float fSeconds)
+		public static int SecondsToFrames(float seconds)
 		{
-			fSeconds *= 60.0f;
-			return (int)(fSeconds + 0.5f);
+			seconds *= 60.0f;
+			return (int)(seconds + 0.5f);
 		}
 
-		public static float FramesToSeconds(int iFrames)
+		public static float FramesToSeconds(int frames)
 		{
-			return ((float)iFrames / 60.0f);
+			return ((float)frames / 60.0f);
 		}
 
 		public static float Length(float fX, float fY)
@@ -74,6 +69,11 @@ namespace GameDonkeyLib
 			myVect.X = fX;
 			myVect.Y = fY;
 			return myVect.Length();
+		}
+
+		public static bool AlmostEqual(this Vector2 myVector, Vector2 otherVector)
+		{
+			return myVector.X.AlmostEqual(otherVector.X) && myVector.Y.AlmostEqual(otherVector.Y);
 		}
 	}
 }

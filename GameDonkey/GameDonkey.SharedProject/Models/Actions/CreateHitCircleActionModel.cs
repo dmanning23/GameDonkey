@@ -1,14 +1,37 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MathNet.Numerics;
+using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Xml;
+using Vector2Extensions;
 
 namespace GameDonkeyLib
 {
 	public class CreateHitCircleActionModel : CreateAttackActionModel
 	{
-		public float radius = 0.0f;
-		public Vector2 startOffset = new Vector2(0.0f);
-		public Vector2 velocity = new Vector2(0.0f);
+		#region Properties
+
+		public override EActionType ActionType
+		{
+			get
+			{
+				return EActionType.CreateHitCircle;
+			}
+		}
+
+		public float Radius { get; private set; }
+		public Vector2 StartOffset { get; private set; }
+		public Vector2 Velocity { get; private set; }
+
+		#endregion //Properties
+
+		#region Methods
+
+		public CreateHitCircleActionModel()
+		{
+			StartOffset = Vector2.Zero;
+			Velocity = Vector2.Zero;
+		}
+
+		#endregion //Methods
 	}
 }

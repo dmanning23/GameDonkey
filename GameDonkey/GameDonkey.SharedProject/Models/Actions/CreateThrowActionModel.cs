@@ -1,12 +1,94 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MathNet.Numerics;
+using System;
+using System.Xml;
 
 namespace GameDonkeyLib
 {
 	public class CreateThrowActionModel : CreateAttackActionModel
 	{
-		public string throwMessage = "";
-		public float releaseTimeDelta = 0.0f;
+		#region Properties
+
+		public override EActionType ActionType
+		{
+			get
+			{
+				return EActionType.CreateThrow;
+			}
+		}
+
+		public string ThrowMessage { get; private set; }
+		public float ReleaseTimeDelta { get; private set; }
+
+		#endregion //Properties
+
+		#region Methods
+
+		public CreateThrowActionModel()
+		{
+		}
+
+		public override bool Compare(BaseActionModel inst)
+		{
+			if (!base.Compare(inst))
+			{
+				return false;
+			}
+
+			var stateAction = inst as CreateThrowActionModel;
+			if (null == stateAction)
+			{
+				return false;
+			}
+
+			if (ThrowMessage != stateAction.ThrowMessage)
+			{
+				return false;
+			}
+
+			if (!ReleaseTimeDelta.AlmostEqual(stateAction.ReleaseTimeDelta))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public override void ParseXmlNode(XmlNode node)
+		{
+			//what is in this node?
+			var name = node.Name;
+			var value = node.InnerText;
+
+			switch (name)
+			{
+				case "ThrowMessage":
+					{
+						ThrowMessage = value;
+					}
+					break;
+				case "ReleaseTimeDelta":
+					{
+						ReleaseTimeDelta = Convert.ToSingle(value);
+					}
+					break;
+				default:
+					{
+						base.ParseXmlNode(node);
+					}
+					break;
+			}
+		}
+
+#if !WINDOWS_UWP
+
+		protected override void WriteActionXml(XmlTextWriter xmlWriter)
+		{
+			xmlWriter.WriteAttributeString("ThrowMessage", ThrowMessage);
+			xmlWriter.WriteAttributeString("ReleaseTimeDelta", ReleaseTimeDelta.ToString());
+		}
+
+#endif
+
+		#endregion //Methods
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System;
 
 namespace GameDonkeyLib
 {
@@ -9,100 +9,109 @@ namespace GameDonkeyLib
 	{
 		#region Methods
 
+		public static BaseActionModel CreateActionModel(string actionType)
+		{
+			//convert to the enumeration
+			var stateActionType = (EActionType)Enum.Parse(typeof(EActionType), actionType);
+
+			switch (stateActionType)
+			{
+				case EActionType.AddGarment: { return new AddGarmentActionModel(); }
+				case EActionType.AddVelocity: { return new AddVelocityActionModel(); }
+				case EActionType.BlockState: { return new BlockingStateActionModel(); }
+				case EActionType.CameraShake: { return new CameraShakeActionModel(); }
+				case EActionType.ConstantAcceleration: { return new ConstantAccelerationActionModel(); }
+				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationActionModel(); }
+				case EActionType.CreateAttack: { return new CreateAttackActionModel(); }
+				case EActionType.CreateBlock: { return new CreateBlockActionModel(); }
+				case EActionType.CreateHitCircle: { return new CreateHitCircleActionModel(); }
+				case EActionType.CreateThrow: { return new CreateThrowActionModel(); }
+				case EActionType.Deactivate: { return new DeactivateActionModel(); }
+				case EActionType.Evade: { return new EvadeActionModel(); }
+				case EActionType.KillPlayer: { return new KillPlayerActionModel(); }
+				case EActionType.ParticleEffect: { return new ParticleEffectActionModel(); }
+				case EActionType.PlayAnimation: { return new PlayAnimationActionModel(); }
+				case EActionType.PlaySound: { return new PlaySoundActionModel(); }
+				case EActionType.Projectile: { return new ProjectileActionModel(); }
+				case EActionType.Rotate: { return new RotateActionModel(); }
+				case EActionType.SendStateMessage: { return new SendStateMessageActionModel(); }
+				case EActionType.SetVelocity: { return new SetVelocityActionModel(); }
+				case EActionType.TargetRotation: { return new TargetRotationActionModel(); }
+				case EActionType.Trail: { return new TrailActionModel(); }
+				default: { throw new Exception($"unknown actionType: {actionType}"); }
+			}
+		}
+
 		/// <summary>
 		/// factory method to create the correct action given an action type
 		/// </summary>
-		/// <param name="eType">the type of action to add</param>
-		/// <param name="rOwner">the owner of this action list</param>
+		/// <param name="actionType">the type of action to add</param>
+		/// <param name="owner">the owner of this action list</param>
 		/// <returns>IBaseAction: reference to the action that was created</returns>
-		public static BaseAction CreateStateAction(EActionType eType, BaseObject rOwner, IGameDonkey rEngine)
+		public static BaseAction CreateStateAction(BaseActionModel actionModel, BaseObject owner)
 		{
 			//get the correct action type
-			switch (eType)
+			switch (actionModel.ActionType)
 			{
-				case EActionType.AddGarment: { return new AddGarmentAction(rOwner); }
-				case EActionType.PlayAnimation: { return new PlayAnimationAction(rOwner); }
-				case EActionType.AddVelocity: { return new AddVelocityAction(rOwner); }
-				case EActionType.SetVelocity: { return new SetVelocityAction(rOwner); }
-				case EActionType.ConstantAcceleration: { return new ConstantAccelerationAction(rOwner); }
-				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationAction(rOwner); }
-				case EActionType.CreateBlock: { return new CreateBlockAction(rOwner); }
-				case EActionType.Evade: { return new EvadeAction(rOwner); }
-				case EActionType.Projectile: { return new ProjectileAction(rOwner); }
-				case EActionType.PlaySound: { return new PlaySoundAction(rOwner, rEngine); }
-				case EActionType.Trail: { return new TrailAction(rOwner); }
-				case EActionType.CreateAttack: { return new CreateAttackAction(rOwner); }
-				case EActionType.BlockState: { return new BlockingStateAction(rOwner); }
-				case EActionType.CreateHitCircle: { return new CreateHitCircleAction(rOwner); }
-				case EActionType.CreateThrow: { return new CreateThrowAction(rOwner); }
-				case EActionType.ParticleEffect: { return new ParticleEffectAction(rOwner, rEngine); }
-				case EActionType.SendStateMessage: { return new SendStateMessageAction(rOwner); }
-				case EActionType.Deactivate: { return new DeactivateAction(rOwner); }
-				case EActionType.Rotate: { return new RotateAction(rOwner); }
-				case EActionType.TargetRotation: { return new TargetRotationAction(rOwner); }
-				case EActionType.CameraShake: { return new CameraShakeAction(rOwner); }
-				case EActionType.KillPlayer: { return new KillPlayerAction(rOwner); }
-				default: { Debug.Assert(false); return null; }
+				case EActionType.AddGarment: { return new AddGarmentAction(owner, actionModel); }
+				case EActionType.AddVelocity: { return new AddVelocityAction(owner, actionModel); }
+				case EActionType.BlockState: { return new BlockingStateAction(owner, actionModel); }
+				case EActionType.CameraShake: { return new CameraShakeAction(owner, actionModel); }
+				case EActionType.ConstantAcceleration: { return new ConstantAccelerationAction(owner, actionModel); }
+				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationAction(owner, actionModel); }
+				case EActionType.CreateAttack: { return new CreateAttackAction(owner, actionModel); }
+				case EActionType.CreateBlock: { return new CreateBlockAction(owner, actionModel); }
+				case EActionType.CreateHitCircle: { return new CreateHitCircleAction(owner, actionModel); }
+				case EActionType.CreateThrow: { return new CreateThrowAction(owner, actionModel); }
+				case EActionType.Deactivate: { return new DeactivateAction(owner, actionModel); }
+				case EActionType.Evade: { return new EvadeAction(owner, actionModel); }
+				case EActionType.KillPlayer: { return new KillPlayerAction(owner, actionModel); }
+				case EActionType.ParticleEffect: { return new ParticleEffectAction(owner, actionModel); }
+				case EActionType.PlayAnimation: { return new PlayAnimationAction(owner, actionModel); }
+				case EActionType.PlaySound: { return new PlaySoundAction(owner, actionModel); }
+				case EActionType.Projectile: { return new ProjectileAction(owner, actionModel); }
+				case EActionType.Rotate: { return new RotateAction(owner, actionModel); }
+				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner, actionModel); }
+				case EActionType.SetVelocity: { return new SetVelocityAction(owner, actionModel); }
+				case EActionType.TargetRotation: { return new TargetRotationAction(owner, actionModel); }
+				case EActionType.Trail: { return new TrailAction(owner, actionModel); }
+				default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
 			}
 		}
 
-		public static EActionType XMLTypeToType(string strXMLType)
+		/// <summary>
+		/// factory method to create the correct action given an action type
+		/// </summary>
+		/// <param name="actionType">the type of action to add</param>
+		/// <param name="owner">the owner of this action list</param>
+		/// <returns>IBaseAction: reference to the action that was created</returns>
+		public static BaseAction CreateStateAction(EActionType actionType, BaseObject owner)
 		{
-			switch (strXMLType)
+			switch (actionType)
 			{
-				case "SPFSettings.AddVelocityActionXML": { return EActionType.AddVelocity; }
-				case "SPFSettings.ConstantAccelerationActionXML": { return EActionType.ConstantAcceleration; }
-				case "SPFSettings.ConstantDeccelerationActionXML": { return EActionType.ConstantDecceleration; }
-				case "SPFSettings.CreateAttackActionXML": { return EActionType.CreateAttack; }
-				case "SPFSettings.CreateBlockActionXML": { return EActionType.CreateBlock; }
-				case "SPFSettings.CreateThrowActionXML": { return EActionType.CreateThrow; }
-				case "SPFSettings.DeactivateActionXML": { return EActionType.Deactivate; }
-				case "SPFSettings.EvadeActionXML": { return EActionType.Evade; }
-				case "SPFSettings.ParticleEffectActionXML": { return EActionType.ParticleEffect; }
-				case "SPFSettings.PlayAnimationActionXML": { return EActionType.PlayAnimation; }
-				case "SPFSettings.PlaySoundActionXML": { return EActionType.PlaySound; }
-				case "SPFSettings.ProjectileActionXML": { return EActionType.Projectile; }
-				case "SPFSettings.SendStateMessageActionXML": { return EActionType.SendStateMessage; }
-				case "SPFSettings.SetVelocityActionXML": { return EActionType.SetVelocity; }
-				case "SPFSettings.TrailActionXML": { return EActionType.Trail; }
-				case "SPFSettings.AddGarmentActionXML": { return EActionType.AddGarment; }
-				case "SPFSettings.BlockingStateActionXML": { return EActionType.BlockState; }
-				case "SPFSettings.CreateHitCircleActionXML": { return EActionType.CreateHitCircle; }
-				case "SPFSettings.RotateActionXML": { return EActionType.Rotate; }
-				case "SPFSettings.TargetRotationActionXML": { return EActionType.TargetRotation; }
-				case "SPFSettings.CameraShakeActionXML": { return EActionType.CameraShake; }
-				case "SPFSettings.KillPlayerActionXML": { return EActionType.KillPlayer; }
-				default: { Debug.Assert(false); return EActionType.NumTypes; }
-			}
-		}
-
-		public static string TypeToXMLString(EActionType eType)
-		{
-			switch (eType)
-			{
-				case EActionType.AddVelocity: { return "SPFSettings.AddVelocityActionXML"; }
-				case EActionType.ConstantAcceleration: { return "SPFSettings.ConstantAccelerationActionXML"; }
-				case EActionType.ConstantDecceleration: { return "SPFSettings.ConstantDeccelerationActionXML"; }
-				case EActionType.CreateAttack: { return "SPFSettings.CreateAttackActionXML"; }
-				case EActionType.CreateBlock: { return "SPFSettings.CreateBlockActionXML"; }
-				case EActionType.CreateHitCircle: { return "SPFSettings.CreateHitCircleActionXML"; }
-				case EActionType.CreateThrow: { return "SPFSettings.CreateThrowActionXML"; }
-				case EActionType.Deactivate: { return "SPFSettings.DeactivateActionXML"; }
-				case EActionType.Evade: { return "SPFSettings.EvadeActionXML"; }
-				case EActionType.ParticleEffect: { return "SPFSettings.ParticleEffectActionXML"; }
-				case EActionType.PlayAnimation: { return "SPFSettings.PlayAnimationActionXML"; }
-				case EActionType.PlaySound: { return "SPFSettings.PlaySoundActionXML"; }
-				case EActionType.Projectile: { return "SPFSettings.ProjectileActionXML"; }
-				case EActionType.SendStateMessage: { return "SPFSettings.SendStateMessageActionXML"; }
-				case EActionType.SetVelocity: { return "SPFSettings.SetVelocityActionXML"; }
-				case EActionType.Trail: { return "SPFSettings.TrailActionXML"; }
-				case EActionType.AddGarment: { return "SPFSettings.AddGarmentActionXML"; }
-				case EActionType.BlockState: { return "SPFSettings.BlockingStateActionXML"; }
-				case EActionType.Rotate: { return "SPFSettings.RotateActionXML"; }
-				case EActionType.TargetRotation: { return "SPFSettings.TargetRotationActionXML"; }
-				case EActionType.CameraShake: { return "SPFSettings.CameraShakeActionXML"; }
-				case EActionType.KillPlayer: { return "SPFSettings.KillPlayerActionXML"; }
-				default: { Debug.Assert(false); return ""; }
+				case EActionType.AddGarment: { return new AddGarmentAction(owner); }
+				case EActionType.AddVelocity: { return new AddVelocityAction(owner); }
+				case EActionType.BlockState: { return new BlockingStateAction(owner); }
+				case EActionType.CameraShake: { return new CameraShakeAction(owner); }
+				case EActionType.ConstantAcceleration: { return new ConstantAccelerationAction(owner); }
+				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationAction(owner); }
+				case EActionType.CreateAttack: { return new CreateAttackAction(owner); }
+				case EActionType.CreateBlock: { return new CreateBlockAction(owner); }
+				case EActionType.CreateHitCircle: { return new CreateHitCircleAction(owner); }
+				case EActionType.CreateThrow: { return new CreateThrowAction(owner); }
+				case EActionType.Deactivate: { return new DeactivateAction(owner); }
+				case EActionType.Evade: { return new EvadeAction(owner); }
+				case EActionType.KillPlayer: { return new KillPlayerAction(owner); }
+				case EActionType.ParticleEffect: { return new ParticleEffectAction(owner); }
+				case EActionType.PlayAnimation: { return new PlayAnimationAction(owner); }
+				case EActionType.PlaySound: { return new PlaySoundAction(owner); }
+				case EActionType.Projectile: { return new ProjectileAction(owner); }
+				case EActionType.Rotate: { return new RotateAction(owner); }
+				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner); }
+				case EActionType.SetVelocity: { return new SetVelocityAction(owner); }
+				case EActionType.TargetRotation: { return new TargetRotationAction(owner); }
+				case EActionType.Trail: { return new TrailAction(owner); }
+				default: { throw new Exception($"unknown actionType: {actionType}"); }
 			}
 		}
 

@@ -1,6 +1,7 @@
 ﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
+using System;
 using System.Diagnostics;
 
 namespace GameDonkeyLib
@@ -8,7 +9,7 @@ namespace GameDonkeyLib
 	/// <summary>
 	/// class for managing projectiles and how they interact with the player character
 	/// </summary>
-	class ProjectileObject : BaseObject
+	public class ProjectileObject : BaseObject
 	{
 		#region Members
 
@@ -26,7 +27,7 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public ProjectileObject(HitPauseClock clock, BaseObject playerOwner, int queueId) : base(EObjectType.Projectile, clock, queueId)
+		public ProjectileObject(HitPauseClock clock, BaseObject playerOwner, int queueId) : base(GameObjectType.Projectile, clock, queueId)
 		{
 			PlayerOwner = playerOwner;
 		}
@@ -45,9 +46,7 @@ namespace GameDonkeyLib
 		/// <returns>The player who landed the attack.</returns>
 		public override BaseObject AttackLanded()
 		{
-			m_bAttackLanded = true;
-			Debug.Assert(null != PlayerOwner);
-			Debug.Assert((EObjectType.Human == PlayerOwner.Type) || (EObjectType.AI == PlayerOwner.Type));
+			_attackLanded = true;
 			PlayerOwner.AttackLanded();
 			return PlayerOwner;
 		}
@@ -55,10 +54,10 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Replace all the base object pointers in this dude to point to a replacement object
 		/// </summary>
-		/// <param name="myBot">the replacement dude</param>
-		public override void ReplaceOwner(PlayerObject myBot)
+		/// <param name="bot">the replacement dude</param>
+		public override void ReplaceOwner(PlayerObject bot)
 		{
-			PlayerOwner = myBot;
+			PlayerOwner = bot;
 		}
 
 		/// <summary>
@@ -69,16 +68,16 @@ namespace GameDonkeyLib
 		/// <param name="engine">the engine we are using to load</param>
 		/// <param name="messageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public override bool ParseXmlData(BaseObjectData childNode, IGameDonkey engine, int messageOffset, ContentManager content)
+		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content)
 		{
-			ProjectileObjectData data = childNode as ProjectileObjectData;
+			var data = model as ProjectileObjectModel;
 			if (null == data)
 			{
-				return false;
+				throw new Exception("must pass ProjectileObjectModel to ProjectileObject.ParseXmlData");
 			}
 
 			WeaponHits = data.Weaponhits;
-			return base.ParseXmlData(childNode, engine, messageOffset, content);
+			base.ParseXmlData(data, engine, messageOffset, content);
 		}
 
 		#endregion //Methods
