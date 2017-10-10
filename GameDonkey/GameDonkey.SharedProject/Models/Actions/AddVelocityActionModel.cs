@@ -19,20 +19,28 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public AddVelocityActionModel()
 		{
 			Direction = new DirectionActionModel();
 		}
 
+		public AddVelocityActionModel(AddVelocityAction action) : base(action)
+		{
+			Direction = new DirectionActionModel(action.Velocity);
+		}
+
+		public AddVelocityActionModel(BaseAction action) : this(action as AddVelocityAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
 		public override bool Compare(BaseActionModel inst)
 		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
 			var stateAction = inst as AddVelocityActionModel;
 			if (null == stateAction)
 			{
@@ -44,7 +52,7 @@ namespace GameDonkeyLib
 				return false;
 			}
 
-			return true;
+			return base.Compare(inst);
 		}
 
 		public override void ParseXmlNode(XmlNode node)

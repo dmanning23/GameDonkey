@@ -19,12 +19,27 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public SetVelocityActionModel()
 		{
 			Direction = new DirectionActionModel();
 		}
+
+		public SetVelocityActionModel(SetVelocityAction action) : base(action)
+		{
+			Direction = new DirectionActionModel(action.Velocity);
+		}
+
+		public SetVelocityActionModel(BaseAction action) : this(action as SetVelocityAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
+	
 
 		public override bool Compare(BaseActionModel inst)
 		{

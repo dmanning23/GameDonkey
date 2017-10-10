@@ -12,13 +12,13 @@ namespace GameDonkeyLib
 		/// The message to send to the state machine when this grab connects, to switch to the throw
 		/// </summary>
 		protected string _throwMessageName;
-		protected string ThrowMessageName
+		public string ThrowMessageName
 		{
 			get
 			{
 				return _throwMessageName;
 			}
-			set
+			private set
 			{
 				_throwMessageName = value;
 				ThrowMessage = Owner.States.GetMessageIndexFromText(ThrowMessageName);

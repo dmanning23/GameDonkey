@@ -22,20 +22,29 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public ConstantAccelerationActionModel()
 		{
 			Direction = new DirectionActionModel();
 		}
 
+		public ConstantAccelerationActionModel(ConstantAccelerationAction action) : base(action)
+		{
+			MaxVelocity = action.MaxVelocity;
+			Direction = new DirectionActionModel(action.Velocity);
+		}
+
+		public ConstantAccelerationActionModel(BaseAction action) : this(action as ConstantAccelerationAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
 		public override bool Compare(BaseActionModel inst)
 		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
 			var stateAction = inst as ConstantAccelerationActionModel;
 			if (null == stateAction)
 			{
@@ -52,7 +61,7 @@ namespace GameDonkeyLib
 				return false;
 			}
 
-			return true;
+			return base.Compare(inst);
 		}
 
 		public override void ParseXmlNode(XmlNode node)

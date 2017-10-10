@@ -22,7 +22,7 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public BlockingStateActionModel()
 		{
@@ -30,13 +30,27 @@ namespace GameDonkeyLib
 			TimeDelta = new TimedActionModel();
 		}
 
+		public BlockingStateActionModel(BlockingStateAction action) : base(action)
+		{
+			BoneName = action.BoneName;
+			TimeDelta = new TimedActionModel(action);
+			SuccessActions = new List<BaseActionModel>();
+			foreach (var stateAction in action.SuccessActions)
+			{
+				SuccessActions.Add(StateActionFactory.CreateActionModel(stateAction));
+			}
+		}
+
+		public BlockingStateActionModel(BaseAction action) : this(action as BlockingStateAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
 		public override bool Compare(BaseActionModel inst)
 		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
 			var stateAction = inst as BlockingStateActionModel;
 			if (null == stateAction)
 			{
@@ -66,7 +80,7 @@ namespace GameDonkeyLib
 				}
 			}
 
-			return true;
+			return base.Compare(inst);
 		}
 
 		public override void ParseXmlNode(XmlNode node)

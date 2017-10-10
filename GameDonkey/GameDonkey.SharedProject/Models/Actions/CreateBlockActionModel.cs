@@ -22,20 +22,28 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public CreateBlockActionModel()
 		{
 			TimeDelta = new TimedActionModel();
 		}
 
+		public CreateBlockActionModel(CreateBlockAction action) : base(action)
+		{
+			TimeDelta = new TimedActionModel(action);
+		}
+
+		public CreateBlockActionModel(BaseAction action) : this(action as CreateBlockAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
 		public override bool Compare(BaseActionModel inst)
 		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
 			var stateAction = inst as CreateBlockActionModel;
 			if (null == stateAction)
 			{
@@ -47,7 +55,7 @@ namespace GameDonkeyLib
 				return false;
 			}
 
-			return true;
+			return base.Compare(inst);
 		}
 
 		public override void ParseXmlNode(XmlNode node)

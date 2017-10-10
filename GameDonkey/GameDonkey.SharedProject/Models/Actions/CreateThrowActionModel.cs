@@ -21,11 +21,25 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public CreateThrowActionModel()
 		{
 		}
+
+		public CreateThrowActionModel(CreateThrowAction action) : base(action)
+		{
+			ThrowMessage = action.ThrowMessageName;
+			ReleaseTimeDelta = action.TimeDelta;
+		}
+
+		public CreateThrowActionModel(BaseAction action) : this(action as CreateThrowAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{
@@ -85,6 +99,7 @@ namespace GameDonkeyLib
 		{
 			xmlWriter.WriteAttributeString("ThrowMessage", ThrowMessage);
 			xmlWriter.WriteAttributeString("ReleaseTimeDelta", ReleaseTimeDelta.ToString());
+			base.WriteActionXml(xmlWriter);
 		}
 
 #endif

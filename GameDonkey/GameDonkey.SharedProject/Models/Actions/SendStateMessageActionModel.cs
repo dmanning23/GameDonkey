@@ -18,11 +18,24 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public SendStateMessageActionModel()
 		{
 		}
+
+		public SendStateMessageActionModel(SendStateMessageAction action) : base(action)
+		{
+			Message = action.MessageName;
+		}
+
+		public SendStateMessageActionModel(BaseAction action) : this(action as SendStateMessageAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{

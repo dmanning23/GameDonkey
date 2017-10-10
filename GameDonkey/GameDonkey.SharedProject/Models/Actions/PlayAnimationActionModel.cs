@@ -21,11 +21,25 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public PlayAnimationActionModel()
 		{
 		}
+
+		public PlayAnimationActionModel(PlayAnimationAction action) : base(action)
+		{
+			Animation = action.AnimationName;
+			Playback = action.PlaybackMode;
+		}
+
+		public PlayAnimationActionModel(BaseAction action) : this(action as PlayAnimationAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{

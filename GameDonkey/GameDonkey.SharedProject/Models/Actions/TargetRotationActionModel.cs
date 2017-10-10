@@ -20,13 +20,27 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public TargetRotationActionModel()
 		{
 			Direction = new DirectionActionModel();
 			TimeDelta = new TimedActionModel();
 		}
+
+		public TargetRotationActionModel(TargetRotationAction action) : base(action)
+		{
+			Direction = new DirectionActionModel(action.TargetRotation);
+			TimeDelta = new TimedActionModel(action);
+		}
+
+		public TargetRotationActionModel(BaseAction action) : this(action as TargetRotationAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{

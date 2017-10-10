@@ -21,7 +21,7 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public AddGarmentActionModel()
 		{
@@ -29,13 +29,22 @@ namespace GameDonkeyLib
 			TimeDelta = new TimedActionModel();
 		}
 
+		public AddGarmentActionModel(AddGarmentAction action) : base(action)
+		{
+			Filename = new Filename(action.Filename);
+			TimeDelta = new TimedActionModel(action);
+		}
+
+		public AddGarmentActionModel(BaseAction action) : this(action as AddGarmentAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
 		public override bool Compare(BaseActionModel inst)
 		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
 			var stateAction = inst as AddGarmentActionModel;
 			if (null == stateAction)
 			{
@@ -52,7 +61,7 @@ namespace GameDonkeyLib
 				return false;
 			}
 
-			return true;
+			return base.Compare(inst);
 		}
 
 		public override void ParseXmlNode(XmlNode node)

@@ -36,12 +36,12 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the vector to set another object to when this attack connects
 		/// </summary>
-		protected ActionDirection _direction { get; set; }
+		public ActionDirection ActionDirection { get; private set; }
 		public Vector2 Direction
 		{
 			get
 			{
-				return _direction.GetDirection(Owner);
+				return ActionDirection.GetDirection(Owner);
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace GameDonkeyLib
 		/// A list of actions that will be run if this attack connects (sound effects, particle effects, etc)
 		/// This list of actions is played whether the attack is blocked or not.
 		/// </summary>
-		private List<BaseAction> SuccessActions;
+		public List<BaseAction> SuccessActions { get; private set; }
 
 		/// <summary>
 		/// the amount of damage to deal when this attack connects
@@ -65,7 +65,7 @@ namespace GameDonkeyLib
 		public CreateAttackAction(BaseObject owner, EActionType actionType = EActionType.CreateAttack) :
 			base(owner, actionType)
 		{
-			_direction = new ActionDirection();
+			ActionDirection = new ActionDirection();
 			SuccessActions = new List<BaseAction>();
 		}
 
@@ -74,7 +74,7 @@ namespace GameDonkeyLib
 		{
 			BoneName = actionModel.BoneName;
 			Damage = actionModel.Damage;
-			_direction = new ActionDirection(actionModel.Direction);
+			ActionDirection = new ActionDirection(actionModel.Direction);
 			SuccessActions = new List<BaseAction>();
 			for (int i = 0; i < actionModel.SuccessActions.Count; i++)
 			{

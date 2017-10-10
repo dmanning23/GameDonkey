@@ -27,14 +27,31 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public ProjectileActionModel()
 		{
+			Filename = new Filename();
 			Direction = new DirectionActionModel();
 			StartOffset = Vector2.Zero;
 			Scale = 1f;
 		}
+
+		public ProjectileActionModel(ProjectileAction action) : base(action)
+		{
+			Filename = new Filename(action.FileName);
+			StartOffset = action.StartOffset;
+			Scale = action.Scale;
+			Direction = new DirectionActionModel(action.Velocity);
+		}
+
+		public ProjectileActionModel(BaseAction action) : this(action as ProjectileAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{

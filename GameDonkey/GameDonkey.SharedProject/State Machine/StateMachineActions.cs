@@ -1,12 +1,6 @@
-﻿using FilenameBuddy;
-using GameTimer;
-using Microsoft.Xna.Framework;
+﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
-using StateMachineBuddy;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Xml;
 
 namespace GameDonkeyLib
 {
@@ -15,13 +9,11 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class StateMachineActions
 	{
-		#region Members
+		#region Properties
 
-		private List<StateActions> Actions { get; set; }
+		public List<StateActions> Actions { get; private set; }
 
-		#endregion //Members
-
-		#region Methods
+		#endregion //Properties
 
 		#region Initialization
 
@@ -52,6 +44,8 @@ namespace GameDonkeyLib
 		}
 
 		#endregion //Initialization
+
+		#region Methods
 
 		/// <summary>
 		/// The states have changed, go through and set all the actions of the new state to "not run"

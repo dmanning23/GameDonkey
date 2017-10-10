@@ -13,11 +13,25 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public TimedActionModel()
 		{
 		}
+
+		public TimedActionModel(TimedAction action)
+		{
+			TimeDelta = action.TimeDelta;
+		}
+
+		public TimedActionModel(float timeDelta)
+		{
+			TimeDelta = timeDelta;
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public TimedActionModel(TimedActionModel inst)
 		{

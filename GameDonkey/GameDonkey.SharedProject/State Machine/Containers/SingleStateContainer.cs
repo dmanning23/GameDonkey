@@ -35,7 +35,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		public StateMachine StateMachine { get; private set; }
 
-		private StateMachineActions Actions;
+		public StateMachineActions Actions { get; private set; }
 
 		/// <summary>
 		/// Flag for whether or not we want to change bewteen state machines.

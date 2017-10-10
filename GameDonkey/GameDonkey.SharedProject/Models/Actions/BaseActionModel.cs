@@ -17,11 +17,20 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public BaseActionModel()
 		{
 		}
+
+		public BaseActionModel(BaseAction action)
+		{
+			Time = action.Time;
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public virtual bool Compare(BaseActionModel inst)
 		{

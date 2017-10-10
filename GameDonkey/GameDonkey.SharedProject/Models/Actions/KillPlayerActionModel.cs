@@ -16,11 +16,23 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public KillPlayerActionModel()
 		{
 		}
+
+		public KillPlayerActionModel(KillPlayerAction action) : base(action)
+		{
+		}
+
+		public KillPlayerActionModel(BaseAction action) : this(action as KillPlayerAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{

@@ -18,13 +18,26 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public EvadeActionModel()
 		{
 			TimeDelta = new TimedActionModel();
 		}
 
+		public EvadeActionModel(EvadeAction action) : base(action)
+		{
+			TimeDelta = new TimedActionModel(action);
+		}
+
+		public EvadeActionModel(BaseAction action) : this(action as EvadeAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+		
 		public override bool Compare(BaseActionModel inst)
 		{
 			if (!base.Compare(inst))

@@ -19,12 +19,25 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public PlaySoundActionModel()
 		{
 			Filename = new Filename();
 		}
+
+		public PlaySoundActionModel(PlaySoundAction action) : base(action)
+		{
+			Filename = new Filename(action.SoundCueName);
+		}
+
+		public PlaySoundActionModel(BaseAction action) : this(action as PlaySoundAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{

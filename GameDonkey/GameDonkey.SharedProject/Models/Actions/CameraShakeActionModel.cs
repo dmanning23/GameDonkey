@@ -21,20 +21,29 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public CameraShakeActionModel()
 		{
 			TimeDelta = new TimedActionModel();
 		}
 
+		public CameraShakeActionModel(CameraShakeAction action) : base(action)
+		{
+			ShakeAmount = action.ShakeAmount;
+			TimeDelta = new TimedActionModel(action.TimeDelta);
+		}
+
+		public CameraShakeActionModel(BaseAction action) : this(action as CameraShakeAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+		
 		public override bool Compare(BaseActionModel inst)
 		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
 			var stateAction = inst as CameraShakeActionModel;
 			if (null == stateAction)
 			{
@@ -51,7 +60,7 @@ namespace GameDonkeyLib
 				return false;
 			}
 
-			return true;
+			return base.Compare(inst);
 		}
 
 		public override void ParseXmlNode(XmlNode node)

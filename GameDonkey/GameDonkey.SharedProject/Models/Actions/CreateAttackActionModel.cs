@@ -26,7 +26,7 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public CreateAttackActionModel()
 		{
@@ -35,13 +35,29 @@ namespace GameDonkeyLib
 			SuccessActions = new List<BaseActionModel>();
 		}
 
+		public CreateAttackActionModel(CreateAttackAction action) : base(action)
+		{
+			BoneName = action.BoneName;
+			Damage = action.Damage;
+			TimeDelta = new TimedActionModel(action);
+			Direction = new DirectionActionModel(action.ActionDirection);
+			SuccessActions = new List<BaseActionModel>();
+			foreach (var stateAction in action.SuccessActions)
+			{
+				SuccessActions.Add(StateActionFactory.CreateActionModel(stateAction));
+			}
+		}
+
+		public CreateAttackActionModel(BaseAction action) : this(action as CreateAttackAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
 		public override bool Compare(BaseActionModel inst)
 		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
 			var stateAction = inst as CreateAttackActionModel;
 			if (null == stateAction)
 			{
@@ -81,7 +97,7 @@ namespace GameDonkeyLib
 				}
 			}
 
-			return true;
+			return base.Compare(inst);
 		}
 
 		public override void ParseXmlNode(XmlNode node)

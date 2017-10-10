@@ -27,7 +27,7 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public ParticleEffectActionModel()
 		{
@@ -35,6 +35,23 @@ namespace GameDonkeyLib
 			StartOffset = Vector2.Zero;
 			Emitter = new EmitterTemplate();
 		}
+
+		public ParticleEffectActionModel(ParticleEffectAction action) : base(action)
+		{
+			Bone = action.BoneName;
+			UseBoneRotation = action.UseBoneRotation;
+			StartOffset = action.StartOffset;
+			Direction = new DirectionActionModel(action.Velocity);
+			Emitter = new EmitterTemplate(action.Emitter);
+		}
+
+		public ParticleEffectActionModel(BaseAction action) : this(action as ParticleEffectAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{
@@ -125,7 +142,6 @@ namespace GameDonkeyLib
 			xmlWriter.WriteStartElement("Emitter");
 			Emitter.WriteXmlNodes(xmlWriter);
 			xmlWriter.WriteEndElement();
-
 		}
 
 #endif

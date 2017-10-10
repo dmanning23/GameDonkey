@@ -14,12 +14,24 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public SingleStateContainerModel(Filename filename) : base("SingleStateContainer", filename)
 		{
 			StatesActions = new List<StateActionsModel>();
 		}
+
+		public SingleStateContainerModel(Filename filename, SingleStateContainer stateContainer) : this(filename)
+		{
+			foreach (var stateActions in stateContainer.Actions.Actions)
+			{
+				StatesActions.Add(new StateActionsModel(stateActions));
+			}
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public bool Compare(SingleStateContainerModel inst)
 		{

@@ -17,17 +17,21 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public DirectionActionModel()
 		{
 		}
 
-		public DirectionActionModel(DirectionActionModel inst)
+		public DirectionActionModel(ActionDirection action)
 		{
-			Velocity = new Vector2(inst.Velocity.X, inst.Velocity.Y);
-			DirectionType = inst.DirectionType;
+			Velocity = action.Velocity;
+			DirectionType = action.DirectionType;
 		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public bool Compare(DirectionActionModel inst)
 		{

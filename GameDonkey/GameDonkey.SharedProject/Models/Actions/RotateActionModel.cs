@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics;
+using Microsoft.Xna.Framework;
 using System;
 using System.Xml;
 
@@ -20,11 +21,24 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public RotateActionModel()
 		{
 		}
+
+		public RotateActionModel(RotateAction action) : base(action)
+		{
+			Rotation = MathHelper.ToDegrees(action.Rotation);
+		}
+
+		public RotateActionModel(BaseAction action) : this(action as RotateAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{

@@ -38,7 +38,37 @@ namespace GameDonkeyLib
 				case EActionType.SetVelocity: { return new SetVelocityActionModel(); }
 				case EActionType.TargetRotation: { return new TargetRotationActionModel(); }
 				case EActionType.Trail: { return new TrailActionModel(); }
-				default: { throw new Exception($"unknown actionType: {actionType}"); }
+				default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
+			}
+		}
+
+		public static BaseActionModel CreateActionModel(BaseAction actionModel)
+		{
+			switch (actionModel.ActionType)
+			{
+				case EActionType.AddGarment: { return new AddGarmentActionModel(actionModel); }
+				case EActionType.AddVelocity: { return new AddVelocityActionModel(actionModel); }
+				case EActionType.BlockState: { return new BlockingStateActionModel(actionModel); }
+				case EActionType.CameraShake: { return new CameraShakeActionModel(actionModel); }
+				case EActionType.ConstantAcceleration: { return new ConstantAccelerationActionModel(actionModel); }
+				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationActionModel(actionModel); }
+				case EActionType.CreateAttack: { return new CreateAttackActionModel(actionModel); }
+				case EActionType.CreateBlock: { return new CreateBlockActionModel(actionModel); }
+				case EActionType.CreateHitCircle: { return new CreateHitCircleActionModel(actionModel); }
+				case EActionType.CreateThrow: { return new CreateThrowActionModel(actionModel); }
+				case EActionType.Deactivate: { return new DeactivateActionModel(actionModel); }
+				case EActionType.Evade: { return new EvadeActionModel(actionModel); }
+				case EActionType.KillPlayer: { return new KillPlayerActionModel(actionModel); }
+				case EActionType.ParticleEffect: { return new ParticleEffectActionModel(actionModel); }
+				case EActionType.PlayAnimation: { return new PlayAnimationActionModel(actionModel); }
+				case EActionType.PlaySound: { return new PlaySoundActionModel(actionModel); }
+				case EActionType.Projectile: { return new ProjectileActionModel(actionModel); }
+				case EActionType.Rotate: { return new RotateActionModel(actionModel); }
+				case EActionType.SendStateMessage: { return new SendStateMessageActionModel(actionModel); }
+				case EActionType.SetVelocity: { return new SetVelocityActionModel(actionModel); }
+				case EActionType.TargetRotation: { return new TargetRotationActionModel(actionModel); }
+				case EActionType.Trail: { return new TrailActionModel(actionModel); }
+				default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
 			}
 		}
 

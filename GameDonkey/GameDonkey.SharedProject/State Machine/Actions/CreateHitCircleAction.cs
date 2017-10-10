@@ -16,15 +16,23 @@ namespace GameDonkeyLib
 		/// </summary>
 		protected PhysicsCircle HitCircle;
 
+		public float Radius
+		{
+			get
+			{
+				return HitCircle.Radius;
+			}
+		}
+
 		/// <summary>
 		/// the offset from the attached bone location to start this circle at
 		/// </summary>
-		protected Vector2 StartOffset;
+		public Vector2 StartOffset { get; private set; }
 
 		/// <summary>
 		/// speed and direction of this circle
 		/// </summary>
-		protected Vector2 Velocity;
+		public Vector2 Velocity { get; private set; }
 
 		#endregion //Properties
 

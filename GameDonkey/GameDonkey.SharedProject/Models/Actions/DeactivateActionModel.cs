@@ -16,11 +16,23 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public DeactivateActionModel()
 		{
 		}
+
+		public DeactivateActionModel(DeactivateAction action) : base(action)
+		{
+		}
+
+		public DeactivateActionModel(BaseAction action) : this(action as DeactivateAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{

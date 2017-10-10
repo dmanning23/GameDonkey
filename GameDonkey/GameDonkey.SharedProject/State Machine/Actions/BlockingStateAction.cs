@@ -36,7 +36,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// A list of actions that will be run if this action blocks an attack (sound effects, particle effects, etc)
 		/// </summary>
-		protected List<BaseAction> SuccessActions;
+		public List<BaseAction> SuccessActions { get; private set; }
 
 		#endregion //Properties
 

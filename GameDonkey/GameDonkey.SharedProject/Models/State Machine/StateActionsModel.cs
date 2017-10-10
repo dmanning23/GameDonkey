@@ -14,13 +14,27 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public StateActionsModel()
 		{
 			StateActions = new List<BaseActionModel>();
 		}
 
+
+		public StateActionsModel(StateActions stateActions) : this()
+		{
+			foreach (var stateAction in stateActions.Actions)
+			{
+				StateActions.Add(StateActionFactory.CreateActionModel(stateAction));
+			}
+		}
+
+		#endregion //Initialization
+
+		#region Methods
+
+		
 		public bool Compare(StateActionsModel inst)
 		{
 			if (StateName != inst.StateName)

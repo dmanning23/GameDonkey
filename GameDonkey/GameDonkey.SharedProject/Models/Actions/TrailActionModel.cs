@@ -25,13 +25,29 @@ namespace GameDonkeyLib
 
 		#endregion //Properties
 
-		#region Methods
+		#region Initialization
 
 		public TrailActionModel()
 		{
 			Color = Color.White;
 			TimeDelta = new TimedActionModel();
 		}
+
+		public TrailActionModel(TrailAction action) : base(action)
+		{
+			Color = action.StartColor;
+			LifeDelta = action.TrailLifeDelta;
+			SpawnDelta = action.SpawnDelta;
+			TimeDelta = new TimedActionModel(action);
+		}
+
+		public TrailActionModel(BaseAction action) : this(action as TrailAction)
+		{
+		}
+
+		#endregion //Initialization
+
+		#region Methods
 
 		public override bool Compare(BaseActionModel inst)
 		{
