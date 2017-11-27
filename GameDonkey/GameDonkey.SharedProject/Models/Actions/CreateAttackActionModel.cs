@@ -18,11 +18,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public string BoneName { get; private set; }
-		public float Damage { get; private set; }
-		public TimedActionModel TimeDelta { get; private set; }
-		public DirectionActionModel Direction { get; private set; }
-		public List<BaseActionModel> SuccessActions { get; private set; }
+		public string BoneName { get; set; }
+		public float Damage { get; set; }
+		public TimedActionModel TimeDelta { get; set; }
+		public DirectionActionModel Direction { get; set; }
+		public List<BaseActionModel> SuccessActions { get; set; }
 
 		#endregion //Properties
 

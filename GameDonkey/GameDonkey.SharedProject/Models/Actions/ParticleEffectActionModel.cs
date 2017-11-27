@@ -19,11 +19,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public string Bone { get; private set; }
-		public bool UseBoneRotation { get; private set; }
-		public Vector2 StartOffset { get; private set; }
-		public DirectionActionModel Direction  { get; private set; }
-		public EmitterTemplate Emitter { get; private set; }
+		public string Bone { get; set; }
+		public bool UseBoneRotation { get; set; }
+		public Vector2 StartOffset { get; set; }
+		public DirectionActionModel Direction  { get; set; }
+		public EmitterTemplate Emitter { get; set; }
 
 		#endregion //Properties
 

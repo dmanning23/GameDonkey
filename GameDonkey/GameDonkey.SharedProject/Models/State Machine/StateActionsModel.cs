@@ -66,11 +66,24 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "Asset":
+					{
+						//skip these old ass nodes
+						XmlFileBuddy.ReadChildNodes(node, ParseXmlNode);
+					}
+					break;
+				case "Type":
+					{
+						//Really skip these old ass nodes
+					}
+					break;
+				case "name":
 				case "StateName":
 					{
 						StateName = value;
 					}
 					break;
+				case "actions":
 				case "Actions":
 					{
 						XmlFileBuddy.ReadChildNodes(node, ParseStateAction);
@@ -88,6 +101,13 @@ namespace GameDonkeyLib
 		{
 			//what is the type of action?
 			var actionType = node.Name;
+
+			if ("Item" == actionType)
+			{
+				//legacy shit
+				var typeNode = node.FirstChild;
+				actionType = typeNode.InnerXml;
+			}
 
 			//create the correct action
 			var stateAction = StateActionFactory.CreateActionModel(actionType);

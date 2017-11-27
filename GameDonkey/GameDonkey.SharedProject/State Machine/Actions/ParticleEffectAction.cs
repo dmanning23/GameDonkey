@@ -13,7 +13,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the particle effect template to use
 		/// </summary>
-		public EmitterTemplate Emitter { get; private set; }
+		public EmitterTemplate Emitter { get; set; }
 
 		/// <summary>
 		/// the name of the bone to emanate from
@@ -25,7 +25,7 @@ namespace GameDonkeyLib
 			set
 			{
 				_boneName = value;
-				if (String.IsNullOrEmpty(_boneName))
+				if (String.IsNullOrEmpty(_boneName) || null == Owner)
 				{
 					_bone = null;
 				}

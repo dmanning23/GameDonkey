@@ -17,7 +17,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public float Rotation { get; private set; }
+		public float Rotation { get; set; }
 
 		#endregion //Properties
 
@@ -29,7 +29,7 @@ namespace GameDonkeyLib
 
 		public RotateActionModel(RotateAction action) : base(action)
 		{
-			Rotation = MathHelper.ToDegrees(action.Rotation);
+			Rotation = action.Rotation;
 		}
 
 		public RotateActionModel(BaseAction action) : this(action as RotateAction)

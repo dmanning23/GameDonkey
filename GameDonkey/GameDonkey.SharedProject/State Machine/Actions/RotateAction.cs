@@ -24,7 +24,7 @@ namespace GameDonkeyLib
 		public RotateAction(BaseObject owner, RotateActionModel actionModel) :
 			base(owner, actionModel)
 		{
-			Rotation = MathHelper.ToRadians(actionModel.Rotation);
+			Rotation = actionModel.Rotation;
 		}
 
 		public RotateAction(BaseObject owner, BaseActionModel actionModel) :

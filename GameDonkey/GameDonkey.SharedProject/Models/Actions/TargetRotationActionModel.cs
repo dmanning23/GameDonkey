@@ -15,8 +15,8 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public DirectionActionModel Direction { get; private set; }
-		public TimedActionModel TimeDelta { get; private set; }
+		public DirectionActionModel Direction { get; set; }
+		public TimedActionModel TimeDelta { get; set; }
 
 		#endregion //Properties
 
@@ -98,8 +98,8 @@ namespace GameDonkeyLib
 
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
-			Direction.WriteXmlNodes(xmlWriter);
 			TimeDelta.WriteXmlNodes(xmlWriter);
+			Direction.WriteXmlNodes(xmlWriter);
 		}
 
 #endif

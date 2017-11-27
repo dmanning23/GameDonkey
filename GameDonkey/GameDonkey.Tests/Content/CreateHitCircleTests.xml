@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<Actions>
+				<CreateHitCircle Time="1" Radius="5" StartOffset="6 7" Velocity="8 9" BoneName="catpants" Damage="4" TimeDelta="2">
+					<Direction Velocity="2 3" DirectionType="NegController" />
+					<SuccessActions>
+						<Deactivate Time="3" />
+					</SuccessActions>
+				</CreateHitCircle>
+			</Actions>
+		</State>
+	</States>
+</SingleStateContainer>

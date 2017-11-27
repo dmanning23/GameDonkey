@@ -46,7 +46,13 @@ namespace GameDonkeyLib
 			DoneTime = 0f;
 		}
 
-		protected TimedAction(BaseObject owner, BaseActionModel actionModel, TimedActionModel timeActionModel) : this(owner, actionModel.ActionType)
+		protected TimedAction(BaseObject owner, BaseActionModel actionModel) : base(owner, actionModel)
+		{
+			TimeDelta = -1f;
+			DoneTime = 0f;
+		}
+
+		protected TimedAction(BaseObject owner, BaseActionModel actionModel, TimedActionModel timeActionModel) : this(owner, actionModel)
 		{
 			TimeDelta = timeActionModel.TimeDelta;
 		}

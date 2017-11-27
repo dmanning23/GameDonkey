@@ -35,12 +35,6 @@ namespace GameDonkeyLib
 		public SoundEffect DeathSound { get ; protected set; }
 
 		/// <summary>
-		/// the sound that gets played when a player blocks an attack
-		/// </summary>
-		/// <value>The block sound.</value>
-		public SoundEffect BlockSound { get; protected set; }
-
-		/// <summary>
 		/// texture to hold the portrait for the HUD
 		/// </summary>
 		public Texture2D Portrait { get; protected set; }
@@ -112,7 +106,6 @@ namespace GameDonkeyLib
 		{
 			//update all our clocks
 			EvasionTimer.Update(CharacterClock);
-			BlockTimer.Update(CharacterClock);
 			TrailTimer.Update(CharacterClock);
 
 			UpdateFallMessage();
@@ -183,7 +176,7 @@ namespace GameDonkeyLib
 		/// for projectile this will be direction player thumbstick was held when rpojectile was shot
 		/// </summary>
 		/// <returns></returns>
-		override public Vector2 Direction()
+		public override Vector2 Direction()
 		{
 			return ThumbstickDirection;
 		}
@@ -440,7 +433,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		private void RespondToAttack(Hit attack, IGameDonkey engine)
+		protected virtual void RespondToAttack(Hit attack, IGameDonkey engine)
 		{
 			//set this dude's last attacker to the other dude
 			LastAttacker = attack.Attacker.PlayerQueue;
@@ -540,7 +533,7 @@ namespace GameDonkeyLib
 			//TODO: does any grab logic need to be performed?
 		}
 
-		private void RespondToPushHit(Hit push)
+		protected virtual void RespondToPushHit(Hit push)
 		{
 			//push away from all push hits!
 			var deltaVect = push.Direction * push.Strength;
@@ -548,7 +541,7 @@ namespace GameDonkeyLib
 			Position += deltaVect;
 		}
 
-		private void RespondToWeaponHit(Hit weaponHit, IGameDonkey engine)
+		protected virtual void RespondToWeaponHit(Hit weaponHit, IGameDonkey engine)
 		{
 			//set this dude's last attacker to the other dude
 			LastAttacker = weaponHit.Attacker.PlayerQueue;
@@ -573,7 +566,7 @@ namespace GameDonkeyLib
 					Color.White);
 		}
 
-		private void RespondToBlockedAttack(Hit attack, IGameDonkey engine)
+		protected virtual void RespondToBlockedAttack(Hit attack, IGameDonkey engine)
 		{
 			//do a block!
 
@@ -589,12 +582,6 @@ namespace GameDonkeyLib
 				new Vector2((attack.Attacker.Flip ? -400.0f : 400.0f), 0.0f),
 				attack.Position,
 				new Color(0, 255, 255));
-
-			//play the block noise
-			if (null != BlockSound)
-			{
-				BlockSound.Play();
-			}
 		}
 
 		#endregion //Hit Response
@@ -634,11 +621,6 @@ namespace GameDonkeyLib
 			if (null != data.DeathSound) 
 			{
 				DeathSound = engine.LoadSound(data.DeathSound);
-			}
-
-			if (null != data.BlockSound) 
-			{
-				BlockSound = engine.LoadSound(data.BlockSound);
 			}
 
 			base.ParseXmlData(model, engine, messageOffset, content);

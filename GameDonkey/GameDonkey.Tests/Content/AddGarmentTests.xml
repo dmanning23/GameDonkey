@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<Actions>
+				<AddGarment Time="1" Filename="catpants.jpg" TimeDelta="2" />
+			</Actions>
+		</State>
+	</States>
+</SingleStateContainer>

@@ -18,10 +18,13 @@ namespace GameDonkeyLib
 			{
 				return _throwMessageName;
 			}
-			private set
+			set
 			{
 				_throwMessageName = value;
-				ThrowMessage = Owner.States.GetMessageIndexFromText(ThrowMessageName);
+				if (null != Owner)
+				{
+					ThrowMessage = Owner.States.GetMessageIndexFromText(ThrowMessageName);
+				}
 			}
 		}
 
@@ -33,7 +36,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the time delta after the grab connects to release the other characters
 		/// </summary>
-		protected float ReleaseTimeDelta { get; set; }
+		public float ReleaseTimeDelta { get; set; }
 
 		/// <summary>
 		/// the time to let go of the character, set at runtime when throw is activated

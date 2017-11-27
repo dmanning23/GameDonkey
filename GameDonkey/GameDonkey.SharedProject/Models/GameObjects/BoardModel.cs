@@ -56,6 +56,17 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "Asset":
+					{
+						//skip these old ass nodes
+						XmlFileBuddy.ReadChildNodes(node, ParseXmlNode);
+					}
+					break;
+				case "Type":
+					{
+						//Really skip these old ass nodes
+					}
+					break;
 				case "name":
 					{
 						Name = value;
@@ -91,11 +102,28 @@ namespace GameDonkeyLib
 						//BackgroundColor = Color.
 					}
 					break;
-				case "NumTiles":
+				case "backgroundR":
 					{
-						BoardHeight = Convert.ToInt32(value);
+						BackgroundColor = new Color(Convert.ToByte(value), BackgroundColor.G, BackgroundColor.B);
 					}
 					break;
+				case "backgroundG":
+					{
+						BackgroundColor = new Color(BackgroundColor.R, Convert.ToByte(value), BackgroundColor.B);
+					}
+					break;
+				case "backgroundB":
+					{
+						BackgroundColor = new Color(BackgroundColor.R, BackgroundColor.G, Convert.ToByte(value));
+					}
+					break;
+				case "numTiles":
+				case "NumTiles":
+					{
+						NumTiles = Convert.ToInt32(value);
+					}
+					break;
+				case "objects":
 				case "levelObjects":
 					{
 						XmlFileBuddy.ReadChildNodes(node, ReadLevelObjects);

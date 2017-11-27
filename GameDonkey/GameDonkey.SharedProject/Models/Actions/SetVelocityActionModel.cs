@@ -15,7 +15,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public DirectionActionModel Direction { get; private set; }
+		public DirectionActionModel Direction { get; set; }
 
 		#endregion //Properties
 

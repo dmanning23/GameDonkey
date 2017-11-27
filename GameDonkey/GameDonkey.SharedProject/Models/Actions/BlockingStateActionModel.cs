@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Xml;
-using XmlBuddy;
+﻿using System.Xml;
 
 namespace GameDonkeyLib
 {
-	public class BlockingStateActionModel : BaseActionModel, ITimedActionModel, IHasSuccessActionModel
+	public class BlockingStateActionModel : CreateBlockActionModel
 	{
 		#region Properties
 
@@ -16,9 +14,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public string BoneName { get; private set; }
-		public TimedActionModel TimeDelta { get; private set; }
-		public List<BaseActionModel> SuccessActions { get; private set; }
+		public string BoneName { get; set; }
 
 		#endregion //Properties
 
@@ -26,19 +22,11 @@ namespace GameDonkeyLib
 
 		public BlockingStateActionModel()
 		{
-			SuccessActions = new List<BaseActionModel>();
-			TimeDelta = new TimedActionModel();
 		}
 
 		public BlockingStateActionModel(BlockingStateAction action) : base(action)
 		{
 			BoneName = action.BoneName;
-			TimeDelta = new TimedActionModel(action);
-			SuccessActions = new List<BaseActionModel>();
-			foreach (var stateAction in action.SuccessActions)
-			{
-				SuccessActions.Add(StateActionFactory.CreateActionModel(stateAction));
-			}
 		}
 
 		public BlockingStateActionModel(BaseAction action) : this(action as BlockingStateAction)
@@ -62,24 +50,6 @@ namespace GameDonkeyLib
 				return false;
 			}
 
-			if (!TimeDelta.Compare(stateAction.TimeDelta))
-			{
-				return false;
-			}
-
-			if (SuccessActions.Count != stateAction.SuccessActions.Count)
-			{
-				return false;
-			}
-
-			for (int i = 0; i < SuccessActions.Count; i++)
-			{
-				if (!SuccessActions[i].Compare(stateAction.SuccessActions[i]))
-				{
-					return false;
-				}
-			}
-
 			return base.Compare(inst);
 		}
 
@@ -96,18 +66,6 @@ namespace GameDonkeyLib
 						BoneName = value;
 					}
 					break;
-				case "TimeDelta":
-					{
-						TimeDelta.ParseXmlNode(node);
-					}
-					break;
-				case "SuccessActions":
-					{
-						var stateActions = new StateActionsModel();
-						XmlFileBuddy.ReadChildNodes(node, stateActions.ParseStateAction);
-						SuccessActions = stateActions.StateActions;
-					}
-					break;
 				default:
 					{
 						base.ParseXmlNode(node);
@@ -121,14 +79,7 @@ namespace GameDonkeyLib
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("BoneName", BoneName);
-			TimeDelta.WriteXmlNodes(xmlWriter);
-
-			xmlWriter.WriteStartElement("SuccessActions");
-			foreach (var stateAction in SuccessActions)
-			{
-				stateAction.WriteXmlNodes(xmlWriter);
-			}
-			xmlWriter.WriteEndElement();
+			base.WriteActionXml(xmlWriter);
 		}
 
 #endif

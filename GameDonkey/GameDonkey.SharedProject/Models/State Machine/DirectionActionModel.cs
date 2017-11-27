@@ -12,8 +12,8 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
-		public Vector2 Velocity { get; private set; }
-		public EDirectionType DirectionType { get; private set; }
+		public Vector2 Velocity { get; set; }
+		public EDirectionType DirectionType { get; set; }
 
 		#endregion //Properties
 

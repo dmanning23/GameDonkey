@@ -41,6 +41,17 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "Asset":
+					{
+						//skip these old ass nodes
+						XmlFileBuddy.ReadChildNodes(node, ParseXmlNode);
+					}
+					break;
+				case "Type":
+					{
+						//Really skip these old ass nodes
+					}
+					break;
 				case "model":
 					{
 						Model.SetRelFilename(value);

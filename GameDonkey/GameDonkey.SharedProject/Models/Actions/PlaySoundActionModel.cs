@@ -15,7 +15,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public Filename Filename { get; private set; }
+		public Filename Filename { get; set; }
 
 		#endregion //Properties
 

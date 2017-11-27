@@ -28,22 +28,13 @@ namespace GameDonkeyLib
 
 		//debugging flags
 		protected KeyboardState _lastKeyboardState;
+
+		//debug shit
 		protected bool _renderJointSkeleton;
 		protected bool _renderPhysics;
-
-		/// <summary>
-		/// render the dots used to calculate camera position
-		/// </summary>
 		protected bool _drawCameraInfo;
 		protected bool _renderWorldBoundaries;
 		protected bool _renderSpawnPoints;
-
-		private TextureInfo _skyBox;
-		private TextureInfo _hudBackground;
-		private Color _skyColor;
-		private int _numTiles;
-
-		FontBuddy m_Font;
 
 		#endregion //Members
 
@@ -194,13 +185,12 @@ namespace GameDonkeyLib
 
 			DefaultParticles = new List<EmitterTemplate>();
 
-			m_Font = new FontBuddy();
 			CharacterClock = new GameClock();
 
 			//debugging stuff
 			_renderJointSkeleton = false;
-			_renderPhysics = false;
-			_drawCameraInfo = false;
+			_renderPhysics = true;
+			_drawCameraInfo = true;
 			_renderWorldBoundaries = false;
 			_renderSpawnPoints = false;
 
@@ -210,11 +200,6 @@ namespace GameDonkeyLib
 			Winner = null;
 			GameOver = false;
 			Tie = false;
-
-			_skyBox = null;
-			_hudBackground = null;
-			_skyColor = Color.White;
-			_numTiles = 1;
 		}
 
 		/// <summary>
@@ -353,7 +338,6 @@ namespace GameDonkeyLib
 			Renderer.Camera.Update(MasterClock);
 
 			//update all our clocks
-			float fOldTime = GameTimer.RemainingTime;
 			GameTimer.Update(MasterClock);
 			CharacterClock.Update(GameTimer);
 
@@ -398,25 +382,25 @@ namespace GameDonkeyLib
 			//debugging stuff!!!
 #if DEBUG
 			KeyboardState currentState = Keyboard.GetState();
-			if (currentState.IsKeyDown(Keys.Y) && m_LastKeyboardState.IsKeyUp(Keys.Y))
+			if (currentState.IsKeyDown(Keys.Y) && _lastKeyboardState.IsKeyUp(Keys.Y))
 			{
-				m_bRenderSpawnPoints = !m_bRenderSpawnPoints;
+				_renderSpawnPoints = !_renderSpawnPoints;
 			}
-			if (currentState.IsKeyDown(Keys.U) && m_LastKeyboardState.IsKeyUp(Keys.U))
+			if (currentState.IsKeyDown(Keys.U) && _lastKeyboardState.IsKeyUp(Keys.U))
 			{
-				m_bRenderJointSkeleton = !m_bRenderJointSkeleton;
+				_renderJointSkeleton = !_renderJointSkeleton;
 			}
-			if (currentState.IsKeyDown(Keys.I) && m_LastKeyboardState.IsKeyUp(Keys.I))
+			if (currentState.IsKeyDown(Keys.I) && _lastKeyboardState.IsKeyUp(Keys.I))
 			{
-				m_bRenderPhysics = !m_bRenderPhysics;
+				_renderPhysics = !_renderPhysics;
 			}
-			if (currentState.IsKeyDown(Keys.O) && m_LastKeyboardState.IsKeyUp(Keys.O))
+			if (currentState.IsKeyDown(Keys.O) && _lastKeyboardState.IsKeyUp(Keys.O))
 			{
-				m_bDrawCameraInfo = !m_bDrawCameraInfo;
+				_drawCameraInfo = !_drawCameraInfo;
 			}
-			if (currentState.IsKeyDown(Keys.P) && m_LastKeyboardState.IsKeyUp(Keys.P))
+			if (currentState.IsKeyDown(Keys.P) && _lastKeyboardState.IsKeyUp(Keys.P))
 			{
-				m_bRenderWorldBoundaries = !m_bRenderWorldBoundaries;
+				_renderWorldBoundaries = !_renderWorldBoundaries;
 			}
 #endif
 
@@ -661,7 +645,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		private void RespawnPlayer(PlayerQueue playerQueue)
+		public void RespawnPlayer(PlayerQueue playerQueue)
 		{
 			//respawn the player
 			int spawnIndex = _random.Next(SpawnPoints.Count);
@@ -754,57 +738,6 @@ namespace GameDonkeyLib
 
 		protected virtual void RenderBackground()
 		{
-			//Check if there is any background to draw
-			if (null == _skyBox)
-			{
-				return;
-			}
-
-			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, Resolution.TransformationMatrix());
-			if (_numTiles <= 1)
-			{
-				//just cover the whole screen with the skybox
-				Renderer.SpriteBatch.Draw(_skyBox.Texture, Resolution.ScreenArea, _skyColor);
-			}
-			else
-			{
-				//get the size of each tile
-				int tileSize = Resolution.ScreenArea.Width / _numTiles;
-
-				//get the number of rows 
-				int numRows = Resolution.ScreenArea.Height / tileSize;
-
-				//display all the whole tiles
-				Rectangle tileRect = new Rectangle();
-				tileRect.X = 0;
-				tileRect.Y = 0;
-				tileRect.Height = tileSize;
-				tileRect.Width = tileSize;
-				for (int i = 0; i < numRows; i++)
-				{
-					for (int j = 0; j < _numTiles; j++)
-					{
-						//draw one tile and move to the next column
-						Renderer.SpriteBatch.Draw(_skyBox.Texture, tileRect, _skyColor);
-						tileRect.X += tileSize;
-					}
-
-					//reset the column to 0 and move to the next row
-					tileRect.X = 0;
-					tileRect.Y += tileSize;
-				}
-
-				//Draw the bottom row, which is cut off :(
-				Rectangle sourceRect = _skyBox.Texture.Bounds;
-				tileRect.Height = Resolution.ScreenArea.Height - (tileSize * numRows);
-				sourceRect.Height = ((tileRect.Height * sourceRect.Height) / tileSize);
-				for (int i = 0; i < _numTiles; i++)
-				{
-					Renderer.SpriteBatch.Draw(_skyBox.Texture, tileRect, sourceRect, _skyColor);
-					tileRect.X += tileSize;
-				}
-			}
-			Renderer.SpriteBatchEnd();
 		}
 
 		protected void RenderLevel(Matrix cameraMatrix)
@@ -814,13 +747,13 @@ namespace GameDonkeyLib
 			LevelObjects.Render(Renderer, true);
 #if DEBUG
 			//draw the world boundaries in debug mode?
-			if (m_bRenderWorldBoundaries)
+			if (_renderWorldBoundaries)
 			{
 				Renderer.Primitive.Rectangle(WorldBoundaries, Color.Red);
 			}
 
 			//draw the spawn points for debug mode
-			if (m_bRenderSpawnPoints)
+			if (_renderSpawnPoints)
 			{
 				for (int i = 0; i < SpawnPoints.Count; i++)
 				{
@@ -836,140 +769,6 @@ namespace GameDonkeyLib
 		/// </summary>
 		protected virtual void RenderHUD()
 		{
-			//draw the hud
-			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, Resolution.TransformationMatrix());
-
-			RenderPlayerHUD();
-
-			RenderClockHUD();
-
-			//TEST
-
-			//CPlayerObject myDude = Players[1].Character as CPlayerObject;
-			//Write(myDude.ComboCounter.ToString(), new Vector2(200, 100));
-
-			Renderer.SpriteBatchEnd();
-		}
-
-		protected void RenderPlayerHUD()
-		{
-			float height;
-			int top;
-			int bottom;
-			float screenHeight;
-			float screenWidth;
-			float centerWidth;
-			GetScreenHUD(out height, out top, out bottom, out screenHeight, out screenWidth, out centerWidth);
-
-			//parse through the list of players
-			for (int i = 0; i < Players.Count; i++)
-			{
-				//Get the left point
-				var left = (int)(((screenWidth / (Players.Count + 1)) * (i + 1)) - (height * .5f));
-				left = Resolution.TitleSafeArea.X + left;
-
-				//draw that circle background 
-				var color = Players[i].Character.PlayerColor;
-				color.A = 200;
-
-				Debug.Assert(null != Renderer);
-				Debug.Assert(null != Renderer.SpriteBatch);
-				if (null != _hudBackground)
-				{
-					Renderer.SpriteBatch.Draw(
-						_hudBackground.Texture,
-						new Rectangle(left, top, (int)height, (int)height),
-						color);
-				}
-
-				//draw the players picture
-				PlayerObject player = Players[i].Character as PlayerObject;
-				if (null != player &&
-					null != player.Portrait)
-				{
-					Renderer.SpriteBatch.Draw(
-						player.Portrait,
-						new Rectangle(left, top, (int)height, (int)height),
-						Color.White);
-				}
-
-				int center = (int)(left + (height * .5f));
-
-				//draw the players health
-				int health = Players[i].Character.DisplayHealth();
-				if (CheckIfPlayerStockOut(Players[i]))
-				{
-					health = 0;
-				}
-
-				Color damageColor = Color.White;
-				string strDamage = health.ToString();
-				if (health < 25)
-				{
-					damageColor = Color.Red;
-				}
-				m_Font.Write(strDamage, new Vector2(center, bottom), Justify.Center, 1.15f, Color.DarkGray, Renderer.SpriteBatch, GameTimer);
-				float fCursor = m_Font.Write(strDamage, new Vector2(center, bottom), Justify.Center, 1.0f, damageColor, Renderer.SpriteBatch, GameTimer);
-
-				////draw the player's score
-
-				////get the number to draw, either points or stock
-				//int iPlayerScore = Players[i].Points;
-				//if (EGameMode.Stock == m_eGameMode)
-				//{
-				//    iPlayerScore = m_iStock - Players[i].Stock;
-				//}
-
-				//Color ScoreColor = Color.White;
-				//if (Players[i].ScoreTimer.RemainingTime() > 0.0f)
-				//{
-				//    ScoreColor = Color.Red;
-				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.8f, ScoreColor, Renderer.SpriteBatch);
-				//}
-				//else
-				//{
-				//    //just draw regular color
-				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.65f, Color.DarkGray, Renderer.SpriteBatch);
-				//    m_Font.Write(iPlayerScore.ToString(), new Vector2(iLeft + fHeight, iBottom), Justify.Right, 1.5f, ScoreColor, Renderer.SpriteBatch);
-				//}
-
-				//write the players name
-				float fPortraitCenter = (height * 0.5f) + left;
-				m_Font.Write(Players[i].PlayerName, new Vector2(fPortraitCenter, top), Justify.Center, 0.7f, Color.White, Renderer.SpriteBatch, GameTimer);
-			}
-		}
-
-		protected void RenderClockHUD()
-		{
-			float fHeight;
-			int iTop;
-			int iBottom;
-			float fScreenHeight;
-			float fScreenWidth;
-			float fCenterWidth;
-			GetScreenHUD(out fHeight, out iTop, out iBottom, out fScreenHeight, out fScreenWidth, out fCenterWidth);
-
-			//if the game mode is time, draw the clock
-			Debug.Assert(MaxTime > 0.0f);
-			if (GameTimer.RemainingTime <= (MaxTime - 5.0f))
-			{
-				//check if the round is about to end
-				Color TimeColor = new Color(0.35f, 0.35f, 0.35f, 0.1f);
-				if (GameTimer.RemainingTime <= 20.0f)
-				{
-					TimeColor = new Color(1.0f, 0.0f, 0.0f, .5f);
-				}
-
-				if (!GameOver && (GameTimer.RemainingTime > 0.0f))
-				{
-					Debug.Assert(null == Winner);
-
-					//draw the time
-					float fPositionY = iBottom + (fHeight * 0.4f);
-					string strTime = GameTimer.ToString();
-					m_Font.Write(strTime, new Vector2(fCenterWidth, fPositionY), Justify.Center, 2.0f, TimeColor, Renderer.SpriteBatch, GameTimer);
-				}
-			}
 		}
 
 		protected void RenderCharacterTrails(Matrix cameraMatrix)
@@ -983,22 +782,6 @@ namespace GameDonkeyLib
 			Renderer.SpriteBatchEnd();
 		}
 
-		public static void GetScreenHUD(out float height, out int top, out int bottom, out float screenHeight, out float screenWidth, out float centerWidth)
-		{
-			//um, the width and height of the player pictures
-			screenHeight = Resolution.TitleSafeArea.Height;
-			screenWidth = Resolution.TitleSafeArea.Width;
-
-			height = (screenHeight * 0.17f);
-			top = (int)(Resolution.TitleSafeArea.Top * 1.05f);
-			if (0 == top)
-			{
-				top = (int)(height * 0.1f);
-			}
-			bottom = top + (int)height;
-			centerWidth = (screenWidth * 0.5f) + Resolution.TitleSafeArea.Left;
-		}
-
 		protected void RenderCharacters(Matrix cameraMatrix)
 		{
 			//render all the players
@@ -1009,18 +792,18 @@ namespace GameDonkeyLib
 
 #if DEBUG
 				//draw debug info?
-				if (m_bRenderPhysics)
+				if (_renderPhysics)
 				{
-					for (int j = 0; j < Players[i].ActiveObjects.Count; j++)
+					for (int j = 0; j < Players[i].Active.Count; j++)
 					{
-						Players[i].ActiveObjects[j].AnimationContainer.Skeleton.RootBone.DrawPhysics(Renderer, true, Color.White);
+						Players[i].Active[j].AnimationContainer.Skeleton.RootBone.DrawPhysics(Renderer, true, Color.White);
 					}
 				}
 
 				//draw the push box for each character?
-				if (m_bRenderJointSkeleton)
+				if (_renderJointSkeleton)
 				{
-					for (int j = 0; j < Players[i].ActiveObjects.Count; j++)
+					for (int j = 0; j < Players[i].Active.Count; j++)
 					{
 						Renderer.Primitive.Circle(Players[i].Character.Position,
 												  (int)(Players[i].Character.MinDistance()),
@@ -1028,16 +811,10 @@ namespace GameDonkeyLib
 					}
 				}
 #endif
-
-				////draw bones, ragdoll
-				//Players[i].Character.AnimationContainer.Model.RenderJointSkeleton(Renderer);
-				//Players[i].Character.AnimationContainer.Model.RenderOutline(Renderer, 1.0f);
-				//Players[i].Character.AnimationContainer.Model.DrawSkeleton(Renderer, true, Color.White);
-				//Players[i].Character.AnimationContainer.Model.DrawJoints(Renderer, true, Color.Red);
 			}
 
 #if DEBUG
-			if (m_bDrawCameraInfo)
+			if (_drawCameraInfo)
 			{
 				for (int i = 0; i < Players.Count; i++)
 				{
@@ -1056,16 +833,6 @@ namespace GameDonkeyLib
 			Renderer.SpriteBatchBegin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, cameraMatrix);
 			ParticleEngine.Render(Renderer.SpriteBatch);
 			Renderer.SpriteBatchEnd();
-		}
-
-		/// <summary>
-		/// write some text on the screen for debugging purposes
-		/// </summary>
-		/// <param name="strText">the text to write</param>
-		/// <param name="position">where to write the text at</param>
-		public void Write(string text, Vector2 position)
-		{
-			m_Font.Write(text, position, Justify.Left, 1.0f, Color.White, Renderer.SpriteBatch, GameTimer);
 		}
 
 		#endregion //Draw
@@ -1101,18 +868,14 @@ namespace GameDonkeyLib
 
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
 			Renderer.LoadContent(graphics);
-
-			//load up our sprite font
-			Debug.Assert(null != m_Font);
-			m_Font.LoadContent(Renderer.Content, "Fonts\\ArialBlack24");
 		}
 
 		public virtual PlayerQueue LoadPlayer(Color color,
 			Filename characterFile,
 			PlayerIndex index,
 			string playerName,
-			GameObjectType playerType = GameObjectType.Human,
-			ContentManager content = null)
+			GameObjectType playerType,
+			ContentManager content)
 		{
 			//create and load a player
 			PlayerQueue player = CreatePlayerQueue(color, Players.Count);
@@ -1138,154 +901,46 @@ namespace GameDonkeyLib
 			return player;
 		}
 
-		public bool LoadBoard(Filename boardFile, ContentManager content)
+		public void LoadBoard(Filename boardFile, ContentManager content)
 		{
-			if (null == content)
-			{
-				//Open the file.
-#if ANDROID
-				using (var stream = Game.Activity.Assets.Open(strBoardFile.File))
-#else
-				using (var stream = File.Open(boardFile.File, FileMode.Open, FileAccess.Read))
-#endif
-				{
-					XmlDocument xmlDoc = new XmlDocument();
-					xmlDoc.Load(stream);
-					return LoadBoardXmlDocument(xmlDoc, content);
-				}
-			}
-			else
-			{
-				var xmlContent = content.Load<string>(boardFile.GetRelPathFileNoExt());
-				XmlDocument xmlDoc = new XmlDocument();
-				xmlDoc.LoadXml(xmlContent);
-				return LoadBoardXmlDocument(xmlDoc, content);
-			}
-		}
-
-		protected bool LoadBoardXmlDocument(XmlDocument xmlDoc, ContentManager content)
-		{
-			XmlNode rootNode = xmlDoc.DocumentElement;
-
-#if DEBUG
-			//make sure it is actually an xml node
-			if (rootNode.NodeType != XmlNodeType.Element)
-			{
-				//should be an xml node!!!
-				Debug.Assert(false);
-				return false;
-			}
-
-			//eat up the name of that xml node
-			string strElementName = rootNode.Name;
-			if (("XnaContent" != strElementName) || !rootNode.HasChildNodes)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-#endif
-			//next node is "<Asset Type="SPFSettings.LevelObjectXML">"
-			XmlNode AssetNode = rootNode.FirstChild;
-#if DEBUG
-			if (null == AssetNode)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-			if (!AssetNode.HasChildNodes)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-			if ("Asset" != AssetNode.Name)
-			{
-				Debug.Assert(false);
-				return false;
-			}
-#endif
+			var boardModel = new BoardModel(boardFile);
+			boardModel.ReadXmlFile(content);
 
 			//First node is the name
-			XmlNode childNode = AssetNode.FirstChild;
-			LevelObjects.PlayerName = childNode.InnerXml;
+			LevelObjects.PlayerName = boardModel.Name;
 
-			//next node is the height
-			childNode = childNode.NextSibling;
-			int iHeight = Convert.ToInt32(childNode.InnerXml);
+			//grab the world boundaries
+			WorldBoundaries = new Rectangle((-1 * (boardModel.BoardWidth / 2)),
+				(-1 * (boardModel.BoardHeight / 2)),
+				boardModel.BoardWidth,
+				boardModel.BoardHeight);
 
-			//nect node is the width
-			childNode = childNode.NextSibling;
-			int iWidth = Convert.ToInt32(childNode.InnerXml);
+			////next node is the music
+			//Music = boardModel.Music;
+			//if (!string.IsNullOrEmpty(Music))
+			//{
+			//	//TODO: load the music
+			//}
 
-			////grab the world boundaries
-			WorldBoundaries = new Rectangle((-1 * (iWidth / 2)),
-				(-1 * (iHeight / 2)),
-				iWidth,
-				iHeight);
-
-			//next node is the music
-			childNode = childNode.NextSibling;
-			Music = childNode.InnerXml;
-			if (!string.IsNullOrEmpty(Music))
-			{
-				//TODO: load the music
-			}
-
-			//next node is the death noise
-			childNode = childNode.NextSibling;
-			DeathNoise = childNode.InnerXml;
-			if (!string.IsNullOrEmpty(DeathNoise))
-			{
-				//TODO: load the death noise
-			}
-
-			//next node is the background tile
-			childNode = childNode.NextSibling;
-			if (!string.IsNullOrEmpty(childNode.InnerXml))
-			{
-				Filename backgroundFile = new Filename(childNode.InnerXml);
-				_skyBox = Renderer.LoadImage(backgroundFile);
-			}
-
-			//load the color!
-			childNode = childNode.NextSibling;
-			_skyColor.R = Convert.ToByte(childNode.InnerXml);
-			childNode = childNode.NextSibling;
-			_skyColor.G = Convert.ToByte(childNode.InnerXml);
-			childNode = childNode.NextSibling;
-			_skyColor.B = Convert.ToByte(childNode.InnerXml);
-			_skyColor.A = 255;
-
-			//next node is the number of tiles
-			childNode = childNode.NextSibling;
-			_numTiles = Convert.ToInt32(childNode.InnerXml);
+			////next node is the death noise
+			//DeathNoise = boardModel.DeathNoise;
+			//if (!string.IsNullOrEmpty(DeathNoise))
+			//{
+			//	//TODO: load the death noise
+			//}
 
 			//load all the level objects
-			childNode = childNode.NextSibling;
-			for (XmlNode levelNode = childNode.FirstChild;
-				null != levelNode;
-				levelNode = levelNode.NextSibling)
+			foreach (var levelObjectFile in boardModel.LevelObjects)
 			{
 				//load the level object
-				Filename myLevelObjectFile = new Filename(levelNode.InnerXml);
-				BaseObject rLevelObject = LevelObjects.LoadXmlObject(myLevelObjectFile, this, GameObjectType.Level, 0, content);
-				if (null == rLevelObject)
-				{
-					Debug.Assert(false);
-				}
+				var levelObject = LevelObjects.LoadXmlObject(levelObjectFile, this, GameObjectType.Level, 0, content);
 			}
 
 			//spawn points
-			childNode = childNode.NextSibling;
-			for (XmlNode spawnNode = childNode.FirstChild;
-				null != spawnNode;
-				spawnNode = spawnNode.NextSibling)
+			foreach (var spawnPointModel in boardModel.SpawnPoints)
 			{
-				Debug.Assert(spawnNode.HasChildNodes);
-				XmlNode locationNode = spawnNode.FirstChild;
-				SpawnPoints.Add(Vector2Ext.ToVector2(locationNode.InnerXml));
+				SpawnPoints.Add(spawnPointModel.Location);
 			}
-
-			return true;
 		}
 
 		#endregion //File IO

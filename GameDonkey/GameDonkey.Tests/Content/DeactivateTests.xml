@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<Actions>
+				<Deactivate Time="1" />
+			</Actions>
+		</State>
+	</States>
+</SingleStateContainer>

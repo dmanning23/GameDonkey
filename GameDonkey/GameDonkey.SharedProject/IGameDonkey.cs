@@ -1,11 +1,13 @@
 ﻿using FilenameBuddy;
 using GameTimer;
+using HadoukInput;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ParticleBuddy;
 using RenderBuddy;
+using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
@@ -22,6 +24,8 @@ namespace GameDonkeyLib
 		Rectangle WorldBoundaries { get; set; }
 
 		ContentManager ContentManager { get; }
+
+		List<PlayerQueue> Players { get; }
 
 		#endregion //Properties
 
@@ -40,6 +44,8 @@ namespace GameDonkeyLib
 		/// <param name="device"></param>
 		void LoadXmlContent(GraphicsDevice device);
 
+		void SetClockSpeed(float speed);
+
 		void Start();
 
 		/// <summary>
@@ -56,6 +62,8 @@ namespace GameDonkeyLib
 		/// <returns>bool: true if the game is over, false if it isn't</returns>
 		bool Update(TimeUpdater time);
 
+		void UpdateInput(InputState input);
+
 		void AddCameraShake(float shakeAmount);
 
 		void PlayParticleEffect(
@@ -65,6 +73,21 @@ namespace GameDonkeyLib
 			Color color);
 
 		SoundEffect LoadSound(Filename cueName);
+
+		PlayerQueue LoadPlayer(Color color,
+		   Filename characterFile,
+		   PlayerIndex index,
+		   string playerName,
+		   GameObjectType playerType = GameObjectType.Human,
+		   ContentManager content = null);
+
+		void LoadBoard(Filename boardFile, ContentManager content);
+
+		void RespawnPlayer(PlayerQueue playerQueue);
+
+		void UpdateCameraMatrix();
+
+		void Render();
 
 		#endregion //Methods
 	}

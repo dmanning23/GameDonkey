@@ -17,7 +17,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		public Garment Garment { get; private set; }
 
-		public Filename Filename { get; private set; }
+		public Filename Filename { get; set; }
 
 		#endregion //Properties
 

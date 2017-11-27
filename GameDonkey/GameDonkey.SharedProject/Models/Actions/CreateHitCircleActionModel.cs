@@ -18,9 +18,9 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public float Radius { get; private set; }
-		public Vector2 StartOffset { get; private set; }
-		public Vector2 Velocity { get; private set; }
+		public float Radius { get; set; }
+		public Vector2 StartOffset { get; set; }
+		public Vector2 Velocity { get; set; }
 
 		#endregion //Properties
 

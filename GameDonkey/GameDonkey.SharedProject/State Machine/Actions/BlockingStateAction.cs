@@ -8,7 +8,7 @@ namespace GameDonkeyLib
 	/// This is the state action used for when a state is a "blocking" state
 	/// It runs until the state is exited.
 	/// </summary>
-	public class BlockingStateAction : TimedAction
+	public class BlockingStateAction : CreateBlockAction
 	{
 		#region Properties
 
@@ -33,11 +33,6 @@ namespace GameDonkeyLib
 		/// </summary>
 		public Bone AttackBone { get; private set; }
 
-		/// <summary>
-		/// A list of actions that will be run if this action blocks an attack (sound effects, particle effects, etc)
-		/// </summary>
-		public List<BaseAction> SuccessActions { get; private set; }
-
 		#endregion //Properties
 
 		#region Initialization
@@ -45,18 +40,13 @@ namespace GameDonkeyLib
 		public BlockingStateAction(BaseObject owner) :
 			base(owner, EActionType.BlockState)
 		{
-			SuccessActions = new List<BaseAction>();
+			
 		}
 
 		public BlockingStateAction(BaseObject owner, BlockingStateActionModel actionModel) :
-			base(owner, actionModel, actionModel.TimeDelta)
+			base(owner, actionModel)
 		{
-			SuccessActions = new List<BaseAction>();
-			for (int i = 0; i < actionModel.SuccessActions.Count; i++)
-			{
-				var stateAction = StateActionFactory.CreateStateAction(actionModel.SuccessActions[i], owner);
-				SuccessActions.Add(stateAction);
-			}
+			BoneName = actionModel.BoneName;
 		}
 
 		public BlockingStateAction(BaseObject owner, BaseActionModel actionModel) :
@@ -66,10 +56,7 @@ namespace GameDonkeyLib
 
 		public override void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
 		{
-			for (int i = 0; i < SuccessActions.Count; i++)
-			{
-				SuccessActions[i].LoadContent(engine, stateContainer, content);
-			}
+			base.LoadContent(engine, stateContainer, content);
 		}
 
 		#endregion //Initialization
@@ -82,22 +69,19 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
+			return base.Execute();
+		}
+
+		protected override void AddBlock()
+		{
 			//Check if the bone is set, if not try and find it...
 			if (null == AttackBone)
 			{
 				AttackBone = Owner.Physics.FindWeapon(BoneName);
 			}
 
-			//reset teh success actions
-			for (int i = 0; i < SuccessActions.Count; i++)
-			{
-				SuccessActions[i].AlreadyRun = false;
-			}
-
 			//add this action to the list of block states
 			Owner.CurrentBlocks.AddAction(this, Owner.CharacterClock);
-
-			return base.Execute();
 		}
 
 		public virtual PhysicsCircle GetCircle()
@@ -120,24 +104,6 @@ namespace GameDonkeyLib
 
 			//get the circle
 			return image.Circles[0]; ;
-		}
-
-		/// <summary>
-		/// execute all the success actions after this attack lands
-		/// </summary>
-		/// <returns>bool: whether or not a state change occurred while this dude was running</returns>
-		public bool ExecuteSuccessActions()
-		{
-			var result = false;
-			for (int i = 0; i < SuccessActions.Count; i++)
-			{
-				if (SuccessActions[i].Execute())
-				{
-					result = true;
-				}
-			}
-
-			return result;
 		}
 
 		#endregion //Methods

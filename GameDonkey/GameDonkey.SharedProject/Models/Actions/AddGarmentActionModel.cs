@@ -16,8 +16,8 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public Filename Filename { get; private set; }
-		public TimedActionModel TimeDelta { get; private set; }
+		public Filename Filename { get; set; }
+		public TimedActionModel TimeDelta { get; set; }
 
 		#endregion //Properties
 

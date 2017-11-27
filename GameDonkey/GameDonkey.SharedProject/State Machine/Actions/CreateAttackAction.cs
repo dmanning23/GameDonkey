@@ -36,7 +36,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the vector to set another object to when this attack connects
 		/// </summary>
-		public ActionDirection ActionDirection { get; private set; }
+		public ActionDirection ActionDirection { get; set; }
 		public Vector2 Direction
 		{
 			get

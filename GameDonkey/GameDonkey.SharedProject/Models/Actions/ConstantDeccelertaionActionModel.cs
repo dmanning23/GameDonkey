@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics;
 using System;
 using System.Xml;
+using Vector2Extensions;
 using XmlBuddy;
 
 namespace GameDonkeyLib
@@ -17,8 +18,8 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public float MinYVelocity { get; private set; }
-		public DirectionActionModel Direction { get; private set; }
+		public float MinYVelocity { get; set; }
+		public DirectionActionModel Direction { get; set; }
 
 		#endregion //Properties
 
@@ -72,9 +73,16 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "minYVelocity":
 				case "MinYVelocity":
 					{
 						MinYVelocity = Convert.ToSingle(value);
+					}
+					break;
+				case "direction":
+					{
+						Direction.Velocity = value.ToVector2();
+						Direction.DirectionType = EDirectionType.Relative;
 					}
 					break;
 				case "Direction":

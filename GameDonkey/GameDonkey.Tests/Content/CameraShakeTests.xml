@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<Actions>
+				<CameraShake Time="1" ShakeAmount="3" TimeDelta="2" />
+			</Actions>
+		</State>
+	</States>
+</SingleStateContainer>

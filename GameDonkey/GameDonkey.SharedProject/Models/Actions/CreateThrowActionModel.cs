@@ -16,8 +16,8 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public string ThrowMessage { get; private set; }
-		public float ReleaseTimeDelta { get; private set; }
+		public string ThrowMessage { get; set; }
+		public float ReleaseTimeDelta { get; set; }
 
 		#endregion //Properties
 
@@ -30,7 +30,7 @@ namespace GameDonkeyLib
 		public CreateThrowActionModel(CreateThrowAction action) : base(action)
 		{
 			ThrowMessage = action.ThrowMessageName;
-			ReleaseTimeDelta = action.TimeDelta;
+			ReleaseTimeDelta = action.ReleaseTimeDelta;
 		}
 
 		public CreateThrowActionModel(BaseAction action) : this(action as CreateThrowAction)

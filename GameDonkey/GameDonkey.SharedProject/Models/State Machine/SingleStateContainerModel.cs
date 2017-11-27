@@ -10,7 +10,7 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
-		public List<StateActionsModel> StatesActions = new List<StateActionsModel>();
+		public List<StateActionsModel> StatesActions { get; private set; }
 
 		#endregion //Properties
 
@@ -59,6 +59,18 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "Asset":
+					{
+						//skip these old ass nodes
+						XmlFileBuddy.ReadChildNodes(node, ParseXmlNode);
+					}
+					break;
+				case "Type":
+					{
+						//Really skip these old ass nodes
+					}
+					break;
+				case "states":
 				case "States":
 					{
 						XmlFileBuddy.ReadChildNodes(node, ParseStates);

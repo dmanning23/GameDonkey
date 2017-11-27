@@ -17,8 +17,8 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public float MaxVelocity { get; private set; }
-		public DirectionActionModel Direction { get; private set; }
+		public float MaxVelocity { get; set; }
+		public DirectionActionModel Direction { get; set; }
 
 		#endregion //Properties
 

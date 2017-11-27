@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using ParticleBuddy;
 using RenderBuddy;
 using StateMachineBuddy;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -106,7 +107,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// If this timer is running, it means attacks don't hit
 		/// </summary>
-		protected CountdownTimer BlockTimer { get; set; }
+		protected CreateBlockAction BlockAction { get; set; }
 
 		/// <summary>
 		/// evasion timer, if this is running it means there are no push collsions
@@ -134,8 +135,10 @@ namespace GameDonkeyLib
 			set
 			{
 				_trailAction = value;
-				Debug.Assert(null != _trailAction);
-				TrailTimer.Start(_trailAction.SpawnDelta);
+				if (null != _trailAction)
+				{
+					TrailTimer.Start(_trailAction.SpawnDelta);
+				}
 			}
 		}
 
@@ -289,12 +292,17 @@ namespace GameDonkeyLib
 		/// <param name="clock">a character clock.</param>
 		public BaseObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId)
 		{
+			if (null == clock)
+			{
+				throw new ArgumentNullException("clock");
+			}
+
 			OjectType = gameObjectType;
 			Id = BaseObject._idCounter++;
 			QueueId = queueId;
 			CurrentAttacks = new List<CreateAttackAction>();
 			CurrentBlocks = new TimedActionList<BlockingStateAction>();
-			BlockTimer = new CountdownTimer();
+			BlockAction = null;
 			EvasionTimer = new CountdownTimer();
 			CurrentThrow = null;
 			AnimationContainer = new AnimationContainer();
@@ -318,7 +326,6 @@ namespace GameDonkeyLib
 			AccelAction = null;
 			DeccelAction = null;
 
-			Debug.Assert(null != clock);
 			CharacterClock = clock;
 
 			LastAttacker = null;
@@ -341,7 +348,7 @@ namespace GameDonkeyLib
 			QueueId = human.QueueId;
 			CurrentAttacks = human.CurrentAttacks;
 			CurrentBlocks = human.CurrentBlocks;
-			BlockTimer = human.BlockTimer;
+			BlockAction = human.BlockAction;
 			EvasionTimer = human.EvasionTimer;
 			CurrentThrow = human.CurrentThrow;
 			AnimationContainer = human.AnimationContainer;
@@ -395,7 +402,7 @@ namespace GameDonkeyLib
 		{
 			CurrentAttacks.Clear();
 			CurrentBlocks.Reset();
-			BlockTimer.Stop();
+			BlockAction = null;
 			EvasionTimer.Stop();
 			CurrentThrow = null;
 			States.Reset();
@@ -422,7 +429,6 @@ namespace GameDonkeyLib
 		{
 			//update all our clocks
 			EvasionTimer.Update(CharacterClock);
-			BlockTimer.Update(CharacterClock);
 			TrailTimer.Update(CharacterClock);
 
 			//update the garments of this dude
@@ -529,7 +535,8 @@ namespace GameDonkeyLib
 		/// <param name="blockAction">the block action to perform</param>
 		public void AddBlock(CreateBlockAction blockAction)
 		{
-			BlockTimer.Start(blockAction.TimeDelta);
+			BlockAction = blockAction;
+			blockAction.SetDoneTime(CharacterClock);
 		}
 
 		/// <summary>
@@ -537,7 +544,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		protected void ClearBlocks()
 		{
-			BlockTimer.Stop();
+			BlockAction = null;
 		}
 
 		/// <summary>
@@ -866,7 +873,7 @@ namespace GameDonkeyLib
 
 		public virtual bool IsBlocking()
 		{
-			return (BlockTimer.RemainingTime > 0.0f);
+			return (null != BlockAction && (CharacterClock.CurrentTime <= BlockAction.DoneTime));
 		}
 
 		/// <summary>

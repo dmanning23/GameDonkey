@@ -11,8 +11,17 @@ namespace GameDonkeyLib
 
 		public static BaseActionModel CreateActionModel(string actionType)
 		{
-			//convert to the enumeration
-			var stateActionType = (EActionType)Enum.Parse(typeof(EActionType), actionType);
+			EActionType stateActionType;
+			if ("Type" == actionType)
+			{
+				//legacy shit
+				stateActionType = XMLTypeToType(actionType);
+			}
+			else
+			{
+				//convert to the enumeration
+				stateActionType = (EActionType)Enum.Parse(typeof(EActionType), actionType);
+			}
 
 			switch (stateActionType)
 			{
@@ -39,6 +48,36 @@ namespace GameDonkeyLib
 				case EActionType.TargetRotation: { return new TargetRotationActionModel(); }
 				case EActionType.Trail: { return new TrailActionModel(); }
 				default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
+			}
+		}
+
+		private static EActionType XMLTypeToType(string actionType)
+		{
+			switch (actionType)
+			{
+				case "SPFSettings.AddVelocityActionXML": { return EActionType.AddVelocity; }
+				case "SPFSettings.ConstantAccelerationActionXML": { return EActionType.ConstantAcceleration; }
+				case "SPFSettings.ConstantDeccelerationActionXML": { return EActionType.ConstantDecceleration; }
+				case "SPFSettings.CreateAttackActionXML": { return EActionType.CreateAttack; }
+				case "SPFSettings.CreateBlockActionXML": { return EActionType.CreateBlock; }
+				case "SPFSettings.CreateThrowActionXML": { return EActionType.CreateThrow; }
+				case "SPFSettings.DeactivateActionXML": { return EActionType.Deactivate; }
+				case "SPFSettings.EvadeActionXML": { return EActionType.Evade; }
+				case "SPFSettings.ParticleEffectActionXML": { return EActionType.ParticleEffect; }
+				case "SPFSettings.PlayAnimationActionXML": { return EActionType.PlayAnimation; }
+				case "SPFSettings.PlaySoundActionXML": { return EActionType.PlaySound; }
+				case "SPFSettings.ProjectileActionXML": { return EActionType.Projectile; }
+				case "SPFSettings.SendStateMessageActionXML": { return EActionType.SendStateMessage; }
+				case "SPFSettings.SetVelocityActionXML": { return EActionType.SetVelocity; }
+				case "SPFSettings.TrailActionXML": { return EActionType.Trail; }
+				case "SPFSettings.AddGarmentActionXML": { return EActionType.AddGarment; }
+				case "SPFSettings.BlockingStateActionXML": { return EActionType.BlockState; }
+				case "SPFSettings.CreateHitCircleActionXML": { return EActionType.CreateHitCircle; }
+				case "SPFSettings.RotateActionXML": { return EActionType.Rotate; }
+				case "SPFSettings.TargetRotationActionXML": { return EActionType.TargetRotation; }
+				case "SPFSettings.CameraShakeActionXML": { return EActionType.CameraShake; }
+				case "SPFSettings.KillPlayerActionXML": { return EActionType.KillPlayer; }
+				default: { throw new Exception($"unknown actionType: {actionType.ToString()}"); }
 			}
 		}
 

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<Actions>
+				<SetVelocity Time="1">
+					<Direction Velocity="2 3" DirectionType="NegController" />
+				</SetVelocity>
+			</Actions>
+		</State>
+	</States>
+</SingleStateContainer>

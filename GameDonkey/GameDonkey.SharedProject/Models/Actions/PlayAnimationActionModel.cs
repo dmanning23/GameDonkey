@@ -16,8 +16,8 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public string Animation { get; private set; }
-		public EPlayback Playback { get; private set; }
+		public string Animation { get; set; }
+		public EPlayback Playback { get; set; }
 
 		#endregion //Properties
 
@@ -73,14 +73,14 @@ namespace GameDonkeyLib
 			var name = node.Name;
 			var value = node.InnerText;
 
-			switch (name)
+			switch (name.ToLower())
 			{
-				case "Animation":
+				case "animation":
 					{
 						Animation = value;
 					}
 					break;
-				case "Playback":
+				case "playback":
 					{
 						Playback = (EPlayback)Enum.Parse(typeof(EPlayback), value);
 					}

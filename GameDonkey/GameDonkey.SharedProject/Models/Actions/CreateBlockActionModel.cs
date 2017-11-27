@@ -6,7 +6,7 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	public class CreateBlockActionModel : BaseActionModel, ITimedActionModel
+	public class CreateBlockActionModel : BaseActionModel, ITimedActionModel, IHasSuccessActionModel
 	{
 		#region Properties
 
@@ -18,7 +18,8 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public TimedActionModel TimeDelta { get; private set; }
+		public TimedActionModel TimeDelta { get; set; }
+		public List<BaseActionModel> SuccessActions { get; private set; }
 
 		#endregion //Properties
 
@@ -26,12 +27,18 @@ namespace GameDonkeyLib
 
 		public CreateBlockActionModel()
 		{
+			SuccessActions = new List<BaseActionModel>();
 			TimeDelta = new TimedActionModel();
 		}
 
 		public CreateBlockActionModel(CreateBlockAction action) : base(action)
 		{
 			TimeDelta = new TimedActionModel(action);
+			SuccessActions = new List<BaseActionModel>();
+			foreach (var stateAction in action.SuccessActions)
+			{
+				SuccessActions.Add(StateActionFactory.CreateActionModel(stateAction));
+			}
 		}
 
 		public CreateBlockActionModel(BaseAction action) : this(action as CreateBlockAction)
@@ -55,6 +62,19 @@ namespace GameDonkeyLib
 				return false;
 			}
 
+			if (SuccessActions.Count != stateAction.SuccessActions.Count)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < SuccessActions.Count; i++)
+			{
+				if (!SuccessActions[i].Compare(stateAction.SuccessActions[i]))
+				{
+					return false;
+				}
+			}
+
 			return base.Compare(inst);
 		}
 
@@ -71,6 +91,13 @@ namespace GameDonkeyLib
 						TimeDelta.ParseXmlNode(node);
 					}
 					break;
+				case "SuccessActions":
+					{
+						var stateActions = new StateActionsModel();
+						XmlFileBuddy.ReadChildNodes(node, stateActions.ParseStateAction);
+						SuccessActions = stateActions.StateActions;
+					}
+					break;
 				default:
 					{
 						base.ParseXmlNode(node);
@@ -84,6 +111,13 @@ namespace GameDonkeyLib
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			TimeDelta.WriteXmlNodes(xmlWriter);
+
+			xmlWriter.WriteStartElement("SuccessActions");
+			foreach (var stateAction in SuccessActions)
+			{
+				stateAction.WriteXmlNodes(xmlWriter);
+			}
+			xmlWriter.WriteEndElement();
 		}
 
 #endif

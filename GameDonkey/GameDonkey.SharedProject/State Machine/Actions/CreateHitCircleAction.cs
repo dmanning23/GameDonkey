@@ -22,17 +22,21 @@ namespace GameDonkeyLib
 			{
 				return HitCircle.Radius;
 			}
+			set
+			{
+				HitCircle.Radius = value;
+			}
 		}
 
 		/// <summary>
 		/// the offset from the attached bone location to start this circle at
 		/// </summary>
-		public Vector2 StartOffset { get; private set; }
+		public Vector2 StartOffset { get; set; }
 
 		/// <summary>
 		/// speed and direction of this circle
 		/// </summary>
-		public Vector2 Velocity { get; private set; }
+		public Vector2 Velocity { get; set; }
 
 		#endregion //Properties
 

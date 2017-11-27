@@ -17,7 +17,10 @@ namespace GameDonkeyLib
 			set
 			{
 				_animationName = value;
-				AnimationIndex = Owner.AnimationContainer.FindAnimationIndex(_animationName);
+				if (null != Owner)
+				{
+					AnimationIndex = Owner.AnimationContainer.FindAnimationIndex(_animationName);
+				}
 			}
 		}
 
