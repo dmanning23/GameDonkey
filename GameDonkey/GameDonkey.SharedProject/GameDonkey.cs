@@ -189,8 +189,8 @@ namespace GameDonkeyLib
 
 			//debugging stuff
 			_renderJointSkeleton = false;
-			_renderPhysics = true;
-			_drawCameraInfo = true;
+			_renderPhysics = false;
+			_drawCameraInfo = false;
 			_renderWorldBoundaries = false;
 			_renderSpawnPoints = false;
 
@@ -830,7 +830,7 @@ namespace GameDonkeyLib
 		protected void RenderParticleEffects(Matrix cameraMatrix)
 		{
 			//draw all the particles, start another spritebatch for the particles
-			Renderer.SpriteBatchBegin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, cameraMatrix);
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix, SpriteSortMode.Deferred);
 			ParticleEngine.Render(Renderer.SpriteBatch);
 			Renderer.SpriteBatchEnd();
 		}
