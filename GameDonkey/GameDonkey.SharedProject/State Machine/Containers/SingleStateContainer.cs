@@ -190,6 +190,15 @@ namespace GameDonkeyLib
 			machine.LoadXml(file, content);
 		}
 
+		public void WriteXml()
+		{
+			//create the model
+			var model = new SingleStateContainerModel(StateContainerFilename, this);
+
+			//write the model out
+			model.WriteXml();
+		}
+
 		#endregion //Initialization
 
 		#region Methods

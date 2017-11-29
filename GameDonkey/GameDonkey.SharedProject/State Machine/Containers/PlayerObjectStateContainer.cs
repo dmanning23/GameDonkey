@@ -367,6 +367,14 @@ namespace GameDonkeyLib
 			return Name;
 		}
 
+		public void WriteXml()
+		{
+			foreach (var container in StateContainers)
+			{
+				container.WriteXml();
+			}
+		}
+
 		#endregion //Methods
 	}
 }

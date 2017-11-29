@@ -27,6 +27,8 @@ namespace GameDonkeyLib
 
 		List<PlayerQueue> Players { get; }
 
+		List<Vector2> SpawnPoints { get; set; }
+
 		#endregion //Properties
 
 		#region Methods
@@ -34,15 +36,9 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// load all the content in a windows forms game
 		/// </summary>
-		void LoadContent();
+		void LoadContent(GraphicsDevice device);
 
 		void UnloadContent();
-
-		/// <summary>
-		/// load all the content in an xna game
-		/// </summary>
-		/// <param name="device"></param>
-		void LoadXmlContent(GraphicsDevice device);
 
 		void SetClockSpeed(float speed);
 

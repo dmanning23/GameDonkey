@@ -128,7 +128,9 @@ namespace GameDonkeyLib
 		StateActions GetStateActions(int stateIndex);
 
 		void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content);
-		
+
+		void WriteXml();
+
 		#endregion //Methods
 	}
 }

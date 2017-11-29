@@ -615,7 +615,8 @@ namespace GameDonkeyLib
 			//load player object stuff
 			if ((null != data.Portrait) && (null != engine.Renderer.Content))
 			{
-				Portrait = engine.Renderer.Content.Load<Texture2D>(data.Portrait.GetRelPathFileNoExt());
+				var textureInfo = engine.Renderer.LoadImage(data.Portrait);
+				Portrait = textureInfo.Texture;
 			}
 
 			if (null != data.DeathSound) 

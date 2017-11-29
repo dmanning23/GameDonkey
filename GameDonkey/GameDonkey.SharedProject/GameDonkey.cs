@@ -80,7 +80,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the spawn points for characters
 		/// </summary>
-		protected List<Vector2> SpawnPoints { get; set; }
+		public List<Vector2> SpawnPoints { get; set; }
 
 		/// <summary>
 		/// The max amount of time a game will last
@@ -216,9 +216,12 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// load all the content in a windows forms game
 		/// </summary>
-		public virtual void LoadContent()
+		public virtual void LoadContent(GraphicsDevice graphics)
 		{
 			WorldBoundaries = new Rectangle();
+
+			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
+			Renderer.LoadContent(graphics);
 		}
 
 		public virtual void UnloadContent()
@@ -229,6 +232,8 @@ namespace GameDonkeyLib
 
 		public void Start()
 		{
+			_lastKeyboardState = Keyboard.GetState();
+
 			MasterClock.Start();
 			MasterClock.TimeDelta = 0.0f;
 
@@ -855,19 +860,6 @@ namespace GameDonkeyLib
 			emitter.ReadXmlFile();
 			emitter.LoadContent(ContentManager);
 			DefaultParticles.Add(emitter);
-		}
-
-		/// <summary>
-		/// load all the content in an xna game
-		/// </summary>
-		public virtual void LoadXmlContent(GraphicsDevice graphics)
-		{
-			_lastKeyboardState = Keyboard.GetState();
-
-			//load all the content
-
-			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
-			Renderer.LoadContent(graphics);
 		}
 
 		public virtual PlayerQueue LoadPlayer(Color color,
