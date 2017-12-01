@@ -157,9 +157,11 @@ namespace GameDonkeyLib
 
 		public void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content)
 		{
-			//Get that first node
-			var stateContainerModel = baseObjectmodel.States.FirstOrDefault();
+			LoadContent(baseObjectmodel.States.FirstOrDefault(), owner, engine, messageOffset, content);
+		}
 
+		public void LoadContent(StateContainerModel stateContainerModel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content)
+		{
 			//grab the filenames
 			StateContainerFilename = new Filename(stateContainerModel.StateActionsFilename);
 			StateMachineFilename = new Filename(stateContainerModel.StateMachineFilename);

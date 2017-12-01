@@ -230,7 +230,7 @@ namespace GameDonkeyLib
 			ContentManager = null;
 		}
 
-		public void Start()
+		public virtual void Start()
 		{
 			_lastKeyboardState = Keyboard.GetState();
 
@@ -724,7 +724,7 @@ namespace GameDonkeyLib
 			return Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
 		}
 
-		public void Render()
+		public virtual void Render()
 		{
 			Matrix cameraMatrix = GetCameraMatrix();
 

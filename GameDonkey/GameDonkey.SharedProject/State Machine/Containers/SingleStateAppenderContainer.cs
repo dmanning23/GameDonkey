@@ -11,7 +11,6 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class SingleStateAppenderContainer : SingleStateContainer
 	{
-
 		public SingleStateAppenderContainer(StateMachine stateMachine, string containerName) :
 			base(stateMachine, containerName)
 		{
