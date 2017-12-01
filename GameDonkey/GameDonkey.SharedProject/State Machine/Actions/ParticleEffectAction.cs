@@ -91,6 +91,7 @@ namespace GameDonkeyLib
 		public override void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
 		{
 			ParticleEngine = engine.ParticleEngine;
+			Emitter.LoadContent(engine.Renderer);
 		}
 
 		#endregion //Initialization

@@ -846,19 +846,19 @@ namespace GameDonkeyLib
 
 		#region File IO
 
-		private void AddParticleEffect(ContentManager content, string file)
+		private void AddParticleEffect(ContentManager xmlContent, IRenderer renderer, string file)
 		{
 			var emitter = new EmitterTemplate(new Filename(file));
-			emitter.ReadXmlFile(content);
-			emitter.LoadContent(content);
+			emitter.ReadXmlFile(xmlContent);
+			emitter.LoadContent(renderer);
 			DefaultParticles.Add(emitter);
 		}
 
-		private void AddParticleEffect(string file)
+		private void AddParticleEffect(IRenderer renderer, string file)
 		{
 			var emitter = new EmitterTemplate(new Filename(file));
 			emitter.ReadXmlFile();
-			emitter.LoadContent(ContentManager);
+			emitter.LoadContent(renderer);
 			DefaultParticles.Add(emitter);
 		}
 
