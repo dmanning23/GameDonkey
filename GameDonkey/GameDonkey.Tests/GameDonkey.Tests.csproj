@@ -91,7 +91,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ParticleBuddy.DesktopGL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.1.0.23\lib\net451\ParticleBuddy.DesktopGL.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.1.0.24\lib\net451\ParticleBuddy.DesktopGL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PrimitiveBuddy.DesktopGL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

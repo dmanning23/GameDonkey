@@ -102,7 +102,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ParticleBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.1.0.23\lib\Xamarin.iOS10\ParticleBuddy.iOS.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.1.0.24\lib\Xamarin.iOS10\ParticleBuddy.iOS.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PrimitiveBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

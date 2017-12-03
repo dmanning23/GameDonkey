@@ -45,14 +45,14 @@ namespace GameDonkeyLib
 			var name = node.Name;
 			var value = node.InnerText;
 
-			switch (name)
+			switch (name.ToLower())
 			{
-				case "Velocity":
+				case "velocity":
 					{
 						Velocity = value.ToVector2();
 					}
 					break;
-				case "DirectionType":
+				case "directiontype":
 					{
 						DirectionType = (EDirectionType)Enum.Parse(typeof(EDirectionType), value);
 					}

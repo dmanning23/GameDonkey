@@ -76,11 +76,13 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "targetRotation":
 				case "Direction":
 					{
 						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
 					}
 					break;
+				case "timeDelta":
 				case "TimeDelta":
 					{
 						TimeDelta.ParseXmlNode(node);

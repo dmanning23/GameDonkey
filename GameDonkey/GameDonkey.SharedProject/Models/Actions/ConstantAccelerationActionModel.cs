@@ -72,11 +72,13 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "maxVelocity":
 				case "MaxVelocity":
 					{
 						MaxVelocity = Convert.ToSingle(value);
 					}
 					break;
+				case "direction":
 				case "Direction":
 					{
 						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);

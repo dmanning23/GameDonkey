@@ -97,6 +97,7 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "bone":
 				case "Bone":
 					{
 						Bone = value;
@@ -112,11 +113,13 @@ namespace GameDonkeyLib
 						StartOffset = value.ToVector2();
 					}
 					break;
+				case "direction":
 				case "Direction":
 					{
 						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
 					}
 					break;
+				case "emitter":
 				case "Emitter":
 					{
 						XmlFileBuddy.ReadChildNodes(node, Emitter.ParseXmlNode);

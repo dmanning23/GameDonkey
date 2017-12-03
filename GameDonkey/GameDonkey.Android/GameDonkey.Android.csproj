@@ -89,7 +89,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ParticleBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.1.0.23\lib\MonoAndroid10\ParticleBuddy.Android.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.1.0.24\lib\MonoAndroid10\ParticleBuddy.Android.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PrimitiveBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

@@ -51,6 +51,7 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "timeDelta":
 				case "TimeDelta":
 					{
 						TimeDelta = Convert.ToSingle(value);
