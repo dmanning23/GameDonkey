@@ -18,7 +18,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the filename of the projectile data.xml file to use
 		/// </summary>
-		public Filename FileName { get; protected set; }
+		public Filename FileName { get; set; }
 
 		/// <summary>
 		/// the offset from the bone to start the particle effect from
