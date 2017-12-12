@@ -10,17 +10,17 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the start color of this trail
 		/// </summary>
-		public Color StartColor { get; protected set; }
+		public Color StartColor { get; set; }
 
 		/// <summary>
 		/// how long each individual trail lasts
 		/// </summary>
-		public float TrailLifeDelta { get; protected set; }
+		public float TrailLifeDelta { get; set; }
 
 		/// <summary>
 		/// how often to spawn a new trail
 		/// </summary>
-		public float SpawnDelta { get; protected set; }
+		public float SpawnDelta { get; set; }
 
 		#endregion //Properties
 
