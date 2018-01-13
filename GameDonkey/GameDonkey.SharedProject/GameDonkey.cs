@@ -790,7 +790,7 @@ namespace GameDonkeyLib
 		protected void RenderCharacters(Matrix cameraMatrix)
 		{
 			//render all the players
-			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
 			for (int i = 0; i < Players.Count; i++)
 			{
 				Players[i].Render(Renderer, true);

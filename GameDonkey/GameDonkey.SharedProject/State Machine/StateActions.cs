@@ -21,12 +21,12 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// If this state is an attack or a throw, the time that the startup ends
 		/// </summary>
-		protected float ActiveTime { get; set; }
+		protected float ActiveTime { get; private set; }
 
 		/// <summary>
 		/// The time that this action enters the "recovery" phase and can be cancelled into other actions
 		/// </summary>
-		protected float RecoveryTime { get; set; }
+		protected float RecoveryTime { get; private set; }
 
 		/// <summary>
 		/// name of the state this thing is describing

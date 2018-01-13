@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 using XmlBuddy;
 
@@ -21,9 +20,9 @@ namespace GameDonkeyLib
 			StateActions = new List<BaseActionModel>();
 		}
 
-
 		public StateActionsModel(StateActions stateActions) : this()
 		{
+			StateName = stateActions.StateName;
 			foreach (var stateAction in stateActions.Actions)
 			{
 				StateActions.Add(StateActionFactory.CreateActionModel(stateAction));

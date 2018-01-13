@@ -1,5 +1,6 @@
 ﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
+using StateMachineBuddy;
 using System.Collections.Generic;
 
 namespace GameDonkeyLib
@@ -25,13 +26,44 @@ namespace GameDonkeyLib
 			Actions = new List<StateActions>();
 		}
 
-		public void LoadStateActions(SingleStateContainerModel stateContainerModel, BaseObject owner)
+		public void LoadStateActions(StateMachine stateMachine, SingleStateContainerModel stateContainerModel, BaseObject owner)
 		{
 			for (int i = 0; i < stateContainerModel.StatesActions.Count; i++)
 			{
 				StateActions actions = new StateActions();
 				actions.LoadStateActions(stateContainerModel.StatesActions[i], owner);
 				Actions.Add(actions);
+			}
+
+			if (Actions.Count != stateMachine.NumStates)
+			{
+				//Add state actions for any missing states
+				for (int i = 0; i < stateMachine.NumStates; i++)
+				{
+					//get the state name
+					var stateName = stateMachine.GetStateName(i);
+
+					//make sure this thing already contains the states for it
+					bool found = false;
+					for (int j = 0; j < Actions.Count; j++)
+					{
+						if (Actions[j].StateName == stateName)
+						{
+							found = true;
+							break;
+						}
+					}
+
+					//add the actions if they werent found
+					if (!found)
+					{
+						StateActions actions = new StateActions()
+						{
+							StateName = stateName
+						};
+						Actions.Add(actions);
+					}
+				}
 			}
 		}
 

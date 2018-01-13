@@ -184,7 +184,7 @@ namespace GameDonkeyLib
 		protected virtual void LoadContainer(SingleStateContainerModel stateContainerModel, BaseObject owner)
 		{
 			//load into the statemachineactions object
-			Actions.LoadStateActions(stateContainerModel, owner);
+			Actions.LoadStateActions(StateMachine, stateContainerModel, owner);
 		}
 
 		public virtual void LoadStateMachine(StateMachine machine, Filename file, ContentManager content)
@@ -204,8 +204,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-
 
 		public void Reset()
 		{
