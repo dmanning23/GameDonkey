@@ -29,8 +29,8 @@ namespace GameDonkeyLib
 		/// </summary>
 		public int Message { get; protected set; }
 
-		private SingleStateContainer _stateContainer { get; set; }
-		private SingleStateContainer StateContainer
+		private IStateContainer _stateContainer { get; set; }
+		private IStateContainer StateContainer
 		{
 			get
 			{
@@ -63,7 +63,7 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public override void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
+		public override void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content)
 		{
 			StateContainer = stateContainer;
 		}

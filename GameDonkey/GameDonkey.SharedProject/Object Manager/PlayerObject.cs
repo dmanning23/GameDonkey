@@ -1,21 +1,19 @@
-﻿using System;
-using FilenameBuddy;
+﻿using GameTimer;
 using HadoukInput;
-using GameTimer;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Vector2Extensions;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
 	/// <summary>
 	/// this is a player game token, either human or AI
 	/// </summary>
-	public class PlayerObject : BaseObject
+	public abstract class PlayerObject : BaseObject
 	{
 		#region Properties
 
@@ -78,10 +76,12 @@ namespace GameDonkeyLib
 			Physics.ReplaceOwner(myBot);
 		}
 
+		protected abstract IStateContainer CreateStateContainer();
+
 		protected override void Init()
 		{
 			ThumbstickDirection = Vector2.Zero;
-			States = new PlayerObjectStateContainer();
+			States = CreateStateContainer();
 			States.StateChangedEvent += this.StateChanged;
 			Physics = new PlayerPhysicsContainer(this);
 

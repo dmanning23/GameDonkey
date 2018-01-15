@@ -107,16 +107,12 @@ namespace GameDonkeyLib
 				}
 
 				//check if this action hasn't happened yet
-				else if (Actions[i].Time >= prevTime)
+				else if (!Actions[i].AlreadyRun)
 				{
-					//if the action is expired, make sure it has been run anyways
-					if (!Actions[i].AlreadyRun)
+					if (Actions[i].Execute())
 					{
-						if (Actions[i].Execute())
-						{
-							//the state was changed when that dude was running
-							return;
-						}
+						//the state was changed when that dude was running
+						return;
 					}
 				}
 			}
@@ -203,10 +199,11 @@ namespace GameDonkeyLib
 		/// <param name="actionType">the type of action to add</param>
 		/// <param name="owner">the owner of this action list</param>
 		/// <returns>IBaseAction: reference to the action that was created</returns>
-		public BaseAction AddNewActionFromType(EActionType actionType, BaseObject owner)
+		public BaseAction AddNewActionFromType(EActionType actionType, BaseObject owner, IGameDonkey engine, IStateContainer container, ContentManager content)
 		{
 			//get the correct action type
 			var action = StateActionFactory.CreateStateAction(actionType, owner);
+			action.LoadContent(engine, container, content);
 
 			//save the action
 			Actions.Add(action);

@@ -40,7 +40,7 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public override void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
+		public override void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content)
 		{
 			//load the garment from the garment manager
 			Garment = Owner.Garments.LoadGarment(Filename, engine.Renderer, content);

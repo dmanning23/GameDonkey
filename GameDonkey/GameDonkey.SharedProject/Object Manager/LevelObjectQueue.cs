@@ -9,6 +9,16 @@ namespace GameDonkeyLib
 		{
 		}
 
+		public override PlayerObject CreateAiPlayer()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override PlayerObject CreateHumanPlayer()
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public override void Reset()
 		{
 			Debug.Assert(null == Character);

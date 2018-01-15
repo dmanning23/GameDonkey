@@ -14,7 +14,7 @@ namespace GameDonkeyLib
 	/// <summary>
 	/// this class is for queueing up players, fireballs, etc.
 	/// </summary>
-	public class PlayerQueue
+	public abstract class PlayerQueue
 	{
 		#region Properties
 
@@ -116,15 +116,9 @@ namespace GameDonkeyLib
 			ScoreTimer = new CountdownTimer();
 		}
 
-		public virtual PlayerObject CreateHumanPlayer()
-		{
-			return new PlayerObject(CharacterClock, _nextObjectId++);
-		}
+		public abstract PlayerObject CreateHumanPlayer();
 
-		public virtual PlayerObject CreateAiPlayer()
-		{
-			return new PlayerObject(CharacterClock, _nextObjectId++);
-		}
+		public abstract PlayerObject CreateAiPlayer();
 
 		public virtual PlayerObjectModel CreatePlayerObjectModel(Filename filename)
 		{

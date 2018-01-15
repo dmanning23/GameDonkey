@@ -16,7 +16,7 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class SingleStateContainer : IStateContainer
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// the filename where the state actions go
@@ -43,10 +43,6 @@ namespace GameDonkeyLib
 		/// Doesn't really do shit in a single container.
 		/// </summary>
 		public bool IgnoreStateMachineChange { get; set; }
-
-		#endregion //Members
-
-		#region Properties
 
 		/// <summary>
 		/// Get the number of containers, if this is a collection
@@ -147,7 +143,6 @@ namespace GameDonkeyLib
 			Actions = new StateMachineActions();
 			StateClock = new GameClock();
 
-			//This container only signs up for the reset event
 			StateMachine.ResetEvent += this.StateChange;
 			Name = containerName;
 

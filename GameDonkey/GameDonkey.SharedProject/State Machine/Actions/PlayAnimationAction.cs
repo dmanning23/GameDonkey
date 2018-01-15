@@ -55,7 +55,7 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public override void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
+		public override void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content)
 		{
 		}
 

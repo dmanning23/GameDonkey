@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-	public class AIObject : PlayerObject
+	public abstract class AIObject : PlayerObject
 	{
 		#region Members
 

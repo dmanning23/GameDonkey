@@ -20,7 +20,7 @@ using Vector2Extensions;
 
 namespace GameDonkeyLib
 {
-	public class GameDonkey : IGameDonkey
+	public abstract class GameDonkey : IGameDonkey
 	{
 		#region Members
 
@@ -208,10 +208,7 @@ namespace GameDonkeyLib
 		/// <param name="myColor"></param>
 		/// <param name="iQueueID"></param>
 		/// <returns></returns>
-		public virtual PlayerQueue CreatePlayerQueue(Color color, int queueID)
-		{
-			return new PlayerQueue(color, queueID);
-		}
+		public abstract PlayerQueue CreatePlayerQueue(Color color, int queueID);
 
 		/// <summary>
 		/// load all the content in a windows forms game
