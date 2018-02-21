@@ -15,6 +15,7 @@ namespace GameDonkeyLib
 		public List<Filename> Garments { get; private set; }
 		public List<StateContainerModel> States { get; private set; }
 		public float Height { get; private set; }
+		public float Scale { get; private set; }
 
 		#endregion //Properties
 
@@ -27,6 +28,7 @@ namespace GameDonkeyLib
 			States = new List<StateContainerModel>();
 			Garments = new List<Filename>();
 			Height = 0f;
+			Scale = 1f;
 		}
 
 		#endregion //Methods
@@ -75,6 +77,11 @@ namespace GameDonkeyLib
 				case "height":
 					{
 						Height = Convert.ToInt32(value);
+					}
+					break;
+				case "scale":
+					{
+						Scale = Convert.ToSingle(value);
 					}
 					break;
 				default:

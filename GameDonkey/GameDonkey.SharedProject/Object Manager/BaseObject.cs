@@ -1197,6 +1197,7 @@ namespace GameDonkeyLib
 		public virtual void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content)
 		{
 			//read in the model
+			AnimationContainer.Scale = model.Scale;
 			AnimationContainer.ReadSkeletonXml(model.Model, engine.Renderer, content);
 			Physics.SortBones(AnimationContainer.Skeleton.RootBone);
 

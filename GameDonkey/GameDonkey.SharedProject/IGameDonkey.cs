@@ -81,9 +81,9 @@ namespace GameDonkeyLib
 
 		void RespawnPlayer(PlayerQueue playerQueue);
 
-		void UpdateCameraMatrix();
+		void UpdateCameraMatrix(bool forceToScreen = false);
 
-		void Render();
+		void Render(BlendState characterBlendState);
 
 		#endregion //Methods
 	}

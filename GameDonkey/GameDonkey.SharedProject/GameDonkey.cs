@@ -58,7 +58,7 @@ namespace GameDonkeyLib
 				_worldBoundaries = value;
 
 				//make the camera rect a little bit smaller so we can see more of the ground
-				Renderer.Camera.WorldBoundary = new Rectangle(_worldBoundaries.X, _worldBoundaries.Y, _worldBoundaries.Width, _worldBoundaries.Height + 100);
+				Renderer.Camera.WorldBoundary = new Rectangle(_worldBoundaries.X, _worldBoundaries.Y, _worldBoundaries.Width, _worldBoundaries.Height);
 			}
 		}
 
@@ -244,16 +244,23 @@ namespace GameDonkeyLib
 			//reset teh level objects
 			LevelObjects.Reset();
 
+			//force the camera to fit the whole scene
+			for (int i = 0; i < Players.Count; i++)
+			{
+				Players[i].AddToCamera(Renderer.Camera);
+			}
+
+			Renderer.Camera.ForceToScreen();
+		}
+
+		public void StartAtSpawnPoints()
+		{
 			//reset the players
-			Debug.Assert(SpawnPoints.Count > 0);
 			int spawnIndex = 0;
 			for (int i = 0; i < Players.Count; i++)
 			{
-				Debug.Assert(null != Players[i]);
-
 				if (null != Players[i].InputQueue)
 				{
-					Debug.Assert(null != Players[i].InputQueue.Controller);
 					Players[i].InputQueue.Controller.ResetController();
 				}
 				Players[i].Reset(SpawnPoints[spawnIndex]);
@@ -268,14 +275,6 @@ namespace GameDonkeyLib
 					spawnIndex = 0;
 				}
 			}
-
-			//force the camera to fit the whole scene
-			for (int i = 0; i < Players.Count; i++)
-			{
-				Players[i].AddToCamera(Renderer.Camera);
-			}
-
-			Renderer.Camera.ForceToScreen();
 		}
 
 		public SoundEffect LoadSound(Filename cueName)
@@ -688,7 +687,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// update the camera before rendering
 		/// </summary>
-		public void UpdateCameraMatrix()
+		public void UpdateCameraMatrix(bool forceToScreen)
 		{
 			//set up the camera
 			if (GameOver && !Tie)
@@ -709,7 +708,7 @@ namespace GameDonkeyLib
 			//DrawBackground();
 
 			//Get the camera matrix we are gonna use
-			Renderer.Camera.BeginScene(false);
+			Renderer.Camera.BeginScene(forceToScreen);
 		}
 
 		/// <summary>
@@ -721,7 +720,7 @@ namespace GameDonkeyLib
 			return Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
 		}
 
-		public virtual void Render()
+		public virtual void Render(BlendState characterBlendState)
 		{
 			Matrix cameraMatrix = GetCameraMatrix();
 
@@ -733,7 +732,7 @@ namespace GameDonkeyLib
 
 			RenderCharacterTrails(cameraMatrix);
 
-			RenderCharacters(cameraMatrix);
+			RenderCharacters(cameraMatrix, characterBlendState);
 
 			RenderParticleEffects(cameraMatrix);
 		}
@@ -784,10 +783,10 @@ namespace GameDonkeyLib
 			Renderer.SpriteBatchEnd();
 		}
 
-		protected void RenderCharacters(Matrix cameraMatrix)
+		protected void RenderCharacters(Matrix cameraMatrix, BlendState blendState)
 		{
 			//render all the players
-			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
+			Renderer.SpriteBatchBegin(blendState, cameraMatrix);
 			for (int i = 0; i < Players.Count; i++)
 			{
 				Players[i].Render(Renderer, true);
