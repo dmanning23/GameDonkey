@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics;
+﻿using FilenameBuddy;
+using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -106,33 +107,44 @@ namespace GameDonkeyLib
 			var name = node.Name;
 			var value = node.InnerText;
 
-			switch (name)
+			switch (name.ToLower())
 			{
-				case "BoneName":
+				case "bonename":
 					{
 						BoneName = value;
 					}
 					break;
-				case "Damage":
+				case "damage":
 					{
 						Damage = Convert.ToSingle(value);
 					}
 					break;
-				case "TimeDelta":
+				case "timedelta":
 					{
 						TimeDelta.ParseXmlNode(node);
 					}
 					break;
-				case "Direction":
+				case "direction":
 					{
 						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
 					}
 					break;
-				case "SuccessActions":
+				case "hitsound":
+					{
+						if (!string.IsNullOrEmpty(value))
+						{
+							SuccessActions.Add(new PlaySoundActionModel()
+							{
+								Filename = new Filename(value)
+							});
+						}
+					}
+					break;
+				case "successactions":
 					{
 						var stateActions = new StateActionsModel();
 						XmlFileBuddy.ReadChildNodes(node, stateActions.ParseStateAction);
-						SuccessActions = stateActions.StateActions;
+						SuccessActions.AddRange(stateActions.StateActions);
 					}
 					break;
 				default:

@@ -47,6 +47,7 @@ namespace GameDonkeyLib
 
 			switch (name.ToLower())
 			{
+				case "#text":
 				case "velocity":
 					{
 						Velocity = value.ToVector2();

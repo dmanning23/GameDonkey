@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AnimationLib.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AnimationLib.1.0.29\lib\net451\AnimationLib.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\AnimationLib.1.0.30\lib\net451\AnimationLib.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CameraBuddy.1.0.9\lib\net451\CameraBuddy.WindowsDX.dll</HintPath>
@@ -53,7 +53,7 @@
       <HintPath>..\packages\GameTimer.1.0.8\lib\net452\GameTimer.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="HadoukInput.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HadoukInput.1.0.11\lib\net451\HadoukInput.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\HadoukInput.1.0.12\lib\net451\HadoukInput.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="MathNet.Numerics, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.4.1.0\lib\net40\MathNet.Numerics.dll</HintPath>
@@ -91,7 +91,7 @@
       <HintPath>..\packages\Shouldly.3.0.0\lib\net451\Shouldly.dll</HintPath>
     </Reference>
     <Reference Include="StateMachineBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StateMachineBuddy.1.0.11\lib\net451\StateMachineBuddy.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\StateMachineBuddy.1.0.12\lib\net451\StateMachineBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

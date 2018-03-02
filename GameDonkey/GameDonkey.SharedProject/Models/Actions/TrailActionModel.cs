@@ -18,7 +18,18 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public Color Color { get; private set; }
+		private Color _color;
+		public Color Color
+		{
+			get
+			{
+				return _color;
+			}
+			private set
+			{
+				_color = value;
+			}
+		}
 		public float LifeDelta { get; private set; }
 		public float SpawnDelta { get; private set; }
 		public TimedActionModel TimeDelta { get; private set; }
@@ -91,24 +102,44 @@ namespace GameDonkeyLib
 			var name = node.Name;
 			var value = node.InnerText;
 
-			switch (name)
+			switch (name.ToLower())
 			{
-				case "Color":
+				case "r":
+					{
+						_color.A = Convert.ToByte(value);
+					}
+					break;
+				case "g":
+					{
+						_color.G = Convert.ToByte(value);
+					}
+					break;
+				case "b":
+					{
+						_color.B = Convert.ToByte(value);
+					}
+					break;
+				case "a":
+					{
+						_color.A = Convert.ToByte(value);
+					}
+					break;
+				case "color":
 					{
 						Color = JsonConvert.DeserializeObject<Color>(value);
 					}
 					break;
-				case "LifeDelta":
+				case "lifedelta":
 					{
 						LifeDelta = Convert.ToSingle(value);
 					}
 					break;
-				case "SpawnDelta":
+				case "spawndelta":
 					{
 						SpawnDelta = Convert.ToSingle(value);
 					}
 					break;
-				case "TimeDelta":
+				case "timedelta":
 					{
 						TimeDelta.ParseXmlNode(node);
 					}

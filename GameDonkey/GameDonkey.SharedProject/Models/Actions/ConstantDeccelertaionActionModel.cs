@@ -79,6 +79,7 @@ namespace GameDonkeyLib
 						MinYVelocity = Convert.ToSingle(value);
 					}
 					break;
+				case "velocity":
 				case "direction":
 					{
 						Direction.Velocity = value.ToVector2();

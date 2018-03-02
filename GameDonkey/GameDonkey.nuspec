@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>GameDonkey</id>
-		<version>1.0.36</version>
+		<version>1.0.42</version>
 		<title>GameDonkey</title>
 		<authors>dmanning23</authors>
 		<owners>dmanning23</owners>
@@ -36,6 +36,7 @@
 				<dependency id="HadoukInput" version="1.0"/>
 				<dependency id="ParticleBuddy" version="1.0"/>
 				<dependency id="StateMachineBuddy" version="1.0"/>
+				<dependency id="Newtonsoft.Json" version="11.0"/>
 			</group>
 
 			<!--Xamarin.iOS Unified-->
@@ -59,6 +60,7 @@
 				<dependency id="HadoukInput" version="1.0"/>
 				<dependency id="ParticleBuddy" version="1.0"/>
 				<dependency id="StateMachineBuddy" version="1.0"/>
+				<dependency id="Newtonsoft.Json" version="11.0"/>
 			</group>
 
 			<!--Win Universal-->
@@ -83,6 +85,7 @@
 				<dependency id="HadoukInput" version="1.0"/>
 				<dependency id="ParticleBuddy" version="1.0"/>
 				<dependency id="StateMachineBuddy" version="1.0"/>
+				<dependency id="Newtonsoft.Json" version="11.0"/>
 			</group>
 
 			<group targetFramework="net451">
@@ -105,6 +108,7 @@
 				<dependency id="HadoukInput" version="1.0"/>
 				<dependency id="ParticleBuddy" version="1.0"/>
 				<dependency id="StateMachineBuddy" version="1.0"/>
+				<dependency id="Newtonsoft.Json" version="11.0"/>
 			</group>
 
 		</dependencies>

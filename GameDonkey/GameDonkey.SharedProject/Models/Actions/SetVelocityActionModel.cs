@@ -70,6 +70,7 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
+				case "direction":
 				case "Direction":
 					{
 						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);

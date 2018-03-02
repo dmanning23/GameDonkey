@@ -40,6 +40,8 @@ namespace GameDonkeyLib
 
 		#region Properties
 
+		public bool ToolMode { get; set; }
+
 		public IRenderer Renderer { get; private set; }
 
 		public ParticleEngine ParticleEngine { get; protected set; }
@@ -170,6 +172,7 @@ namespace GameDonkeyLib
 		public GameDonkey(IRenderer renderer, Game game)
 			: base()
 		{
+			ToolMode = false;
 			ParticleEngine = new ParticleEngine();
 			MasterClock = new GameClock();
 
@@ -523,7 +526,7 @@ namespace GameDonkeyLib
 			}
 
 			//there can be only one winner!
-			if (1 >= numPlayers)
+			if (1 >= numPlayers && !ToolMode)
 			{
 				StopTimers();
 				GameOver = true;
@@ -558,8 +561,7 @@ namespace GameDonkeyLib
 		protected virtual void CheckForTimeOver()
 		{
 			//check for time over
-			Debug.Assert(0.0f < MaxTime);
-			if ((null == Winner) && (GameTimer.RemainingTime <= 0.0f))
+			if ((null == Winner) && (GameTimer.RemainingTime <= 0.0f) && !ToolMode)
 			{
 				//find winner
 				int currentMaxStock = 0;
@@ -665,7 +667,10 @@ namespace GameDonkeyLib
 			Vector2 position,
 			Color color)
 		{
-			ParticleEngine.PlayParticleEffect(DefaultParticles[(int)eEffect], velocity, position, Vector2.Zero, color, false);
+			if ((int)eEffect < DefaultParticles.Count)
+			{
+				ParticleEngine.PlayParticleEffect(DefaultParticles[(int)eEffect], velocity, position, Vector2.Zero, color, false);
+			}
 		}
 
 		#region Draw

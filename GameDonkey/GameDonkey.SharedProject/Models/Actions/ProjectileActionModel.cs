@@ -95,24 +95,24 @@ namespace GameDonkeyLib
 			var name = node.Name;
 			var value = node.InnerText;
 
-			switch (name)
+			switch (name.ToLower())
 			{
-				case "Filename":
+				case "filename":
 					{
 						Filename.SetRelFilename(value);
 					}
 					break;
-				case "StartOffset":
+				case "startoffset":
 					{
 						StartOffset = value.ToVector2();
 					}
 					break;
-				case "Scale":
+				case "scale":
 					{
 						Scale = Convert.ToSingle(value);
 					}
 					break;
-				case "Direction":
+				case "direction":
 					{
 						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
 					}

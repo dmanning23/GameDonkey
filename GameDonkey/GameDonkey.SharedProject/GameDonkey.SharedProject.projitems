@@ -79,7 +79,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\BlockingStateAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CameraShakeAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\ConstantAccelerationAction.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\ConstantDecceleration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\ConstantDeccelerationAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CreateAttackAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CreateBlockAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\CreateHitCircleAction.cs" />

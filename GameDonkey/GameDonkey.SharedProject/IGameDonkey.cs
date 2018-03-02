@@ -15,6 +15,8 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
+		bool ToolMode { get; set; }
+
 		IRenderer Renderer { get; }
 
 		ParticleEngine ParticleEngine { get; }
