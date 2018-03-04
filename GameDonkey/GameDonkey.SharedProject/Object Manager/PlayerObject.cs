@@ -335,7 +335,7 @@ namespace GameDonkeyLib
 				//if the player is stunned, bounce them up in the air
 				_velocity.Y = -1.0f * Math.Abs(Velocity.Y);
 
-				engine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
+				engine.PlayParticleEffect(DefaultParticleEffect.StunnedBounce,
 					Velocity,
 					groundHit.Position,
 					Color.White);
@@ -386,7 +386,7 @@ namespace GameDonkeyLib
 				//if the player is stunned, bounce them up in the air
 				_velocity.X = -1.0f * Velocity.X;
 
-				engine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
+				engine.PlayParticleEffect(DefaultParticleEffect.StunnedBounce,
 					Velocity,
 					groundHit.Position,
 					Color.White);
@@ -415,7 +415,7 @@ namespace GameDonkeyLib
 				//if the player is stunned, bounce them up in the air
 				_velocity.X = -1.0f * Velocity.X;
 
-				engine.PlayParticleEffect(EDefaultParticleEffects.StunnedBounce,
+				engine.PlayParticleEffect(DefaultParticleEffect.StunnedBounce,
 					Velocity,
 					groundHit.Position,
 					Color.White);
@@ -468,19 +468,19 @@ namespace GameDonkeyLib
 				engine.AddCameraShake(0.25f);
 
 				//add the hit spark
-				engine.PlayParticleEffect(EDefaultParticleEffects.HitSpark,
+				engine.PlayParticleEffect(DefaultParticleEffect.HitSpark,
 					Vector2.Zero,
 					attack.Position,
 					attack.Attacker.PlayerQueue.PlayerColor);
 
 				//add a hit cloud
-				engine.PlayParticleEffect(EDefaultParticleEffects.HitCloud,
+				engine.PlayParticleEffect(DefaultParticleEffect.HitCloud,
 					Vector2.Zero,
 					attack.Position,
 					Color.Yellow);
 
 				//shoot particles out of teh characters butt
-				engine.PlayParticleEffect(EDefaultParticleEffects.HitCloud,
+				engine.PlayParticleEffect(DefaultParticleEffect.HitCloud,
 					Velocity * 1.5f,
 					attack.Position,
 					Color.Yellow);
@@ -560,7 +560,7 @@ namespace GameDonkeyLib
 			engine.AddCameraShake(0.08f);
 
 			//do a special hit spark for weapon clash
-			engine.PlayParticleEffect(EDefaultParticleEffects.WeaponHit,
+			engine.PlayParticleEffect(DefaultParticleEffect.WeaponHit,
 					Velocity * 1.5f,
 					weaponHit.Position,
 					Color.White);
@@ -578,7 +578,7 @@ namespace GameDonkeyLib
 			attack.Attacker.CharacterClock.AddHitPause(_hitPause * 0.8f);
 
 			//play the particle effect
-			engine.PlayParticleEffect(EDefaultParticleEffects.Block,
+			engine.PlayParticleEffect(DefaultParticleEffect.Block,
 				new Vector2((attack.Attacker.Flip ? -400.0f : 400.0f), 0.0f),
 				attack.Position,
 				new Color(0, 255, 255));

@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "AnimationLib": "1.0.30",
-    "CameraBuddy": "1.0.9",
+    "CameraBuddy": "1.0.10",
     "CollisionBuddy": "1.0.5",
     "DrawlistBuddy": "1.0.20",
     "FilenameBuddy": "1.0.11",
@@ -13,7 +13,7 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "MonoGame.Framework.WindowsUniversal": "3.6.0.1625",
     "Newtonsoft.Json": "11.0.1",
-    "ParticleBuddy": "1.0.28",
+    "ParticleBuddy": "1.0.30",
     "PrimitiveBuddy": "1.0.4",
     "RandomExtensions.dmanning23": "1.0.5",
     "RenderBuddy": "1.0.29",

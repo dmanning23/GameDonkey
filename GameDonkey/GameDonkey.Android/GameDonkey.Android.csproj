@@ -43,7 +43,7 @@
       <HintPath>..\packages\AnimationLib.1.0.30\lib\MonoAndroid10\AnimationLib.Android.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CameraBuddy.1.0.9\lib\MonoAndroid10\CameraBuddy.Android.dll</HintPath>
+      <HintPath>..\packages\CameraBuddy.1.0.10\lib\MonoAndroid10\CameraBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="CollisionBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CollisionBuddy.1.0.5\lib\MonoAndroid10\CollisionBuddy.Android.dll</HintPath>
@@ -78,7 +78,7 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.1.0.28\lib\MonoAndroid10\ParticleBuddy.Android.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.1.0.30\lib\MonoAndroid10\ParticleBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="PrimitiveBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PrimitiveBuddy.1.0.4\lib\MonoAndroid10\PrimitiveBuddy.Android.dll</HintPath>

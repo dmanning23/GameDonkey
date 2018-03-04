@@ -25,8 +25,6 @@ namespace GameDonkeyLib
 
 		Rectangle WorldBoundaries { get; set; }
 
-		ContentManager ContentManager { get; }
-
 		List<PlayerQueue> Players { get; }
 
 		List<Vector2> SpawnPoints { get; set; }
@@ -38,7 +36,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// load all the content in a windows forms game
 		/// </summary>
-		void LoadContent(GraphicsDevice device);
+		void LoadContent(GraphicsDevice device, ContentManager xmlContent);
 
 		void UnloadContent();
 
@@ -65,7 +63,7 @@ namespace GameDonkeyLib
 		void AddCameraShake(float shakeAmount);
 
 		void PlayParticleEffect(
-			EDefaultParticleEffects effect,
+			DefaultParticleEffect effect,
 			Vector2 velocity,
 			Vector2 position,
 			Color color);

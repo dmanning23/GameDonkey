@@ -36,7 +36,7 @@
       <HintPath>..\packages\AnimationLib.1.0.30\lib\net451\AnimationLib.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CameraBuddy.1.0.9\lib\net451\CameraBuddy.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\CameraBuddy.1.0.10\lib\net451\CameraBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="CollisionBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CollisionBuddy.1.0.5\lib\net451\CollisionBuddy.WindowsDX.dll</HintPath>
@@ -70,7 +70,7 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.1.0.28\lib\net451\ParticleBuddy.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.1.0.30\lib\net451\ParticleBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="PrimitiveBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PrimitiveBuddy.1.0.4\lib\net451\PrimitiveBuddy.WindowsDX.dll</HintPath>

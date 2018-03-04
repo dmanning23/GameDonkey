@@ -9,7 +9,7 @@
     <Import_RootNamespace>GameDonkey.SharedProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)DefaultParticleEffects.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParticleEffects\DefaultParticleEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGameDonkey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\AddGarmentActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\AddVelocityActionModel.cs" />
@@ -50,6 +50,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\SingleStateContainerModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\StateActionsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\TimedActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParticleEffects\ParticleEffectCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sounds\DefaultSounds.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sounds\SoundCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\EMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\EState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object Manager\AIObject.cs" />

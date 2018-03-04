@@ -56,7 +56,7 @@
       <HintPath>..\packages\AnimationLib.1.0.30\lib\Xamarin.iOS10\AnimationLib.iOS.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CameraBuddy.1.0.9\lib\Xamarin.iOS10\CameraBuddy.iOS.dll</HintPath>
+      <HintPath>..\packages\CameraBuddy.1.0.10\lib\Xamarin.iOS10\CameraBuddy.iOS.dll</HintPath>
     </Reference>
     <Reference Include="CollisionBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CollisionBuddy.1.0.5\lib\Xamarin.iOS10\CollisionBuddy.iOS.dll</HintPath>
@@ -90,7 +90,7 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.1.0.28\lib\Xamarin.iOS10\ParticleBuddy.iOS.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.1.0.30\lib\Xamarin.iOS10\ParticleBuddy.iOS.dll</HintPath>
     </Reference>
     <Reference Include="PrimitiveBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PrimitiveBuddy.1.0.4\lib\Xamarin.iOS10\PrimitiveBuddy.iOS.dll</HintPath>

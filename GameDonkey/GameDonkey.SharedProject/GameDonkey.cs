@@ -1,5 +1,4 @@
 ﻿using FilenameBuddy;
-using FontBuddyLib;
 using GameTimer;
 using HadoukInput;
 using Microsoft.Xna.Framework;
@@ -13,10 +12,7 @@ using ResolutionBuddy;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
-using System.Xml;
-using Vector2Extensions;
 
 namespace GameDonkeyLib
 {
@@ -39,6 +35,8 @@ namespace GameDonkeyLib
 		#endregion //Members
 
 		#region Properties
+
+		protected Game Game { get; set; }
 
 		public bool ToolMode { get; set; }
 
@@ -104,41 +102,6 @@ namespace GameDonkeyLib
 		/// </summary>
 		public string Music { get; private set; }
 
-		protected EmitterTemplate Block
-		{
-			get { return DefaultParticles[(int)EDefaultParticleEffects.Block]; }
-		}
-
-		protected EmitterTemplate HitSpark
-		{
-			get { return DefaultParticles[(int)EDefaultParticleEffects.HitSpark]; }
-		}
-
-		protected EmitterTemplate HitCloud
-		{
-			get { return DefaultParticles[(int)EDefaultParticleEffects.HitCloud]; }
-		}
-
-		protected EmitterTemplate StunnedBounce
-		{
-			get { return DefaultParticles[(int)EDefaultParticleEffects.StunnedBounce]; }
-		}
-
-		protected EmitterTemplate DeathParticles
-		{
-			get { return DefaultParticles[(int)EDefaultParticleEffects.Death]; }
-		}
-
-		protected EmitterTemplate HeadBop
-		{
-			get { return DefaultParticles[(int)EDefaultParticleEffects.HeadBop]; }
-		}
-
-		protected EmitterTemplate WeaponHit
-		{
-			get { return DefaultParticles[(int)EDefaultParticleEffects.WeaponHit]; }
-		}
-
 		//Game over stuff!!!
 		public PlayerQueue Winner { get; protected set; }
 		public bool Tie { get; protected set; }
@@ -148,7 +111,7 @@ namespace GameDonkeyLib
 		/// dumb thing for loading sound effects.
 		/// </summary>
 		/// <value>The content of the sound.</value>
-		public ContentManager ContentManager { get; private set; }
+		protected ContentManager SoundContent { get; private set; }
 
 		/// <summary>
 		/// The noise to play when a character falls off the board
@@ -160,10 +123,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		public Vector2 CenterVelocity { get; set; }
 
-		/// <summary>
-		/// a list of all the default particle effects used int he game
-		/// </summary>
-		private List<EmitterTemplate> DefaultParticles { get; set; }
+		protected ParticleEffectCollection ParticleEffects { get; set; }
 
 		#endregion //Properties
 
@@ -176,17 +136,15 @@ namespace GameDonkeyLib
 			ParticleEngine = new ParticleEngine();
 			MasterClock = new GameClock();
 
-			if (null != game)
-			{
-				ContentManager = new ContentManager(game.Services, "Content");
-			}
+			Game = game;
+			SoundContent = new ContentManager(Game.Services, "Content");
 
 			Renderer = renderer;
 			Players = new List<PlayerQueue>();
 			LevelObjects = new LevelObjectQueue();
 			SpawnPoints = new List<Vector2>();
 
-			DefaultParticles = new List<EmitterTemplate>();
+			ParticleEffects = new ParticleEffectCollection();
 
 			CharacterClock = new GameClock();
 
@@ -216,7 +174,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// load all the content in a windows forms game
 		/// </summary>
-		public virtual void LoadContent(GraphicsDevice graphics)
+		public virtual void LoadContent(GraphicsDevice graphics, ContentManager xmlContent)
 		{
 			WorldBoundaries = new Rectangle();
 
@@ -226,8 +184,8 @@ namespace GameDonkeyLib
 
 		public virtual void UnloadContent()
 		{
-			ContentManager.Dispose();
-			ContentManager = null;
+			SoundContent.Dispose();
+			SoundContent = null;
 		}
 
 		public virtual void Start()
@@ -282,14 +240,7 @@ namespace GameDonkeyLib
 
 		public SoundEffect LoadSound(Filename cueName)
 		{
-			if (ContentManager != null)
-			{
-				return ContentManager.Load<SoundEffect>(cueName.GetRelPathFileNoExt());
-			}
-			else
-			{
-				return null;
-			}
+			return SoundContent.Load<SoundEffect>(cueName.GetRelPathFileNoExt());
 		}
 
 		#endregion //Construction
@@ -662,15 +613,16 @@ namespace GameDonkeyLib
 		}
 
 		public void PlayParticleEffect(
-			EDefaultParticleEffects eEffect,
+			DefaultParticleEffect effect,
 			Vector2 velocity,
 			Vector2 position,
 			Color color)
 		{
-			if ((int)eEffect < DefaultParticles.Count)
-			{
-				ParticleEngine.PlayParticleEffect(DefaultParticles[(int)eEffect], velocity, position, Vector2.Zero, color, false);
-			}
+			//get the particle effect
+			var emitterTemplate = ParticleEffects.GetEmitterTemplate(effect);
+
+			//play the particle effect
+			ParticleEngine.PlayParticleEffect(emitterTemplate, velocity, position, Vector2.Zero, color, false);
 		}
 
 		#region Draw
@@ -846,22 +798,6 @@ namespace GameDonkeyLib
 		#endregion //Methods
 
 		#region File IO
-
-		private void AddParticleEffect(ContentManager xmlContent, IRenderer renderer, string file)
-		{
-			var emitter = new EmitterTemplate(new Filename(file));
-			emitter.ReadXmlFile(xmlContent);
-			emitter.LoadContent(renderer);
-			DefaultParticles.Add(emitter);
-		}
-
-		private void AddParticleEffect(IRenderer renderer, string file)
-		{
-			var emitter = new EmitterTemplate(new Filename(file));
-			emitter.ReadXmlFile();
-			emitter.LoadContent(renderer);
-			DefaultParticles.Add(emitter);
-		}
 
 		public virtual PlayerQueue LoadPlayer(Color color,
 			Filename characterFile,

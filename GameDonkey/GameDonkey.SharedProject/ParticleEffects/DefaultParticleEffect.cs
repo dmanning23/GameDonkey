@@ -5,7 +5,7 @@ namespace GameDonkeyLib
 	/// All the different default particle effects that can be played
 	/// </summary>
 	/// <remarks>used in packets to identify the particle effect to play.</remarks>
-	public enum EDefaultParticleEffects
+	public enum DefaultParticleEffect
 	{
 		HitCloud,
 		HitSpark,
@@ -13,7 +13,6 @@ namespace GameDonkeyLib
 		Block,
 		WeaponHit,
 		StunnedBounce,
-		HeadBop,
-		NumDefaultParticleEffects
+		HeadBop
 	};
 }
