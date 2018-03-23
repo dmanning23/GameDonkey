@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -21,9 +20,6 @@ namespace GameDonkeyLib
 
 		public override void Reset()
 		{
-			Debug.Assert(null == Character);
-			Debug.Assert(0 == Inactive.Count);
-
 			//reset all the level objects
 			for (int i = 0; i < Active.Count; i++)
 			{

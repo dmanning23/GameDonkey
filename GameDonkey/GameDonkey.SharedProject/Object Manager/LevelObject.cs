@@ -1,5 +1,4 @@
-﻿using FilenameBuddy;
-using GameTimer;
+﻿using GameTimer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;

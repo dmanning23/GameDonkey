@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using RenderBuddy;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -573,7 +572,6 @@ namespace GameDonkeyLib
 					break;
 				case GameObjectType.Projectile:
 					{
-						Debug.Assert(null != Character);
 						gameObject = new ProjectileObject(CharacterClock, Character, _nextObjectId++);
 						gameObjectModel = new ProjectileObjectModel(fileName);
 					}
@@ -586,7 +584,6 @@ namespace GameDonkeyLib
 					break;
 				default:
 					{
-						Debug.Assert(false);
 						return null;
 					}
 			}

@@ -1,9 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Diagnostics;
-using System.Xml;
-using Vector2Extensions;
-using MatrixExtensions;
+﻿using MatrixExtensions;
+using Microsoft.Xna.Framework;
 
 namespace GameDonkeyLib
 {
@@ -77,8 +73,6 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public Vector2 GetDirection(BaseObject owner)
 		{
-			Debug.Assert(null != owner);
-
 			switch (DirectionType)
 			{
 				case EDirectionType.Controller:

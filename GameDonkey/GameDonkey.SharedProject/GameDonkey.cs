@@ -11,7 +11,6 @@ using RenderBuddy;
 using ResolutionBuddy;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace GameDonkeyLib
@@ -271,7 +270,6 @@ namespace GameDonkeyLib
 			var tasks = new List<Task>();
 			foreach (var player in Players)
 			{
-				Debug.Assert(null != player);
 				if (null != player.InputQueue)
 				{
 					tasks.Add(Task.Factory.StartNew(() => { player.UpdateInput(input); }));
@@ -392,7 +390,6 @@ namespace GameDonkeyLib
 			List<Task> tasks = new List<Task>();
 			foreach (var player in Players)
 			{
-				Debug.Assert(null != player);
 				tasks.Add(Task.Factory.StartNew(() => { UpdatePlayer(player); }));
 			}
 			Task.WaitAll(tasks.ToArray());
@@ -404,7 +401,6 @@ namespace GameDonkeyLib
 		/// <param name="PlayerQueue"></param>
 		private void UpdatePlayer(PlayerQueue playerQueue)
 		{
-			Debug.Assert(null != playerQueue);
 			if (!CheckIfPlayerStockOut(playerQueue))
 			{
 				//check if the player is dead
@@ -557,7 +553,6 @@ namespace GameDonkeyLib
 		/// <param name="rObject">the object to check for death</param>
 		private void CheckIfDead(PlayerQueue playerQueue)
 		{
-			Debug.Assert(null != playerQueue);
 			if (playerQueue.CheckIfDead())
 			{
 				KillPlayer(playerQueue);
@@ -650,7 +645,6 @@ namespace GameDonkeyLib
 			if (GameOver && !Tie)
 			{
 				//only show the winner!
-				Debug.Assert(null != Winner);
 				Winner.AddToCamera(Renderer.Camera);
 			}
 			else
@@ -808,10 +802,7 @@ namespace GameDonkeyLib
 		{
 			//create and load a player
 			PlayerQueue player = CreatePlayerQueue(color, Players.Count);
-			if (null == player.LoadXmlObject(characterFile, this, playerType, 0, content))
-			{
-				Debug.Assert(false);
-			}
+			player.LoadXmlObject(characterFile, this, playerType, 0, content);
 			Players.Add(player);
 
 			//create a controller for that player
