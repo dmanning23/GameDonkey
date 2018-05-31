@@ -68,10 +68,29 @@ namespace GameDonkeyLib
 
 		public InputWrapper InputQueue { get; set; }
 
+		private Color _playerColor;
 		/// <summary>
 		/// the color of the characters in this player queue
 		/// </summary>
-		public Color PlayerColor { get; private set; }
+		public Color PlayerColor
+		{
+			get
+			{
+				return _playerColor;
+			}
+			set
+			{
+				_playerColor = value;
+				foreach (var active in Active)
+				{
+					active.PlayerColor = PlayerColor;
+				}
+				foreach (var inactive in Inactive)
+				{
+					inactive.PlayerColor = PlayerColor;
+				}
+			}
+		}
 
 		public float Scale
 		{
