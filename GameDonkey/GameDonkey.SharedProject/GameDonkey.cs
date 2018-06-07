@@ -671,19 +671,19 @@ namespace GameDonkeyLib
 			return Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
 		}
 
-		public virtual void Render(BlendState characterBlendState)
+		public virtual void Render(BlendState characterBlendState, SpriteSortMode sortMode = SpriteSortMode.Immediate)
 		{
 			Matrix cameraMatrix = GetCameraMatrix();
 
 			RenderBackground();
 
-			RenderLevel(cameraMatrix);
+			RenderLevel(cameraMatrix, sortMode);
 
 			RenderHUD();
 
-			RenderCharacterTrails(cameraMatrix);
+			RenderCharacterTrails(cameraMatrix, sortMode);
 
-			RenderCharacters(cameraMatrix, characterBlendState);
+			RenderCharacters(cameraMatrix, characterBlendState, sortMode);
 
 			RenderParticleEffects(cameraMatrix);
 		}
@@ -692,10 +692,10 @@ namespace GameDonkeyLib
 		{
 		}
 
-		protected void RenderLevel(Matrix cameraMatrix)
+		protected void RenderLevel(Matrix cameraMatrix, SpriteSortMode sortMode)
 		{
 			//draw the level
-			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix);
+			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
 			LevelObjects.Render(Renderer, true);
 #if DEBUG
 			//draw the world boundaries in debug mode?
@@ -723,10 +723,10 @@ namespace GameDonkeyLib
 		{
 		}
 
-		protected void RenderCharacterTrails(Matrix cameraMatrix)
+		protected void RenderCharacterTrails(Matrix cameraMatrix, SpriteSortMode sortMode)
 		{
 			//render all the character trails, start another spritebatch
-			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix);
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix, sortMode);
 			for (int i = 0; i < Players.Count; i++)
 			{
 				Players[i].Render(Renderer, false);
@@ -734,10 +734,10 @@ namespace GameDonkeyLib
 			Renderer.SpriteBatchEnd();
 		}
 
-		protected void RenderCharacters(Matrix cameraMatrix, BlendState blendState)
+		protected void RenderCharacters(Matrix cameraMatrix, BlendState blendState, SpriteSortMode sortMode)
 		{
 			//render all the players
-			Renderer.SpriteBatchBegin(blendState, cameraMatrix);
+			Renderer.SpriteBatchBegin(blendState, cameraMatrix, sortMode);
 			for (int i = 0; i < Players.Count; i++)
 			{
 				Players[i].Render(Renderer, true);

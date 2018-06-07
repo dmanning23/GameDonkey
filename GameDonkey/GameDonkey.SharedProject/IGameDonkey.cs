@@ -83,7 +83,7 @@ namespace GameDonkeyLib
 
 		void UpdateCameraMatrix(bool forceToScreen = false);
 
-		void Render(BlendState characterBlendState);
+		void Render(BlendState characterBlendState, SpriteSortMode sortMode = SpriteSortMode.Immediate);
 
 		#endregion //Methods
 	}
