@@ -163,6 +163,12 @@ namespace GameDonkeyLib
 		/// </summary>
 		public List<Emitter> Emitters { get; private set; }
 
+		/// <summary>
+		/// a list of all the current point lights launched from state actions
+		/// Used to kill lights when state changes
+		/// </summary>
+		public List<FlarePointLight> Lights { get; private set; }
+
 		#endregion //State Data
 
 		#region Positional Data
@@ -332,6 +338,7 @@ namespace GameDonkeyLib
 
 			Garments = new GarmentManager(this);
 			Emitters = new List<Emitter>();
+			Lights = new List<FlarePointLight>();
 
 			Init();
 		}
@@ -463,6 +470,26 @@ namespace GameDonkeyLib
 				if (curEmitter.IsDead())
 				{
 					Emitters.RemoveAt(i);
+				}
+				else
+				{
+					i++;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Clear out all the dead particle emitters
+		/// </summary>
+		protected void UpdateLights()
+		{
+			int i = 0;
+			while (i < Lights.Count)
+			{
+				var light = Lights[i];
+				if (light.IsDead)
+				{
+					Lights.RemoveAt(i);
 				}
 				else
 				{
@@ -612,6 +639,13 @@ namespace GameDonkeyLib
 				emitter.EmitterTimer.Stop();
 			}
 			Emitters.Clear();
+
+			//kill all the lights and clear out that list
+			foreach (var light in Lights)
+			{
+				light.Kill();
+			}
+			Lights.Clear();
 		}
 
 		public virtual void CheckCollisions(BaseObject badGuy)

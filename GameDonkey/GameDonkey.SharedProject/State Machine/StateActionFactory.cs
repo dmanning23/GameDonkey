@@ -41,6 +41,7 @@ namespace GameDonkeyLib
 				case EActionType.ParticleEffect: { return new ParticleEffectActionModel(); }
 				case EActionType.PlayAnimation: { return new PlayAnimationActionModel(); }
 				case EActionType.PlaySound: { return new PlaySoundActionModel(); }
+				case EActionType.PointLight: { return new PointLightActionModel(); }
 				case EActionType.Projectile: { return new ProjectileActionModel(); }
 				case EActionType.Rotate: { return new RotateActionModel(); }
 				case EActionType.SendStateMessage: { return new SendStateMessageActionModel(); }
@@ -101,6 +102,7 @@ namespace GameDonkeyLib
 				case EActionType.ParticleEffect: { return new ParticleEffectActionModel(actionModel); }
 				case EActionType.PlayAnimation: { return new PlayAnimationActionModel(actionModel); }
 				case EActionType.PlaySound: { return new PlaySoundActionModel(actionModel); }
+				case EActionType.PointLight: { return new PointLightActionModel(actionModel); }
 				case EActionType.Projectile: { return new ProjectileActionModel(actionModel); }
 				case EActionType.Rotate: { return new RotateActionModel(actionModel); }
 				case EActionType.SendStateMessage: { return new SendStateMessageActionModel(actionModel); }
@@ -138,6 +140,7 @@ namespace GameDonkeyLib
 				case EActionType.ParticleEffect: { return new ParticleEffectAction(owner, actionModel); }
 				case EActionType.PlayAnimation: { return new PlayAnimationAction(owner, actionModel); }
 				case EActionType.PlaySound: { return new PlaySoundAction(owner, actionModel); }
+				case EActionType.PointLight: { return new PointLightAction(owner, actionModel); }
 				case EActionType.Projectile: { return new ProjectileAction(owner, actionModel); }
 				case EActionType.Rotate: { return new RotateAction(owner, actionModel); }
 				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner, actionModel); }
@@ -174,6 +177,7 @@ namespace GameDonkeyLib
 				case EActionType.ParticleEffect: { return new ParticleEffectAction(owner); }
 				case EActionType.PlayAnimation: { return new PlayAnimationAction(owner); }
 				case EActionType.PlaySound: { return new PlaySoundAction(owner); }
+				case EActionType.PointLight: { return new PointLightAction(owner); }
 				case EActionType.Projectile: { return new ProjectileAction(owner); }
 				case EActionType.Rotate: { return new RotateAction(owner); }
 				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner); }

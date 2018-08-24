@@ -19,6 +19,7 @@ namespace GameDonkeyLib
 		CreateHitCircle,
 		CreateThrow,
 		ParticleEffect,
+		PointLight,
 		SendStateMessage,
 		Deactivate,
 		Rotate,
