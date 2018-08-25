@@ -39,7 +39,7 @@ namespace GameDonkeyLib
 
 		public PointLightActionModel()
 		{
-			StartOffset = Vector3.Zero;
+			StartOffset = new Vector3(0f, 0f, 20f);
 			LightColor = Color.White;
 			AttackTimeDelta = 1f;
 			SustainTimeDelta = 1f;

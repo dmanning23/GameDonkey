@@ -294,6 +294,8 @@ namespace GameDonkeyLib
 			GameTimer.Update(MasterClock);
 			CharacterClock.Update(GameTimer);
 
+			Renderer.Update(CharacterClock);
+
 			//check for a winner
 			if (!GameOver)
 			{

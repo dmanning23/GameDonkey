@@ -27,11 +27,11 @@ namespace GameDonkeyLib
 				_boneName = value;
 				if (String.IsNullOrEmpty(_boneName) || null == Owner)
 				{
-					_bone = null;
+					Bone = null;
 				}
 				else
 				{
-					_bone = Owner.AnimationContainer.Skeleton.RootBone.GetBone(_boneName);
+					Bone = Owner.AnimationContainer.Skeleton.RootBone.GetBone(_boneName);
 				}
 			}
 		}
@@ -39,7 +39,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the bone to attach the particle emitter to
 		/// </summary>
-		private Bone _bone;
+		public Bone Bone { get; private set; }
 
 		/// <summary>
 		/// the direction to shoot the particle effect
@@ -125,9 +125,9 @@ namespace GameDonkeyLib
 
 		private PositionDelegate GetPosDelegate()
 		{
-			if (null != _bone)
+			if (null != Bone)
 			{
-				return _bone.GetPosition;
+				return Bone.GetPosition;
 			}
 
 			return null;
@@ -135,9 +135,9 @@ namespace GameDonkeyLib
 
 		private RotationDelegate GetRotationDelegate()
 		{
-			if ((null != _bone) && UseBoneRotation)
+			if ((null != Bone) && UseBoneRotation)
 			{
-				return _bone.TrueRotationAngle;
+				return Bone.TrueRotationAngle;
 			}
 
 			return null;
@@ -145,9 +145,9 @@ namespace GameDonkeyLib
 
 		private bool GetFlip()
 		{
-			if ((null != _bone) && UseBoneRotation)
+			if ((null != Bone) && UseBoneRotation)
 			{
-				return _bone.Flipped;
+				return Bone.Flipped;
 			}
 
 			return Owner.Flip;
@@ -155,7 +155,7 @@ namespace GameDonkeyLib
 
 		private RotationDelegate GetOwnerRotation()
 		{
-			if ((null != _bone) && UseBoneRotation)
+			if ((null != Bone) && UseBoneRotation)
 			{
 				return null;
 			}

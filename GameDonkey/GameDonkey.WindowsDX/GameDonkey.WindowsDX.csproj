@@ -70,7 +70,7 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.1.0.32\lib\net451\ParticleBuddy.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.1.0.33\lib\net451\ParticleBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="PrimitiveBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PrimitiveBuddy.1.0.4\lib\net451\PrimitiveBuddy.WindowsDX.dll</HintPath>
@@ -79,7 +79,7 @@
       <HintPath>..\packages\RandomExtensions.dmanning23.1.0.6\lib\net452\RandomExtensions.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="RenderBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RenderBuddy.1.0.39\lib\net451\RenderBuddy.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\RenderBuddy.1.0.43\lib\net451\RenderBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="ResolutionBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ResolutionBuddy.1.0.17\lib\net451\ResolutionBuddy.WindowsDX.dll</HintPath>

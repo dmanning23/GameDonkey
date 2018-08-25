@@ -23,11 +23,11 @@ namespace GameDonkeyLib
 				_boneName = value;
 				if (String.IsNullOrEmpty(_boneName) || null == Owner)
 				{
-					_bone = null;
+					Bone = null;
 				}
 				else
 				{
-					_bone = Owner.AnimationContainer.Skeleton.RootBone.GetBone(_boneName);
+					Bone = Owner.AnimationContainer.Skeleton.RootBone.GetBone(_boneName);
 				}
 			}
 		}
@@ -35,7 +35,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the bone to attach the particle emitter to
 		/// </summary>
-		private Bone _bone;
+		public Bone Bone { get; private set; }
 
 		/// <summary>
 		/// the offset from the character origin to start the particle effect from
@@ -63,7 +63,7 @@ namespace GameDonkeyLib
 			base(owner, EActionType.PointLight)
 		{
 			BoneName = "";
-			StartOffset = Vector3.Zero;
+			StartOffset = new Vector3(0f, 0f, 20f);
 			LightColor = Color.White;
 			AttackTimeDelta = 1f;
 			SustainTimeDelta = 1f;
@@ -123,7 +123,7 @@ namespace GameDonkeyLib
 
 		private Position3Delegate GetPosDelegate()
 		{
-			if (null != _bone)
+			if (null != Bone)
 			{
 				return BonePosition;
 			}
@@ -135,7 +135,10 @@ namespace GameDonkeyLib
 
 		private Vector3 BonePosition()
 		{
-			return new Vector3(_bone.GetPosition(), 25f);
+			var bonePos = Bone.GetPosition();
+			return new Vector3(bonePos.X + (Owner.Flip ? (-1f * StartOffset.X) : StartOffset.X),
+				bonePos.Y + StartOffset.Y,
+				StartOffset.Z);
 		}
 
 		#endregion //Methods

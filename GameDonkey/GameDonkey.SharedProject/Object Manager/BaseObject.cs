@@ -425,6 +425,20 @@ namespace GameDonkeyLib
 			Garments.Reset();
 			RotationPerSecond = 0.0f;
 			CurrentRotation = 0.0f;
+
+			//kill all the particle effects and clear out that list
+			foreach (var emitter in Emitters)
+			{
+				emitter.EmitterTimer.Stop();
+			}
+			Emitters.Clear();
+
+			//kill all the lights and clear out that list
+			foreach (var light in Lights)
+			{
+				light.Kill();
+			}
+			Lights.Clear();
 		}
 
 		public virtual int DisplayHealth()

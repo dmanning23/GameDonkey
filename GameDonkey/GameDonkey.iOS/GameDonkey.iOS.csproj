@@ -90,7 +90,7 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.1.0.32\lib\Xamarin.iOS10\ParticleBuddy.iOS.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.1.0.33\lib\Xamarin.iOS10\ParticleBuddy.iOS.dll</HintPath>
     </Reference>
     <Reference Include="PrimitiveBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PrimitiveBuddy.1.0.4\lib\Xamarin.iOS10\PrimitiveBuddy.iOS.dll</HintPath>
@@ -99,7 +99,7 @@
       <HintPath>..\packages\RandomExtensions.dmanning23.1.0.6\lib\Xamarin.iOS10\RandomExtensions.iOS.dll</HintPath>
     </Reference>
     <Reference Include="RenderBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RenderBuddy.1.0.39\lib\Xamarin.iOS10\RenderBuddy.iOS.dll</HintPath>
+      <HintPath>..\packages\RenderBuddy.1.0.43\lib\Xamarin.iOS10\RenderBuddy.iOS.dll</HintPath>
     </Reference>
     <Reference Include="ResolutionBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ResolutionBuddy.1.0.17\lib\Xamarin.iOS10\ResolutionBuddy.iOS.dll</HintPath>
