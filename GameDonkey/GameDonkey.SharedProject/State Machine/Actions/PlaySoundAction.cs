@@ -8,10 +8,28 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
+		IGameDonkey _engine;
+
+		private Filename _soundCueName;
+
 		/// <summary>
 		/// the filename of the sound file to use
 		/// </summary>		/// <value>The name of the sound cue.</value>
-		public Filename SoundCueName { get; set; }
+		public Filename SoundCueName
+		{
+			get
+			{
+				return _soundCueName;
+			}
+			set
+			{
+				_soundCueName = value;
+				if (null != _engine && !string.IsNullOrEmpty(SoundCueName.File))
+				{
+					Sound = _engine.LoadSound(SoundCueName);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets the sound.
@@ -42,7 +60,11 @@ namespace GameDonkeyLib
 
 		public override void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content)
 		{
-			Sound = engine.LoadSound(SoundCueName);
+			_engine = engine;
+			if (!string.IsNullOrEmpty(SoundCueName.File))
+			{
+				Sound = engine.LoadSound(SoundCueName);
+			}
 		}
 
 		#endregion //Initialization

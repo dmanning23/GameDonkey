@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>GameDonkey</id>
-		<version>1.0.63</version>
+		<version>2.0.2</version>
 		<title>GameDonkey</title>
 		<authors>dmanning23</authors>
 		<owners>dmanning23</owners>
@@ -17,97 +17,97 @@
 
 			<!--Xamarin.Android-->
 			<group targetFramework="MonoAndroid10">
-				<dependency id="MonoGame.Framework.Android" version="3.6"/>
-				<dependency id="CameraBuddy" version="1.0.1"/>
-				<dependency id="CollisionBuddy" version="1.0"/>
-				<dependency id="DrawListBuddy" version="1.0"/>
-				<dependency id="FilenameBuddy" version="1.0"/>
-				<dependency id="GameTimer" version="1.0"/>
-				<dependency id="MatrixExtensions" version="1.0.1"/>
-				<dependency id="PrimitiveBuddy" version="1.0"/>
-				<dependency id="RandomExtensions.dmanning23" version="1.0"/>
-				<dependency id="RenderBuddy" version="1.0"/>
-				<dependency id="ResolutionBuddy" version="1.0"/>
-				<dependency id="UndoRedoBuddy" version="1.0"/>
-				<dependency id="Vector2Extensions" version="1.0.1"/>
-				<dependency id="XmlBuddy" version="1.0"/>
-				<dependency id="AnimationLib" version="1.0"/>
-				<dependency id="FontBuddy" version="1.0"/>
-				<dependency id="HadoukInput" version="1.0"/>
-				<dependency id="ParticleBuddy" version="1.0"/>
-				<dependency id="StateMachineBuddy" version="1.0"/>
+				<dependency id="MonoGame.Framework.Android" version="3.7"/>
+				<dependency id="CameraBuddy" version="2.0"/>
+				<dependency id="CollisionBuddy" version="2.0"/>
+				<dependency id="DrawListBuddy" version="2.0"/>
+				<dependency id="FilenameBuddy" version="2.0"/>
+				<dependency id="GameTimer" version="2.0"/>
+				<dependency id="MatrixExtensions" version="2.0"/>
+				<dependency id="PrimitiveBuddy" version="2.0"/>
+				<dependency id="RandomExtensions.dmanning23" version="2.0"/>
+				<dependency id="RenderBuddy" version="2.0"/>
+				<dependency id="ResolutionBuddy" version="2.0"/>
+				<dependency id="UndoRedoBuddy" version="2.0"/>
+				<dependency id="Vector2Extensions" version="2.0"/>
+				<dependency id="XmlBuddy" version="2.0"/>
+				<dependency id="AnimationLib" version="2.0"/>
+				<dependency id="FontBuddy" version="2.0"/>
+				<dependency id="HadoukInput" version="2.0"/>
+				<dependency id="ParticleBuddy" version="2.0"/>
+				<dependency id="StateMachineBuddy" version="2.0"/>
 				<dependency id="Newtonsoft.Json" version="11.0"/>
 			</group>
 
 			<!--Xamarin.iOS Unified-->
 			<group targetFramework="Xamarin.iOS10">
-				<dependency id="MonoGame.Framework.iOS" version="3.6"/>
-				<dependency id="CameraBuddy" version="1.0.1"/>
-				<dependency id="CollisionBuddy" version="1.0"/>
-				<dependency id="DrawListBuddy" version="1.0"/>
-				<dependency id="FilenameBuddy" version="1.0"/>
-				<dependency id="GameTimer" version="1.0"/>
-				<dependency id="MatrixExtensions" version="1.0.1"/>
-				<dependency id="PrimitiveBuddy" version="1.0"/>
-				<dependency id="RandomExtensions.dmanning23" version="1.0"/>
-				<dependency id="RenderBuddy" version="1.0"/>
-				<dependency id="ResolutionBuddy" version="1.0"/>
-				<dependency id="UndoRedoBuddy" version="1.0"/>
-				<dependency id="Vector2Extensions" version="1.0.1"/>
-				<dependency id="XmlBuddy" version="1.0"/>
-				<dependency id="AnimationLib" version="1.0"/>
-				<dependency id="FontBuddy" version="1.0"/>
-				<dependency id="HadoukInput" version="1.0"/>
-				<dependency id="ParticleBuddy" version="1.0"/>
-				<dependency id="StateMachineBuddy" version="1.0"/>
+				<dependency id="MonoGame.Framework.iOS" version="3.7"/>
+				<dependency id="CameraBuddy" version="2.0"/>
+				<dependency id="CollisionBuddy" version="2.0"/>
+				<dependency id="DrawListBuddy" version="2.0"/>
+				<dependency id="FilenameBuddy" version="2.0"/>
+				<dependency id="GameTimer" version="2.0"/>
+				<dependency id="MatrixExtensions" version="2.0"/>
+				<dependency id="PrimitiveBuddy" version="2.0"/>
+				<dependency id="RandomExtensions.dmanning23" version="2.0"/>
+				<dependency id="RenderBuddy" version="2.0"/>
+				<dependency id="ResolutionBuddy" version="2.0"/>
+				<dependency id="UndoRedoBuddy" version="2.0"/>
+				<dependency id="Vector2Extensions" version="2.0"/>
+				<dependency id="XmlBuddy" version="2.0"/>
+				<dependency id="AnimationLib" version="2.0"/>
+				<dependency id="FontBuddy" version="2.0"/>
+				<dependency id="HadoukInput" version="2.0"/>
+				<dependency id="ParticleBuddy" version="2.0"/>
+				<dependency id="StateMachineBuddy" version="2.0"/>
 				<dependency id="Newtonsoft.Json" version="11.0"/>
 			</group>
 
 			<!--Win Universal-->
 			<group targetFramework="uap10.0">
-				<dependency id="MonoGame.Framework.WindowsUniversal" version="3.6"/>
-				<dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.1"/>
-				<dependency id="CameraBuddy" version="1.0.1"/>
-				<dependency id="CollisionBuddy" version="1.0"/>
-				<dependency id="DrawListBuddy" version="1.0"/>
-				<dependency id="FilenameBuddy" version="1.0"/>
-				<dependency id="GameTimer" version="1.0"/>
-				<dependency id="MatrixExtensions" version="1.0.1"/>
-				<dependency id="PrimitiveBuddy" version="1.0"/>
-				<dependency id="RandomExtensions.dmanning23" version="1.0"/>
-				<dependency id="RenderBuddy" version="1.0"/>
-				<dependency id="ResolutionBuddy" version="1.0"/>
-				<dependency id="UndoRedoBuddy" version="1.0"/>
-				<dependency id="Vector2Extensions" version="1.0.1"/>
-				<dependency id="XmlBuddy" version="1.0"/>
-				<dependency id="AnimationLib" version="1.0"/>
-				<dependency id="FontBuddy" version="1.0"/>
-				<dependency id="HadoukInput" version="1.0"/>
-				<dependency id="ParticleBuddy" version="1.0"/>
-				<dependency id="StateMachineBuddy" version="1.0"/>
+				<dependency id="MonoGame.Framework.WindowsUniversal" version="3.7"/>
+				<dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.1"/>
+				<dependency id="CameraBuddy" version="2.0"/>
+				<dependency id="CollisionBuddy" version="2.0"/>
+				<dependency id="DrawListBuddy" version="2.0"/>
+				<dependency id="FilenameBuddy" version="2.0"/>
+				<dependency id="GameTimer" version="2.0"/>
+				<dependency id="MatrixExtensions" version="2.0"/>
+				<dependency id="PrimitiveBuddy" version="2.0"/>
+				<dependency id="RandomExtensions.dmanning23" version="2.0"/>
+				<dependency id="RenderBuddy" version="2.0"/>
+				<dependency id="ResolutionBuddy" version="2.0"/>
+				<dependency id="UndoRedoBuddy" version="2.0"/>
+				<dependency id="Vector2Extensions" version="2.0"/>
+				<dependency id="XmlBuddy" version="2.0"/>
+				<dependency id="AnimationLib" version="2.0"/>
+				<dependency id="FontBuddy" version="2.0"/>
+				<dependency id="HadoukInput" version="2.0"/>
+				<dependency id="ParticleBuddy" version="2.0"/>
+				<dependency id="StateMachineBuddy" version="2.0"/>
 				<dependency id="Newtonsoft.Json" version="11.0"/>
 			</group>
 
 			<group targetFramework="net451">
-				<dependency id="MonoGame.Framework.WindowsDX" version="3.6"/>
-				<dependency id="CameraBuddy" version="1.0.1"/>
-				<dependency id="CollisionBuddy" version="1.0"/>
-				<dependency id="DrawListBuddy" version="1.0"/>
-				<dependency id="FilenameBuddy" version="1.0"/>
-				<dependency id="GameTimer" version="1.0"/>
-				<dependency id="MatrixExtensions" version="1.0.1"/>
-				<dependency id="PrimitiveBuddy" version="1.0"/>
-				<dependency id="RandomExtensions.dmanning23" version="1.0"/>
-				<dependency id="RenderBuddy" version="1.0"/>
-				<dependency id="ResolutionBuddy" version="1.0"/>
-				<dependency id="UndoRedoBuddy" version="1.0"/>
-				<dependency id="Vector2Extensions" version="1.0.1"/>
-				<dependency id="XmlBuddy" version="1.0"/>
-				<dependency id="AnimationLib" version="1.0"/>
-				<dependency id="FontBuddy" version="1.0"/>
-				<dependency id="HadoukInput" version="1.0"/>
-				<dependency id="ParticleBuddy" version="1.0"/>
-				<dependency id="StateMachineBuddy" version="1.0"/>
+				<dependency id="MonoGame.Framework.WindowsDX" version="3.7"/>
+				<dependency id="CameraBuddy" version="2.0"/>
+				<dependency id="CollisionBuddy" version="2.0"/>
+				<dependency id="DrawListBuddy" version="2.0"/>
+				<dependency id="FilenameBuddy" version="2.0"/>
+				<dependency id="GameTimer" version="2.0"/>
+				<dependency id="MatrixExtensions" version="2.0"/>
+				<dependency id="PrimitiveBuddy" version="2.0"/>
+				<dependency id="RandomExtensions.dmanning23" version="2.0"/>
+				<dependency id="RenderBuddy" version="2.0"/>
+				<dependency id="ResolutionBuddy" version="2.0"/>
+				<dependency id="UndoRedoBuddy" version="2.0"/>
+				<dependency id="Vector2Extensions" version="2.0"/>
+				<dependency id="XmlBuddy" version="2.0"/>
+				<dependency id="AnimationLib" version="2.0"/>
+				<dependency id="FontBuddy" version="2.0"/>
+				<dependency id="HadoukInput" version="2.0"/>
+				<dependency id="ParticleBuddy" version="2.0"/>
+				<dependency id="StateMachineBuddy" version="2.0"/>
 				<dependency id="Newtonsoft.Json" version="11.0"/>
 			</group>
 

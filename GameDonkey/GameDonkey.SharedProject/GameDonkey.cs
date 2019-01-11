@@ -183,8 +183,11 @@ namespace GameDonkeyLib
 
 		public virtual void UnloadContent()
 		{
-			SoundContent.Dispose();
-			SoundContent = null;
+			if (null != SoundContent)
+			{
+				SoundContent.Dispose();
+				SoundContent = null;
+			}
 		}
 
 		public virtual void Start()

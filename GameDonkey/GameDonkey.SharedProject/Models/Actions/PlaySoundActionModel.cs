@@ -70,7 +70,10 @@ namespace GameDonkeyLib
 			{
 				case "filename":
 					{
-						Filename.SetRelFilename(value);
+						if (!string.IsNullOrEmpty(value))
+						{
+							Filename.SetRelFilename(value);
+						}
 					}
 					break;
 				default:
