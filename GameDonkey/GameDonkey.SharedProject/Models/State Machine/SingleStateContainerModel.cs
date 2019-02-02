@@ -25,7 +25,7 @@ namespace GameDonkeyLib
 		{
 			foreach (var stateActions in stateContainer.Actions.Actions)
 			{
-				StatesActions.Add(new StateActionsModel(stateActions));
+				StatesActions.Add(new StateActionsModel(stateActions.Value));
 			}
 		}
 

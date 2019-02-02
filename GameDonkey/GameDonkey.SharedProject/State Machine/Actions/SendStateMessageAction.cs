@@ -9,39 +9,9 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// name of the message this dude sends
 		/// </summary>
-		protected string _messageName;
-		public string MessageName
-		{
-			get
-			{
-				return _messageName;
-			}
-			set
-			{
-				_messageName = value;
-				SetMessage();
-			}
-		}
+		public string Message { get; set; }
 
-
-		/// <summary>
-		/// the message this dude sends
-		/// </summary>
-		public int Message { get; protected set; }
-
-		private IStateContainer _stateContainer { get; set; }
-		private IStateContainer StateContainer
-		{
-			get
-			{
-				return _stateContainer;
-			}
-			set
-			{
-				_stateContainer = value;
-				SetMessage();
-			}
-		}
+		private IStateContainer StateContainer { get; set; }
 
 		#endregion //Properties
 
@@ -55,7 +25,7 @@ namespace GameDonkeyLib
 		public SendStateMessageAction(BaseObject owner, SendStateMessageActionModel actionModel) :
 			base(owner, actionModel)
 		{
-			MessageName = actionModel.Message;
+			Message = actionModel.Message;
 		}
 
 		public SendStateMessageAction(BaseObject owner, BaseActionModel actionModel) :
@@ -71,14 +41,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		private void SetMessage()
-		{
-			if (null != StateContainer && !string.IsNullOrEmpty(MessageName))
-			{
-				Message = StateContainer.GetMessageIndexFromText(MessageName);
-			}
-		}
 
 		/// <summary>
 		/// execute this action (overridden in all child classes)

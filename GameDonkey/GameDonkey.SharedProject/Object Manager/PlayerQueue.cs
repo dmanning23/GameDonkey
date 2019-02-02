@@ -514,23 +514,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-		private int GetNextMessageOffset()
-		{
-			//go through all the current objects and add up the number of messages
-			int numMessages = 0;
-			for (var i = 0; i < Active.Count; i++)
-			{
-				numMessages += Active[i].States.NumMessages;
-			}
-
-			for (var i = 0; i < Inactive.Count; i++)
-			{
-				numMessages += Inactive[i].States.NumMessages;
-			}
-
-			return numMessages;
-		}
-
 		/// <summary>
 		/// add one stock to this player.
 		/// </summary>
@@ -607,15 +590,12 @@ namespace GameDonkeyLib
 					}
 			}
 
-			//get the message offset
-			int messageOffset = GetNextMessageOffset();
-
 			//load the object data
 			gameObjectModel.ReadXmlFile(content);
 
 			//load the object data into the thing
 			gameObject.PlayerQueue = this;
-			gameObject.ParseXmlData(gameObjectModel, engine, messageOffset, content);
+			gameObject.ParseXmlData(gameObjectModel, engine, content);
 
 			//add to the correct list
 			if (objectType == GameObjectType.Level)

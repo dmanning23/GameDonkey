@@ -56,8 +56,8 @@ namespace GameDonkeyLib
 				}
 
 				//Check if anyone is stunned
-				var meStunned = EState.Stunned == (EState)Owner.States.CurrentState;
-				var himStunned = EState.Stunned == (EState)otherGuy.Owner.States.CurrentState;
+				var meStunned = Owner.States.CurrentState == "Stunned";
+				var himStunned = otherGuy.Owner.States.CurrentState == "Stunned";
 
 				//get the strength of the hit
 				var collisionDelta = (minDistance - objVect.Length());

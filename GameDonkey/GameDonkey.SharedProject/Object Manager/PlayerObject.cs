@@ -165,7 +165,7 @@ namespace GameDonkeyLib
 			ThumbstickDirection = controller.Controller.Thumbsticks.LeftThumbstick.Direction;
 
 			//get the next moov from the input
-			int nextMoov = controller.GetNextMove();
+			var nextMoov = controller.GetNextMove();
 			SendAttackMessage(nextMoov);
 		}
 
@@ -185,7 +185,7 @@ namespace GameDonkeyLib
 		/// This is used to send attack moves from the input queue to the state machine, through the combo engine
 		/// </summary>
 		/// <param name="iMessage"></param>
-		protected virtual void SendAttackMessage(int nextMoov)
+		protected virtual void SendAttackMessage(string nextMoov)
 		{
 			//am i currently in an attack state? 
 			if (States.IsCurrentStateAttack())
@@ -195,7 +195,7 @@ namespace GameDonkeyLib
 				{
 					//wait until the attack ends
 
-					if (-1 != nextMoov)
+					if (!string.IsNullOrEmpty(nextMoov))
 					{
 						//add the move to the queue
 						_queuedInput.Enqueue(nextMoov);
@@ -219,12 +219,12 @@ namespace GameDonkeyLib
 			{
 				//ok character is in neutral state
 
-				if (nextMoov > -1)
+				if (!string.IsNullOrEmpty(nextMoov))
 				{
 					//ok not in an attack state, no queued input
 					SendStateMessage(nextMoov);
 				}
-				else if (-1 == nextMoov)
+				else
 				{
 					//clear out the queued input
 					_queuedInput.Clear();
@@ -303,7 +303,7 @@ namespace GameDonkeyLib
 				if (CurrentThrow.TimeToRelease <= CharacterClock.CurrentTime)
 				{
 					//send the 'done' message
-					SendStateMessage((int)EMessage.Done);
+					SendStateMessage("Done");
 
 					//set the velocity
 					var throwVelocity = CurrentThrow.Direction * _strengthMultiplier;
@@ -329,8 +329,7 @@ namespace GameDonkeyLib
 			//move the player UP out of the floor
 			_position.Y += (groundHit.Strength * groundHit.Direction.Y);
 
-			EState currentState = (EState)States.CurrentState;
-			if (EState.Stunned == currentState)
+			if (States.CurrentState == "Stunned")
 			{
 				//if the player is stunned, bounce them up in the air
 				_velocity.Y = -1.0f * Math.Abs(Velocity.Y);
@@ -361,8 +360,7 @@ namespace GameDonkeyLib
 			//always bounce the player out of a ceiling hit
 			_velocity.Y = -1.0f * Velocity.Y;
 
-			int iCurrentState = States.CurrentState;
-			if ((int)EState.Stunned == iCurrentState)
+			if (States.CurrentState == "Stunned")
 			{
 				//add camera shake
 				engine.AddCameraShake(0.2f);
@@ -380,8 +378,7 @@ namespace GameDonkeyLib
 			//move the player UP out of the floor
 			_position.X += (groundHit.Strength * groundHit.Direction.X);
 
-			EState iCurrentState = (EState)States.CurrentState;
-			if (EState.Stunned == iCurrentState)
+			if (States.CurrentState == "Stunned")
 			{
 				//if the player is stunned, bounce them up in the air
 				_velocity.X = -1.0f * Velocity.X;
@@ -409,8 +406,7 @@ namespace GameDonkeyLib
 			//move the player UP out of the floor
 			_position.X += (groundHit.Strength * groundHit.Direction.X);
 
-			EState iCurrentState = (EState)States.CurrentState;
-			if (EState.Stunned == iCurrentState)
+			if (States.CurrentState == "Stunned")
 			{
 				//if the player is stunned, bounce them up in the air
 				_velocity.X = -1.0f * Velocity.X;
@@ -446,9 +442,9 @@ namespace GameDonkeyLib
 			else if (EvasionTimer.RemainingTime <= 0.0f) //make sure the character is not evading
 			{
 				//if the player is already stunned, restart his state timer
-				if (States.CurrentState == (int)EState.Stunned)
+				if (States.CurrentState == "Stunned")
 				{
-					States.ForceStateChange((int)EState.Stunned);
+					States.ForceStateChange("Stunned");
 				}
 
 				//add the damage
@@ -458,7 +454,7 @@ namespace GameDonkeyLib
 				Velocity = AttackedVector(attack);
 
 				//send the state message
-				SendStateMessage((int)EMessage.Hit);
+				SendStateMessage("Hit");
 
 				//do a hit pause
 				CharacterClock.AddHitPause(_hitPause);
@@ -503,7 +499,7 @@ namespace GameDonkeyLib
 			var HitDirection = attack.Direction * _strengthMultiplier;
 
 			//if this player is already stunned, strengthen the hit
-			if (States.CurrentState == (int)EState.Stunned)
+			if (States.CurrentState == "Stunned")
 			{
 				//This player was already stunned, increment the combo counter
 				ComboCounter++;
@@ -604,7 +600,7 @@ namespace GameDonkeyLib
 		/// <param name="engine">the engine we are using to load</param>
 		/// <param name="messageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content)
+		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content)
 		{
 			var data = model as PlayerObjectModel;
 			if (null == data)
@@ -624,7 +620,7 @@ namespace GameDonkeyLib
 				DeathSound = engine.LoadSound(data.DeathSound);
 			}
 
-			base.ParseXmlData(model, engine, messageOffset, content);
+			base.ParseXmlData(model, engine, content);
 		}
 
 		#endregion //File IO

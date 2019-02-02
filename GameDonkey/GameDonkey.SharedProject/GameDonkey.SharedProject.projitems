@@ -105,7 +105,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\TrailAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\ObjectStateContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\PlayerObjectStateContainer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\SingleStateAppenderContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\SingleStateContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Containers\IStateContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameDonkey.cs" />

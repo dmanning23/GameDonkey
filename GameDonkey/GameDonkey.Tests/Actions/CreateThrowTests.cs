@@ -59,7 +59,7 @@ namespace GameDonkey.Tests
 			action.ActionDirection.Velocity.X.ShouldBe(X);
 			action.ActionDirection.Velocity.Y.ShouldBe(Y);
 			action.ReleaseTimeDelta.ShouldBe(releaseTimeDelta);
-			action.ThrowMessageName.ShouldBe(throwMessage);
+			action.ThrowMessage.ShouldBe(throwMessage);
 			action.SuccessActions.Count.ShouldBe(1);
 			var subAction = action.SuccessActions[0] as DeactivateAction;
 			subAction.ShouldNotBeNull();
@@ -81,7 +81,7 @@ namespace GameDonkey.Tests
 					Velocity = new Vector2(X, Y)
 				},
 				ReleaseTimeDelta = releaseTimeDelta,
-				ThrowMessageName = throwMessage,
+				ThrowMessage = throwMessage,
 			};
 			action.SuccessActions.Add(new DeactivateAction(null)
 			{

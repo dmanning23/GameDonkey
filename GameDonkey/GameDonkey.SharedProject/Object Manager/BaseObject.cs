@@ -32,7 +32,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		protected bool _attackLanded;
 
-		protected Queue<int> _queuedInput;
+		protected Queue<string> _queuedInput;
 
 		#endregion //Fields
 
@@ -321,7 +321,7 @@ namespace GameDonkeyLib
 			PlayerQueue = null;
 			_playerColor = Color.White;
 			_attackLanded = false;
-			_queuedInput = new Queue<int>();
+			_queuedInput = new Queue<string>();
 			_height = 0.0f;
 			RotationPerSecond = 0.0f;
 			CurrentRotation = 0.0f;
@@ -388,7 +388,7 @@ namespace GameDonkeyLib
 		protected virtual void Init()
 		{
 			Physics = new PlayerPhysicsContainer(this);
-			States = new ObjectStateContainer(new StateMachine());
+			States = new ObjectStateContainer(new HybridStateMachine());
 			States.StateChangedEvent += this.StateChanged;
 		}
 
@@ -593,13 +593,13 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="iMessage">the message to send to the state machine</param>
 		/// <returns>bool: whether or not this dude changed states</returns>
-		public void SendStateMessage(int message)
+		public void SendStateMessage(string message)
 		{
 			//send the message to the state machine
 			States.SendStateMessage(message);
 		}
 
-		public void ForceStateChange(int state)
+		public void ForceStateChange(string state)
 		{
 			//force the state change in the state machine
 			States.ForceStateChange(state);
@@ -608,10 +608,10 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Call this when the state changes to reset everything for the new state
 		/// </summary>
-		protected virtual void StateChanged(object sender, StateChangeEventArgs eventArgs)
+		protected virtual void StateChanged(object sender, HybridStateChangeEventArgs eventArgs)
 		{
 			//was this a turn around message?
-			if (States.CurrentState == (int)EState.TurningAround)
+			if (States.CurrentState == "TurningAround")
 			{
 				Flip = !Flip;
 			}
@@ -1242,7 +1242,7 @@ namespace GameDonkeyLib
 		/// <param name="engine">the engine we are using to load</param>
 		/// <param name="messageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public virtual void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content)
+		public virtual void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content)
 		{
 			//read in the model
 			AnimationContainer.Scale = model.Scale;
@@ -1260,7 +1260,7 @@ namespace GameDonkeyLib
 			}
 
 			//read in the states
-			States.LoadContent(model, this, engine, messageOffset, content);
+			States.LoadContent(model, this, engine, content);
 
 			//read in the height
 			_height = model.Height;

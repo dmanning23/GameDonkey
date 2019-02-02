@@ -26,7 +26,7 @@ namespace GameDonkeyLib
 
 		public SendStateMessageActionModel(SendStateMessageAction action) : base(action)
 		{
-			Message = action.MessageName;
+			Message = action.Message;
 		}
 
 		public SendStateMessageActionModel(BaseAction action) : this(action as SendStateMessageAction)

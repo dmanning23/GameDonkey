@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace GameDonkeyLib
@@ -28,12 +27,12 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Occurs when the state changes in the state machine.
 		/// </summary>
-		public event EventHandler<StateChangeEventArgs> StateChangedEvent;
+		public event EventHandler<HybridStateChangeEventArgs> StateChangedEvent;
 
 		/// <summary>
 		/// Get the current state machine for this container
 		/// </summary>
-		public StateMachine StateMachine { get; private set; }
+		public HybridStateMachine StateMachine { get; private set; }
 
 		public StateMachineActions Actions { get; private set; }
 
@@ -88,7 +87,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public int CurrentState
+		public string CurrentState
 		{
 			get
 			{
@@ -96,27 +95,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public int PrevState
+		public string PrevState
 		{
 			get
 			{
 				return StateMachine.PrevState;
-			}
-		}
-
-		public int NumStates
-		{
-			get
-			{
-				return StateMachine.NumStates;
-			}
-		}
-
-		public int NumMessages
-		{
-			get
-			{
-				return StateMachine.NumMessages;
 			}
 		}
 
@@ -125,19 +108,11 @@ namespace GameDonkeyLib
 		/// </summary>
 		public GameClock StateClock { get; protected set; }
 
-		public string CurrentStateText
-		{
-			get
-			{
-				return StateMachine.CurrentStateText;
-			}
-		}
-
 		#endregion //Properties
 
 		#region Initialization
 
-		public SingleStateContainer(StateMachine stateMachine, string containerName)
+		public SingleStateContainer(HybridStateMachine stateMachine, string containerName)
 		{
 			StateMachine = stateMachine;
 			Actions = new StateMachineActions();
@@ -150,19 +125,18 @@ namespace GameDonkeyLib
 			StateMachineFilename = new Filename();
 		}
 
-		public void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content)
+		public void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, ContentManager content)
 		{
-			LoadContent(baseObjectmodel.States.FirstOrDefault(), owner, engine, messageOffset, content);
+			LoadContent(baseObjectmodel.States.FirstOrDefault(), owner, engine, content);
 		}
 
-		public void LoadContent(StateContainerModel stateContainerModel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content)
+		public void LoadContent(StateContainerModel stateContainerModel, BaseObject owner, IGameDonkey engine, ContentManager content)
 		{
 			//grab the filenames
 			StateContainerFilename = new Filename(stateContainerModel.StateActionsFilename);
 			StateMachineFilename = new Filename(stateContainerModel.StateMachineFilename);
 
 			//load the state machine
-			StateMachine.MessageOffset = messageOffset;
 			LoadStateMachine(StateMachine, StateMachineFilename, content);
 
 			//Create the statecontainer model and load it
@@ -182,9 +156,16 @@ namespace GameDonkeyLib
 			Actions.LoadStateActions(StateMachine, stateContainerModel, owner);
 		}
 
-		public virtual void LoadStateMachine(StateMachine machine, Filename file, ContentManager content)
+		public virtual void LoadStateMachine(HybridStateMachine machine, Filename file, ContentManager content)
 		{
-			machine.LoadXml(file, content);
+			//Load the state machine model
+			using (var model = new StateMachineModel(file))
+			{
+				model.ReadXmlFile(content);
+				machine.AddStateMachine(model);
+
+				machine.SetInitialState(model.Initial);
+			}
 		}
 
 		public void WriteXml()
@@ -211,12 +192,12 @@ namespace GameDonkeyLib
 		/// <param name="message">message to send to the state machine, 
 		/// should be offset by the message offset of this dude</param>
 		/// <returns>bool: did it change states?</returns>
-		public void SendStateMessage(int message)
+		public void SendStateMessage(string message)
 		{
 			StateMachine.SendStateMessage(message);
 		}
 
-		public void ForceStateChange(int state)
+		public void ForceStateChange(string state)
 		{
 			StateMachine.ForceState(state);
 		}
@@ -225,7 +206,7 @@ namespace GameDonkeyLib
 		/// The states have changed, go through and set all the actions of the new state to "not run"
 		/// </summary>
 		/// <param name="iCurState">the new state of the object</param>
-		public void StateChange(object sender, StateChangeEventArgs eventArgs)
+		public void StateChange(object sender, HybridStateChangeEventArgs eventArgs)
 		{
 			//set the new state actions to 'not run'
 			Actions.StateChange(eventArgs.NewState);
@@ -268,7 +249,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="state">The state to check if is an attack state</param>
 		/// <returns>bool: whether or not the requested state has an attack</returns>
-		public bool IsStateAttack(int state)
+		public bool IsStateAttack(string state)
 		{
 			return Actions.IsStateAttack(state);
 		}
@@ -294,34 +275,14 @@ namespace GameDonkeyLib
 			Actions.ReplaceOwner(bot);
 		}
 
-		public int GetStateIndexFromText(string stateName)
-		{
-			return StateMachine.GetStateFromName(stateName);
-		}
-
-		public int GetMessageIndexFromText(string messageName)
-		{
-			return StateMachine.GetMessageFromName(messageName);
-		}
-
-		public string GetStateName(int stateIndex)
-		{
-			return StateMachine.GetStateName(stateIndex);
-		}
-
-		public string GetMessageName(int messageIndex)
-		{
-			return StateMachine.GetMessageName(messageIndex);
-		}
-
-		public StateActions GetStateActions(int stateIndex)
-		{
-			return Actions.GetStateActions(stateIndex);
-		}
-
 		public override string ToString()
 		{
 			return Name;
+		}
+
+		public StateActions GetStateActions(string stateName)
+		{
+			return Actions.GetStateActions(stateName);
 		}
 
 		#endregion //Methods

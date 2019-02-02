@@ -62,7 +62,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		private CountdownTimer StateMachineChangeTimer { get; set; }
 
-		public event EventHandler<StateChangeEventArgs> StateChangedEvent;
+		public event EventHandler<HybridStateChangeEventArgs> StateChangedEvent;
 
 		/// <summary>
 		/// Get the number of containers, if this is a collection
@@ -90,7 +90,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Get the current state machine for this container
 		/// </summary>
-		public StateMachine StateMachine
+		public HybridStateMachine StateMachine
 		{
 			get
 			{
@@ -104,7 +104,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		public bool IgnoreStateMachineChange { get; set; }
 
-		public int CurrentState
+		public string CurrentState
 		{
 			get
 			{
@@ -112,37 +112,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public int PrevState
+		public string PrevState
 		{
 			get
 			{
 				return StateContainers[CurrentStateMachine].PrevState;
-			}
-		}
-
-		public int NumStates
-		{
-			get
-			{
-				return StateContainers[CurrentStateMachine].NumStates;
-			}
-		}
-
-		public int NumMessages
-		{
-			get
-			{
-				//find the state machine with the most states
-				int iNumMessages = StateContainers[0].NumMessages;
-				for (int i = 1; i < StateContainers.Count; i++)
-				{
-					if (StateContainers[i].NumMessages > iNumMessages)
-					{
-						iNumMessages = StateContainers[i].NumMessages;
-					}
-				}
-
-				return iNumMessages;
 			}
 		}
 
@@ -151,14 +125,6 @@ namespace GameDonkeyLib
 			get
 			{
 				return StateContainers[CurrentStateMachine].StateClock;
-			}
-		}
-
-		public string CurrentStateText
-		{
-			get
-			{
-				return StateContainers[CurrentStateMachine].CurrentStateText;
 			}
 		}
 
@@ -177,7 +143,7 @@ namespace GameDonkeyLib
 			IgnoreStateMachineChange = false;
 		}
 
-		public virtual void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content)
+		public virtual void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, ContentManager content)
 		{
 			throw new NotImplementedException("This method should be implemented in the child class.");
 		}
@@ -206,16 +172,13 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="message">message to send to the state machine, 
 		/// should be offset by the message offset of this dude</param>
-		public void SendStateMessage(int message)
+		public void SendStateMessage(string message)
 		{
-			//grab onto the current state
-			int iCurrentState = CurrentState;
-
 			//check if the state change causes a state machine switch
 			StateContainers[CurrentStateMachine].SendStateMessage(message);
 		}
 
-		public void ForceStateChange(int state)
+		public void ForceStateChange(string state)
 		{
 			//check if the state change causes a state machine switch
 			StateContainers[CurrentStateMachine].ForceStateChange(state);
@@ -226,7 +189,7 @@ namespace GameDonkeyLib
 		/// if the state change was not safe, we need to pop back into the previous state.
 		/// </summary>
 		/// <param name="iCurState">the new state of the object</param>
-		public virtual void StateChange(object sender, StateChangeEventArgs eventArgs)
+		public virtual void StateChange(object sender, HybridStateChangeEventArgs eventArgs)
 		{
 			//reset the current single state container
 			StateContainers[CurrentStateMachine].StateChange(sender, eventArgs);
@@ -242,7 +205,7 @@ namespace GameDonkeyLib
 		/// change the index of the state machine to use
 		/// </summary>
 		/// <param name="index"></param>
-		public virtual void StateMachineIndex(int index, StateChangeEventArgs eventArgs)
+		public virtual void StateMachineIndex(int index, HybridStateChangeEventArgs eventArgs)
 		{
 			//do a little timer so it doesn't pop back and forth between state machines...
 			//but ignore it for switching into/out of ground state machine
@@ -309,7 +272,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="state">The state to check if is an attack state</param>
 		/// <returns>bool: whether or not the requested state has an attack</returns>
-		public bool IsStateAttack(int state)
+		public bool IsStateAttack(string state)
 		{
 			return StateContainers[CurrentStateMachine].IsStateAttack(state);
 		}
@@ -337,27 +300,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public int GetStateIndexFromText(string stateName)
-		{
-			return StateContainers[CurrentStateMachine].GetStateIndexFromText(stateName);
-		}
-
-		public int GetMessageIndexFromText(string messageName)
-		{
-			return StateContainers[CurrentStateMachine].GetMessageIndexFromText(messageName);
-		}
-
-		public string GetStateName(int state)
-		{
-			return StateContainers[CurrentStateMachine].GetStateName(state);
-		}
-
-		public string GetMessageName(int messge)
-		{
-			return StateContainers[CurrentStateMachine].GetMessageName(messge);
-		}
-
-		public StateActions GetStateActions(int state)
+		public StateActions GetStateActions(string state)
 		{
 			return StateContainers[CurrentStateMachine].GetStateActions(state);
 		}

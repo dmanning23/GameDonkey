@@ -9,6 +9,5 @@ namespace GameDonkeyLib
 		Done = 0,
 		Hit,
 		TurnAround,
-		NumMessages
 	}
 }

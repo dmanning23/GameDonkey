@@ -27,7 +27,7 @@ namespace GameDonkeyLib
 		protected override void Init()
 		{
 			Physics = new LevelObjectPhysicsContainer(this);
-			States = new ObjectStateContainer(new StateMachine());
+			States = new ObjectStateContainer(new HybridStateMachine());
 			States.StateChangedEvent += this.StateChanged;
 		}
 
@@ -91,7 +91,7 @@ namespace GameDonkeyLib
 		/// <param name="engine">the engine we are using to load</param>
 		/// <param name="messageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content = null)
+		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content = null)
 		{
 			var data = model as LevelObjectModel;
 			if (null == data)
@@ -105,7 +105,7 @@ namespace GameDonkeyLib
 			//set teh position
 			Position = data.Position;
 
-			base.ParseXmlData(model, engine, messageOffset, content);
+			base.ParseXmlData(model, engine, content);
 		}
 
 		#endregion //File IO

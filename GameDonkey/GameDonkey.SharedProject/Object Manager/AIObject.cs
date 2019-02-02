@@ -244,7 +244,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		public override void CheckHardCodedStates()
 		{
-			int currentState = States.CurrentState;
+			var currentState = States.CurrentState;
 
 			////check if forward button is held down, add forward movement to the player 
 			//if (m_bMoveTowards)

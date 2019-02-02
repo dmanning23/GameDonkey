@@ -11,27 +11,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// The message to send to the state machine when this grab connects, to switch to the throw
 		/// </summary>
-		protected string _throwMessageName;
-		public string ThrowMessageName
-		{
-			get
-			{
-				return _throwMessageName;
-			}
-			set
-			{
-				_throwMessageName = value;
-				if (null != Owner)
-				{
-					ThrowMessage = Owner.States.GetMessageIndexFromText(ThrowMessageName);
-				}
-			}
-		}
-
-		/// <summary>
-		/// that message, loaded from the state machine
-		/// </summary>
-		public int ThrowMessage { get; protected set; }
+		public string ThrowMessage { get; set; }
 
 		/// <summary>
 		/// the time delta after the grab connects to release the other characters
@@ -55,7 +35,7 @@ namespace GameDonkeyLib
 		public CreateThrowAction(BaseObject owner, CreateThrowActionModel actionModel) :
 			base(owner, actionModel)
 		{
-			ThrowMessageName = actionModel.ThrowMessage;
+			ThrowMessage = actionModel.ThrowMessage;
 			ReleaseTimeDelta = actionModel.ReleaseTimeDelta;
 		}
 

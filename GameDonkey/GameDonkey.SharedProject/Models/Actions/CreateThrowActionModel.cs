@@ -29,7 +29,7 @@ namespace GameDonkeyLib
 
 		public CreateThrowActionModel(CreateThrowAction action) : base(action)
 		{
-			ThrowMessage = action.ThrowMessageName;
+			ThrowMessage = action.ThrowMessage;
 			ReleaseTimeDelta = action.ReleaseTimeDelta;
 		}
 

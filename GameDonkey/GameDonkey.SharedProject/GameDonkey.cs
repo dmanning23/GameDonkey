@@ -816,7 +816,7 @@ namespace GameDonkeyLib
 				BufferedInputExpire = 0.0f,
 				QueuedInputExpire = 0.05f
 			};
-			queue.ReadXmlFile(new Filename(@"MoveList.xml"), player.Character.States.GetMessageIndexFromText, content);
+			queue.ReadXmlFile(new Filename(@"MoveList.xml"), content);
 			player.InputQueue = queue;
 
 			//if this is player one, let them use the keyboard

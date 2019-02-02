@@ -8,6 +8,5 @@ namespace GameDonkeyLib
 	{
 		Stunned,
 		TurningAround,
-		NumStates
 	}
 }

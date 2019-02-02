@@ -29,7 +29,7 @@ namespace GameDonkey.Tests
 			var action = new SendStateMessageAction(null, model);
 
 			action.Time.ShouldBe(time);
-			action.MessageName.ShouldBe(message);
+			action.Message.ShouldBe(message);
 		}
 
 		[Test]
@@ -38,7 +38,7 @@ namespace GameDonkey.Tests
 			var action = new SendStateMessageAction(null)
 			{
 				Time = time,
-				MessageName = message,
+				Message = message,
 			};
 
 			var model = new SendStateMessageActionModel(action);

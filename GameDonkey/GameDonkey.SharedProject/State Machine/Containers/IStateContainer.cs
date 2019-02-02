@@ -16,7 +16,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Event raised when current state changes
 		/// </summary>
-		event EventHandler<StateChangeEventArgs> StateChangedEvent;
+		event EventHandler<HybridStateChangeEventArgs> StateChangedEvent;
 
 		#endregion //Events
 
@@ -40,7 +40,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Get the current state machine for this container
 		/// </summary>
-		StateMachine StateMachine { get; }
+		HybridStateMachine StateMachine { get; }
 
 		/// <summary>
 		/// The index of the state machine currently being used
@@ -53,15 +53,9 @@ namespace GameDonkeyLib
 		/// </summary>
 		bool IgnoreStateMachineChange { get; set; }
 
-		int CurrentState { get; }
+		string CurrentState { get; }
 
-		int PrevState { get; }
-
-		int NumStates { get; }
-
-		int NumMessages { get; }
-
-		string CurrentStateText { get; }
+		string PrevState { get; }
 
 		GameClock StateClock { get; }
 
@@ -76,15 +70,15 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="message">message to send to the state machine, 
 		/// should be offset by the message offset of this dude</param>
-		void SendStateMessage(int message);
+		void SendStateMessage(string message);
 
-		void ForceStateChange(int state);
+		void ForceStateChange(string state);
 
 		/// <summary>
 		/// The states have changed, go through and set all the actions of the new state to "not run"
 		/// </summary>
 		/// <param name="iCurState">the new state of the object</param>
-		void StateChange(object sender, StateChangeEventArgs e);
+		void StateChange(object sender, HybridStateChangeEventArgs e);
 
 		/// <summary>
 		/// Execute the actions for the current state
@@ -102,7 +96,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="state">The state to check if is an attack state</param>
 		/// <returns>bool: whether or not the requested state has an attack</returns>
-		bool IsStateAttack(int state);
+		bool IsStateAttack(string state);
 
 		/// <summary>
 		/// Check if an attack is active in this state.  Used to queue moves during a combo.
@@ -117,17 +111,9 @@ namespace GameDonkeyLib
 		/// <param name="bot">the replacement dude</param>
 		void ReplaceOwner(BaseObject bot);
 
-		int GetStateIndexFromText(string stateName);
+		StateActions GetStateActions(string stateName);
 
-		int GetMessageIndexFromText(string messageName);
-
-		string GetStateName(int stateIndex);
-
-		string GetMessageName(int messageIndex);
-
-		StateActions GetStateActions(int stateIndex);
-
-		void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, int messageOffset, ContentManager content);
+		void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, ContentManager content);
 
 		void WriteXml();
 

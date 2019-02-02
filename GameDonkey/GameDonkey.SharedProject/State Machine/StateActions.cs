@@ -1,8 +1,6 @@
 ﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Xml;
 
 namespace GameDonkeyLib
 {

@@ -35,7 +35,7 @@ namespace GameDonkeyLib
 		protected override void Init()
 		{
 			Physics = new ProjectilePhysicsContainer(this);
-			States = new ObjectStateContainer(new StateMachine());
+			States = new ObjectStateContainer(new HybridStateMachine());
 			States.StateChangedEvent += this.StateChanged;
 		}
 
@@ -68,7 +68,7 @@ namespace GameDonkeyLib
 		/// <param name="engine">the engine we are using to load</param>
 		/// <param name="messageOffset">the message offset of this object's state machine</param>
 		/// <returns></returns>
-		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, int messageOffset, ContentManager content)
+		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content)
 		{
 			var data = model as ProjectileObjectModel;
 			if (null == data)
@@ -77,7 +77,7 @@ namespace GameDonkeyLib
 			}
 
 			WeaponHits = data.Weaponhits;
-			base.ParseXmlData(data, engine, messageOffset, content);
+			base.ParseXmlData(data, engine, content);
 		}
 
 		#endregion //Methods

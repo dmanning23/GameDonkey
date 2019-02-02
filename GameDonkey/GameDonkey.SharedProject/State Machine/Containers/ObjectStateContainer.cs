@@ -8,7 +8,7 @@ namespace GameDonkeyLib
 	/// </summary>
 	public class ObjectStateContainer : SingleStateContainer
 	{
-		public ObjectStateContainer(StateMachine stateMachine, string containerName = "") :
+		public ObjectStateContainer(HybridStateMachine stateMachine, string containerName = "") :
 			base(stateMachine, containerName)
 		{
 			stateMachine.StateChangedEvent += this.StateChange;
