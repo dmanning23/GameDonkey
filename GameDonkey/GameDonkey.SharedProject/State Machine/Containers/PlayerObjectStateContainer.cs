@@ -300,7 +300,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public StateActions GetStateActions(string state)
+		public SingleStateActions GetStateActions(string state)
 		{
 			return StateContainers[CurrentStateMachine].GetStateActions(state);
 		}

@@ -1101,7 +1101,7 @@ namespace GameDonkeyLib
 			if (Velocity.X <= 0.0f)
 			{
 				//moving left -x, flip the x decceleration
-				decceleration.X *= -1.0f;
+				//decceleration.X *= -1.0f;
 				decceleration.X += Velocity.X;
 
 				//only deccelerate to 0

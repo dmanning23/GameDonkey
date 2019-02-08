@@ -75,7 +75,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\ActionSort.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\ActionType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateActionFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateActions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\SingleStateActions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateMachineActions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\TimedActionList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\AddGarmentAction.cs" />

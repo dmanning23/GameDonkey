@@ -158,23 +158,37 @@ namespace GameDonkeyLib
 
 		public virtual void LoadStateMachine(HybridStateMachine machine, Filename file, ContentManager content)
 		{
-			//Load the state machine model
-			using (var model = new StateMachineModel(file))
+			if (file.HasFilename)
 			{
-				model.ReadXmlFile(content);
-				machine.AddStateMachine(model);
+				//Load the state machine model
+				using (var model = new StateMachineModel(file))
+				{
+					model.ReadXmlFile(content);
+					machine.AddStateMachine(model);
 
-				machine.SetInitialState(model.Initial);
+					machine.SetInitialState(model.Initial);
+				}
 			}
 		}
 
 		public void WriteXml()
 		{
 			//create the model
-			var model = new SingleStateContainerModel(StateContainerFilename, this);
+			using (var model = new SingleStateContainerModel(StateContainerFilename, this))
+			{
+				//write the model out
+				model.WriteXml();
+			}
 
-			//write the model out
-			model.WriteXml();
+			//write out the state machine
+			if (StateMachineFilename.HasFilename)
+			{
+				using (var model = new StateMachineModel(StateMachineFilename, StateMachine))
+				{
+					//write the model out
+					model.WriteXml();
+				}
+			}
 		}
 
 		#endregion //Initialization
@@ -280,7 +294,7 @@ namespace GameDonkeyLib
 			return Name;
 		}
 
-		public StateActions GetStateActions(string stateName)
+		public SingleStateActions GetStateActions(string stateName)
 		{
 			return Actions.GetStateActions(stateName);
 		}

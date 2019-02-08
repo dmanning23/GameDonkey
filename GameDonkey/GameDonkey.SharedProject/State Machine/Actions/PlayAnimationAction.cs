@@ -10,24 +10,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Name of the animation to play
 		/// </summary>
-		protected string _animationName;
-		public string AnimationName
-		{
-			get { return _animationName; }
-			set
-			{
-				_animationName = value;
-				if (null != Owner)
-				{
-					AnimationIndex = Owner.AnimationContainer.FindAnimationIndex(_animationName);
-				}
-			}
-		}
-
-		/// <summary>
-		/// the index of the animation to play, set at load time
-		/// </summary>
-		public int AnimationIndex { get; protected set; }
+		public string AnimationName { get; set; }
 
 		/// <summary>
 		/// which playback mode to use
@@ -69,7 +52,7 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
-			Owner.AnimationContainer.SetAnimation(AnimationIndex, PlaybackMode);
+			Owner.AnimationContainer.SetAnimation(AnimationName, PlaybackMode);
 
 			return base.Execute();
 		}

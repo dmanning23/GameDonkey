@@ -20,7 +20,7 @@ namespace GameDonkeyLib
 			StateActions = new List<BaseActionModel>();
 		}
 
-		public StateActionsModel(StateActions stateActions) : this()
+		public StateActionsModel(SingleStateActions stateActions) : this()
 		{
 			StateName = stateActions.StateName;
 			foreach (var stateAction in stateActions.Actions)

@@ -7,7 +7,7 @@ namespace GameDonkeyLib
 	/// <summary>
 	/// A list of actions to perform while in one state
 	/// </summary>
-	public class StateActions
+	public class SingleStateActions
 	{
 		#region Properties
 
@@ -45,7 +45,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// standard constructor!
 		/// </summary>
-		public StateActions()
+		public SingleStateActions()
 		{
 			Actions = new List<BaseAction>();
 		}

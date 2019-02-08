@@ -3,6 +3,7 @@ using FilenameBuddy;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System;
+using System.Linq;
 
 namespace GameDonkeyLib
 {
@@ -122,7 +123,8 @@ namespace GameDonkeyLib
 
 				//run the animation container so all the bones will be in the correct position when it updates
 				//This way, any particle effects created will be in correct location.
-				Projectile.AnimationContainer.SetAnimation(0, EPlayback.Loop);
+				var animationName = Projectile.AnimationContainer.Animations.First().Key;
+				Projectile.AnimationContainer.SetAnimation(animationName, EPlayback.Loop);
 				Projectile.AnimationContainer.Update(Owner.PlayerQueue.CharacterClock,
 					Projectile.Position,
 					Projectile.Flip,

@@ -12,7 +12,7 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
-		public Dictionary<string, StateActions> Actions { get; private set; }
+		public Dictionary<string, SingleStateActions> Actions { get; private set; }
 
 		#endregion //Properties
 
@@ -23,14 +23,14 @@ namespace GameDonkeyLib
 		/// </summary>
 		public StateMachineActions()
 		{
-			Actions = new Dictionary<string, StateActions>();
+			Actions = new Dictionary<string, SingleStateActions>();
 		}
 
 		public void LoadStateActions(HybridStateMachine stateMachine, SingleStateContainerModel stateContainerModel, BaseObject owner)
 		{
 			for (int i = 0; i < stateContainerModel.StatesActions.Count; i++)
 			{
-				StateActions actions = new StateActions();
+				SingleStateActions actions = new SingleStateActions();
 				actions.LoadStateActions(stateContainerModel.StatesActions[i], owner);
 				Actions[actions.StateName] = actions;
 			}
@@ -39,7 +39,7 @@ namespace GameDonkeyLib
 			{
 				if (!Actions.ContainsKey(state))
 				{
-					Actions[state] = new StateActions()
+					Actions[state] = new SingleStateActions()
 					{
 						StateName = state
 					};
@@ -52,6 +52,32 @@ namespace GameDonkeyLib
 			foreach (var action in Actions)
 			{
 				action.Value.LoadContent(engine, stateContainer, content);
+			}
+		}
+
+		/// <summary>
+		/// Add one list of state machine actions into this one
+		/// </summary>
+		/// <param name="stateMachineActions"></param>
+		public void AddStateMachineActions(StateMachineActions stateMachineActions)
+		{
+			foreach (var singleStateAction in stateMachineActions.Actions)
+			{
+				if (!Actions.ContainsKey(singleStateAction.Key))
+				{
+					Actions[singleStateAction.Key] = singleStateAction.Value;
+				}
+			}
+		}
+
+		public void RemoveStateMachineActions(StateMachineActions stateMachineActions)
+		{
+			foreach (var singleStateAction in stateMachineActions.Actions)
+			{
+				if (Actions.ContainsKey(singleStateAction.Key))
+				{
+					Actions.Remove(singleStateAction.Key);
+				}
 			}
 		}
 
@@ -114,7 +140,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public StateActions GetStateActions(string state)
+		public SingleStateActions GetStateActions(string state)
 		{
 			return Actions[state];
 		}

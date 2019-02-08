@@ -111,7 +111,7 @@ namespace GameDonkeyLib
 		/// <param name="bot">the replacement dude</param>
 		void ReplaceOwner(BaseObject bot);
 
-		StateActions GetStateActions(string stateName);
+		SingleStateActions GetStateActions(string stateName);
 
 		void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, ContentManager content);
 

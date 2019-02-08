@@ -755,6 +755,11 @@ namespace GameDonkeyLib
 					{
 						Players[i].Active[j].AnimationContainer.Skeleton.RootBone.DrawPhysics(Renderer, true, Color.White);
 					}
+
+					for (int j = 0; j < Players[i].Active.Count; j++)
+					{
+						Players[i].RenderAttacks(Renderer);
+					}
 				}
 
 				//draw the push box for each character?

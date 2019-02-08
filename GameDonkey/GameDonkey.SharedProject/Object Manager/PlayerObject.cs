@@ -178,7 +178,7 @@ namespace GameDonkeyLib
 		/// <returns></returns>
 		public override Vector2 Direction()
 		{
-			return ThumbstickDirection;
+			return new Vector2(ThumbstickDirection.X, ThumbstickDirection.Y * -1f);
 		}
 
 		/// <summary>
