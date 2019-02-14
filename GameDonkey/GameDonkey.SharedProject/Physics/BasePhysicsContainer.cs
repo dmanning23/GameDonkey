@@ -231,7 +231,7 @@ namespace GameDonkeyLib
 			}
 
 			//loop through the bones of the level object
-			foreach (var otherBone in CollisionBones)
+			foreach (var otherBone in levelObjects.CollisionBones)
 			{
 				var otherImage = otherBone.GetCurrentImage();
 				if (null == otherImage)

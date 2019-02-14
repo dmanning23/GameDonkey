@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\PointLightActionModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GameObjects\BackgroundLayerModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParticleEffects\DefaultParticleEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGameDonkey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\AddGarmentActionModel.cs" />

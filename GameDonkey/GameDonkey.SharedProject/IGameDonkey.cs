@@ -25,6 +25,8 @@ namespace GameDonkeyLib
 
 		Rectangle WorldBoundaries { get; set; }
 
+		Rectangle CollisionBoundaries { get; set; }
+
 		List<PlayerQueue> Players { get; }
 
 		List<Vector2> SpawnPoints { get; set; }

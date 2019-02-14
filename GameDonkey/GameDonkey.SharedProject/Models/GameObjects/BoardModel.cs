@@ -17,6 +17,7 @@ namespace GameDonkeyLib
 		public string Name { get; private set; }
 		public int BoardHeight { get; private set; }
 		public int BoardWidth { get; private set; }
+		public int Floor { get; private set; }
 		public Filename Music { get; private set; }
 		public Filename DeathNoise { get; private set; }
 		public Filename BackgroundTile { get; private set; }
@@ -24,6 +25,9 @@ namespace GameDonkeyLib
 		public int NumTiles { get; private set; }
 		public List<Filename> LevelObjects { get; private set; }
 		public List<SpawnPointModel> SpawnPoints { get; private set; }
+
+		public List<BackgroundLayerModel> Background { get; private set; }
+		public List<BackgroundLayerModel> Foreground { get; private set; }
 
 		#endregion //Properties
 
@@ -37,6 +41,8 @@ namespace GameDonkeyLib
 			BackgroundColor = Color.White;
 			LevelObjects = new List<Filename>();
 			SpawnPoints = new List<SpawnPointModel>();
+			Background = new List<BackgroundLayerModel>();
+			Foreground = new List<BackgroundLayerModel>();
 		}
 
 		public override string ToString()
@@ -77,6 +83,11 @@ namespace GameDonkeyLib
 						BoardHeight = Convert.ToInt32(value);
 					}
 					break;
+				case "floor":
+					{
+						Floor = Convert.ToInt32(value);
+					}
+					break;
 				case "boardWidth":
 					{
 						BoardWidth = Convert.ToInt32(value);
@@ -90,6 +101,16 @@ namespace GameDonkeyLib
 				case "deathNoise":
 					{
 						DeathNoise.SetRelFilename(value);
+					}
+					break;
+				case "background":
+					{
+						XmlFileBuddy.ReadChildNodes(node, ReadBackground);
+					}
+					break;
+				case "foreground":
+					{
+						XmlFileBuddy.ReadChildNodes(node, ReadForeground);
 					}
 					break;
 				case "backgroundTile":
@@ -152,6 +173,20 @@ namespace GameDonkeyLib
 			var spawnPoint = new SpawnPointModel();
 			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
 			SpawnPoints.Add(spawnPoint);
+		}
+
+		public void ReadBackground(XmlNode node)
+		{
+			var spawnPoint = new BackgroundLayerModel();
+			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
+			Background.Add(spawnPoint);
+		}
+
+		public void ReadForeground(XmlNode node)
+		{
+			var spawnPoint = new BackgroundLayerModel();
+			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
+			Foreground.Add(spawnPoint);
 		}
 
 #if !WINDOWS_UWP

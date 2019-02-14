@@ -36,7 +36,6 @@ namespace GameDonkeyLib
 			Vector2 firstCollisionPoint,
 			Vector2 secondCollisionPoint)
 		{
-
 			//get a vector from the level object to the object
 			var levelToObject = firstCollisionPoint - secondCollisionPoint;
 

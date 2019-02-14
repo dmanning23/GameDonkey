@@ -55,9 +55,23 @@ namespace GameDonkeyLib
 			set
 			{
 				_worldBoundaries = value;
+				CollisionBoundaries = value;
 
 				//make the camera rect a little bit smaller so we can see more of the ground
 				Renderer.Camera.WorldBoundary = new Rectangle(_worldBoundaries.X, _worldBoundaries.Y, _worldBoundaries.Width, _worldBoundaries.Height);
+			}
+		}
+
+		private Rectangle _collisionBoundaries;
+		public Rectangle CollisionBoundaries
+		{
+			get
+			{
+				return _collisionBoundaries;
+			}
+			set
+			{
+				_collisionBoundaries = value;
 			}
 		}
 
@@ -454,7 +468,7 @@ namespace GameDonkeyLib
 				Players[i].CheckCollisions(LevelObjects);
 
 				//check for world collisions
-				Players[i].CheckWorldCollisions(WorldBoundaries);
+				Players[i].CheckWorldCollisions(CollisionBoundaries);
 			}
 
 			//respond to hits!
@@ -691,13 +705,19 @@ namespace GameDonkeyLib
 			RenderCharacters(cameraMatrix, characterBlendState, sortMode);
 
 			RenderParticleEffects(cameraMatrix);
+
+			RenderForeground();
 		}
 
 		protected virtual void RenderBackground()
 		{
 		}
 
-		protected void RenderLevel(Matrix cameraMatrix, SpriteSortMode sortMode)
+		protected virtual void RenderForeground()
+		{
+		}
+
+		protected virtual void RenderLevel(Matrix cameraMatrix, SpriteSortMode sortMode)
 		{
 			//draw the level
 			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
@@ -835,7 +855,11 @@ namespace GameDonkeyLib
 		{
 			var boardModel = new BoardModel(boardFile);
 			boardModel.ReadXmlFile(content);
+			LoadBoard(boardModel, content);
+		}
 
+		protected virtual void LoadBoard(BoardModel boardModel, ContentManager content)
+		{
 			//First node is the name
 			LevelObjects.PlayerName = boardModel.Name;
 
@@ -844,6 +868,11 @@ namespace GameDonkeyLib
 				(-1 * (boardModel.BoardHeight / 2)),
 				boardModel.BoardWidth,
 				boardModel.BoardHeight);
+
+			if (boardModel.Floor > 0)
+			{
+				_collisionBoundaries.Height = boardModel.Floor;
+			}
 
 			////next node is the music
 			//Music = boardModel.Music;
