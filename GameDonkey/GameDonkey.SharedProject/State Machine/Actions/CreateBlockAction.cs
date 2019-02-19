@@ -41,11 +41,11 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public override void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content)
+		public override void LoadContent(IGameDonkey engine, ContentManager content)
 		{
 			for (int i = 0; i < SuccessActions.Count; i++)
 			{
-				SuccessActions[i].LoadContent(engine, stateContainer, content);
+				SuccessActions[i].LoadContent(engine, content);
 			}
 		}
 

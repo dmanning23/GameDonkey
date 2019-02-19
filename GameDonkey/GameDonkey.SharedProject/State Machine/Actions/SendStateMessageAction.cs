@@ -11,8 +11,6 @@ namespace GameDonkeyLib
 		/// </summary>
 		public string Message { get; set; }
 
-		private IStateContainer StateContainer { get; set; }
-
 		#endregion //Properties
 
 		#region Initialization
@@ -33,9 +31,8 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public override void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content)
+		public override void LoadContent(IGameDonkey engine, ContentManager content)
 		{
-			StateContainer = stateContainer;
 		}
 
 		#endregion //Initialization
@@ -49,7 +46,7 @@ namespace GameDonkeyLib
 		public override bool Execute()
 		{
 			//The message offset is added to this message when it is read in, so dont add anything
-			StateContainer.SendStateMessage(Message);
+			Owner.States.SendStateMessage(Message);
 
 			//keep running the action until it goes through?
 			AlreadyRun = true;

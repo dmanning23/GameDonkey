@@ -60,11 +60,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
+		public void LoadContent(IGameDonkey engine, ContentManager content)
 		{
 			for (int i = 0; i < Actions.Count; i++)
 			{
-				Actions[i].LoadContent(engine, stateContainer, content);
+				Actions[i].LoadContent(engine, content);
 			}
 
 			Sort();
@@ -197,11 +197,11 @@ namespace GameDonkeyLib
 		/// <param name="actionType">the type of action to add</param>
 		/// <param name="owner">the owner of this action list</param>
 		/// <returns>IBaseAction: reference to the action that was created</returns>
-		public BaseAction AddNewActionFromType(EActionType actionType, BaseObject owner, IGameDonkey engine, IStateContainer container, ContentManager content)
+		public BaseAction AddNewActionFromType(EActionType actionType, BaseObject owner, IGameDonkey engine, ContentManager content)
 		{
 			//get the correct action type
 			var action = StateActionFactory.CreateStateAction(actionType, owner);
-			action.LoadContent(engine, container, content);
+			action.LoadContent(engine, content);
 
 			//save the action
 			Actions.Add(action);

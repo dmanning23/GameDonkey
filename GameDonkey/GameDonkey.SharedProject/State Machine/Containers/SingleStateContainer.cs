@@ -140,14 +140,16 @@ namespace GameDonkeyLib
 			LoadStateMachine(StateMachine, StateMachineFilename, content);
 
 			//Create the statecontainer model and load it
-			var singleStateContainerModel = new SingleStateContainerModel(StateContainerFilename);
-			singleStateContainerModel.ReadXmlFile(content);
+			using (var singleStateContainerModel = new SingleStateContainerModel(StateContainerFilename))
+			{
+				singleStateContainerModel.ReadXmlFile(content);
 
-			//load the actions into the statemachine actions
-			LoadContainer(singleStateContainerModel, owner);
+				//load the actions into the statemachine actions
+				LoadContainer(singleStateContainerModel, owner);
+			}
 
 			//load the action content
-			Actions.LoadContent(engine, this, content);
+			Actions.LoadContent(engine, content);
 		}
 
 		protected virtual void LoadContainer(SingleStateContainerModel stateContainerModel, BaseObject owner)
@@ -230,10 +232,7 @@ namespace GameDonkeyLib
 			StateClock.TimeDelta = 0.0f;
 
 			//fire off the event if anyone is listening
-			if (null != StateChangedEvent)
-			{
-				StateChangedEvent(this, eventArgs);
-			}
+			StateChangedEvent?.Invoke(this, eventArgs);
 		}
 
 		/// <summary>

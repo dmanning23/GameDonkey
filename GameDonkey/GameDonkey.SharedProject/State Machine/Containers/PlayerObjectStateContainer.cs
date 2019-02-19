@@ -49,13 +49,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		private bool IsCurrentStateMachineValid
-		{
-			get
-			{
-				return (_currentStateMachine < StateContainers.Count);
-			}
-		}
+		private bool IsCurrentStateMachineValid => (_currentStateMachine < StateContainers.Count);
 
 		/// <summary>
 		/// timer so it doesn't jump back and forth between state machines really quick
@@ -67,36 +61,17 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Get the number of containers, if this is a collection
 		/// </summary>
-		public int NumContainers
-		{
-			get
-			{
-				return StateContainers.Count;
-			}
-		}
+		public int NumContainers => StateContainers.Count;
 
 		/// <summary>
-		/// Get the name of this state container
+		/// player object state containers arent named.
 		/// </summary>
-		public string Name
-		{
-			get
-			{
-				//player object state containers arent named.
-				return "PlayerObjectStateContainer";
-			}
-		}
+		public string Name => "PlayerObjectStateContainer";
 
 		/// <summary>
 		/// Get the current state machine for this container
 		/// </summary>
-		public HybridStateMachine StateMachine
-		{
-			get
-			{
-				return StateContainers[CurrentStateMachine].StateMachine;
-			}
-		}
+		public HybridStateMachine StateMachine => StateContainers[CurrentStateMachine].StateMachine;
 
 		/// <summary>
 		/// Flag for whether or not we want to change bewteen state machines.
@@ -104,29 +79,13 @@ namespace GameDonkeyLib
 		/// </summary>
 		public bool IgnoreStateMachineChange { get; set; }
 
-		public string CurrentState
-		{
-			get
-			{
-				return StateContainers[CurrentStateMachine].CurrentState;
-			}
-		}
+		public string CurrentState => StateContainers[CurrentStateMachine].CurrentState;
 
-		public string PrevState
-		{
-			get
-			{
-				return StateContainers[CurrentStateMachine].PrevState;
-			}
-		}
+		public string PrevState => StateContainers[CurrentStateMachine].PrevState;
 
-		public GameClock StateClock
-		{
-			get
-			{
-				return StateContainers[CurrentStateMachine].StateClock;
-			}
-		}
+		public GameClock StateClock => StateContainers[CurrentStateMachine].StateClock;
+
+		public StateMachineActions Actions => StateContainers[CurrentStateMachine].Actions;
 
 		#endregion //Properties
 
@@ -195,10 +154,7 @@ namespace GameDonkeyLib
 			StateContainers[CurrentStateMachine].StateChange(sender, eventArgs);
 
 			//for all other events, fire off the event if anyone is listening
-			if (null != StateChangedEvent)
-			{
-				StateChangedEvent(this, eventArgs);
-			}
+			StateChangedEvent?.Invoke(this, eventArgs);
 		}
 
 		/// <summary>
@@ -227,10 +183,7 @@ namespace GameDonkeyLib
 				StateContainers[CurrentStateMachine].StateChange(index, eventArgs);
 
 				//fire off the state changed event if anyone is listening
-				if (null != StateChangedEvent)
-				{
-					StateChangedEvent(this, eventArgs);
-				}
+				StateChangedEvent?.Invoke(this, eventArgs);
 			}
 			else
 			{

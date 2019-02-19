@@ -77,7 +77,7 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public override void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content)
+		public override void LoadContent(IGameDonkey engine, ContentManager content)
 		{
 			//try to load the file into the particle effect
 			if ((null != engine) && !String.IsNullOrEmpty(FileName.File))

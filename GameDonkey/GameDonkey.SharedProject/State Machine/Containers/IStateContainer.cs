@@ -27,6 +27,8 @@ namespace GameDonkeyLib
 		/// </summary>
 		int NumContainers { get; }
 
+		StateMachineActions Actions { get; }
+
 		/// <summary>
 		/// Get a list of all the containers in this dude.
 		/// </summary>

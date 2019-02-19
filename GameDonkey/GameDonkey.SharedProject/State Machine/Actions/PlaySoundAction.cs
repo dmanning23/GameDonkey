@@ -58,7 +58,7 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public override void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content)
+		public override void LoadContent(IGameDonkey engine, ContentManager content)
 		{
 			_engine = engine;
 			if (!string.IsNullOrEmpty(SoundCueName.File))

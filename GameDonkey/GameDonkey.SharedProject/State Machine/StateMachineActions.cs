@@ -47,11 +47,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public void LoadContent(IGameDonkey engine, SingleStateContainer stateContainer, ContentManager content)
+		public void LoadContent(IGameDonkey engine, ContentManager content)
 		{
 			foreach (var action in Actions)
 			{
-				action.Value.LoadContent(engine, stateContainer, content);
+				action.Value.LoadContent(engine, content);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace GameDonkeyLib
 			{
 				if (!Actions.ContainsKey(singleStateAction.Key))
 				{
-					Actions[singleStateAction.Key] = singleStateAction.Value;
+					Actions.Add(singleStateAction.Key, singleStateAction.Value);
 				}
 			}
 		}

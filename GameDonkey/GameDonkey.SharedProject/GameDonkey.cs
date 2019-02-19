@@ -35,7 +35,7 @@ namespace GameDonkeyLib
 
 		#region Properties
 
-		protected Game Game { get; set; }
+		public Game Game { get; set; }
 
 		public bool ToolMode { get; set; }
 
@@ -828,11 +828,11 @@ namespace GameDonkeyLib
 			PlayerIndex index,
 			string playerName,
 			GameObjectType playerType,
-			ContentManager content)
+			ContentManager xmlContent)
 		{
 			//create and load a player
 			PlayerQueue player = CreatePlayerQueue(color, Players.Count);
-			player.LoadXmlObject(characterFile, this, playerType, 0, content);
+			player.LoadXmlObject(characterFile, this, playerType, 0, xmlContent);
 			Players.Add(player);
 
 			//create a controller for that player
@@ -841,7 +841,7 @@ namespace GameDonkeyLib
 				BufferedInputExpire = 0.0f,
 				QueuedInputExpire = 0.05f
 			};
-			queue.ReadXmlFile(new Filename(@"MoveList.xml"), content);
+			queue.ReadXmlFile(new Filename(@"MoveList.xml"), xmlContent);
 			player.InputQueue = queue;
 
 			//if this is player one, let them use the keyboard

@@ -298,11 +298,6 @@ namespace GameDonkeyLib
 		/// <param name="clock">a character clock.</param>
 		public BaseObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId)
 		{
-			if (null == clock)
-			{
-				throw new ArgumentNullException("clock");
-			}
-
 			OjectType = gameObjectType;
 			Id = BaseObject._idCounter++;
 			QueueId = queueId;
@@ -332,7 +327,7 @@ namespace GameDonkeyLib
 			AccelAction = null;
 			DeccelAction = null;
 
-			CharacterClock = clock;
+			CharacterClock = clock ?? throw new ArgumentNullException("clock");
 
 			LastAttacker = null;
 
@@ -611,7 +606,7 @@ namespace GameDonkeyLib
 		protected virtual void StateChanged(object sender, HybridStateChangeEventArgs eventArgs)
 		{
 			//was this a turn around message?
-			if (States.CurrentState == "TurningAround")
+			if (States.CurrentState == "TurningAround" || States.CurrentState == "AirTurningAround")
 			{
 				Flip = !Flip;
 			}

@@ -15,6 +15,8 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
+		Game Game { get; }
+
 		bool ToolMode { get; set; }
 
 		IRenderer Renderer { get; }

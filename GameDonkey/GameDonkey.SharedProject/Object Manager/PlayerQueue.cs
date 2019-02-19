@@ -6,6 +6,7 @@ using HadoukInput;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using RenderBuddy;
+using System;
 using System.Collections.Generic;
 
 namespace GameDonkeyLib
@@ -342,7 +343,7 @@ namespace GameDonkeyLib
 			return false;
 		}
 
-		public void Update(GameClock clock)
+		public virtual void Update(GameClock clock)
 		{
 			//update the clock
 			CharacterClock.Update(clock);
@@ -543,62 +544,34 @@ namespace GameDonkeyLib
 
 		#region File IO
 
-		public BaseObject LoadXmlObject(Filename fileName, IGameDonkey engine, GameObjectType objectType, int difficulty, ContentManager content)
+		/// <summary>
+		/// This is only kept aroud for legacy game donkeys
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <param name="engine"></param>
+		/// <param name="objectType"></param>
+		/// <param name="difficulty"></param>
+		/// <param name="xmlContent"></param>
+		/// <returns></returns>
+		public BaseObject LoadXmlObject(Filename fileName, IGameDonkey engine, GameObjectType objectType, int difficulty, ContentManager xmlContent)
+		{
+			return LoadXmlObject(fileName, engine, objectType.ToString(), xmlContent);
+		}
+
+		public BaseObject LoadXmlObject(Filename fileName, IGameDonkey engine, string objectType, ContentManager xmlContent)
 		{
 			//try to load all that stuff
-			BaseObject gameObject;
-			BaseObjectModel gameObjectModel;
-			switch (objectType)
-			{
-				case GameObjectType.Human:
-					{
-						gameObject = CreateHumanPlayer();
-						gameObjectModel = CreatePlayerObjectModel(fileName);
-
-						//set as the main character
-						AddCharacterToList(gameObject);
-					}
-					break;
-				case GameObjectType.AI:
-					{
-						//AIObject myDude = new AIObject(m_CharacterClock, m_iNextObjectID++);
-						//myDude.Difficulty = iDifficulty;
-						//myCharacter = myDude;
-
-						gameObject = CreateAiPlayer();
-						gameObjectModel = CreatePlayerObjectModel(fileName);
-
-						//set as the main character
-						AddCharacterToList(gameObject);
-					}
-					break;
-				case GameObjectType.Projectile:
-					{
-						gameObject = new ProjectileObject(CharacterClock, Character, _nextObjectId++);
-						gameObjectModel = new ProjectileObjectModel(fileName);
-					}
-					break;
-				case GameObjectType.Level:
-					{
-						gameObject = new LevelObject(CharacterClock, _nextObjectId++);
-						gameObjectModel = new LevelObjectModel(fileName);
-					}
-					break;
-				default:
-					{
-						return null;
-					}
-			}
+			PlayerFactory(fileName, objectType, out BaseObject gameObject, out BaseObjectModel gameObjectModel);
 
 			//load the object data
-			gameObjectModel.ReadXmlFile(content);
+			gameObjectModel.ReadXmlFile(xmlContent);
 
 			//load the object data into the thing
 			gameObject.PlayerQueue = this;
-			gameObject.ParseXmlData(gameObjectModel, engine, content);
+			gameObject.ParseXmlData(gameObjectModel, engine, xmlContent);
 
 			//add to the correct list
-			if (objectType == GameObjectType.Level)
+			if (objectType == "Level")
 			{
 				Active.Add(gameObject);
 			}
@@ -611,6 +584,47 @@ namespace GameDonkeyLib
 			gameObject.PlayerColor = PlayerColor;
 
 			return gameObject;
+		}
+
+		protected virtual void PlayerFactory(Filename fileName, string objectType, out BaseObject gameObject, out BaseObjectModel gameObjectModel)
+		{
+			switch (objectType)
+			{
+				case "Human":
+					{
+						gameObject = CreateHumanPlayer();
+						gameObjectModel = CreatePlayerObjectModel(fileName);
+
+						//set as the main character
+						AddCharacterToList(gameObject);
+					}
+					break;
+				case "AI":
+					{
+						gameObject = CreateAiPlayer();
+						gameObjectModel = CreatePlayerObjectModel(fileName);
+
+						//set as the main character
+						AddCharacterToList(gameObject);
+					}
+					break;
+				case "Projectile":
+					{
+						gameObject = new ProjectileObject(CharacterClock, Character, _nextObjectId++);
+						gameObjectModel = new ProjectileObjectModel(fileName);
+					}
+					break;
+				case "Level":
+					{
+						gameObject = new LevelObject(CharacterClock, _nextObjectId++);
+						gameObjectModel = new LevelObjectModel(fileName);
+					}
+					break;
+				default:
+					{
+						throw new Exception($"Unknown objectType passed to PlayerFactory: {objectType}");
+					}
+			}
 		}
 
 		protected virtual void AddCharacterToList(BaseObject gameObject)

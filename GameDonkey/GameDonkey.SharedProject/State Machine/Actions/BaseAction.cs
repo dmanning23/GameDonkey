@@ -46,7 +46,7 @@ namespace GameDonkeyLib
 			Time = actionModel.Time;
 		}
 
-		public abstract void LoadContent(IGameDonkey engine, IStateContainer stateContainer, ContentManager content);
+		public abstract void LoadContent(IGameDonkey engine, ContentManager content);
 
 		/// <summary>
 		/// execute this action (overridden in all child classes)
