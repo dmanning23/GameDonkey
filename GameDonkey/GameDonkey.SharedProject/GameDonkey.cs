@@ -182,7 +182,7 @@ namespace GameDonkeyLib
 		/// <param name="myColor"></param>
 		/// <param name="iQueueID"></param>
 		/// <returns></returns>
-		public abstract PlayerQueue CreatePlayerQueue(Color color, int queueID);
+		public abstract PlayerQueue CreatePlayerQueue(Color color);
 
 		/// <summary>
 		/// load all the content in a windows forms game
@@ -241,6 +241,11 @@ namespace GameDonkeyLib
 					Players[i].InputQueue.Controller.ResetController();
 				}
 				Players[i].Reset(SpawnPoints[spawnIndex]);
+
+				if (SpawnPoints[spawnIndex].X > WorldBoundaries.Center.X)
+				{
+					Players[i].Character.Flip = true;
+				}
 
 				//increment to the next spawn point
 				if (spawnIndex < (SpawnPoints.Count - 1))
@@ -831,7 +836,7 @@ namespace GameDonkeyLib
 			ContentManager xmlContent)
 		{
 			//create and load a player
-			PlayerQueue player = CreatePlayerQueue(color, Players.Count);
+			PlayerQueue player = CreatePlayerQueue(color);
 			player.LoadXmlObject(characterFile, this, playerType, 0, xmlContent);
 			Players.Add(player);
 

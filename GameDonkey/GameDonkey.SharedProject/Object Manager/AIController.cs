@@ -6,9 +6,14 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-	public abstract class AIObject : PlayerObject
+	/// <summary>
+	/// This is a controller thing that is used to control a PlayerObject
+	/// </summary>
+	public abstract class AIController
 	{
-		#region Members
+		#region Properties
+
+		protected PlayerObject Player { get; set; }
 
 		/// <summary>
 		/// Used to update the AI on a schedule instead of every frame.
@@ -16,25 +21,16 @@ namespace GameDonkeyLib
 		/// </summary>
 		private CountdownTimer UpdateTimer { get; set; }
 
-		//hard coded messages
-		private int JumpMessage { get; set; }
-		private int HighJumpMessage { get; set; }
-
-		////whether or not the AI should move towards the target
-		//private bool m_bMoveTowards;
-
-		//how often the update loop should be run on this dude
+		/// <summary>
+		/// how often the update loop should be run on this dude
+		/// </summary>
 		private float UpdateDelta { get; set; }
 
 		static private Random _random = new Random(DateTime.Now.Millisecond);
 
-		#endregion //Members
-
-		#region properties
-
 		protected float HalfHeight
 		{
-			get { return Height * 0.5f; }
+			get { return Player.Height * 0.5f; }
 		}
 
 		public int Difficulty
@@ -58,26 +54,26 @@ namespace GameDonkeyLib
 			}
 		}
 
-		#endregion
+		/// <summary>
+		/// The direction this AI wants to go
+		/// </summary>
+		public Vector2 Direction { get; set; }
+
+		#endregion //Properties
 
 		#region Methods
 
-		public AIObject(HitPauseClock clock, int queueId) : base(GameObjectType.AI, clock, queueId)
+		public AIController(PlayerObject player)
 		{
+			Player = player;
 			UpdateTimer = new CountdownTimer();
-
-			JumpMessage = -1;
-			HighJumpMessage = -1;
-
-			//m_bMoveTowards = false;
 
 			UpdateDelta = 1.0f;
 		}
 
-		public override void Update()
+		public virtual void Update()
 		{
-			UpdateTimer.Update(CharacterClock);
-			base.Update();
+			UpdateTimer.Update(Player.CharacterClock);
 		}
 
 		/// <summary>
@@ -87,10 +83,10 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="controller">the controller for this player (bullshit and ignored for AI)</param>
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public override void GetPlayerInput(InputWrapper controller, List<PlayerQueue> listBadGuys)
+		public void GetPlayerInput(List<PlayerQueue> listBadGuys, bool ignoreAttackInput)
 		{
 			//check if we should update the AI
-			if ((0.0f >= UpdateTimer.RemainingTime) && (0.0f <= UpdateDelta))
+			if (!UpdateTimer.HasTimeRemaining && (0.0f <= UpdateDelta))
 			{
 				//restart the timer and run the AI update loop
 				UpdateTimer.Start(UpdateDelta);
@@ -101,7 +97,7 @@ namespace GameDonkeyLib
 				for (var i = 0; i < listBadGuys.Count; i++)
 				{
 					//first make sure this isn't me!
-					if (Id == listBadGuys[i].Character.Id)
+					if (Player.QueueId == listBadGuys[i].QueueId)
 					{
 						continue;
 					}
@@ -110,7 +106,7 @@ namespace GameDonkeyLib
 					for (var j = 0; j < listBadGuys[i].Active.Count; j++)
 					{
 						//get the distance to this dude
-						var distance = listBadGuys[i].Active[j].Position - Position;
+						var distance = listBadGuys[i].Active[j].Position - Player.Position;
 						if ((null == badGuy) || (badGuyDistance.LengthSquared() > distance.LengthSquared()))
 						{
 							badGuy = listBadGuys[i].Active[j];
@@ -131,48 +127,45 @@ namespace GameDonkeyLib
 				if (badGuyDistance.X <= 0.0f)
 				{
 					//the bad guy is to the left of me
-					if (!Flip)
+					if (!Player.Flip)
 					{
-						//TODO: start moving the AI in that direction?
-						//SendTurnAroundMessage();
+						SendTurnAroundMessage();
 					}
 				}
 				else
 				{
 					//the BadGuyDistance guy is to the right
-					if (Flip)
+					if (Player.Flip)
 					{
-						//TODO: start moving the AI in that direction?
-						//SendTurnAroundMessage();
+						SendTurnAroundMessage();
 					}
 				}
-
-				//reset the "move towards" flag
-				//m_bMoveTowards = false;
 
 				//shoudl i move towards the target?
 				if ((badGuyDistance.X > HalfHeight) || (badGuyDistance.X < (-1.0 * HalfHeight)))
 				{
 					//the bad guy is to the left or right, move towards the target
-					//m_bMoveTowards = true;
+					SendWalkMessage();
+				}
+				else
+				{
+					//SendDoneMessage();
 				}
 
 				//the target is far away, but is it above me?
 				if (badGuyDistance.Y < (-2.0f * HalfHeight))
 				{
-					////teh bad guy is waaay above me, super jump at them
-					//Debug.Assert(-1 != m_iHighJumpMessage);
-					//SendAttackMessage(m_iHighJumpMessage);
+					//teh bad guy is waaay above me, super jump at them
+					SendHighJumpMessage();
 				}
 				else if (badGuyDistance.Y < (-1.0f * HalfHeight))
 				{
-					////jump at the target
-					//Debug.Assert(-1 != m_iJumpMessage);
-					//SendAttackMessage(m_iJumpMessage);
+					//jump at the target
+					SendJumpMessage();
 				}
 
 				//how far away is the target?
-				if (badGuyDistance.LengthSquared() <= (Height * Height))
+				if (badGuyDistance.LengthSquared() <= (Player.Height * Player.Height))
 				{
 					//the target must be close!
 
@@ -182,7 +175,7 @@ namespace GameDonkeyLib
 						//select a defensive option
 						SelectDefensiveOption();
 					}
-					else
+					else if (!ignoreAttackInput)
 					{
 						//try to attack the target
 
@@ -193,8 +186,18 @@ namespace GameDonkeyLib
 			}
 		}
 
-		private void SelectDefensiveOption()
-		{
+		protected abstract void SendTurnAroundMessage();
+
+		protected abstract void SendWalkMessage();
+
+		protected abstract void SendDoneMessage();
+
+		protected abstract void SendHighJumpMessage();
+
+		protected abstract void SendJumpMessage();
+
+		protected abstract void SelectDefensiveOption();
+		
 			//TODO: should i block or evade?
 			//if ((g_Random.Next() % 2) == 0)
 			//{
@@ -208,10 +211,10 @@ namespace GameDonkeyLib
 			//    Debug.Assert(-1 != DashMessage);
 			//    SendAttackMessage(DashMessage);
 			//}
-		}
+		
 
-		private void SelectOffensiveOption()
-		{
+		protected abstract void SelectOffensiveOption();
+		
 			////select a random attack and execute it
 			//int iMin = (TurnAroundMessage - m_States.StateMachine.MessageOffset) + 1;
 			//int iMax = m_States.StateMachine.NumMessages - iMin;
@@ -224,7 +227,7 @@ namespace GameDonkeyLib
 			//SendAttackMessage(iAttack + m_States.StateMachine.MessageOffset);
 
 			//SendAttackMessage((int)EState.Quick);
-		}
+		
 
 		///// <summary>
 		///// This is used to send attack moves from the input queue to the state machine, through the combo engine
@@ -242,9 +245,9 @@ namespace GameDonkeyLib
 		/// Check if the play is in a hard coded state,
 		/// if so, check if its button is still being held down
 		/// </summary>
-		public override void CheckHardCodedStates()
-		{
-			var currentState = States.CurrentState;
+		//public override void CheckHardCodedStates()
+		//{
+		//	var currentState = States.CurrentState;
 
 			////check if forward button is held down, add forward movement to the player 
 			//if (m_bMoveTowards)
@@ -287,8 +290,8 @@ namespace GameDonkeyLib
 			//    }
 			//}
 
-			base.CheckHardCodedStates();
-		}
+		//	base.CheckHardCodedStates();
+		//}
 
 		/// <summary>
 		/// convert the ai difficulty to an integer

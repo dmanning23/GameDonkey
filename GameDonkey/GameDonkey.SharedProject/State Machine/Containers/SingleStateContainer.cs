@@ -155,7 +155,7 @@ namespace GameDonkeyLib
 		protected virtual void LoadContainer(SingleStateContainerModel stateContainerModel, BaseObject owner)
 		{
 			//load into the statemachineactions object
-			Actions.LoadStateActions(StateMachine, stateContainerModel, owner);
+			Actions.LoadStateActions(StateMachine.States, stateContainerModel, owner);
 		}
 
 		public virtual void LoadStateMachine(HybridStateMachine machine, Filename file, ContentManager content)
@@ -296,6 +296,11 @@ namespace GameDonkeyLib
 		public SingleStateActions GetStateActions(string stateName)
 		{
 			return Actions.GetStateActions(stateName);
+		}
+
+		public bool IsAttackMessage(string message)
+		{
+			return false;
 		}
 
 		#endregion //Methods

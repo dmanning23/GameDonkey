@@ -39,6 +39,10 @@ namespace GameDonkeyLib
 			States.StateChangedEvent += this.StateChanged;
 		}
 
+		public override void KillPlayer()
+		{
+		}
+
 		/// <summary>
 		/// called when this object lands an attack on another object
 		/// Set the attack landed flag in the owner character for the combo engine
@@ -70,7 +74,7 @@ namespace GameDonkeyLib
 		/// <returns></returns>
 		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content)
 		{
-			var data = model as ProjectileObjectModel;
+			ProjectileObjectModel data = model as ProjectileObjectModel;
 			if (null == data)
 			{
 				throw new Exception("must pass ProjectileObjectModel to ProjectileObject.ParseXmlData");

@@ -29,6 +29,14 @@ namespace GameDonkeyLib
 			}
 		}
 
+		public SingleStateContainerModel(Filename filename, StateMachineActions stateActions) : this(filename)
+		{
+			foreach (var singleStateActions in stateActions.Actions)
+			{
+				StatesActions.Add(new StateActionsModel(singleStateActions.Value));
+			}
+		}
+
 		#endregion //Initialization
 
 		#region Methods

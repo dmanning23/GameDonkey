@@ -22,9 +22,10 @@ namespace GameDonkeyLib
 		/// </summary>
 		public int ComboCounter { get; private set; }
 
-		private const float _hitPause = 0.2f; //how long hit pause is in this game
-		private const float _strengthMultiplier = 1.0f; //amount to multiply how far characters are hit in this game
-		private const float _damageMultiplier = 2.5f; //amount to multiply how much damage characters do in this game
+		/// <summary>
+		/// how long hit pause is in this game
+		/// </summary>
+		protected virtual float HitPause => 0.2f;
 
 		/// <summary>
 		/// The sound that gets played when a player dies
@@ -42,10 +43,11 @@ namespace GameDonkeyLib
 		/// </summary>
 		protected Vector2 ThumbstickDirection;
 
-		/// <summary>
-		/// How much health this character has left
-		/// </summary>
-		public float Health { get; protected set; }
+		public abstract float Health { get; set; }
+
+		public event EventHandler<HealthEventArgs> HealthChangedEvent;
+
+		public AIController AI { get; set; }
 
 		#endregion //Properties
 
@@ -94,12 +96,7 @@ namespace GameDonkeyLib
 		public override void Reset()
 		{
 			base.Reset();
-			Health = 10.0f;
-		}
-
-		public override int DisplayHealth()
-		{
-			return (int)(Health * 10.0f);
+			ResetHealth();
 		}
 
 		public override void Update()
@@ -152,21 +149,33 @@ namespace GameDonkeyLib
 			//Overload in child classes!
 		}
 
-		/// <summary>
-		/// Do all the specific processing to get player input.
-		/// For human players, this means getting info from the controller.
-		/// For AI players, this means reacting to info in the list of "bad guys"
-		/// </summary>
-		/// <param name="controller">the controller for this player (bullshit and ignored for AI)</param>
-		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public override void GetPlayerInput(InputWrapper controller, List<PlayerQueue> listBadGuys)
+		public override void GetPlayerInput(InputWrapper controller, List<PlayerQueue> listBadGuys, bool ignoreAttackInput)
 		{
-			//get the thumbstick direction
-			ThumbstickDirection = controller.Controller.Thumbsticks.LeftThumbstick.Direction;
+			if (null != AI)
+			{
+				AI.Update();
+				AI.GetPlayerInput(listBadGuys, ignoreAttackInput);
+				ThumbstickDirection = AI.Direction;
+			}
+			else{
+				//get the thumbstick direction
+				ThumbstickDirection = controller.Controller.Thumbsticks.LeftThumbstick.Direction;
 
-			//get the next moov from the input
-			var nextMoov = controller.GetNextMove();
-			SendAttackMessage(nextMoov);
+				//get the next moov from the input
+				var nextMoov = controller.GetNextMove();
+				if (!ignoreAttackInput)
+				{
+					SendAttackMessage(nextMoov);
+				}
+				else
+				{
+					//if we are ignoring attack input, only send the message if it isn't an attack
+					if (!States.IsAttackMessage(nextMoov))
+					{
+						SendAttackMessage(nextMoov);
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -306,7 +315,7 @@ namespace GameDonkeyLib
 					SendStateMessage("Done");
 
 					//set the velocity
-					var throwVelocity = CurrentThrow.Direction * _strengthMultiplier;
+					var throwVelocity = CurrentThrow.Direction;
 
 					//flip the direction?
 					if (!Flip)
@@ -448,7 +457,8 @@ namespace GameDonkeyLib
 				}
 
 				//add the damage
-				Health -= (_damageMultiplier * attack.Strength);
+				HealthChangedEvent?.Invoke(this, new HealthEventArgs(attack.Strength));
+				TakeDamage(attack.Strength);
 
 				//add the velocity
 				Velocity = AttackedVector(attack);
@@ -457,8 +467,8 @@ namespace GameDonkeyLib
 				SendStateMessage("Hit");
 
 				//do a hit pause
-				CharacterClock.AddHitPause(_hitPause);
-				attack.Attacker.CharacterClock.AddHitPause(_hitPause);
+				CharacterClock.AddHitPause(HitPause);
+				attack.Attacker.CharacterClock.AddHitPause(HitPause);
 
 				//add camera shake
 				engine.AddCameraShake(0.25f);
@@ -496,7 +506,7 @@ namespace GameDonkeyLib
 
 		private Vector2 AttackedVector(Hit attack)
 		{
-			var HitDirection = attack.Direction * _strengthMultiplier;
+			var HitDirection = attack.Direction;
 
 			//if this player is already stunned, strengthen the hit
 			if (States.CurrentState == "Stunned")
@@ -549,8 +559,8 @@ namespace GameDonkeyLib
 			Velocity = hitDirection;
 
 			//do a hit pause
-			CharacterClock.AddHitPause(_hitPause);
-			weaponHit.Attacker.CharacterClock.AddHitPause(_hitPause);
+			CharacterClock.AddHitPause(HitPause);
+			weaponHit.Attacker.CharacterClock.AddHitPause(HitPause);
 
 			//add camera shake
 			engine.AddCameraShake(0.08f);
@@ -570,8 +580,8 @@ namespace GameDonkeyLib
 			Velocity = AttackedVector(attack) * 0.9f;
 
 			//do a hit pause
-			CharacterClock.AddHitPause(_hitPause * 0.8f);
-			attack.Attacker.CharacterClock.AddHitPause(_hitPause * 0.8f);
+			CharacterClock.AddHitPause(HitPause * 0.8f);
+			attack.Attacker.CharacterClock.AddHitPause(HitPause * 0.8f);
 
 			//play the particle effect
 			engine.PlayParticleEffect(DefaultParticleEffect.Block,
@@ -582,11 +592,11 @@ namespace GameDonkeyLib
 
 		#endregion //Hit Response
 
-		public override void KillPlayer()
-		{
-			//set health to 0, that will kill the dude
-			Health = 0;
-		}
+		public abstract void ResetHealth();
+
+		public abstract bool CheckIfDead();
+
+		public abstract void TakeDamage(float damage);
 
 		#endregion //Methods
 
@@ -602,7 +612,7 @@ namespace GameDonkeyLib
 		/// <returns></returns>
 		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content)
 		{
-			var data = model as PlayerObjectModel;
+			PlayerObjectModel data = model as PlayerObjectModel;
 			if (null == data)
 			{
 				throw new Exception("must pass PlayerObjectModel to PlayerObject.ParseXmlData");

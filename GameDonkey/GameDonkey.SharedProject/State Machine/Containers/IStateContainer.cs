@@ -101,6 +101,13 @@ namespace GameDonkeyLib
 		bool IsStateAttack(string state);
 
 		/// <summary>
+		/// Check if a message is an attack message. Allows to filter input based on movement msgs vs. attack msgs
+		/// </summary>
+		/// <param name="message"></param>
+		/// <returns></returns>
+		bool IsAttackMessage(string message);
+
+		/// <summary>
 		/// Check if an attack is active in this state.  Used to queue moves during a combo.
 		/// </summary>
 		/// <returns>bool: this state hasnt yet entered the recovery phase.  

@@ -18,7 +18,7 @@ namespace GameDonkeyLib
 	/// <summary>
 	/// this is a game token, either player or projectile
 	/// </summary>
-	public class BaseObject
+	public abstract class BaseObject
 	{
 		#region Fields
 
@@ -436,11 +436,6 @@ namespace GameDonkeyLib
 			Lights.Clear();
 		}
 
-		public virtual int DisplayHealth()
-		{
-			return 0;
-		}
-
 		public virtual void Update()
 		{
 			//update all our clocks
@@ -511,20 +506,12 @@ namespace GameDonkeyLib
 		/// Do all the specific processing to get player input.
 		/// For human players, this means getting info from the controller.
 		/// For AI players, this means reacting to info in the list of "bad guys"
+		/// Also can ignore attack input to have times when players can move but not attack, like at beginning of match
 		/// </summary>
 		/// <param name="controller">the controller for this player (bullshit and ignored for AI)</param>
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public virtual void GetPlayerInput(InputWrapper controller, List<PlayerQueue> listBadGuys)
-		{
-		}
-
-		/// <summary>
-		/// Do all the specific processing to get player attacks.
-		/// By breaking this out from GetPlayerInput, can have times when players can move but not attack, like at beginning of match
-		/// </summary>
-		/// <param name="rController">the controller for this player (bullshit and ignored for AI)</param>
-		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-		public virtual void GetPlayerAttackInput(InputWrapper rController, List<PlayerQueue> listBadGuys)
+		/// <param name="ignoreAttackInput">If true, the object should only move and not attack anything</param>
+		public virtual void GetPlayerInput(InputWrapper controller, List<PlayerQueue> listBadGuys, bool ignoreAttackInput)
 		{
 		}
 
@@ -1204,9 +1191,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Kill this dude!
 		/// </summary>
-		public virtual void KillPlayer()
-		{
-		}
+		public abstract void KillPlayer();
 
 		#region Tools
 

@@ -4,7 +4,7 @@ namespace GameDonkeyLib
 {
 	public class LevelObjectQueue : PlayerQueue
 	{
-		public LevelObjectQueue() : base(Color.White, 0)
+		public LevelObjectQueue() : base(Color.White)
 		{
 		}
 

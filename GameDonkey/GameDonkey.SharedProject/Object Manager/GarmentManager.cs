@@ -48,17 +48,39 @@ namespace GameDonkeyLib
 		{
 			//Store the garment
 			base.AddAction(action, clock);
+			AddGarment(action.Garment);
+		}
 
+		public void AddGarment(Garment garment)
+		{
 			//add to the model
-			action.Garment.AddToSkeleton();
+			garment.AddToSkeleton();
 
 			//redo the physics lists
-			Owner.Physics.GarmentChange(action.Garment);
+			Owner.Physics.GarmentChange(garment);
 
 			//the animation has changed!!!
-			for (int i = 0; i < action.Garment.Fragments.Count; i++)
+			for (int i = 0; i < garment.Fragments.Count; i++)
 			{
-				action.Garment.Fragments[i].AnimationContainer.RestartAnimation();
+				garment.Fragments[i].AnimationContainer.RestartAnimation();
+			}
+		}
+
+		public void RemoveGarment(Garment garment)
+		{
+			garment.RemoveFromSkeleton();
+
+			var hasPhysics = false; //flag to check if any physics need to be updated
+			if (garment.HasPhysics)
+			{
+				hasPhysics = true;
+			}
+
+			//clear the physics if required
+			if (hasPhysics)
+			{
+				Owner.Physics.ClearPhysicsLists();
+				Owner.Physics.SortBones(Owner.AnimationContainer.Skeleton.RootBone);
 			}
 		}
 

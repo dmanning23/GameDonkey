@@ -271,6 +271,11 @@ namespace GameDonkeyLib
 			}
 		}
 
+		public virtual bool IsAttackMessage(string message)
+		{
+			return false;
+		}
+
 		#endregion //Methods
 	}
 }

@@ -19,12 +19,14 @@ namespace GameDonkeyLib
 		#region Properties
 
 		/// <summary>
+		/// this is a counter for assigning round-robin item ids, this is the next id to use
+		/// </summary>
+		private static int _nextQueueId;
+
+		/// <summary>
 		/// The ID of this queue, used to send AIs over the network
 		/// </summary>
 		public int QueueId { get; private set; }
-
-		//the player queue ID that can be used by the player queue to identify objects
-		protected int _nextObjectId;
 
 		//the list of active objects
 		public List<BaseObject> Active { get; private set; }
@@ -40,7 +42,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// this is the player's character
 		/// </summary>
-		public BaseObject Character { get; protected set; }
+		public PlayerObject Character { get; protected set; }
 
 		/// <summary>
 		/// This clock synchronizes the clocks between all the dudes this guy contains
@@ -118,7 +120,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// standard constructor
 		/// </summary>
-		public PlayerQueue(Color playerColor, int queueId)
+		public PlayerQueue(Color playerColor)
 		{
 			Active = new List<BaseObject>();
 			Inactive = new List<BaseObject>();
@@ -129,8 +131,7 @@ namespace GameDonkeyLib
 			Points = 0;
 			Stock = 1;
 			InputQueue = null;
-			_nextObjectId = 0;
-			QueueId = queueId;
+			QueueId = _nextQueueId++;
 
 			ScoreTimer = new CountdownTimer();
 		}
@@ -172,59 +173,6 @@ namespace GameDonkeyLib
 		}
 
 		/// <summary>
-		/// pull an item out of the inactive list and add it to the active list.
-		/// </summary>
-		/// <param name="rObject">the object to activate</param>
-		/// <returns>reference to the object if the object was spawned, null if the object is already active</returns>
-		public BaseObject ActivateObject(int queueID)
-		{
-			//find the object in the inactive list
-			for (var i = 0; i < Inactive.Count; i++)
-			{
-				if (Inactive[i].QueueId == queueID)
-				{
-					BaseObject gameObject = Inactive[i];
-
-					//remove from the incative list and add to active
-					Active.Add(Inactive[i]);
-					Inactive.RemoveAt(i);
-
-					//reset the thing back to it's start state
-					gameObject.Reset();
-
-					//run the animation container so all the bones will be in the correct position when it updates
-					gameObject.AnimationContainer.Update(CharacterClock, gameObject.Position, gameObject.Flip, 0.0f, true);
-
-					return gameObject;
-				}
-			}
-
-			//that object must already be in the active list
-			return null;
-		}
-
-		/// <summary>
-		/// Find an object by its queue id so it can be updated
-		/// </summary>
-		/// <param name="queueID"></param>
-		/// <returns></returns>
-		protected BaseObject FindActiveObject(int queueID)
-		{
-			//check the active objects
-			for (var i = 0; i < Active.Count; i++)
-			{
-				if (Active[i].QueueId == queueID)
-				{
-					//found it, that was easy enough
-					return Active[i];
-				}
-			}
-
-			//it must be inactive, look through that list
-			return ActivateObject(queueID);
-		}
-
-		/// <summary>
 		/// Take an object out of the active list, put it in the inactive list
 		/// </summary>
 		/// <param name="gameObject">the object to deactivate</param>
@@ -234,25 +182,6 @@ namespace GameDonkeyLib
 			for (var i = 0; i < Active.Count; i++)
 			{
 				if (Active[i].Id == gameObject.Id)
-				{
-					//pop into the inactive list, remove from the active list
-					Inactive.Add(Active[i]);
-					Active.RemoveAt(i);
-					return;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Take an object out of the active list, put it in the inactive list
-		/// </summary>
-		/// <param name="queueID">the queue id of the object to deactivate</param>
-		protected void DeactivateObject(int queueID)
-		{
-			//go through the active list, look for that object
-			for (var i = 0; i < Active.Count; i++)
-			{
-				if (Active[i].QueueId == queueID)
 				{
 					//pop into the inactive list, remove from the active list
 					Inactive.Add(Active[i]);
@@ -362,7 +291,7 @@ namespace GameDonkeyLib
 		/// <returns>whether or not the thing is dead</returns>
 		public bool CheckIfDead()
 		{
-			return (Character.DisplayHealth() <= 0);
+			return Character.CheckIfDead();
 		}
 
 		public void UpdateInput(InputState input)
@@ -370,19 +299,11 @@ namespace GameDonkeyLib
 			Character.UpdateInput(InputQueue, input);
 		}
 
-		public void GetPlayerInput(List<PlayerQueue> badGuys)
+		public void GetPlayerInput(List<PlayerQueue> badGuys, bool ignoreAttackInput)
 		{
 			for (var i = 0; i < Active.Count; i++)
 			{
-				Active[i].GetPlayerInput(InputQueue, badGuys);
-			}
-		}
-
-		public void GetPlayerAttackInput(List<PlayerQueue> badGuys)
-		{
-			for (var i = 0; i < Active.Count; i++)
-			{
-				Active[i].GetPlayerAttackInput(InputQueue, badGuys);
+				Active[i].GetPlayerInput(InputQueue, badGuys, ignoreAttackInput);
 			}
 		}
 
@@ -610,13 +531,13 @@ namespace GameDonkeyLib
 					break;
 				case "Projectile":
 					{
-						gameObject = new ProjectileObject(CharacterClock, Character, _nextObjectId++);
+						gameObject = new ProjectileObject(CharacterClock, Character, QueueId);
 						gameObjectModel = new ProjectileObjectModel(fileName);
 					}
 					break;
 				case "Level":
 					{
-						gameObject = new LevelObject(CharacterClock, _nextObjectId++);
+						gameObject = new LevelObject(CharacterClock, QueueId);
 						gameObjectModel = new LevelObjectModel(fileName);
 					}
 					break;
@@ -629,7 +550,7 @@ namespace GameDonkeyLib
 
 		protected virtual void AddCharacterToList(BaseObject gameObject)
 		{
-			Character = gameObject;
+			Character = gameObject as PlayerObject;
 		}
 
 		#endregion

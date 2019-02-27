@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\PointLightActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameObjects\BackgroundLayerModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\HealthEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParticleEffects\DefaultParticleEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGameDonkey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\AddGarmentActionModel.cs" />
@@ -58,7 +59,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\PointLightAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\EMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\EState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\AIObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object Manager\AIController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object Manager\BaseObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object Manager\GarmentManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object Manager\LevelObject.cs" />

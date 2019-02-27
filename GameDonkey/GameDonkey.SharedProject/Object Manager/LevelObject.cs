@@ -31,6 +31,10 @@ namespace GameDonkeyLib
 			States.StateChangedEvent += this.StateChanged;
 		}
 
+		public override void KillPlayer()
+		{
+		}
+
 		public override void CollisionResponse(BasePhysicsContainer otherObject,
 			CreateAttackAction attackAction,
 			Vector2 firstCollisionPoint,
