@@ -1,20 +1,14 @@
 ﻿using GameTimer;
 using Microsoft.Xna.Framework.Content;
-using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
 	/// <summary>
 	/// A list of actions to perform while in one state
 	/// </summary>
-	public class SingleStateActions
+	public class SingleStateActions : StateActionsList
 	{
 		#region Properties
-
-		/// <summary>
-		/// List of all the actions to perform when in this state
-		/// </summary>
-		public List<BaseAction> Actions { get; private set; }
 
 		/// <summary>
 		/// If this state is an attack or a throw, the time that the startup ends
@@ -47,27 +41,17 @@ namespace GameDonkeyLib
 		/// </summary>
 		public SingleStateActions()
 		{
-			Actions = new List<BaseAction>();
 		}
 
-		public void LoadStateActions(StateActionsModel actionModels, BaseObject owner)
+		public void LoadStateActions(SingleStateActionsModel actionModels, BaseObject owner)
 		{
 			StateName = actionModels.StateName;
-			for (int i = 0; i < actionModels.StateActions.Count; i++)
-			{
-				var stateAction = StateActionFactory.CreateStateAction(actionModels.StateActions[i], owner);
-				Actions.Add(stateAction);
-			}
+			base.LoadStateActions(actionModels, owner);
 		}
 
-		public void LoadContent(IGameDonkey engine, ContentManager content)
+		public override void LoadContent(IGameDonkey engine, ContentManager content)
 		{
-			for (int i = 0; i < Actions.Count; i++)
-			{
-				Actions[i].LoadContent(engine, content);
-			}
-
-			Sort();
+			base.LoadContent(engine, content);
 
 			//calculate "active" and "recovery" phases
 			CalculateAttackTime();
@@ -188,46 +172,6 @@ namespace GameDonkeyLib
 		{
 			return StateName;
 		}
-
-		#region Tool Methods
-
-		/// <summary>
-		/// Given an action type, add a blank action to this list of actions
-		/// </summary>
-		/// <param name="actionType">the type of action to add</param>
-		/// <param name="owner">the owner of this action list</param>
-		/// <returns>IBaseAction: reference to the action that was created</returns>
-		public BaseAction AddNewActionFromType(EActionType actionType, BaseObject owner, IGameDonkey engine, ContentManager content)
-		{
-			//get the correct action type
-			var action = StateActionFactory.CreateStateAction(actionType, owner);
-			action.LoadContent(engine, content);
-
-			//save the action
-			Actions.Add(action);
-
-			//sort the list of actions
-			Sort();
-
-			//return the newly created dude
-			return action;
-		}
-
-		/// <summary>
-		/// remove an item from the state actions
-		/// </summary>
-		/// <param name="iActionIndex">index of the item to remove</param>
-		public bool RemoveAction(BaseAction action)
-		{
-			return Actions.Remove(action);
-		}
-
-		public void Sort()
-		{
-			Actions.Sort(new ActionSort());
-		}
-
-		#endregion //Tool Methods
 
 		#endregion //Methods
 	}

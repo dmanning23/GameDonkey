@@ -6,7 +6,7 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	public class CreateAttackActionModel : BaseActionModel, ITimedActionModel, IDirectionalActionModel, IHasSuccessActionModel
+	public class CreateAttackActionModel : BaseActionModel, ITimedActionModel, IDirectionalActionModel, IHasStateActionsListModel
 	{
 		#region Properties
 
@@ -22,7 +22,8 @@ namespace GameDonkeyLib
 		public float Damage { get; set; }
 		public TimedActionModel TimeDelta { get; set; }
 		public DirectionActionModel Direction { get; set; }
-		public List<BaseActionModel> SuccessActions { get; set; }
+
+		public StateActionsListModel ActionModels { get; set; }
 
 		#endregion //Properties
 
@@ -32,7 +33,7 @@ namespace GameDonkeyLib
 		{
 			Direction = new DirectionActionModel();
 			TimeDelta = new TimedActionModel();
-			SuccessActions = new List<BaseActionModel>();
+			ActionModels = new StateActionsListModel();
 		}
 
 		public CreateAttackActionModel(CreateAttackAction action) : base(action)
@@ -41,11 +42,7 @@ namespace GameDonkeyLib
 			Damage = action.Damage;
 			TimeDelta = new TimedActionModel(action);
 			Direction = new DirectionActionModel(action.ActionDirection);
-			SuccessActions = new List<BaseActionModel>();
-			foreach (var stateAction in action.SuccessActions)
-			{
-				SuccessActions.Add(StateActionFactory.CreateActionModel(stateAction));
-			}
+			ActionModels = new StateActionsListModel(action.Actions);
 		}
 
 		public CreateAttackActionModel(BaseAction action) : this(action as CreateAttackAction)
@@ -88,18 +85,17 @@ namespace GameDonkeyLib
 					{
 						if (!string.IsNullOrEmpty(value))
 						{
-							SuccessActions.Add(new PlaySoundActionModel()
+							ActionModels.ActionModels.Add(new PlaySoundActionModel()
 							{
 								Filename = new Filename(value)
 							});
 						}
 					}
 					break;
+				case "actions":
 				case "successactions":
 					{
-						var stateActions = new StateActionsModel();
-						XmlFileBuddy.ReadChildNodes(node, stateActions.ParseStateAction);
-						SuccessActions.AddRange(stateActions.StateActions);
+						ActionModels.ParseXmlNode(node);
 					}
 					break;
 				default:
@@ -119,12 +115,7 @@ namespace GameDonkeyLib
 			TimeDelta.WriteXmlNodes(xmlWriter);
 			Direction.WriteXmlNodes(xmlWriter);
 
-			xmlWriter.WriteStartElement("SuccessActions");
-			foreach (var stateAction in SuccessActions)
-			{
-				stateAction.WriteXmlNodes(xmlWriter);
-			}
-			xmlWriter.WriteEndElement();
+			ActionModels.WriteXmlNodes(xmlWriter);
 		}
 
 #endif

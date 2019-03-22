@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<actions>
+				<PlayAnimation Time="1" Animation="catpants" Playback="LoopBackwards" />
+			</actions>
+		</State>
+	</States>
+</SingleStateContainer>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<actions>
+				<SendStateMessage Time="1" Message="catpants" />
+			</actions>
+		</State>
+	</States>
+</SingleStateContainer>

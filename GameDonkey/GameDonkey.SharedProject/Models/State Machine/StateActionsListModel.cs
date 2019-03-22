@@ -4,29 +4,31 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	public class StateActionsModel : XmlObject
+	public class StateActionsListModel : XmlObject
 	{
 		#region Properties
 
-		public string StateName { get; private set; }
-		public List<BaseActionModel> StateActions { get; private set; }
+		public List<BaseActionModel> ActionModels { get; private set; }
 
 		#endregion //Properties
 
 		#region Initialization
 
-		public StateActionsModel()
+		public StateActionsListModel()
 		{
-			StateActions = new List<BaseActionModel>();
+			ActionModels = new List<BaseActionModel>();
 		}
 
-		public StateActionsModel(SingleStateActions stateActions) : this()
+		public StateActionsListModel(List<BaseAction> actions) : this()
 		{
-			StateName = stateActions.StateName;
-			foreach (var stateAction in stateActions.Actions)
+			foreach (var stateAction in actions)
 			{
-				StateActions.Add(StateActionFactory.CreateActionModel(stateAction));
+				ActionModels.Add(StateActionFactory.CreateActionModel(stateAction));
 			}
+		}
+
+		public StateActionsListModel(StateActionsList actions) : this(actions.Actions)
+		{
 		}
 
 		#endregion //Initialization
@@ -39,27 +41,22 @@ namespace GameDonkeyLib
 			var name = node.Name;
 			var value = node.InnerText;
 
-			switch (name)
+			switch (name.ToLower())
 			{
-				case "Asset":
+				case "asset":
 					{
 						//skip these old ass nodes
 						XmlFileBuddy.ReadChildNodes(node, ParseXmlNode);
 					}
 					break;
-				case "Type":
+				case "type":
 					{
 						//Really skip these old ass nodes
 					}
 					break;
 				case "name":
-				case "StateName":
-					{
-						StateName = value;
-					}
-					break;
 				case "actions":
-				case "Actions":
+				case "successactions":
 					{
 						XmlFileBuddy.ReadChildNodes(node, ParseStateAction);
 					}
@@ -87,24 +84,18 @@ namespace GameDonkeyLib
 			//create the correct action
 			var stateAction = StateActionFactory.CreateActionModel(actionType);
 			XmlFileBuddy.ReadChildNodes(node, stateAction.ParseXmlNode);
-			StateActions.Add(stateAction);
+			ActionModels.Add(stateAction);
 		}
 
 #if !WINDOWS_UWP
 
 		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
 		{
-			xmlWriter.WriteStartElement("State");
-
-			xmlWriter.WriteAttributeString("StateName", StateName);
-
-			xmlWriter.WriteStartElement("Actions");
-			foreach (var stateAction in StateActions)
+			xmlWriter.WriteStartElement("actions");
+			foreach (var stateAction in ActionModels)
 			{
 				stateAction.WriteXmlNodes(xmlWriter);
 			}
-			xmlWriter.WriteEndElement();
-
 			xmlWriter.WriteEndElement();
 		}
 

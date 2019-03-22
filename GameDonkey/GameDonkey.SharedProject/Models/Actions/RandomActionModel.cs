@@ -1,11 +1,8 @@
-﻿using FilenameBuddy;
-using System.Collections.Generic;
-using System.Xml;
-using XmlBuddy;
+﻿using System.Xml;
 
 namespace GameDonkeyLib
 {
-	public class CreateBlockActionModel : BaseActionModel, ITimedActionModel, IHasStateActionsListModel
+	public class RandomActionModel : BaseActionModel, IHasStateActionsListModel
 	{
 		#region Properties
 
@@ -13,11 +10,9 @@ namespace GameDonkeyLib
 		{
 			get
 			{
-				return EActionType.CreateBlock;
+				return EActionType.Random;
 			}
 		}
-
-		public TimedActionModel TimeDelta { get; set; }
 
 		public StateActionsListModel ActionModels { get; set; }
 
@@ -25,19 +20,17 @@ namespace GameDonkeyLib
 
 		#region Initialization
 
-		public CreateBlockActionModel()
+		public RandomActionModel()
 		{
 			ActionModels = new StateActionsListModel();
-			TimeDelta = new TimedActionModel();
 		}
 
-		public CreateBlockActionModel(CreateBlockAction action) : base(action)
+		public RandomActionModel(RandomAction action) : base(action)
 		{
-			TimeDelta = new TimedActionModel(action);
 			ActionModels = new StateActionsListModel(action.Actions);
 		}
 
-		public CreateBlockActionModel(BaseAction action) : this(action as CreateBlockAction)
+		public RandomActionModel(BaseAction action) : this(action as RandomAction)
 		{
 		}
 
@@ -53,24 +46,7 @@ namespace GameDonkeyLib
 
 			switch (name.ToLower())
 			{
-				case "timedelta":
-					{
-						TimeDelta.ParseXmlNode(node);
-					}
-					break;
-				case "hitsound":
-					{
-						if (!string.IsNullOrEmpty(value))
-						{
-							ActionModels.ActionModels.Add(new PlaySoundActionModel()
-							{
-								Filename = new Filename(value)
-							});
-						}
-					}
-					break;
 				case "actions":
-				case "successactions":
 					{
 						ActionModels.ParseXmlNode(node);
 					}
@@ -87,8 +63,6 @@ namespace GameDonkeyLib
 
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
-			TimeDelta.WriteXmlNodes(xmlWriter);
-
 			ActionModels.WriteXmlNodes(xmlWriter);
 		}
 

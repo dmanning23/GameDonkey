@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-	public class CreateAttackAction : TimedAction
+	public class CreateAttackAction : TimedAction, IStateActionsList
 	{
 		#region Properties
 
@@ -51,7 +51,9 @@ namespace GameDonkeyLib
 		/// A list of actions that will be run if this attack connects (sound effects, particle effects, etc)
 		/// This list of actions is played whether the attack is blocked or not.
 		/// </summary>
-		public List<BaseAction> SuccessActions { get; private set; }
+		private StateActionsList StateActionsList { get; set; }
+
+		public List<BaseAction> Actions => StateActionsList.Actions;
 
 		/// <summary>
 		/// the amount of damage to deal when this attack connects
@@ -66,7 +68,7 @@ namespace GameDonkeyLib
 			base(owner, actionType)
 		{
 			ActionDirection = new ActionDirection();
-			SuccessActions = new List<BaseAction>();
+			StateActionsList = new StateActionsList();
 		}
 
 		public CreateAttackAction(BaseObject owner, CreateAttackActionModel actionModel) :
@@ -75,12 +77,9 @@ namespace GameDonkeyLib
 			BoneName = actionModel.BoneName;
 			Damage = actionModel.Damage;
 			ActionDirection = new ActionDirection(actionModel.Direction);
-			SuccessActions = new List<BaseAction>();
-			for (int i = 0; i < actionModel.SuccessActions.Count; i++)
-			{
-				var stateAction = StateActionFactory.CreateStateAction(actionModel.SuccessActions[i], owner);
-				SuccessActions.Add(stateAction);
-			}
+
+			StateActionsList = new StateActionsList();
+			StateActionsList.LoadStateActions(actionModel.ActionModels, owner);
 		}
 
 		public CreateAttackAction(BaseObject owner, BaseActionModel actionModel) :
@@ -90,10 +89,7 @@ namespace GameDonkeyLib
 
 		public override void LoadContent(IGameDonkey engine, ContentManager content)
 		{
-			for (int i = 0; i < SuccessActions.Count; i++)
-			{
-				SuccessActions[i].LoadContent(engine, content);
-			}
+			StateActionsList.LoadContent(engine, content);
 		}
 
 		#endregion //Initialization
@@ -113,9 +109,9 @@ namespace GameDonkeyLib
 			}
 
 			//reset teh success actions
-			for (var i = 0; i < SuccessActions.Count; i++)
+			for (var i = 0; i < StateActionsList.Actions.Count; i++)
 			{
-				SuccessActions[i].AlreadyRun = false;
+				StateActionsList.Actions[i].AlreadyRun = false;
 			}
 
 			//activate the attack
@@ -171,15 +167,35 @@ namespace GameDonkeyLib
 		public virtual bool ExecuteSuccessActions(BaseObject characterHit)
 		{
 			var result = false;
-			for (var i = 0; i < SuccessActions.Count; i++)
+			for (var i = 0; i < StateActionsList.Actions.Count; i++)
 			{
-				if (SuccessActions[i].Execute())
+				if (StateActionsList.Actions[i].Execute())
 				{
 					result = true;
 				}
 			}
 
 			return result;
+		}
+
+		public BaseAction AddNewActionFromType(EActionType actionType, BaseObject owner, IGameDonkey engine, ContentManager content)
+		{
+			return StateActionsList.AddNewActionFromType(actionType, owner, engine, content);
+		}
+
+		public void LoadStateActions(StateActionsListModel actionModels, BaseObject owner)
+		{
+			StateActionsList.LoadStateActions(actionModels, owner);
+		}
+
+		public bool RemoveAction(BaseAction action)
+		{
+			return StateActionsList.RemoveAction(action);
+		}
+
+		public void Sort()
+		{
+			StateActionsList.Sort();
 		}
 
 		#endregion //Methods

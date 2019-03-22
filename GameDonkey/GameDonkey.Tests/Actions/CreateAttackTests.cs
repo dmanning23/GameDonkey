@@ -39,7 +39,7 @@ namespace GameDonkey.Tests
 					Velocity = new Vector2(X, Y)
 				}
 			};
-			model.SuccessActions.Add(new DeactivateActionModel()
+			model.ActionModels.ActionModels.Add(new DeactivateActionModel()
 			{
 				Time = subTime
 			});
@@ -53,8 +53,8 @@ namespace GameDonkey.Tests
 			action.ActionDirection.DirectionType.ShouldBe(directionType);
 			action.ActionDirection.Velocity.X.ShouldBe(X);
 			action.ActionDirection.Velocity.Y.ShouldBe(Y);
-			action.SuccessActions.Count.ShouldBe(1);
-			var subAction = action.SuccessActions[0] as DeactivateAction;
+			action.Actions.Count.ShouldBe(1);
+			var subAction = action.Actions[0] as DeactivateAction;
 			subAction.ShouldNotBeNull();
 			subAction.Time.ShouldBe(subTime);
 		}
@@ -74,7 +74,7 @@ namespace GameDonkey.Tests
 					Velocity = new Vector2(X, Y)
 				}
 			};
-			action.SuccessActions.Add(new DeactivateAction(null)
+			action.Actions.Add(new DeactivateAction(null)
 			{
 				Time = subTime
 			});
@@ -88,8 +88,8 @@ namespace GameDonkey.Tests
 			model.Direction.DirectionType.ShouldBe(directionType);
 			model.Direction.Velocity.X.ShouldBe(X);
 			model.Direction.Velocity.Y.ShouldBe(Y);
-			model.SuccessActions.Count.ShouldBe(1);
-			var subAction = model.SuccessActions[0] as DeactivateActionModel;
+			model.ActionModels.ActionModels.Count.ShouldBe(1);
+			var subAction = model.ActionModels.ActionModels[0] as DeactivateActionModel;
 			subAction.ShouldNotBeNull();
 			subAction.Time.ShouldBe(subTime);
 		}
@@ -109,16 +109,16 @@ namespace GameDonkey.Tests
 					Velocity = new Vector2(X, Y)
 				}
 			};
-			model.SuccessActions.Add(new DeactivateActionModel()
+			model.ActionModels.ActionModels.Add(new DeactivateActionModel()
 			{
 				Time = subTime
 			});
 
 			//write the action out
 			var container = new SingleStateContainerModel(new Filename("CreateAttackTests.xml"));
-			var actions = new StateActionsModel();
+			var actions = new SingleStateActionsModel();
 			container.StatesActions.Add(actions);
-			actions.StateActions.Add(model);
+			actions.ActionModels.Add(model);
 			container.WriteXml();
 
 			//read it back in
@@ -127,8 +127,8 @@ namespace GameDonkey.Tests
 
 			//get the action
 			container2.StatesActions.Count.ShouldBe(1);
-			container2.StatesActions[0].StateActions.Count.ShouldBe(1);
-			var model2 = container2.StatesActions[0].StateActions[0] as CreateAttackActionModel;
+			container2.StatesActions[0].ActionModels.Count.ShouldBe(1);
+			var model2 = container2.StatesActions[0].ActionModels[0] as CreateAttackActionModel;
 			model2.Time.ShouldBe(time);
 			model2.BoneName.ShouldBe(bone);
 			model2.Damage.ShouldBe(damage);
@@ -136,8 +136,8 @@ namespace GameDonkey.Tests
 			model2.Direction.DirectionType.ShouldBe(directionType);
 			model2.Direction.Velocity.X.ShouldBe(X);
 			model2.Direction.Velocity.Y.ShouldBe(Y);
-			model2.SuccessActions.Count.ShouldBe(1);
-			var subAction = model2.SuccessActions[0] as DeactivateActionModel;
+			model2.ActionModels.ActionModels.Count.ShouldBe(1);
+			var subAction = model2.ActionModels.ActionModels[0] as DeactivateActionModel;
 			subAction.ShouldNotBeNull();
 			subAction.Time.ShouldBe(subTime);
 		}

@@ -9,8 +9,11 @@
     <Import_RootNamespace>GameDonkey.SharedProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\RandomActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\PointLightActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameObjects\BackgroundLayerModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\IHasStateActionsListModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\StateActionsListModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object Manager\HealthEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParticleEffects\DefaultParticleEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGameDonkey.cs" />
@@ -48,14 +51,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\DirectionActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\IDirectionalActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\IHasFilenameActionModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\IHasSuccessActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\ITimedActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\SingleStateContainerModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\StateActionsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\SingleStateActionsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\TimedActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParticleEffects\ParticleEffectCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sounds\DefaultSounds.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sounds\SoundCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\RandomAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\PointLightAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\EMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\EState.cs" />
@@ -76,6 +79,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\ActionDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\ActionSort.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\ActionType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\IStateActionsList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateActionsList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateActionFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\SingleStateActions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\StateMachineActions.cs" />

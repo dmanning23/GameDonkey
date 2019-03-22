@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<actions>
+				<BlockState Time="1" BoneName="catpants" TimeDelta="2">
+					<actions>
+						<Deactivate Time="3" />
+					</actions>
+				</BlockState>
+			</actions>
+		</State>
+	</States>
+</SingleStateContainer>

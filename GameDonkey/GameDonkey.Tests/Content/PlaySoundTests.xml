@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<actions>
+				<PlaySound Time="1" Filename="catpants.jpg" />
+			</actions>
+		</State>
+	</States>
+</SingleStateContainer>

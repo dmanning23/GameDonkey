@@ -25,6 +25,7 @@ namespace GameDonkeyLib
 		Rotate,
 		TargetRotation,
 		CameraShake,
-		KillPlayer
+		KillPlayer,
+		Random
 	}
 }

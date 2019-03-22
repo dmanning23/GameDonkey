@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<SingleStateContainer>
+	<States>
+		<State StateName="">
+			<actions>
+				<Rotate Time="1" Rotation="3" />
+			</actions>
+		</State>
+	</States>
+</SingleStateContainer>

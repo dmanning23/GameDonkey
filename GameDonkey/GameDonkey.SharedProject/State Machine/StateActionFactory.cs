@@ -43,6 +43,7 @@ namespace GameDonkeyLib
 				case EActionType.PlaySound: { return new PlaySoundActionModel(); }
 				case EActionType.PointLight: { return new PointLightActionModel(); }
 				case EActionType.Projectile: { return new ProjectileActionModel(); }
+				case EActionType.Random: { return new RandomActionModel(); }
 				case EActionType.Rotate: { return new RotateActionModel(); }
 				case EActionType.SendStateMessage: { return new SendStateMessageActionModel(); }
 				case EActionType.SetVelocity: { return new SetVelocityActionModel(); }
@@ -104,6 +105,7 @@ namespace GameDonkeyLib
 				case EActionType.PlaySound: { return new PlaySoundActionModel(actionModel); }
 				case EActionType.PointLight: { return new PointLightActionModel(actionModel); }
 				case EActionType.Projectile: { return new ProjectileActionModel(actionModel); }
+				case EActionType.Random: { return new RandomActionModel(actionModel); }
 				case EActionType.Rotate: { return new RotateActionModel(actionModel); }
 				case EActionType.SendStateMessage: { return new SendStateMessageActionModel(actionModel); }
 				case EActionType.SetVelocity: { return new SetVelocityActionModel(actionModel); }
@@ -142,6 +144,7 @@ namespace GameDonkeyLib
 				case EActionType.PlaySound: { return new PlaySoundAction(owner, actionModel); }
 				case EActionType.PointLight: { return new PointLightAction(owner, actionModel); }
 				case EActionType.Projectile: { return new ProjectileAction(owner, actionModel); }
+				case EActionType.Random: { return new RandomAction(owner, actionModel); }
 				case EActionType.Rotate: { return new RotateAction(owner, actionModel); }
 				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner, actionModel); }
 				case EActionType.SetVelocity: { return new SetVelocityAction(owner, actionModel); }
@@ -179,6 +182,7 @@ namespace GameDonkeyLib
 				case EActionType.PlaySound: { return new PlaySoundAction(owner); }
 				case EActionType.PointLight: { return new PointLightAction(owner); }
 				case EActionType.Projectile: { return new ProjectileAction(owner); }
+				case EActionType.Random: { return new RandomAction(owner); }
 				case EActionType.Rotate: { return new RotateAction(owner); }
 				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner); }
 				case EActionType.SetVelocity: { return new SetVelocityAction(owner); }

@@ -9,7 +9,7 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
-		public List<StateActionsModel> StatesActions { get; private set; }
+		public List<SingleStateActionsModel> StatesActions { get; private set; }
 
 		#endregion //Properties
 
@@ -17,14 +17,14 @@ namespace GameDonkeyLib
 
 		public SingleStateContainerModel(Filename filename) : base("SingleStateContainer", filename)
 		{
-			StatesActions = new List<StateActionsModel>();
+			StatesActions = new List<SingleStateActionsModel>();
 		}
 
 		public SingleStateContainerModel(Filename filename, SingleStateContainer stateContainer) : this(filename)
 		{
 			foreach (var stateActions in stateContainer.Actions.Actions)
 			{
-				StatesActions.Add(new StateActionsModel(stateActions.Value));
+				StatesActions.Add(new SingleStateActionsModel(stateActions.Value));
 			}
 		}
 
@@ -32,7 +32,7 @@ namespace GameDonkeyLib
 		{
 			foreach (var singleStateActions in stateActions.Actions)
 			{
-				StatesActions.Add(new StateActionsModel(singleStateActions.Value));
+				StatesActions.Add(new SingleStateActionsModel(singleStateActions.Value));
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace GameDonkeyLib
 
 		private void ParseStates(XmlNode node)
 		{
-			var stateActions = new StateActionsModel();
+			var stateActions = new SingleStateActionsModel();
 			XmlFileBuddy.ReadChildNodes(node, stateActions.ParseXmlNode);
 			StatesActions.Add(stateActions);
 		}
