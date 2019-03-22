@@ -1,4 +1,3 @@
-using MathNet.Numerics;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -69,11 +68,6 @@ namespace GameDonkeyLib
 			myVect.X = fX;
 			myVect.Y = fY;
 			return myVect.Length();
-		}
-
-		public static bool AlmostEqual(this Vector2 myVector, Vector2 otherVector)
-		{
-			return myVector.X.AlmostEqual(otherVector.X) && myVector.Y.AlmostEqual(otherVector.Y);
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics;
-using System;
+﻿using System;
 using System.Xml;
 using Vector2Extensions;
 using XmlBuddy;
@@ -43,27 +42,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public override bool Compare(BaseActionModel inst)
-		{
-			var stateAction = inst as ConstantDeccelerationActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (!MinYVelocity.AlmostEqual(stateAction.MinYVelocity))
-			{
-				return false;
-			}
-
-			if (!Direction.Compare(stateAction.Direction))
-			{
-				return false;
-			}
-
-			return base.Compare(inst);
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

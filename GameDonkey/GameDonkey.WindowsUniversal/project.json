@@ -1,19 +1,17 @@
 ﻿{
   "dependencies": {
-    "AnimationLib": "2.0.11",
+    "AnimationLib": "2.0.14",
     "CameraBuddy": "2.0.0",
     "CollisionBuddy": "2.0.1",
     "DrawlistBuddy": "2.0.0",
-    "FilenameBuddy": "2.0.1",
-    "FontBuddy": "2.0.0",
+    "FilenameBuddy": "2.0.4",
+    "FontBuddy": "2.0.4",
     "GameTimer": "2.0.0",
     "HadoukInput": "2.0.18",
-    "MathNet.Numerics": "4.7.0",
     "MatrixExtensions": "2.0.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "6.1.9",
     "MonoGame.Framework.WindowsUniversal": "3.7.1.189",
-    "Newtonsoft.Json": "12.0.1",
-    "ParticleBuddy": "2.0.0",
+    "ParticleBuddy": "2.0.2",
     "PrimitiveBuddy": "2.0.0",
     "RandomExtensions.dmanning23": "2.0.0",
     "RenderBuddy": "2.0.1",
@@ -22,7 +20,7 @@
     "System.Xml.ReaderWriter": "4.3.1",
     "System.Xml.XmlDocument": "4.3.0",
     "UndoRedoBuddy": "2.0.1",
-    "Vector2Extensions": "2.0.0",
+    "Vector2Extensions": "2.0.1",
     "XmlBuddy": "2.0.1"
   },
   "frameworks": {

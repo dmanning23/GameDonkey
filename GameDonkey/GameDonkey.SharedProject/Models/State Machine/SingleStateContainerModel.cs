@@ -1,5 +1,4 @@
 ﻿using FilenameBuddy;
-using System;
 using System.Collections.Generic;
 using System.Xml;
 using XmlBuddy;
@@ -40,24 +39,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public bool Compare(SingleStateContainerModel inst)
-		{
-			if (StatesActions.Count != inst.StatesActions.Count)
-			{
-				return false;
-			}
-
-			for (int i = 0; i < StatesActions.Count; i++)
-			{
-				if (!StatesActions[i].Compare(inst.StatesActions[i]))
-				{
-					return false;
-				}
-			}
-
-			return Filename == inst.Filename;
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

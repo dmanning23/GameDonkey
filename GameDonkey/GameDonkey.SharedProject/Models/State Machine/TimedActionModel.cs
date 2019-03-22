@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics;
-using System;
+﻿using System;
 using System.Xml;
 using XmlBuddy;
 
@@ -36,11 +35,6 @@ namespace GameDonkeyLib
 		public TimedActionModel(TimedActionModel inst)
 		{
 			TimeDelta = inst.TimeDelta;
-		}
-
-		public bool Compare(TimedActionModel inst)
-		{
-			return TimeDelta.AlmostEqual(inst.TimeDelta);
 		}
 
 		public override void ParseXmlNode(XmlNode node)

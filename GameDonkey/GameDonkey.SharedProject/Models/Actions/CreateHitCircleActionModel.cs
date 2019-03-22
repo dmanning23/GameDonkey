@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Xml;
 using Vector2Extensions;
@@ -46,32 +45,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public override bool Compare(BaseActionModel inst)
-		{
-			var stateAction = inst as CreateHitCircleActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (!Radius.AlmostEqual(stateAction.Radius))
-			{
-				return false;
-			}
-
-			if (!StartOffset.AlmostEqual(stateAction.StartOffset))
-			{
-				return false;
-			}
-
-			if (!Velocity.AlmostEqual(stateAction.Velocity))
-			{
-				return false;
-			}
-
-			return base.Compare(inst);
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

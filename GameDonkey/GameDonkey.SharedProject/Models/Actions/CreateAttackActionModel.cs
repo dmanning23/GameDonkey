@@ -1,5 +1,4 @@
 ﻿using FilenameBuddy;
-using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -56,50 +55,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public override bool Compare(BaseActionModel inst)
-		{
-			var stateAction = inst as CreateAttackActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (BoneName != stateAction.BoneName)
-			{
-				return false;
-			}
-
-			if (!Damage.AlmostEqual(stateAction.Damage))
-			{
-				return false;
-			}
-
-			if (!TimeDelta.Compare(stateAction.TimeDelta))
-			{
-				return false;
-			}
-
-			if (!Direction.Compare(stateAction.Direction))
-			{
-				return false;
-			}
-
-			if (SuccessActions.Count != stateAction.SuccessActions.Count)
-			{
-				return false;
-			}
-
-			for (int i = 0; i < SuccessActions.Count; i++)
-			{
-				if (!SuccessActions[i].Compare(stateAction.SuccessActions[i]))
-				{
-					return false;
-				}
-			}
-
-			return base.Compare(inst);
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

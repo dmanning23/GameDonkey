@@ -39,22 +39,6 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public override bool Compare(BaseActionModel inst)
-		{
-			var stateAction = inst as AddVelocityActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (!Direction.Compare(stateAction.Direction))
-			{
-				return false;
-			}
-
-			return base.Compare(inst);
-		}
-
 		public override void ParseXmlNode(XmlNode node)
 		{
 			//what is in this node?

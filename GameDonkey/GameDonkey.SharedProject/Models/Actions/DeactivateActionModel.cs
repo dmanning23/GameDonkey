@@ -34,22 +34,6 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public override bool Compare(BaseActionModel inst)
-		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
-			var stateAction = inst as DeactivateActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			return true;
-		}
-
 #if !WINDOWS_UWP
 
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)

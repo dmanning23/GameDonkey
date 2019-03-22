@@ -41,32 +41,6 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public override bool Compare(BaseActionModel inst)
-		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
-			var stateAction = inst as PlayAnimationActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (Animation != stateAction.Animation)
-			{
-				return false;
-			}
-
-			if (Playback != stateAction.Playback)
-			{
-				return false;
-			}
-
-			return true;
-		}
-
 		public override void ParseXmlNode(XmlNode node)
 		{
 			//what is in this node?

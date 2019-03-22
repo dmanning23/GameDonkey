@@ -4,7 +4,6 @@ using System;
 using System.Xml;
 using Vector2Extensions;
 using XmlBuddy;
-using MathNet.Numerics;
 
 namespace GameDonkeyLib
 {
@@ -52,42 +51,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public override bool Compare(BaseActionModel inst)
-		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
-			var stateAction = inst as ProjectileActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (!StartOffset.AlmostEqual(stateAction.StartOffset))
-			{
-				return false;
-			}
-
-			if (!Scale.AlmostEqual(stateAction.Scale))
-			{
-				return false;
-			}
-
-			if (!Filename.Compare(stateAction.Filename))
-			{
-				return false;
-			}
-
-			if (!Direction.Compare(stateAction.Direction))
-			{
-				return false;
-			}
-
-			return true;
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

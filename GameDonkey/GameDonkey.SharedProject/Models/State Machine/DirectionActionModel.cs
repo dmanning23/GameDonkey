@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using XmlBuddy;
 using System.Xml;
 using Vector2Extensions;
+using XmlBuddy;
 
 namespace GameDonkeyLib
 {
@@ -32,12 +30,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public bool Compare(DirectionActionModel inst)
-		{
-			return Velocity.AlmostEqual(inst.Velocity) &&
-				DirectionType == inst.DirectionType;
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

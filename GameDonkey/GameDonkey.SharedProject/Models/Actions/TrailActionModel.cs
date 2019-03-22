@@ -1,8 +1,7 @@
-﻿using MathNet.Numerics;
-using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Xml;
+using Vector2Extensions;
 
 namespace GameDonkeyLib
 {
@@ -60,42 +59,6 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public override bool Compare(BaseActionModel inst)
-		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
-			var stateAction = inst as TrailActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (!TimeDelta.Compare(stateAction.TimeDelta))
-			{
-				return false;
-			}
-
-			if (Color != stateAction.Color)
-			{
-				return false;
-			}
-
-			if (!LifeDelta.AlmostEqual(stateAction.LifeDelta))
-			{
-				return false;
-			}
-
-			if (!SpawnDelta.AlmostEqual(stateAction.SpawnDelta))
-			{
-				return false;
-			}
-
-			return true;
-		}
-
 		public override void ParseXmlNode(XmlNode node)
 		{
 			//what is in this node?
@@ -126,7 +89,7 @@ namespace GameDonkeyLib
 					break;
 				case "color":
 					{
-						Color = JsonConvert.DeserializeObject<Color>(value);
+						Color = value.ToColor();
 					}
 					break;
 				case "lifedelta":
@@ -159,7 +122,7 @@ namespace GameDonkeyLib
 			TimeDelta.WriteXmlNodes(xmlWriter);
 			xmlWriter.WriteAttributeString("LifeDelta", LifeDelta.ToString());
 			xmlWriter.WriteAttributeString("SpawnDelta", SpawnDelta.ToString());
-			xmlWriter.WriteAttributeString("Color", JsonConvert.SerializeObject(Color));
+			xmlWriter.WriteAttributeString("Color", Color.StringFromColor());
 		}
 
 #endif

@@ -37,22 +37,6 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public override bool Compare(BaseActionModel inst)
-		{
-			var stateAction = inst as BlockingStateActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (BoneName != stateAction.BoneName)
-			{
-				return false;
-			}
-
-			return base.Compare(inst);
-		}
-
 		public override void ParseXmlNode(XmlNode node)
 		{
 			//what is in this node?

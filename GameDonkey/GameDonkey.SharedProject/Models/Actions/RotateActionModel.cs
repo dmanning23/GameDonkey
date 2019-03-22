@@ -1,6 +1,4 @@
-﻿using MathNet.Numerics;
-using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Xml;
 
 namespace GameDonkeyLib
@@ -39,27 +37,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public override bool Compare(BaseActionModel inst)
-		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
-			var stateAction = inst as RotateActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (!Rotation.AlmostEqual(stateAction.Rotation))
-			{
-				return false;
-			}
-
-			return true;
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics;
-using System;
+﻿using System;
 using System.Xml;
 using XmlBuddy;
 
@@ -31,11 +30,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public virtual bool Compare(BaseActionModel inst)
-		{
-			return ((ActionType == inst.ActionType) && !Time.AlmostEqual(inst.Time));
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

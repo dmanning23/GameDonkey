@@ -1,7 +1,4 @@
-﻿using MathNet.Numerics;
-using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
-using ParticleBuddy;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Xml;
 using Vector2Extensions;
@@ -70,62 +67,6 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public override bool Compare(BaseActionModel inst)
-		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
-			var stateAction = inst as PointLightActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (Bone != stateAction.Bone)
-			{
-				return false;
-			}
-
-			//if (!StartOffset.AlmostEqual(stateAction.StartOffset))
-			//{
-			//	return false;
-			//}
-
-			if (LightColor != stateAction.LightColor)
-			{
-				return false;
-			}
-
-			if (!AttackTimeDelta.AlmostEqual(stateAction.AttackTimeDelta))
-			{
-				return false;
-			}
-			if (!SustainTimeDelta.AlmostEqual(stateAction.SustainTimeDelta))
-			{
-				return false;
-			}
-			if (!DelayTimeDelta.AlmostEqual(stateAction.DelayTimeDelta))
-			{
-				return false;
-			}
-			if (!FlareTimeDelta.AlmostEqual(stateAction.FlareTimeDelta))
-			{
-				return false;
-			}
-			if (!MinBrightness.AlmostEqual(stateAction.MinBrightness))
-			{
-				return false;
-			}
-			if (!MaxBrightness.AlmostEqual(stateAction.MaxBrightness))
-			{
-				return false;
-			}
-
-			return true;
-		}
-
 		public override void ParseXmlNode(XmlNode node)
 		{
 			//what is in this node?
@@ -147,7 +88,7 @@ namespace GameDonkeyLib
 					break;
 				case "LightColor":
 					{
-						LightColor = JsonConvert.DeserializeObject<Color>(value);
+						LightColor = value.ToColor();
 					}
 					break;
 				case "AttackTimeDelta":
@@ -194,7 +135,7 @@ namespace GameDonkeyLib
 		{
 			xmlWriter.WriteAttributeString("Bone", Bone);
 			xmlWriter.WriteAttributeString("StartOffset", StartOffset.StringFromVector());
-			xmlWriter.WriteAttributeString("LightColor", JsonConvert.SerializeObject(LightColor));
+			xmlWriter.WriteAttributeString("LightColor", LightColor.StringFromColor());
 			xmlWriter.WriteAttributeString("AttackTimeDelta", AttackTimeDelta.ToString());
 			xmlWriter.WriteAttributeString("SustainTimeDelta", SustainTimeDelta.ToString());
 			xmlWriter.WriteAttributeString("DelayTimeDelta", DelayTimeDelta.ToString());

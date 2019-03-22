@@ -1,5 +1,4 @@
 ﻿using FilenameBuddy;
-using System;
 using System.Xml;
 
 namespace GameDonkeyLib
@@ -42,27 +41,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		public override bool Compare(BaseActionModel inst)
-		{
-			var stateAction = inst as AddGarmentActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (!TimeDelta.Compare(stateAction.TimeDelta))
-			{
-				return false;
-			}
-
-			if (!Filename.Compare(stateAction.Filename))
-			{
-				return false;
-			}
-
-			return base.Compare(inst);
-		}
 
 		public override void ParseXmlNode(XmlNode node)
 		{

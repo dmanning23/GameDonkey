@@ -53,42 +53,6 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public override bool Compare(BaseActionModel inst)
-		{
-			if (!base.Compare(inst))
-			{
-				return false;
-			}
-
-			var stateAction = inst as ParticleEffectActionModel;
-			if (null == stateAction)
-			{
-				return false;
-			}
-
-			if (Bone != stateAction.Bone)
-			{
-				return false;
-			}
-
-			if (UseBoneRotation != stateAction.UseBoneRotation)
-			{
-				return false;
-			}
-
-			if (!StartOffset.AlmostEqual(stateAction.StartOffset))
-			{
-				return false;
-			}
-
-			if (!Direction.Compare(stateAction.Direction))
-			{
-				return false;
-			}
-
-			return true;
-		}
-
 		public override void ParseXmlNode(XmlNode node)
 		{
 			//what is in this node?

@@ -33,30 +33,6 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		
-		public bool Compare(StateActionsModel inst)
-		{
-			if (StateName != inst.StateName)
-			{
-				return false;
-			}
-
-			if (StateActions.Count != inst.StateActions.Count)
-			{
-				return false;
-			}
-
-			for (int i = 0; i < StateActions.Count; i++)
-			{
-				if (!StateActions[i].Compare(inst.StateActions[i]))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
 		public override void ParseXmlNode(XmlNode node)
 		{
 			//what is in this node?
