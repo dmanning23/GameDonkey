@@ -39,6 +39,8 @@ namespace GameDonkeyLib
 		/// </summary>
 		protected List<DrawList> TrailDrawLists { get; set; }
 
+		public bool HasTrails => TrailDrawLists.Count > 0;
+
 		/// <summary>
 		/// this is the player's character
 		/// </summary>
@@ -112,6 +114,8 @@ namespace GameDonkeyLib
 				}
 			}
 		}
+
+		public bool HasActive => Active.Count > 0;
 
 		#endregion //Properties
 

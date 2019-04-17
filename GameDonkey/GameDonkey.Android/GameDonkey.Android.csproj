@@ -39,7 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AnimationLib.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AnimationLib.2.0.14\lib\MonoAndroid10\AnimationLib.Android.dll</HintPath>
+      <HintPath>..\packages\AnimationLib.2.0.18\lib\MonoAndroid10\AnimationLib.Android.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CameraBuddy.2.0.0\lib\MonoAndroid10\CameraBuddy.Android.dll</HintPath>
@@ -51,7 +51,7 @@
       <HintPath>..\packages\DrawlistBuddy.2.0.0\lib\MonoAndroid10\DrawListBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="FilenameBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FilenameBuddy.2.0.4\lib\MonoAndroid10\FilenameBuddy.Android.dll</HintPath>
+      <HintPath>..\packages\FilenameBuddy.2.0.5\lib\MonoAndroid10\FilenameBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="FontBuddyLib.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FontBuddy.2.0.4\lib\MonoAndroid10\FontBuddyLib.Android.dll</HintPath>
@@ -70,7 +70,7 @@
       <HintPath>..\packages\MonoGame.Framework.Android.3.7.1.189\lib\MonoAndroid\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.2.0.2\lib\MonoAndroid10\ParticleBuddy.Android.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.2.0.3\lib\MonoAndroid10\ParticleBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="PrimitiveBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PrimitiveBuddy.2.0.0\lib\MonoAndroid10\PrimitiveBuddy.Android.dll</HintPath>
@@ -79,7 +79,7 @@
       <HintPath>..\packages\RandomExtensions.dmanning23.2.0.0\lib\MonoAndroid10\RandomExtensions.Android.dll</HintPath>
     </Reference>
     <Reference Include="RenderBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RenderBuddy.2.0.1\lib\MonoAndroid10\RenderBuddy.Android.dll</HintPath>
+      <HintPath>..\packages\RenderBuddy.2.0.3\lib\MonoAndroid10\RenderBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="ResolutionBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ResolutionBuddy.2.0.1\lib\MonoAndroid10\ResolutionBuddy.Android.dll</HintPath>
@@ -114,6 +114,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\" />
   </ItemGroup>
   <Import Project="..\GameDonkey.SharedProject\GameDonkey.SharedProject.projitems" Label="Shared" Condition="Exists('..\GameDonkey.SharedProject\GameDonkey.SharedProject.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

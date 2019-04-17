@@ -138,12 +138,27 @@ namespace GameDonkeyLib
 
 		protected ParticleEffectCollection ParticleEffects { get; set; }
 
+		public bool HasTrails
+		{
+			get
+			{
+				for (var i = 0; i < Players.Count; i++)
+				{
+					if (Players[i].HasTrails)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
 		#endregion //Properties
 
 		#region Construction
 
 		public GameDonkey(IRenderer renderer, Game game)
-			: base()
+	: base()
 		{
 			ToolMode = false;
 			ParticleEngine = new ParticleEngine();
@@ -321,14 +336,14 @@ namespace GameDonkeyLib
 			//check for a winner
 			if (!GameOver)
 			{
-//				//warn about time almost over?
-//				if (EGameMode.Time == GameMode)
-//				{
-//					if ((GameTimer.RemainingTime() < 20.0f) && (fOldTime >= 20.0f))
-//					{
-//						PlaySound("twenty");
-//					}
-//				}
+				//				//warn about time almost over?
+				//				if (EGameMode.Time == GameMode)
+				//				{
+				//					if ((GameTimer.RemainingTime() < 20.0f) && (fOldTime >= 20.0f))
+				//					{
+				//						PlaySound("twenty");
+				//					}
+				//				}
 
 				//check if anyone has won
 				CheckForWinner();
@@ -724,6 +739,11 @@ namespace GameDonkeyLib
 
 		protected virtual void RenderLevel(Matrix cameraMatrix, SpriteSortMode sortMode)
 		{
+			if (!LevelObjects.HasActive)
+			{
+				return;
+			}
+
 			//draw the level
 			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
 			LevelObjects.Render(Renderer, true);
@@ -755,6 +775,11 @@ namespace GameDonkeyLib
 
 		protected void RenderCharacterTrails(Matrix cameraMatrix, SpriteSortMode sortMode)
 		{
+			if (!HasTrails)
+			{
+				return;
+			}
+
 			//render all the character trails, start another spritebatch
 			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix, sortMode);
 			for (int i = 0; i < Players.Count; i++)
@@ -816,6 +841,11 @@ namespace GameDonkeyLib
 
 		protected void RenderParticleEffects(Matrix cameraMatrix)
 		{
+			if (!ParticleEngine.HasEmitters)
+			{
+				return;
+			}
+
 			//draw all the particles, start another spritebatch for the particles
 			Renderer.SpriteBatchBeginNoEffect(BlendState.NonPremultiplied, cameraMatrix, SpriteSortMode.Deferred);
 			ParticleEngine.Render(Renderer.SpriteBatch);

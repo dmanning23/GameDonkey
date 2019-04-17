@@ -15,6 +15,8 @@ namespace GameDonkeyLib
 
 		public Filename StateActionsFilename { get; set; }
 
+		BaseObjectModel BaseObject { get; set; }
+
 		#endregion //Properties
 
 		#region Methods
@@ -22,10 +24,11 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// hello, standard constructor!
 		/// </summary>
-		public StateContainerModel()
+		public StateContainerModel(BaseObjectModel baseObject)
 		{
 			StateMachineFilename = new Filename();
 			StateActionsFilename = new Filename();
+			BaseObject = baseObject;
 		}
 
 		#endregion //Methods
@@ -53,6 +56,16 @@ namespace GameDonkeyLib
 				case "stateActions":
 					{
 						StateActionsFilename.SetRelFilename(value);
+					}
+					break;
+				case "stateMachine1":
+					{
+						StateMachineFilename.SetFilenameRelativeToPath(BaseObject.Filename, value);
+					}
+					break;
+				case "stateActions1":
+					{
+						StateActionsFilename.SetFilenameRelativeToPath(BaseObject.Filename, value);
 					}
 					break;
 				default:

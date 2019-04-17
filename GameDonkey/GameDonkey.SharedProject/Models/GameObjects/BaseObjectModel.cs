@@ -64,9 +64,24 @@ namespace GameDonkeyLib
 						Animations.SetRelFilename(value);
 					}
 					break;
+				case "model1":
+					{
+						Model.SetFilenameRelativeToPath(Filename, value);
+					}
+					break;
+				case "animations1":
+					{
+						Animations.SetFilenameRelativeToPath(Filename, value);
+					}
+					break;
 				case "garments":
 					{
 						XmlFileBuddy.ReadChildNodes(node, ReadGarment);
+					}
+					break;
+				case "garments1":
+					{
+						XmlFileBuddy.ReadChildNodes(node, ReadGarment1);
 					}
 					break;
 				case "states":
@@ -98,9 +113,16 @@ namespace GameDonkeyLib
 			Garments.Add(garmentFile);
 		}
 
+		public void ReadGarment1(XmlNode node)
+		{
+			Filename garmentFile = new Filename();
+			garmentFile.SetFilenameRelativeToPath(Filename, node.InnerText);
+			Garments.Add(garmentFile);
+		}
+
 		public void ReadStateContainer(XmlNode node)
 		{
-			var states = new StateContainerModel();
+			var states = new StateContainerModel(this);
 			XmlFileBuddy.ReadChildNodes(node, states.ParseXmlNode);
 			States.Add(states);
 		}

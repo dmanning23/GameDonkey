@@ -1,1 +1,0 @@
-﻿This stupid file only ensures the folder exists on source control.
