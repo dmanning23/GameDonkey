@@ -64,7 +64,7 @@ namespace GameDonkeyLib
 			}
 
 			//Pick one of the success actions and run it
-			var index = _random.Next(0, StateActionsList.Actions.Count - 1);
+			var index = _random.Next(0, StateActionsList.Actions.Count);
 			StateActionsList.Actions[index].Execute();
 
 			return base.Execute();
