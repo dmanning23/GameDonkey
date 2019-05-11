@@ -64,7 +64,10 @@ namespace GameDonkeyLib
 			//write out the type
 			xmlWriter.WriteStartElement(ActionType.ToString());
 
-			xmlWriter.WriteAttributeString("Time", Time.ToString());
+			if (Time != 0f)
+			{
+				xmlWriter.WriteAttributeString("Time", Time.ToString());
+			}
 
 			WriteActionXml(xmlWriter);
 

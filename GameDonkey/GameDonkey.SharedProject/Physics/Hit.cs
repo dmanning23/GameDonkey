@@ -39,10 +39,6 @@ namespace GameDonkeyLib
 		/// </summary>
 		private Vector2 _position;
 
-		#endregion //Properties
-
-		#region Properties
-
 		public float Strength { get; private set; }
 
 		public Vector2 Direction
