@@ -886,14 +886,14 @@ namespace GameDonkeyLib
 			return player;
 		}
 
-		public void LoadBoard(Filename boardFile, ContentManager content)
+		public void LoadBoard(Filename boardFile, ContentManager xmlContent)
 		{
 			var boardModel = new BoardModel(boardFile);
-			boardModel.ReadXmlFile(content);
-			LoadBoard(boardModel, content);
+			boardModel.ReadXmlFile(xmlContent);
+			LoadBoard(boardModel, xmlContent);
 		}
 
-		protected virtual void LoadBoard(BoardModel boardModel, ContentManager content)
+		protected virtual void LoadBoard(BoardModel boardModel, ContentManager xmlContent)
 		{
 			//First node is the name
 			LevelObjects.PlayerName = boardModel.Name;
@@ -927,7 +927,7 @@ namespace GameDonkeyLib
 			foreach (var levelObjectFile in boardModel.LevelObjects)
 			{
 				//load the level object
-				var levelObject = LevelObjects.LoadXmlObject(levelObjectFile, this, GameObjectType.Level, 0, content);
+				var levelObject = LevelObjects.LoadXmlObject(levelObjectFile, this, GameObjectType.Level, 0, xmlContent);
 			}
 
 			//spawn points

@@ -35,6 +35,12 @@ namespace GameDonkeyLib
 
 		Vector2 CenterVelocity { get; set; }
 
+		PlayerQueue Winner { get; }
+
+		bool Tie { get; }
+
+		bool GameOver { get; }
+
 		#endregion //Properties
 
 		#region Methods
@@ -83,7 +89,7 @@ namespace GameDonkeyLib
 		   GameObjectType playerType = GameObjectType.Human,
 		   ContentManager xmlContent = null);
 
-		void LoadBoard(Filename boardFile, ContentManager content);
+		void LoadBoard(Filename boardFile, ContentManager xmlContent);
 
 		void RespawnPlayer(PlayerQueue playerQueue);
 
