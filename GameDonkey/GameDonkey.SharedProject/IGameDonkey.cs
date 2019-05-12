@@ -81,7 +81,7 @@ namespace GameDonkeyLib
 		   PlayerIndex index,
 		   string playerName,
 		   GameObjectType playerType = GameObjectType.Human,
-		   ContentManager content = null);
+		   ContentManager xmlContent = null);
 
 		void LoadBoard(Filename boardFile, ContentManager content);
 
