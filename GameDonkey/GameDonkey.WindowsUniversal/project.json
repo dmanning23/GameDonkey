@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "AnimationLib": "2.0.18",
+    "AnimationLib": "2.0.19",
     "CameraBuddy": "2.0.0",
     "CollisionBuddy": "2.0.1",
     "DrawlistBuddy": "2.0.0",

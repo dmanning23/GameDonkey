@@ -33,6 +33,8 @@ namespace GameDonkeyLib
 
 		List<Vector2> SpawnPoints { get; set; }
 
+		Vector2 CenterVelocity { get; set; }
+
 		#endregion //Properties
 
 		#region Methods
