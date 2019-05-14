@@ -263,11 +263,11 @@ namespace GameDonkeyLib
 			return Name;
 		}
 
-		public void WriteXml()
+		public void WriteXml(bool addAllMessages = false)
 		{
 			foreach (var container in StateContainers)
 			{
-				container.WriteXml();
+				container.WriteXml(addAllMessages);
 			}
 		}
 

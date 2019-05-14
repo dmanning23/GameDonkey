@@ -173,7 +173,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public void WriteXml()
+		public void WriteXml(bool addAllMessages = false)
 		{
 			//create the model
 			using (var model = new SingleStateContainerModel(StateContainerFilename, this))
@@ -185,7 +185,7 @@ namespace GameDonkeyLib
 			//write out the state machine
 			if (StateMachineFilename.HasFilename)
 			{
-				using (var model = new StateMachineModel(StateMachineFilename, StateMachine))
+				using (var model = new StateMachineModel(StateMachineFilename, StateMachine, addAllMessages))
 				{
 					//write the model out
 					model.WriteXml();

@@ -124,7 +124,7 @@ namespace GameDonkeyLib
 
 		void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, ContentManager content);
 
-		void WriteXml();
+		void WriteXml(bool addAllMessages = false);
 
 		#endregion //Methods
 	}
