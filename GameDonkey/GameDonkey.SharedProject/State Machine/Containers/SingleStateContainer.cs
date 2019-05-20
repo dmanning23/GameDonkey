@@ -155,7 +155,7 @@ namespace GameDonkeyLib
 		protected virtual void LoadContainer(SingleStateContainerModel stateContainerModel, BaseObject owner)
 		{
 			//load into the statemachineactions object
-			Actions.LoadStateActions(StateMachine.States, stateContainerModel, owner);
+			Actions.LoadStateActions(StateMachine.States, stateContainerModel, owner, this);
 		}
 
 		public virtual void LoadStateMachine(HybridStateMachine machine, Filename file, ContentManager content)

@@ -29,11 +29,11 @@ namespace GameDonkeyLib
 			Actions = new List<BaseAction>();
 		}
 
-		public virtual void LoadStateActions(StateActionsListModel actionModels, BaseObject owner)
+		public virtual void LoadStateActions(StateActionsListModel actionModels, BaseObject owner, IStateContainer stateContainer)
 		{
 			for (int i = 0; i < actionModels.ActionModels.Count; i++)
 			{
-				var stateAction = StateActionFactory.CreateStateAction(actionModels.ActionModels[i], owner);
+				var stateAction = StateActionFactory.CreateStateAction(actionModels.ActionModels[i], owner, stateContainer);
 				Actions.Add(stateAction);
 			}
 		}

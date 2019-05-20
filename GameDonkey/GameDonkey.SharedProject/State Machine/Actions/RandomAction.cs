@@ -1,7 +1,4 @@
-﻿using AnimationLib;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
 
@@ -30,15 +27,15 @@ namespace GameDonkeyLib
 			StateActionsList = new StateActionsList();
 		}
 
-		public RandomAction(BaseObject owner, RandomActionModel actionModel) :
+		public RandomAction(BaseObject owner, RandomActionModel actionModel, IStateContainer stateContainer) :
 			base(owner, actionModel)
 		{
 			StateActionsList = new StateActionsList();
-			StateActionsList.LoadStateActions(actionModel.ActionModels, owner);
+			StateActionsList.LoadStateActions(actionModel.ActionModels, owner, stateContainer);
 		}
 
-		public RandomAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as RandomActionModel)
+		public RandomAction(BaseObject owner, BaseActionModel actionModel, IStateContainer stateContainer) :
+			this(owner, actionModel as RandomActionModel, stateContainer)
 		{
 		}
 
@@ -75,9 +72,9 @@ namespace GameDonkeyLib
 			return StateActionsList.AddNewActionFromType(actionType, owner, engine, content);
 		}
 
-		public void LoadStateActions(StateActionsListModel actionModels, BaseObject owner)
+		public void LoadStateActions(StateActionsListModel actionModels, BaseObject owner, IStateContainer stateContainer)
 		{
-			StateActionsList.LoadStateActions(actionModels, owner);
+			StateActionsList.LoadStateActions(actionModels, owner, stateContainer);
 		}
 
 		public bool RemoveAction(BaseAction action)

@@ -26,13 +26,24 @@ namespace GameDonkeyLib
 			Actions = new Dictionary<string, SingleStateActions>();
 		}
 
-		public void LoadStateActions(IEnumerable<string> stateNames, SingleStateContainerModel stateContainerModel, BaseObject owner)
+		public void LoadStateActions(IEnumerable<string> stateNames, SingleStateContainerModel stateContainerModel, BaseObject owner, IStateContainer stateContainer)
 		{
 			for (int i = 0; i < stateContainerModel.StatesActions.Count; i++)
 			{
-				SingleStateActions actions = new SingleStateActions();
-				actions.LoadStateActions(stateContainerModel.StatesActions[i], owner);
-				Actions[actions.StateName] = actions;
+				SingleStateActions actions = null;
+
+				if (Actions.ContainsKey(stateContainerModel.StatesActions[i].StateName))
+				{
+					actions = Actions[stateContainerModel.StatesActions[i].StateName];
+				}
+				else
+				{
+					actions = new SingleStateActions();
+					Actions[stateContainerModel.StatesActions[i].StateName] = actions;
+				}
+				
+				actions.LoadStateActions(stateContainerModel.StatesActions[i], owner, stateContainer);
+				
 			}
 
 			foreach (var state in stateNames)

@@ -27,15 +27,15 @@ namespace GameDonkeyLib
 			StateActionsList = new StateActionsList();
 		}
 
-		public CreateBlockAction(BaseObject owner, CreateBlockActionModel actionModel) :
+		public CreateBlockAction(BaseObject owner, CreateBlockActionModel actionModel, IStateContainer stateContainer) :
 			base(owner, actionModel, actionModel.TimeDelta)
 		{
 			StateActionsList = new StateActionsList();
-			StateActionsList.LoadStateActions(actionModel.ActionModels, owner);
+			StateActionsList.LoadStateActions(actionModel.ActionModels, owner, stateContainer);
 		}
 
-		public CreateBlockAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as CreateBlockActionModel)
+		public CreateBlockAction(BaseObject owner, BaseActionModel actionModel, IStateContainer stateContainer) :
+			this(owner, actionModel as CreateBlockActionModel, stateContainer)
 		{
 		}
 
@@ -93,9 +93,9 @@ namespace GameDonkeyLib
 			return StateActionsList.AddNewActionFromType(actionType, owner, engine, content);
 		}
 
-		public void LoadStateActions(StateActionsListModel actionModels, BaseObject owner)
+		public void LoadStateActions(StateActionsListModel actionModels, BaseObject owner, IStateContainer stateContainer)
 		{
-			StateActionsList.LoadStateActions(actionModels, owner);
+			StateActionsList.LoadStateActions(actionModels, owner, stateContainer);
 		}
 
 		public bool RemoveAction(BaseAction action)

@@ -9,7 +9,7 @@ namespace GameDonkeyLib
 
 		BaseAction AddNewActionFromType(EActionType actionType, BaseObject owner, IGameDonkey engine, ContentManager content);
 		void LoadContent(IGameDonkey engine, ContentManager content);
-		void LoadStateActions(StateActionsListModel actionModels, BaseObject owner);
+		void LoadStateActions(StateActionsListModel actionModels, BaseObject owner, IStateContainer stateContainer);
 		bool RemoveAction(BaseAction action);
 		void Sort();
 	}

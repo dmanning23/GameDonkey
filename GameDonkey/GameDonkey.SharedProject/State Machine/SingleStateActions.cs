@@ -43,10 +43,10 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public void LoadStateActions(SingleStateActionsModel actionModels, BaseObject owner)
+		public void LoadStateActions(SingleStateActionsModel actionModels, BaseObject owner, IStateContainer stateContainer)
 		{
 			StateName = actionModels.StateName;
-			base.LoadStateActions(actionModels, owner);
+			base.LoadStateActions(actionModels, owner, stateContainer);
 		}
 
 		public override void LoadContent(IGameDonkey engine, ContentManager content)

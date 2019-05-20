@@ -89,7 +89,7 @@ namespace GameDonkeyLib
 		   GameObjectType playerType = GameObjectType.Human,
 		   ContentManager xmlContent = null);
 
-		void LoadBoard(Filename boardFile, ContentManager xmlContent);
+		void LoadBoard(Filename boardFile, ContentManager xmlContent = null);
 
 		void RespawnPlayer(PlayerQueue playerQueue);
 

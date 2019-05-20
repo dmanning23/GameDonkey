@@ -43,14 +43,14 @@ namespace GameDonkeyLib
 			
 		}
 
-		public BlockingStateAction(BaseObject owner, BlockingStateActionModel actionModel) :
-			base(owner, actionModel)
+		public BlockingStateAction(BaseObject owner, BlockingStateActionModel actionModel, IStateContainer container) :
+			base(owner, actionModel, container)
 		{
 			BoneName = actionModel.BoneName;
 		}
 
-		public BlockingStateAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as BlockingStateActionModel)
+		public BlockingStateAction(BaseObject owner, BaseActionModel actionModel, IStateContainer container) :
+			this(owner, actionModel as BlockingStateActionModel, container)
 		{
 		}
 

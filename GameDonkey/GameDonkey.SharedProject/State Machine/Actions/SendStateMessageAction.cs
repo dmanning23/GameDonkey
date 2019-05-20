@@ -11,6 +11,11 @@ namespace GameDonkeyLib
 		/// </summary>
 		public string Message { get; set; }
 
+		/// <summary>
+		/// This is the state container that will get sent the message
+		/// </summary>
+		IStateContainer StateContainer { get; set; }
+
 		#endregion //Properties
 
 		#region Initialization
@@ -20,14 +25,15 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public SendStateMessageAction(BaseObject owner, SendStateMessageActionModel actionModel) :
+		public SendStateMessageAction(BaseObject owner, SendStateMessageActionModel actionModel, IStateContainer stateContainer) :
 			base(owner, actionModel)
 		{
 			Message = actionModel.Message;
+			StateContainer = stateContainer;
 		}
 
-		public SendStateMessageAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as SendStateMessageActionModel)
+		public SendStateMessageAction(BaseObject owner, BaseActionModel actionModel, IStateContainer stateContainer) :
+			this(owner, actionModel as SendStateMessageActionModel, stateContainer)
 		{
 		}
 
@@ -46,7 +52,7 @@ namespace GameDonkeyLib
 		public override bool Execute()
 		{
 			//The message offset is added to this message when it is read in, so dont add anything
-			Owner.States.SendStateMessage(Message);
+			StateContainer.SendStateMessage(Message);
 
 			//keep running the action until it goes through?
 			AlreadyRun = true;

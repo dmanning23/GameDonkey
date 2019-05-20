@@ -32,15 +32,15 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public CreateThrowAction(BaseObject owner, CreateThrowActionModel actionModel) :
-			base(owner, actionModel)
+		public CreateThrowAction(BaseObject owner, CreateThrowActionModel actionModel, IStateContainer container) :
+			base(owner, actionModel, container)
 		{
 			ThrowMessage = actionModel.ThrowMessage;
 			ReleaseTimeDelta = actionModel.ReleaseTimeDelta;
 		}
 
-		public CreateThrowAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as CreateThrowActionModel)
+		public CreateThrowAction(BaseObject owner, BaseActionModel actionModel, IStateContainer container) :
+			this(owner, actionModel as CreateThrowActionModel, container)
 		{
 		}
 

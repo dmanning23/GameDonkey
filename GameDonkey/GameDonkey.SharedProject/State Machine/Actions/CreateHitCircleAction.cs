@@ -50,8 +50,8 @@ namespace GameDonkeyLib
 			Velocity = Vector2.Zero;
 		}
 
-		public CreateHitCircleAction(BaseObject owner, CreateHitCircleActionModel actionModel) :
-			base(owner, actionModel)
+		public CreateHitCircleAction(BaseObject owner, CreateHitCircleActionModel actionModel, IStateContainer container) :
+			base(owner, actionModel, container)
 		{
 			HitCircle = new PhysicsCircle()
 			{
@@ -61,8 +61,8 @@ namespace GameDonkeyLib
 			Velocity = actionModel.Velocity;
 		}
 
-		public CreateHitCircleAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as CreateHitCircleActionModel)
+		public CreateHitCircleAction(BaseObject owner, BaseActionModel actionModel, IStateContainer container) :
+			this(owner, actionModel as CreateHitCircleActionModel, container)
 		{
 		}
 

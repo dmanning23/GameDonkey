@@ -121,21 +121,21 @@ namespace GameDonkeyLib
 		/// <param name="actionType">the type of action to add</param>
 		/// <param name="owner">the owner of this action list</param>
 		/// <returns>IBaseAction: reference to the action that was created</returns>
-		public static BaseAction CreateStateAction(BaseActionModel actionModel, BaseObject owner)
+		public static BaseAction CreateStateAction(BaseActionModel actionModel, BaseObject owner, IStateContainer stateContainer)
 		{
 			//get the correct action type
 			switch (actionModel.ActionType)
 			{
 				case EActionType.AddGarment: { return new AddGarmentAction(owner, actionModel); }
 				case EActionType.AddVelocity: { return new AddVelocityAction(owner, actionModel); }
-				case EActionType.BlockState: { return new BlockingStateAction(owner, actionModel); }
+				case EActionType.BlockState: { return new BlockingStateAction(owner, actionModel, stateContainer); }
 				case EActionType.CameraShake: { return new CameraShakeAction(owner, actionModel); }
 				case EActionType.ConstantAcceleration: { return new ConstantAccelerationAction(owner, actionModel); }
 				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationAction(owner, actionModel); }
-				case EActionType.CreateAttack: { return new CreateAttackAction(owner, actionModel); }
-				case EActionType.CreateBlock: { return new CreateBlockAction(owner, actionModel); }
-				case EActionType.CreateHitCircle: { return new CreateHitCircleAction(owner, actionModel); }
-				case EActionType.CreateThrow: { return new CreateThrowAction(owner, actionModel); }
+				case EActionType.CreateAttack: { return new CreateAttackAction(owner, actionModel, stateContainer); }
+				case EActionType.CreateBlock: { return new CreateBlockAction(owner, actionModel, stateContainer); }
+				case EActionType.CreateHitCircle: { return new CreateHitCircleAction(owner, actionModel, stateContainer); }
+				case EActionType.CreateThrow: { return new CreateThrowAction(owner, actionModel, stateContainer); }
 				case EActionType.Deactivate: { return new DeactivateAction(owner, actionModel); }
 				case EActionType.Evade: { return new EvadeAction(owner, actionModel); }
 				case EActionType.KillPlayer: { return new KillPlayerAction(owner, actionModel); }
@@ -144,9 +144,9 @@ namespace GameDonkeyLib
 				case EActionType.PlaySound: { return new PlaySoundAction(owner, actionModel); }
 				case EActionType.PointLight: { return new PointLightAction(owner, actionModel); }
 				case EActionType.Projectile: { return new ProjectileAction(owner, actionModel); }
-				case EActionType.Random: { return new RandomAction(owner, actionModel); }
+				case EActionType.Random: { return new RandomAction(owner, actionModel, stateContainer); }
 				case EActionType.Rotate: { return new RotateAction(owner, actionModel); }
-				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner, actionModel); }
+				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner, actionModel, stateContainer); }
 				case EActionType.SetVelocity: { return new SetVelocityAction(owner, actionModel); }
 				case EActionType.TargetRotation: { return new TargetRotationAction(owner, actionModel); }
 				case EActionType.Trail: { return new TrailAction(owner, actionModel); }

@@ -71,7 +71,7 @@ namespace GameDonkeyLib
 			StateActionsList = new StateActionsList();
 		}
 
-		public CreateAttackAction(BaseObject owner, CreateAttackActionModel actionModel) :
+		public CreateAttackAction(BaseObject owner, CreateAttackActionModel actionModel, IStateContainer stateContainer) :
 			base(owner, actionModel, actionModel.TimeDelta)
 		{
 			BoneName = actionModel.BoneName;
@@ -79,11 +79,11 @@ namespace GameDonkeyLib
 			ActionDirection = new ActionDirection(actionModel.Direction);
 
 			StateActionsList = new StateActionsList();
-			StateActionsList.LoadStateActions(actionModel.ActionModels, owner);
+			StateActionsList.LoadStateActions(actionModel.ActionModels, owner, stateContainer);
 		}
 
-		public CreateAttackAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as CreateAttackActionModel)
+		public CreateAttackAction(BaseObject owner, BaseActionModel actionModel, IStateContainer stateContainer) :
+			this(owner, actionModel as CreateAttackActionModel, stateContainer)
 		{
 		}
 
@@ -183,9 +183,9 @@ namespace GameDonkeyLib
 			return StateActionsList.AddNewActionFromType(actionType, owner, engine, content);
 		}
 
-		public void LoadStateActions(StateActionsListModel actionModels, BaseObject owner)
+		public void LoadStateActions(StateActionsListModel actionModels, BaseObject owner, IStateContainer stateContainer)
 		{
-			StateActionsList.LoadStateActions(actionModels, owner);
+			StateActionsList.LoadStateActions(actionModels, owner, stateContainer);
 		}
 
 		public bool RemoveAction(BaseAction action)

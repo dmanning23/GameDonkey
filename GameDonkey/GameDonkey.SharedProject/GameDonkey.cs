@@ -886,7 +886,7 @@ namespace GameDonkeyLib
 			return player;
 		}
 
-		public void LoadBoard(Filename boardFile, ContentManager xmlContent)
+		public void LoadBoard(Filename boardFile, ContentManager xmlContent = null)
 		{
 			var boardModel = new BoardModel(boardFile);
 			boardModel.ReadXmlFile(xmlContent);
