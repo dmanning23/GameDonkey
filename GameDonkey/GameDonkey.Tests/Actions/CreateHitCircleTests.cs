@@ -59,7 +59,7 @@ namespace GameDonkey.Tests
 				Time = subTime
 			});
 
-			var action = new CreateHitCircleAction(null, model);
+			var action = new CreateHitCircleAction(null, model, null);
 
 			action.Time.ShouldBe(time);
 			action.BoneName.ShouldBe(bone);

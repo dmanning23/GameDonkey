@@ -26,7 +26,7 @@ namespace GameDonkey.Tests
 				Message = message,
 			};
 
-			var action = new SendStateMessageAction(null, model);
+			var action = new SendStateMessageAction(null, model, null);
 
 			action.Time.ShouldBe(time);
 			action.Message.ShouldBe(message);

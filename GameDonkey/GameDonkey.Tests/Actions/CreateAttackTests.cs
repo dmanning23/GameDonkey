@@ -44,7 +44,7 @@ namespace GameDonkey.Tests
 				Time = subTime
 			});
 
-			var action = new CreateAttackAction(null, model);
+			var action = new CreateAttackAction(null, model, null);
 
 			action.Time.ShouldBe(time);
 			action.BoneName.ShouldBe(bone);

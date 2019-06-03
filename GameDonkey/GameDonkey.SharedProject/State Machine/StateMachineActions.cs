@@ -32,18 +32,9 @@ namespace GameDonkeyLib
 			{
 				SingleStateActions actions = null;
 
-				if (Actions.ContainsKey(stateContainerModel.StatesActions[i].StateName))
-				{
-					actions = Actions[stateContainerModel.StatesActions[i].StateName];
-				}
-				else
-				{
-					actions = new SingleStateActions();
-					Actions[stateContainerModel.StatesActions[i].StateName] = actions;
-				}
-				
+				actions = new SingleStateActions();
 				actions.LoadStateActions(stateContainerModel.StatesActions[i], owner, stateContainer);
-				
+				Actions[stateContainerModel.StatesActions[i].StateName] = actions;
 			}
 
 			foreach (var state in stateNames)
