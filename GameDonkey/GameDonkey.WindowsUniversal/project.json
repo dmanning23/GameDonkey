@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "AnimationLib": "2.0.19",
-    "CameraBuddy": "2.0.0",
+    "CameraBuddy": "2.0.4",
     "CollisionBuddy": "2.0.1",
     "DrawlistBuddy": "2.0.0",
     "FilenameBuddy": "2.0.5",
@@ -14,13 +14,13 @@
     "ParticleBuddy": "2.0.3",
     "PrimitiveBuddy": "2.0.0",
     "RandomExtensions.dmanning23": "2.0.0",
-    "RenderBuddy": "2.0.3",
+    "RenderBuddy": "2.0.5",
     "ResolutionBuddy": "2.0.1",
     "StateMachineBuddy": "2.0.18",
     "System.Xml.ReaderWriter": "4.3.1",
     "System.Xml.XmlDocument": "4.3.0",
     "UndoRedoBuddy": "2.0.1",
-    "Vector2Extensions": "2.0.1",
+    "Vector2Extensions": "2.0.2",
     "XmlBuddy": "2.0.1"
   },
   "frameworks": {

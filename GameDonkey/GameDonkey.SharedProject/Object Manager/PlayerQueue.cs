@@ -399,7 +399,7 @@ namespace GameDonkeyLib
 			}
 		}
 
-		public void AddToCamera(Camera camera)
+		public void AddToCamera(ICamera camera)
 		{
 			for (var i = 0; i < Active.Count; i++)
 			{

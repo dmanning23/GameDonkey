@@ -20,7 +20,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// the camera to shake
 		/// </summary>
-		public Camera Camera { get; set; }
+		public ICamera Camera { get; set; }
 
 		#endregion //Properties
 

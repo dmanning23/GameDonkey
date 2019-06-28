@@ -885,7 +885,7 @@ namespace GameDonkeyLib
 		/// add all the data for this dude to the camera
 		/// </summary>
 		/// <param name="camera"></param>
-		public virtual void AddToCamera(Camera camera)
+		public virtual void AddToCamera(ICamera camera)
 		{
 			//get half the height
 			var halfHeight = (int)(_height * 0.68f);
