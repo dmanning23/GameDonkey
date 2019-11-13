@@ -70,7 +70,7 @@ namespace GameDonkeyLib
 		/// <returns>bool: true if the game is over, false if it isn't</returns>
 		bool Update(TimeUpdater time);
 
-		void UpdateInput(InputState input);
+		void UpdateInput(IInputState input);
 
 		void AddCameraShake(float shakeAmount);
 

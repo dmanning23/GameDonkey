@@ -520,7 +520,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="controller"></param>
 		/// <param name="input"></param>
-		public virtual void UpdateInput(InputWrapper controller, InputState input)
+		public virtual void UpdateInput(InputWrapper controller, IInputState input)
 		{
 		}
 
@@ -962,6 +962,10 @@ namespace GameDonkeyLib
 		public virtual void Render(IRenderer renderer)
 		{
 			DrawList.Render(renderer);
+		}
+
+		public virtual void RenderCharacterShadow(IGameDonkey engine)
+		{
 		}
 
 		public void RenderAttacks(IRenderer renderer)

@@ -40,14 +40,14 @@ namespace GameDonkey.Android
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f020001
-			public static int ApplicationName = 2130837505;
+			// aapt resource value: 0x7F010000
+			public static int ApplicationName = 2130771968;
 			
-			// aapt resource value: 0x7f020000
-			public static int Hello = 2130837504;
+			// aapt resource value: 0x7F010001
+			public static int Hello = 2130771969;
 			
-			// aapt resource value: 0x7f020002
-			public static int library_name = 2130837506;
+			// aapt resource value: 0x7F010002
+			public static int library_name = 2130771970;
 			
 			static String()
 			{

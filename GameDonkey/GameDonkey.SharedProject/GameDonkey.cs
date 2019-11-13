@@ -153,12 +153,13 @@ namespace GameDonkeyLib
 			}
 		}
 
+		protected virtual bool RenderShadows => false;
+
 		#endregion //Properties
 
 		#region Construction
 
-		public GameDonkey(IRenderer renderer, Game game)
-	: base()
+		public GameDonkey(IRenderer renderer, Game game) : base()
 		{
 			ToolMode = false;
 			ParticleEngine = new ParticleEngine();
@@ -302,7 +303,7 @@ namespace GameDonkeyLib
 		/// In the real game, each individual player queue will be updated in the network game loop.
 		/// </summary>
 		/// <param name="rInput"></param>
-		public void UpdateInput(InputState input)
+		public void UpdateInput(IInputState input)
 		{
 			var tasks = new List<Task>();
 			foreach (var player in Players)
@@ -718,6 +719,8 @@ namespace GameDonkeyLib
 
 			RenderLevel(cameraMatrix, sortMode);
 
+			RenderCharacterShadows(cameraMatrix, sortMode);
+
 			RenderHUD();
 
 			RenderCharacterTrails(cameraMatrix, sortMode);
@@ -726,7 +729,7 @@ namespace GameDonkeyLib
 
 			RenderParticleEffects(cameraMatrix);
 
-			RenderForeground();
+			//RenderForeground();
 		}
 
 		protected virtual void RenderBackground()
@@ -747,6 +750,7 @@ namespace GameDonkeyLib
 			//draw the level
 			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
 			LevelObjects.Render(Renderer, true);
+
 #if DEBUG
 			//draw the world boundaries in debug mode?
 			if (_renderWorldBoundaries)
@@ -763,6 +767,22 @@ namespace GameDonkeyLib
 				}
 			}
 #endif
+			Renderer.SpriteBatchEnd();
+		}
+
+		protected virtual void RenderCharacterShadows(Matrix cameraMatrix, SpriteSortMode sortMode)
+		{
+			if (!RenderShadows)
+			{
+				return;
+			}
+
+			//render all the character trails, start another spritebatch
+			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix, sortMode);
+			for (int i = 0; i < Players.Count; i++)
+			{
+				Players[i].RenderCharacterShadows(this);
+			}
 			Renderer.SpriteBatchEnd();
 		}
 

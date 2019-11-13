@@ -126,7 +126,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="controller"></param>
 		/// <param name="input"></param>
-		public override void UpdateInput(InputWrapper controller, InputState input)
+		public override void UpdateInput(InputWrapper controller, IInputState input)
 		{
 			controller.Update(input, Flip);
 		}

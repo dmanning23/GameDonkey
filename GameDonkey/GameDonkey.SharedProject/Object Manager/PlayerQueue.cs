@@ -298,7 +298,7 @@ namespace GameDonkeyLib
 			return Character.CheckIfDead();
 		}
 
-		public void UpdateInput(InputState input)
+		public void UpdateInput(IInputState input)
 		{
 			Character.UpdateInput(InputQueue, input);
 		}
@@ -447,6 +447,14 @@ namespace GameDonkeyLib
 		{
 			Stock--;
 			ScoreTimer.Start(3.0f);
+		}
+
+		public virtual void RenderCharacterShadows(IGameDonkey engine)
+		{
+			for (var i = 0; i < Active.Count; i++)
+			{
+				Active[i].RenderCharacterShadow(engine);
+			}
 		}
 
 		public void RenderPhysics(IRenderer renderer)

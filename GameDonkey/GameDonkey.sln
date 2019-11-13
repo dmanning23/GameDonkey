@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29403.142
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDonkey.Android", "GameDonkey.Android\GameDonkey.Android.csproj", "{26B492F5-AB2E-4873-983B-28503668054C}"
 EndProject
@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		GameDonkey.nuspec = GameDonkey.nuspec
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDonkey.WindowsUniversal", "GameDonkey.WindowsUniversal\GameDonkey.WindowsUniversal.csproj", "{91B68B1F-6474-4B61-A240-77491249A523}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDonkey.Tests", "GameDonkey.Tests\GameDonkey.Tests.csproj", "{AB471760-B129-4B1D-872A-C00639E0BC89}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDonkey.WindowsDX", "GameDonkey.WindowsDX\GameDonkey.WindowsDX.csproj", "{27F5328A-5C7F-4429-BD5E-2434FF5CF7C1}"
@@ -26,7 +24,6 @@ Global
 		GameDonkey.SharedProject\GameDonkey.SharedProject.projitems*{17204dc7-16fc-4c85-9e21-e0c990d926a3}*SharedItemsImports = 4
 		GameDonkey.SharedProject\GameDonkey.SharedProject.projitems*{26b492f5-ab2e-4873-983b-28503668054c}*SharedItemsImports = 4
 		GameDonkey.SharedProject\GameDonkey.SharedProject.projitems*{27f5328a-5c7f-4429-bd5e-2434ff5cf7c1}*SharedItemsImports = 4
-		GameDonkey.SharedProject\GameDonkey.SharedProject.projitems*{91b68b1f-6474-4b61-a240-77491249a523}*SharedItemsImports = 4
 		GameDonkey.SharedProject\GameDonkey.SharedProject.projitems*{a242c23a-06c6-4462-941a-49b5cf426f00}*SharedItemsImports = 13
 		GameDonkey.SharedProject\GameDonkey.SharedProject.projitems*{ab471760-b129-4b1d-872a-c00639e0bc89}*SharedItemsImports = 4
 	EndGlobalSection
@@ -73,22 +70,6 @@ Global
 		{17204DC7-16FC-4C85-9E21-E0C990D926A3}.Release|x64.Build.0 = Release|Any CPU
 		{17204DC7-16FC-4C85-9E21-E0C990D926A3}.Release|x86.ActiveCfg = Release|Any CPU
 		{17204DC7-16FC-4C85-9E21-E0C990D926A3}.Release|x86.Build.0 = Release|Any CPU
-		{91B68B1F-6474-4B61-A240-77491249A523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91B68B1F-6474-4B61-A240-77491249A523}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91B68B1F-6474-4B61-A240-77491249A523}.Debug|ARM.ActiveCfg = Debug|ARM
-		{91B68B1F-6474-4B61-A240-77491249A523}.Debug|ARM.Build.0 = Debug|ARM
-		{91B68B1F-6474-4B61-A240-77491249A523}.Debug|x64.ActiveCfg = Debug|x64
-		{91B68B1F-6474-4B61-A240-77491249A523}.Debug|x64.Build.0 = Debug|x64
-		{91B68B1F-6474-4B61-A240-77491249A523}.Debug|x86.ActiveCfg = Debug|x86
-		{91B68B1F-6474-4B61-A240-77491249A523}.Debug|x86.Build.0 = Debug|x86
-		{91B68B1F-6474-4B61-A240-77491249A523}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91B68B1F-6474-4B61-A240-77491249A523}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91B68B1F-6474-4B61-A240-77491249A523}.Release|ARM.ActiveCfg = Release|ARM
-		{91B68B1F-6474-4B61-A240-77491249A523}.Release|ARM.Build.0 = Release|ARM
-		{91B68B1F-6474-4B61-A240-77491249A523}.Release|x64.ActiveCfg = Release|x64
-		{91B68B1F-6474-4B61-A240-77491249A523}.Release|x64.Build.0 = Release|x64
-		{91B68B1F-6474-4B61-A240-77491249A523}.Release|x86.ActiveCfg = Release|Any CPU
-		{91B68B1F-6474-4B61-A240-77491249A523}.Release|x86.Build.0 = Release|Any CPU
 		{AB471760-B129-4B1D-872A-C00639E0BC89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB471760-B129-4B1D-872A-C00639E0BC89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB471760-B129-4B1D-872A-C00639E0BC89}.Debug|ARM.ActiveCfg = Debug|Any CPU
