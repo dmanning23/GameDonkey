@@ -432,6 +432,7 @@ namespace GameDonkeyLib
 			{
 				tasks.Add(Task.Factory.StartNew(() => { UpdatePlayer(player); }));
 			}
+
 			Task.WaitAll(tasks.ToArray());
 		}
 
