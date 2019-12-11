@@ -44,7 +44,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// Whether or not the bones have been sorted
 		/// </summary>
-		private bool BonesSorted { get; set; }
+		protected bool BonesSorted { get; set; }
 
 		#endregion //
 
@@ -88,7 +88,7 @@ namespace GameDonkeyLib
 		/// sort the bones into the appropriate lists at startup
 		/// </summary>
 		/// <param name="bone"></param>
-		public void SortBones(Bone bone)
+		public virtual void SortBones(Bone bone)
 		{
 			if (bone.HasPhysicsData())
 			{
@@ -269,7 +269,10 @@ namespace GameDonkeyLib
 				if (CheckBlockedAttack(Owner.CurrentAttacks[attackIndex], otherGuy))
 				{
 					//the attack was blocked, remove from the list
-					Owner.RemoveAttack(attackIndex);
+					if (!Owner.RemoveAttack(attackIndex))
+					{
+						++attackIndex;
+					}
 				}
 				else
 				{
@@ -284,7 +287,10 @@ namespace GameDonkeyLib
 				if (otherGuy.CheckBlockedAttack(otherGuy.Owner.CurrentAttacks[otherAttackIndex], this))
 				{
 					//the attack was blocked, remove from the list
-					otherGuy.Owner.RemoveAttack(otherAttackIndex);
+					if (!otherGuy.Owner.RemoveAttack(otherAttackIndex))
+					{
+						++otherAttackIndex;
+					}
 				}
 				else
 				{
@@ -403,7 +409,10 @@ namespace GameDonkeyLib
 				if (CheckAttackCollisions(Owner.CurrentAttacks[myAttackIndex], otherGuy))
 				{
 					//the attack connected, remove from the list
-					Owner.RemoveAttack(myAttackIndex);
+					if (!Owner.RemoveAttack(myAttackIndex))
+					{
+						++myAttackIndex;
+					}
 				}
 				else
 				{
@@ -418,7 +427,10 @@ namespace GameDonkeyLib
 				if (otherGuy.CheckAttackCollisions(otherGuy.Owner.CurrentAttacks[otherAttackIndex], this))
 				{
 					//the attack connected, remove from the list
-					otherGuy.Owner.RemoveAttack(otherAttackIndex);
+					if (!otherGuy.Owner.RemoveAttack(otherAttackIndex))
+					{
+						++otherAttackIndex;
+					}
 				}
 				else
 				{

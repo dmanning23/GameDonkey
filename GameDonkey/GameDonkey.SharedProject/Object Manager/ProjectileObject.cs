@@ -1,4 +1,5 @@
 ﻿using GameTimer;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using System;
@@ -37,6 +38,38 @@ namespace GameDonkeyLib
 			Physics = new ProjectilePhysicsContainer(this);
 			States = new ObjectStateContainer(new HybridStateMachine());
 			States.StateChangedEvent += this.StateChanged;
+		}
+
+		protected override void RespondToGroundHit(Hit groundHit, IGameDonkey engine)
+		{
+			base.RespondToGroundHit(groundHit, engine);
+			SetHitWallMessage();
+		}
+
+		protected override void RespondToCeilingHit(Hit groundHit, IGameDonkey engine)
+		{
+			base.RespondToCeilingHit(groundHit, engine);
+			SetHitWallMessage();
+		}
+
+		protected override void RespondToLeftWallHit(Hit groundHit, IGameDonkey engine)
+		{
+			base.RespondToLeftWallHit(groundHit, engine);
+			SetHitWallMessage();
+		}
+
+		protected override void RespondToRightWallHit(Hit groundHit, IGameDonkey engine)
+		{
+			base.RespondToRightWallHit(groundHit, engine);
+			SetHitWallMessage();
+		}
+
+		private void SetHitWallMessage()
+		{
+			if (States.StateMachine.Messages.Contains("HitWall"))
+			{
+				SendStateMessage("HitWall");
+			}
 		}
 
 		public override void KillPlayer()
@@ -82,6 +115,18 @@ namespace GameDonkeyLib
 
 			WeaponHits = data.Weaponhits;
 			base.ParseXmlData(data, engine, content);
+		}
+
+		public override void UpdateAnimation()
+		{
+			CurrentRotation = -1f * Helper.atan2(Velocity);
+
+			if (Flip)
+			{
+				CurrentRotation += MathHelper.Pi;
+			}
+
+			base.UpdateAnimation();
 		}
 
 		#endregion //Methods

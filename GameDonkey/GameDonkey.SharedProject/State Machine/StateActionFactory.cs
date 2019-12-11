@@ -27,12 +27,12 @@ namespace GameDonkeyLib
 			{
 				case EActionType.AddGarment: { return new AddGarmentActionModel(); }
 				case EActionType.AddVelocity: { return new AddVelocityActionModel(); }
-				case EActionType.BlockState: { return new BlockingStateActionModel(); }
+				case EActionType.Block: { return new BlockActionModel(); }
 				case EActionType.CameraShake: { return new CameraShakeActionModel(); }
 				case EActionType.ConstantAcceleration: { return new ConstantAccelerationActionModel(); }
 				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationActionModel(); }
 				case EActionType.CreateAttack: { return new CreateAttackActionModel(); }
-				case EActionType.CreateBlock: { return new CreateBlockActionModel(); }
+				case EActionType.Shield: { return new ShieldActionModel(); }
 				case EActionType.CreateHitCircle: { return new CreateHitCircleActionModel(); }
 				case EActionType.CreateThrow: { return new CreateThrowActionModel(); }
 				case EActionType.Deactivate: { return new DeactivateActionModel(); }
@@ -61,7 +61,7 @@ namespace GameDonkeyLib
 				case "SPFSettings.ConstantAccelerationActionXML": { return EActionType.ConstantAcceleration; }
 				case "SPFSettings.ConstantDeccelerationActionXML": { return EActionType.ConstantDecceleration; }
 				case "SPFSettings.CreateAttackActionXML": { return EActionType.CreateAttack; }
-				case "SPFSettings.CreateBlockActionXML": { return EActionType.CreateBlock; }
+				case "SPFSettings.CreateBlockActionXML": { return EActionType.Shield; }
 				case "SPFSettings.CreateThrowActionXML": { return EActionType.CreateThrow; }
 				case "SPFSettings.DeactivateActionXML": { return EActionType.Deactivate; }
 				case "SPFSettings.EvadeActionXML": { return EActionType.Evade; }
@@ -73,7 +73,7 @@ namespace GameDonkeyLib
 				case "SPFSettings.SetVelocityActionXML": { return EActionType.SetVelocity; }
 				case "SPFSettings.TrailActionXML": { return EActionType.Trail; }
 				case "SPFSettings.AddGarmentActionXML": { return EActionType.AddGarment; }
-				case "SPFSettings.BlockingStateActionXML": { return EActionType.BlockState; }
+				case "SPFSettings.BlockingStateActionXML": { return EActionType.Block; }
 				case "SPFSettings.CreateHitCircleActionXML": { return EActionType.CreateHitCircle; }
 				case "SPFSettings.RotateActionXML": { return EActionType.Rotate; }
 				case "SPFSettings.TargetRotationActionXML": { return EActionType.TargetRotation; }
@@ -89,12 +89,12 @@ namespace GameDonkeyLib
 			{
 				case EActionType.AddGarment: { return new AddGarmentActionModel(actionModel); }
 				case EActionType.AddVelocity: { return new AddVelocityActionModel(actionModel); }
-				case EActionType.BlockState: { return new BlockingStateActionModel(actionModel); }
+				case EActionType.Block: { return new BlockActionModel(actionModel); }
 				case EActionType.CameraShake: { return new CameraShakeActionModel(actionModel); }
 				case EActionType.ConstantAcceleration: { return new ConstantAccelerationActionModel(actionModel); }
 				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationActionModel(actionModel); }
 				case EActionType.CreateAttack: { return new CreateAttackActionModel(actionModel); }
-				case EActionType.CreateBlock: { return new CreateBlockActionModel(actionModel); }
+				case EActionType.Shield: { return new ShieldActionModel(actionModel); }
 				case EActionType.CreateHitCircle: { return new CreateHitCircleActionModel(actionModel); }
 				case EActionType.CreateThrow: { return new CreateThrowActionModel(actionModel); }
 				case EActionType.Deactivate: { return new DeactivateActionModel(actionModel); }
@@ -128,12 +128,12 @@ namespace GameDonkeyLib
 			{
 				case EActionType.AddGarment: { return new AddGarmentAction(owner, actionModel); }
 				case EActionType.AddVelocity: { return new AddVelocityAction(owner, actionModel); }
-				case EActionType.BlockState: { return new BlockingStateAction(owner, actionModel, stateContainer); }
+				case EActionType.Block: { return new BlockAction(owner, actionModel, stateContainer); }
 				case EActionType.CameraShake: { return new CameraShakeAction(owner, actionModel); }
 				case EActionType.ConstantAcceleration: { return new ConstantAccelerationAction(owner, actionModel); }
 				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationAction(owner, actionModel); }
 				case EActionType.CreateAttack: { return new CreateAttackAction(owner, actionModel, stateContainer); }
-				case EActionType.CreateBlock: { return new CreateBlockAction(owner, actionModel, stateContainer); }
+				case EActionType.Shield: { return new ShieldAction(owner, actionModel, stateContainer); }
 				case EActionType.CreateHitCircle: { return new CreateHitCircleAction(owner, actionModel, stateContainer); }
 				case EActionType.CreateThrow: { return new CreateThrowAction(owner, actionModel, stateContainer); }
 				case EActionType.Deactivate: { return new DeactivateAction(owner, actionModel); }
@@ -166,12 +166,12 @@ namespace GameDonkeyLib
 			{
 				case EActionType.AddGarment: { return new AddGarmentAction(owner); }
 				case EActionType.AddVelocity: { return new AddVelocityAction(owner); }
-				case EActionType.BlockState: { return new BlockingStateAction(owner); }
+				case EActionType.Block: { return new BlockAction(owner); }
 				case EActionType.CameraShake: { return new CameraShakeAction(owner); }
 				case EActionType.ConstantAcceleration: { return new ConstantAccelerationAction(owner); }
 				case EActionType.ConstantDecceleration: { return new ConstantDeccelerationAction(owner); }
 				case EActionType.CreateAttack: { return new CreateAttackAction(owner); }
-				case EActionType.CreateBlock: { return new CreateBlockAction(owner); }
+				case EActionType.Shield: { return new ShieldAction(owner); }
 				case EActionType.CreateHitCircle: { return new CreateHitCircleAction(owner); }
 				case EActionType.CreateThrow: { return new CreateThrowAction(owner); }
 				case EActionType.Deactivate: { return new DeactivateAction(owner); }

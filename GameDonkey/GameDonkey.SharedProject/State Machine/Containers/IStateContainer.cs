@@ -70,8 +70,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// method to send a message
 		/// </summary>
-		/// <param name="message">message to send to the state machine, 
-		/// should be offset by the message offset of this dude</param>
+		/// <param name="message">message to send to the state machine</param>
 		void SendStateMessage(string message);
 
 		void ForceStateChange(string state);
@@ -79,7 +78,6 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// The states have changed, go through and set all the actions of the new state to "not run"
 		/// </summary>
-		/// <param name="iCurState">the new state of the object</param>
 		void StateChange(object sender, HybridStateChangeEventArgs e);
 
 		/// <summary>

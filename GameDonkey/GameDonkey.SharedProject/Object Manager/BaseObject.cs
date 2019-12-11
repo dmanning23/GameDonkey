@@ -102,12 +102,12 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// If this dude is in a blocking state, this is a reference to that state
 		/// </summary>
-		public TimedActionList<BlockingStateAction> CurrentBlocks { get; set; }
+		public TimedActionList<BlockAction> CurrentBlocks { get; set; }
 
 		/// <summary>
 		/// If this timer is running, it means attacks don't hit
 		/// </summary>
-		protected CreateBlockAction BlockAction { get; set; }
+		protected ShieldAction ShieldAction { get; set; }
 
 		/// <summary>
 		/// evasion timer, if this is running it means there are no push collsions
@@ -192,7 +192,7 @@ namespace GameDonkeyLib
 			set
 			{
 				_scale = value;
-				DrawList.Scale = _scale;
+				AnimationContainer.Scale = _scale;
 			}
 		}
 
@@ -302,8 +302,8 @@ namespace GameDonkeyLib
 			Id = BaseObject._idCounter++;
 			QueueId = queueId;
 			CurrentAttacks = new List<CreateAttackAction>();
-			CurrentBlocks = new TimedActionList<BlockingStateAction>();
-			BlockAction = null;
+			CurrentBlocks = new TimedActionList<BlockAction>();
+			ShieldAction = null;
 			EvasionTimer = new CountdownTimer();
 			CurrentThrow = null;
 			AnimationContainer = new AnimationContainer();
@@ -350,7 +350,7 @@ namespace GameDonkeyLib
 			QueueId = human.QueueId;
 			CurrentAttacks = human.CurrentAttacks;
 			CurrentBlocks = human.CurrentBlocks;
-			BlockAction = human.BlockAction;
+			ShieldAction = human.ShieldAction;
 			EvasionTimer = human.EvasionTimer;
 			CurrentThrow = human.CurrentThrow;
 			AnimationContainer = human.AnimationContainer;
@@ -404,7 +404,7 @@ namespace GameDonkeyLib
 		{
 			CurrentAttacks.Clear();
 			CurrentBlocks.Reset();
-			BlockAction = null;
+			ShieldAction = null;
 			EvasionTimer.Stop();
 			CurrentThrow = null;
 			States.Reset();
@@ -555,11 +555,11 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// set the block action of this object
 		/// </summary>
-		/// <param name="blockAction">the block action to perform</param>
-		public void AddBlock(CreateBlockAction blockAction)
+		/// <param name="shieldAction">the block action to perform</param>
+		public void AddShield(ShieldAction shieldAction)
 		{
-			BlockAction = blockAction;
-			blockAction.SetDoneTime(CharacterClock);
+			ShieldAction = shieldAction;
+			ShieldAction.SetDoneTime(CharacterClock);
 		}
 
 		/// <summary>
@@ -567,7 +567,7 @@ namespace GameDonkeyLib
 		/// </summary>
 		protected void ClearBlocks()
 		{
-			BlockAction = null;
+			ShieldAction = null;
 		}
 
 		/// <summary>
@@ -723,7 +723,7 @@ namespace GameDonkeyLib
 		/// <param name="secondCollisionPoint"></param>
 		public virtual void BlockResponse(BasePhysicsContainer otherObject,
 			CreateAttackAction attackAction,
-			BlockingStateAction otherDudesAction,
+			BlockAction otherDudesAction,
 			Vector2 firstCollisionPoint,
 			Vector2 secondCollisionPoint)
 		{
@@ -752,12 +752,23 @@ namespace GameDonkeyLib
 
 		#endregion //Collision Responses
 
-		public void RemoveAttack(int attackIndex)
+		/// <summary>
+		/// Remove an attack from the list
+		/// </summary>
+		/// <param name="attackIndex"></param>
+		/// <returns>True if it was able to remove the attack.</returns>
+		public bool RemoveAttack(int attackIndex)
 		{
 			if (attackIndex < CurrentAttacks.Count)
 			{
-				CurrentAttacks.RemoveAt(attackIndex);
+				//Only remove attacks if they are not AoE, otherwise they should be able to hit multiple enemies.
+				if (!CurrentAttacks[attackIndex].AoE)
+				{
+					CurrentAttacks.RemoveAt(attackIndex);
+				}
 			}
+
+			return (attackIndex < CurrentAttacks.Count) && !CurrentAttacks[attackIndex].AoE;
 		}
 
 		#region Hit Response
@@ -847,14 +858,14 @@ namespace GameDonkeyLib
 			}
 		}
 
-		protected virtual void RespondToLeftWallHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected virtual void RespondToLeftWallHit(Hit groundHit, IGameDonkey engine)
 		{
 			//TODO: override this in projectile and kill the projectile when it hits a wall
 
 			//TOOD: override in level object and do nothing
 
 			//move the player right out of the wall
-			_position.X += (rGroundHit.Strength * rGroundHit.Direction.X);
+			_position.X += (groundHit.Strength * groundHit.Direction.X);
 
 			//if the player's velocity is -X, it is set to 0
 			if (Velocity.X < 0f)
@@ -863,14 +874,14 @@ namespace GameDonkeyLib
 			}
 		}
 
-		protected virtual void RespondToRightWallHit(Hit rGroundHit, IGameDonkey rEngine)
+		protected virtual void RespondToRightWallHit(Hit groundHit, IGameDonkey engine)
 		{
 			//TODO: override this in projectile and kill the projectile when it hits a wall
 
 			//TOOD: override in level object and do nothing
 
 			//move the player left out of the wall
-			_position.X += (rGroundHit.Strength * rGroundHit.Direction.X);
+			_position.X += (groundHit.Strength * groundHit.Direction.X);
 
 			//if the player's velocity is +X, it is set to 0
 			if (0f < Velocity.X)
@@ -901,9 +912,9 @@ namespace GameDonkeyLib
 			camera.AddPoint(new Vector2(Position.X, Position.Y - (int)(_height * 0.77f)));
 		}
 
-		public virtual bool IsBlocking()
+		public virtual bool IsShielded()
 		{
-			return (null != BlockAction && (CharacterClock.CurrentTime <= BlockAction.DoneTime));
+			return (null != ShieldAction && (CharacterClock.CurrentTime <= ShieldAction.DoneTime));
 		}
 
 		/// <summary>
@@ -1229,7 +1240,7 @@ namespace GameDonkeyLib
 		public virtual void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content)
 		{
 			//read in the model
-			AnimationContainer.Scale = model.Scale;
+			Scale = model.Scale;
 			AnimationContainer.ReadSkeletonXml(model.Model, engine.Renderer, content);
 			Physics.SortBones(AnimationContainer.Skeleton.RootBone);
 

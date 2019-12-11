@@ -13,7 +13,7 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
-		protected PlayerObject Player { get; set; }
+		protected BaseObject Player { get; set; }
 
 		/// <summary>
 		/// Used to update the AI on a schedule instead of every frame.
@@ -24,7 +24,30 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// how often the update loop should be run on this dude
 		/// </summary>
-		private float UpdateDelta { get; set; }
+		private float _updateDelta;
+		private float UpdateDelta
+		{
+			get
+			{
+				return _updateDelta;
+			}
+			set
+			{
+				_updateDelta = value;
+				UpdateAimDelta = UpdateDelta * 0.3f;
+			}
+		}
+
+		/// <summary>
+		/// Used to update the AI on a schedule instead of every frame.
+		/// by making time length longer, AI will be easier, short time makes the AI harder
+		/// </summary>
+		private CountdownTimer AimTimer { get; set; }
+
+		/// <summary>
+		/// how often the update loop should be run on this dude
+		/// </summary>
+		private float UpdateAimDelta { get; set; }
 
 		static private Random _random = new Random(DateTime.Now.Millisecond);
 
@@ -57,7 +80,26 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// The direction this AI wants to go
 		/// </summary>
-		public Vector2 Direction { get; set; }
+		private Vector2 _direction;
+		public Vector2 Direction
+		{
+			get
+			{
+				return _direction;
+			}
+			set
+			{
+				_direction = value;
+			}
+		}
+
+		protected abstract int AttackDistance { get; }
+
+		protected abstract int DefendDistance { get; }
+
+		protected BaseObject BadGuy { get; set; }
+
+		protected Vector2 BadGuyDistance { get; set; }
 
 		#endregion //Properties
 
@@ -67,6 +109,7 @@ namespace GameDonkeyLib
 		{
 			Player = player;
 			UpdateTimer = new CountdownTimer();
+			AimTimer = new CountdownTimer();
 
 			UpdateDelta = 1.0f;
 		}
@@ -74,6 +117,7 @@ namespace GameDonkeyLib
 		public virtual void Update()
 		{
 			UpdateTimer.Update(Player.CharacterClock);
+			AimTimer.Update(Player.CharacterClock);
 		}
 
 		/// <summary>
@@ -85,15 +129,14 @@ namespace GameDonkeyLib
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
 		public void GetPlayerInput(List<PlayerQueue> listBadGuys, bool ignoreAttackInput)
 		{
-			//check if we should update the AI
-			if (!UpdateTimer.HasTimeRemaining && (0.0f <= UpdateDelta))
+			//check if we should update the target
+			if (!AimTimer.HasTimeRemaining && (0.0f <= UpdateAimDelta))
 			{
-				//restart the timer and run the AI update loop
-				UpdateTimer.Start(UpdateDelta);
+				AimTimer.Start(UpdateAimDelta);
 
 				//loop through the "bad guys" and select a target
-				BaseObject badGuy = null;
-				var badGuyDistance = Vector2.Zero;
+				BadGuy = null;
+				BadGuyDistance = Vector2.Zero;
 				for (var i = 0; i < listBadGuys.Count; i++)
 				{
 					//first make sure this isn't me!
@@ -107,15 +150,29 @@ namespace GameDonkeyLib
 					{
 						//get the distance to this dude
 						var distance = listBadGuys[i].Active[j].Position - Player.Position;
-						if ((null == badGuy) || (badGuyDistance.LengthSquared() > distance.LengthSquared()))
+						if ((null == BadGuy) || (BadGuyDistance.LengthSquared() > distance.LengthSquared()))
 						{
-							badGuy = listBadGuys[i].Active[j];
-							badGuyDistance = distance;
+							BadGuy = listBadGuys[i].Active[j];
+							BadGuyDistance = distance;
 						}
 					}
 				}
 
-				if (null == badGuy)
+				if (null != BadGuy && BadGuyDistance.LengthSquared() > 0f)
+				{
+					//set the direction
+					Direction = Vector2.Normalize(BadGuyDistance);
+					_direction.Y = _direction.Y * -1f;
+				}
+			}
+
+			//check if we should update the AI
+			if (!UpdateTimer.HasTimeRemaining && (0.0f <= UpdateDelta))
+			{
+				//restart the timer and run the AI update loop
+				UpdateTimer.Start(UpdateDelta);
+
+				if (null == BadGuy || BadGuyDistance.LengthSquared() == 0f)
 				{
 					//if AI wins a stock match, there won't be any bad guys
 					return;
@@ -124,7 +181,7 @@ namespace GameDonkeyLib
 				//react to the target
 
 				//do i need to turn around?
-				if (badGuyDistance.X <= 0.0f)
+				if (BadGuyDistance.X <= 0.0f)
 				{
 					//the bad guy is to the left of me
 					if (!Player.Flip)
@@ -142,7 +199,7 @@ namespace GameDonkeyLib
 				}
 
 				//shoudl i move towards the target?
-				if ((badGuyDistance.X > HalfHeight) || (badGuyDistance.X < (-1.0 * HalfHeight)))
+				if ((BadGuyDistance.X > HalfHeight) || (BadGuyDistance.X < (-1.0 * HalfHeight)))
 				{
 					//the bad guy is to the left or right, move towards the target
 					SendWalkMessage();
@@ -153,35 +210,30 @@ namespace GameDonkeyLib
 				}
 
 				//the target is far away, but is it above me?
-				if (badGuyDistance.Y < (-2.0f * HalfHeight))
+				if (BadGuyDistance.Y < (-2.0f * HalfHeight))
 				{
 					//teh bad guy is waaay above me, super jump at them
 					SendHighJumpMessage();
 				}
-				else if (badGuyDistance.Y < (-1.0f * HalfHeight))
+				else if (BadGuyDistance.Y < (-1.0f * HalfHeight))
 				{
 					//jump at the target
 					SendJumpMessage();
 				}
 
-				//how far away is the target?
-				if (badGuyDistance.LengthSquared() <= (Player.Height * Player.Height))
+				//is the target attacking?
+				var blocking = false;
+				if (BadGuy.States.IsCurrentStateAttack() && BadGuyDistance.LengthSquared() <= (DefendDistance * DefendDistance))
 				{
-					//the target must be close!
+					//select a defensive option
+					blocking = SelectDefensiveOption();
+				}
 
-					//is the target attacking?
-					if (badGuy.States.IsCurrentStateAttack())
-					{
-						//select a defensive option
-						SelectDefensiveOption();
-					}
-					else if (!ignoreAttackInput)
-					{
-						//try to attack the target
-
-						//select an offensive option
-						SelectOffensiveOption();
-					}
+				//If we aren't trying to block an attack and the target is in distance, take a swing at them.
+				if (!blocking && BadGuyDistance.LengthSquared() <= (AttackDistance * AttackDistance) && !ignoreAttackInput)
+				{
+					//the target must be close! try to attack the target
+					SelectOffensiveOption();
 				}
 			}
 		}
@@ -196,7 +248,7 @@ namespace GameDonkeyLib
 
 		protected abstract void SendJumpMessage();
 
-		protected abstract void SelectDefensiveOption();
+		protected abstract bool SelectDefensiveOption();
 		
 			//TODO: should i block or evade?
 			//if ((g_Random.Next() % 2) == 0)

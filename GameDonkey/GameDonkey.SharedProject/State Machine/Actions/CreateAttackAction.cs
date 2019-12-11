@@ -60,6 +60,11 @@ namespace GameDonkeyLib
 		/// </summary>
 		public float Damage { get; set; }
 
+		/// <summary>
+		/// True if this attack can hit multiple enemies, false if only hits one
+		/// </summary>
+		public bool AoE { get; set; }
+
 		#endregion //Properties
 
 		#region Initialization
@@ -76,6 +81,7 @@ namespace GameDonkeyLib
 		{
 			BoneName = actionModel.BoneName;
 			Damage = actionModel.Damage;
+			AoE = actionModel.AoE;
 			ActionDirection = new ActionDirection(actionModel.Direction);
 
 			StateActionsList = new StateActionsList();
@@ -102,11 +108,7 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
-			//Check if the bone is set, if not try and find it...
-			if (null == AttackBone)
-			{
-				AttackBone = Owner.Physics.FindWeapon(BoneName);
-			}
+			SetAttackBone();
 
 			//reset teh success actions
 			for (var i = 0; i < StateActionsList.Actions.Count; i++)
@@ -123,6 +125,15 @@ namespace GameDonkeyLib
 			return base.Execute();
 		}
 
+		public void SetAttackBone()
+		{
+			//Check if the bone is set, if not try and find it...
+			if (null == AttackBone)
+			{
+				AttackBone = Owner.Physics.FindWeapon(BoneName);
+			}
+		}
+
 		public virtual void Update()
 		{
 			//nothing to do here, used in child classes
@@ -133,10 +144,7 @@ namespace GameDonkeyLib
 			//return the first circle from this dude's image
 
 			//Check if the bone is set, if not try and find it...
-			if (null == AttackBone)
-			{
-				AttackBone = Owner.Physics.FindWeapon(BoneName);
-			}
+			SetAttackBone();
 
 			//the bone for this attack is in a garment that isnt being displayed
 			if (null == AttackBone)

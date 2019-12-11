@@ -27,6 +27,7 @@ namespace GameDonkeyLib
 		//debug shit
 		protected bool _renderJointSkeleton;
 		protected bool _renderPhysics;
+		protected bool _renderAI;
 		protected bool _drawCameraInfo;
 		protected bool _renderWorldBoundaries;
 		protected bool _renderSpawnPoints;
@@ -180,6 +181,7 @@ namespace GameDonkeyLib
 			//debugging stuff
 			_renderJointSkeleton = false;
 			_renderPhysics = false;
+			_renderAI = false;
 			_drawCameraInfo = false;
 			_renderWorldBoundaries = false;
 			_renderSpawnPoints = false;
@@ -394,6 +396,10 @@ namespace GameDonkeyLib
 			if (currentState.IsKeyDown(Keys.P) && _lastKeyboardState.IsKeyUp(Keys.P))
 			{
 				_renderWorldBoundaries = !_renderWorldBoundaries;
+			}
+			if (currentState.IsKeyDown(Keys.T) && _lastKeyboardState.IsKeyUp(Keys.T))
+			{
+				_renderAI = !_renderAI;
 			}
 #endif
 
@@ -833,13 +839,24 @@ namespace GameDonkeyLib
 					}
 				}
 
+				//Draw the AI direction?
+				if (_renderAI)
+				{
+					for (int j = 0; j < Players[i].Active.Count; j++)
+					{
+						Renderer.Primitive.Line(Players[i].Active[j].Position,
+												Players[i].Active[j].Position + (100f * Players[i].Active[j].Direction()),
+												  Color.White);
+					}
+				}
+
 				//draw the push box for each character?
 				if (_renderJointSkeleton)
 				{
 					for (int j = 0; j < Players[i].Active.Count; j++)
 					{
-						Renderer.Primitive.Circle(Players[i].Character.Position,
-												  (int)(Players[i].Character.MinDistance()),
+						Renderer.Primitive.Circle(Players[i].Active[j].Position,
+												  (int)(Players[i].Active[j].MinDistance()),
 												  Color.White);
 					}
 				}

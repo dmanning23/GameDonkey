@@ -31,7 +31,7 @@ namespace GameDonkeyLib
 		/// The sound that gets played when a player dies
 		/// </summary>
 		/// <value>The death sound.</value>
-		public SoundEffect DeathSound { get ; protected set; }
+		public SoundEffect DeathSound { get; protected set; }
 
 		/// <summary>
 		/// texture to hold the portrait for the HUD
@@ -157,7 +157,8 @@ namespace GameDonkeyLib
 				AI.GetPlayerInput(listBadGuys, ignoreAttackInput);
 				ThumbstickDirection = AI.Direction;
 			}
-			else{
+			else
+			{
 				//get the thumbstick direction
 				ThumbstickDirection = controller.Controller.Thumbsticks.LeftThumbstick.Direction;
 
@@ -253,54 +254,54 @@ namespace GameDonkeyLib
 					switch (i)
 					{
 						case EHitType.AttackHit:
-						{
-							//is this a grab or an attack?
-							if (EActionType.CreateThrow == Physics.Hits[(int)i].AttackAction.ActionType)
 							{
-								//process grab hit
-								RespondToGrab(Physics.Hits[(int)i]);
+								//is this a grab or an attack?
+								if (EActionType.CreateThrow == Physics.Hits[(int)i].AttackAction.ActionType)
+								{
+									//process grab hit
+									RespondToGrab(Physics.Hits[(int)i]);
+								}
+								else
+								{
+									//process attack hit
+									RespondToAttack(Physics.Hits[(int)i], engine);
+								}
 							}
-							else
-							{
-								//process attack hit
-								RespondToAttack(Physics.Hits[(int)i], engine);
-							}
-						}
-						break;
+							break;
 
 						case EHitType.GroundHit:
 						case EHitType.CeilingHit:
 						case EHitType.LeftWallHit:
 						case EHitType.RightWallHit:
-						{
-							//taken care of in the base class
-						}
-						break;
+							{
+								//taken care of in the base class
+							}
+							break;
 
 						case EHitType.PushHit:
-						{
-							RespondToPushHit(Physics.Hits[(int)i]);
-						}
-						break;
+							{
+								RespondToPushHit(Physics.Hits[(int)i]);
+							}
+							break;
 
 						case EHitType.WeaponHit:
-						{
-							RespondToWeaponHit(Physics.Hits[(int)i], engine);
-						}
-						break;
+							{
+								RespondToWeaponHit(Physics.Hits[(int)i], engine);
+							}
+							break;
 
 						case EHitType.BlockHit:
-						{
-							RespondToBlockedAttack(Physics.Hits[(int)i], engine);
-						}
-						break;
+							{
+								RespondToBlockedAttack(Physics.Hits[(int)i], engine);
+							}
+							break;
 
 						default:
-						{
-							//fuckass
-							Debug.Assert(false);
-						}
-						break;
+							{
+								//fuckass
+								Debug.Assert(false);
+							}
+							break;
 					}
 				}
 			}
@@ -443,7 +444,7 @@ namespace GameDonkeyLib
 			//set this dude's last attacker to the other dude
 			LastAttacker = attack.Attacker.PlayerQueue;
 
-			if (IsBlocking())
+			if (IsShielded())
 			{
 				//do a block!
 				RespondToBlockedAttack(attack, engine);
@@ -625,7 +626,7 @@ namespace GameDonkeyLib
 				Portrait = textureInfo.Texture;
 			}
 
-			if (null != data.DeathSound) 
+			if (null != data.DeathSound)
 			{
 				DeathSound = engine.LoadSound(data.DeathSound);
 			}

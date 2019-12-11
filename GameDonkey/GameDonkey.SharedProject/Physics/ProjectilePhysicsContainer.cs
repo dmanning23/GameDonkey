@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using AnimationLib;
+using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -11,6 +12,24 @@ namespace GameDonkeyLib
 
 		public ProjectilePhysicsContainer(ProjectileObject projectileObject) : base(projectileObject)
 		{
+		}
+
+		public override void SortBones(Bone bone)
+		{
+			if (bone.HasPhysicsData())
+			{
+				Weapons.Add(bone);
+
+				CollisionBones.Add(bone);
+			}
+
+			//run through all the child bones
+			for (int i = 0; i < bone.Bones.Count; i++)
+			{
+				SortBones(bone.Bones[i]);
+			}
+
+			BonesSorted = true;
 		}
 
 		/// <summary>

@@ -25,6 +25,8 @@ namespace GameDonkeyLib
 
 		public StateActionsListModel ActionModels { get; set; }
 
+		public bool AoE { get; set; }
+
 		#endregion //Properties
 
 		#region Initialization
@@ -34,12 +36,14 @@ namespace GameDonkeyLib
 			Direction = new DirectionActionModel();
 			TimeDelta = new TimedActionModel();
 			ActionModels = new StateActionsListModel();
+			AoE = false;
 		}
 
 		public CreateAttackActionModel(CreateAttackAction action) : base(action)
 		{
 			BoneName = action.BoneName;
 			Damage = action.Damage;
+			AoE = action.AoE;
 			TimeDelta = new TimedActionModel(action);
 			Direction = new DirectionActionModel(action.ActionDirection);
 			ActionModels = new StateActionsListModel(action.Actions);
@@ -92,6 +96,11 @@ namespace GameDonkeyLib
 						}
 					}
 					break;
+				case "aoe":
+					{
+						AoE = Convert.ToBoolean(value);
+					}
+					break;
 				case "actions":
 				case "successactions":
 					{
@@ -112,6 +121,12 @@ namespace GameDonkeyLib
 		{
 			xmlWriter.WriteAttributeString("BoneName", BoneName);
 			xmlWriter.WriteAttributeString("Damage", Damage.ToString());
+
+			if (AoE)
+			{
+				xmlWriter.WriteAttributeString("aoe", AoE.ToString());
+			}
+
 			TimeDelta.WriteXmlNodes(xmlWriter);
 			Direction.WriteXmlNodes(xmlWriter);
 

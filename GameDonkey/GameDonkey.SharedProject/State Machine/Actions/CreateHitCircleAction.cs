@@ -81,6 +81,8 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
+			SetAttackBone();
+
 			//set the circle location
 
 			//get the bone location

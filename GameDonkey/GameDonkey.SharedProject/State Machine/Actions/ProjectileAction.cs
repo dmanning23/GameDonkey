@@ -128,7 +128,7 @@ namespace GameDonkeyLib
 				Projectile.AnimationContainer.Update(Owner.PlayerQueue.CharacterClock,
 					Projectile.Position,
 					Projectile.Flip,
-					0.0f,
+					0f,
 					true);
 			}
 
