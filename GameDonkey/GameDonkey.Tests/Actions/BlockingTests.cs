@@ -22,7 +22,7 @@ namespace GameDonkey.Tests
 		[Test]
 		public void ModelToAction()
 		{
-			var model = new BlockingStateActionModel()
+			var model = new BlockActionModel()
 			{
 				Time = time,
 				BoneName = bone,
@@ -33,7 +33,7 @@ namespace GameDonkey.Tests
 				Time = subTime
 			});
 
-			var action = new BlockingStateAction(null, model, null);
+			var action = new BlockAction(null, model, null);
 
 			action.Time.ShouldBe(time);
 			action.BoneName.ShouldBe(bone);
@@ -47,7 +47,7 @@ namespace GameDonkey.Tests
 		[Test]
 		public void ActionToModel()
 		{
-			var action = new BlockingStateAction(null)
+			var action = new BlockAction(null)
 			{
 				Time = time,
 				BoneName = bone,
@@ -58,7 +58,7 @@ namespace GameDonkey.Tests
 				Time = subTime
 			});
 
-			var model = new BlockingStateActionModel(action);
+			var model = new BlockActionModel(action);
 
 			model.Time.ShouldBe(time);
 			model.BoneName.ShouldBe(bone);
@@ -72,7 +72,7 @@ namespace GameDonkey.Tests
 		[Test]
 		public void Persist()
 		{
-			var model = new BlockingStateActionModel()
+			var model = new BlockActionModel()
 			{
 				Time = time,
 				BoneName = bone,
@@ -97,9 +97,9 @@ namespace GameDonkey.Tests
 			//get the action
 			container2.StatesActions.Count.ShouldBe(1);
 			container2.StatesActions[0].ActionModels.Count.ShouldBe(1);
-			var model2 = container2.StatesActions[0].ActionModels[0] as BlockingStateActionModel;
+			var model2 = container2.StatesActions[0].ActionModels[0] as BlockActionModel;
 			model2.ShouldNotBeNull();
-			model2.ActionType.ShouldBe(EActionType.BlockState);
+			model2.ActionType.ShouldBe(EActionType.Block);
 			model2.Time.ShouldBe(time);
 			model2.BoneName.ShouldBe(bone);
 			model2.TimeDelta.TimeDelta.ShouldBe(timeDelta);

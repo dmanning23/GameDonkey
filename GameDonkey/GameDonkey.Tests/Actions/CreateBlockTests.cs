@@ -22,7 +22,7 @@ namespace GameDonkey.Tests
 		[Test]
 		public void ModelToAction()
 		{
-			var model = new CreateBlockActionModel()
+			var model = new ShieldActionModel()
 			{
 				Time = time,
 				TimeDelta = new TimedActionModel(timeDelta)
@@ -32,7 +32,7 @@ namespace GameDonkey.Tests
 				Time = subTime
 			});
 
-			var action = new CreateBlockAction(null, model, null);
+			var action = new ShieldAction(null, model, null);
 
 			action.Time.ShouldBe(time);
 			action.TimeDelta.ShouldBe(timeDelta);
@@ -45,7 +45,7 @@ namespace GameDonkey.Tests
 		[Test]
 		public void ActionToModel()
 		{
-			var action = new CreateBlockAction(null)
+			var action = new ShieldAction(null)
 			{
 				Time = time,
 				TimeDelta = timeDelta
@@ -55,7 +55,7 @@ namespace GameDonkey.Tests
 				Time = subTime
 			});
 
-			var model = new CreateBlockActionModel(action);
+			var model = new ShieldActionModel(action);
 
 			model.Time.ShouldBe(time);
 			model.TimeDelta.TimeDelta.ShouldBe(timeDelta);
@@ -68,7 +68,7 @@ namespace GameDonkey.Tests
 		[Test]
 		public void Persist()
 		{
-			var model = new CreateBlockActionModel()
+			var model = new ShieldActionModel()
 			{
 				Time = time,
 				TimeDelta = new TimedActionModel(timeDelta)
@@ -92,9 +92,9 @@ namespace GameDonkey.Tests
 			//get the action
 			container2.StatesActions.Count.ShouldBe(1);
 			container2.StatesActions[0].ActionModels.Count.ShouldBe(1);
-			var model2 = container2.StatesActions[0].ActionModels[0] as CreateBlockActionModel;
+			var model2 = container2.StatesActions[0].ActionModels[0] as ShieldActionModel;
 			model2.ShouldNotBeNull();
-			model2.ActionType.ShouldBe(EActionType.CreateBlock);
+			model2.ActionType.ShouldBe(EActionType.Shield);
 			model2.Time.ShouldBe(time);
 			model2.TimeDelta.TimeDelta.ShouldBe(timeDelta);
 			model2.ActionModels.ActionModels.Count.ShouldBe(1);
