@@ -115,8 +115,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			TimeDelta.WriteXmlNodes(xmlWriter);
@@ -124,8 +122,6 @@ namespace GameDonkeyLib
 			xmlWriter.WriteAttributeString("SpawnDelta", SpawnDelta.ToString());
 			xmlWriter.WriteAttributeString("Color", Color.StringFromColor());
 		}
-
-#endif
 
 		#endregion //Methods
 	}

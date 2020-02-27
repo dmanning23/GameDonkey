@@ -896,12 +896,20 @@ namespace GameDonkeyLib
 
 		#region File IO
 
+		public PlayerObjectModel LoadModel(Filename filename, ContentManager xmlContent)
+		{
+			var model = new PlayerObjectModel(filename);
+			model.ReadXmlFile(xmlContent);
+			return model;
+		}
+
 		public virtual PlayerQueue LoadPlayer(Color color,
 			Filename characterFile,
-			PlayerIndex index,
+			int playerIndex,
 			string playerName,
 			GameObjectType playerType,
-			ContentManager xmlContent)
+			ContentManager xmlContent,
+			bool useKeyboard)
 		{
 			//create and load a player
 			PlayerQueue player = CreatePlayerQueue(color);
@@ -909,16 +917,13 @@ namespace GameDonkeyLib
 			Players.Add(player);
 
 			//create a controller for that player
-			InputWrapper queue = new InputWrapper(new ControllerWrapper(index, (PlayerIndex.One == index)), MasterClock.GetCurrentTime)
+			InputWrapper queue = new InputWrapper(new ControllerWrapper(playerIndex), MasterClock.GetCurrentTime)
 			{
 				BufferedInputExpire = 0.0f,
 				QueuedInputExpire = 0.05f
 			};
 			queue.ReadXmlFile(new Filename(@"MoveList.xml"), xmlContent);
 			player.InputQueue = queue;
-
-			//if this is player one, let them use the keyboard
-			player.InputQueue.Controller.UseKeyboard = (PlayerIndex.One == index);
 
 			player.PlayerName = playerName;
 			return player;

@@ -70,15 +70,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("MaxVelocity", MaxVelocity.ToString());
 			Direction.WriteXmlNodes(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

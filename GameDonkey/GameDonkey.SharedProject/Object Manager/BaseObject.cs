@@ -53,7 +53,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// The type of thing this is
 		/// </summary>
-		public GameObjectType OjectType { get; private set; }
+		public string ObjectType { get; private set; }
 
 		/// <summary>
 		/// the animation container for this dude
@@ -298,7 +298,7 @@ namespace GameDonkeyLib
 		/// <param name="clock">a character clock.</param>
 		public BaseObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId)
 		{
-			OjectType = gameObjectType;
+			ObjectType = gameObjectType.ToString();
 			Id = BaseObject._idCounter++;
 			QueueId = queueId;
 			CurrentAttacks = new List<CreateAttackAction>();
@@ -345,7 +345,7 @@ namespace GameDonkeyLib
 		public BaseObject(GameObjectType gamGameObjectType, BaseObject human)
 		{
 			//grab all this shit
-			OjectType = gamGameObjectType;
+			ObjectType = gamGameObjectType;
 			Id = human.Id;
 			QueueId = human.QueueId;
 			CurrentAttacks = human.CurrentAttacks;

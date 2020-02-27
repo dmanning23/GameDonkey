@@ -12,8 +12,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\RandomActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\PointLightActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameObjects\BackgroundLayerModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GameObjects\InstanceObjectModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\IHasStateActionsListModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\State Machine\StateActionsListModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GameObjects\ItemObjectModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object Manager\HealthEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParticleEffects\DefaultParticleEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGameDonkey.cs" />

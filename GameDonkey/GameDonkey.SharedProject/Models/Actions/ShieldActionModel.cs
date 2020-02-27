@@ -81,16 +81,12 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			TimeDelta.WriteXmlNodes(xmlWriter);
 
 			ActionModels.WriteXmlNodes(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

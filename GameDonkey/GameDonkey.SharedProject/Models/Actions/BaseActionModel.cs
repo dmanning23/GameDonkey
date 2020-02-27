@@ -57,8 +57,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
 		{
 			//write out the type
@@ -79,8 +77,6 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="rXMLFile"></param>
 		protected abstract void WriteActionXml(XmlTextWriter xmlWriter);
-
-#endif
 
 		#endregion //Methods
 	}

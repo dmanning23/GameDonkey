@@ -80,8 +80,6 @@ namespace GameDonkeyLib
 			StatesActions.Add(stateActions);
 		}
 
-#if !WINDOWS_UWP
-
 		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteStartElement("States");
@@ -93,8 +91,6 @@ namespace GameDonkeyLib
 
 			xmlWriter.WriteEndElement();
 		}
-
-#endif
 
 		#endregion //Methods
 	}

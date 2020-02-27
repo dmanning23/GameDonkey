@@ -67,15 +67,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("ShakeAmount", ShakeAmount.ToString());
 			TimeDelta.WriteXmlNodes(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

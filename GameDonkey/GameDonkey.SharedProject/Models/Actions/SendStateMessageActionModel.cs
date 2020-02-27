@@ -58,14 +58,10 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("Message", Message);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

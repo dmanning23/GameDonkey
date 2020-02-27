@@ -77,8 +77,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("Radius", Radius.ToString());
@@ -86,8 +84,6 @@ namespace GameDonkeyLib
 			xmlWriter.WriteAttributeString("Velocity", Velocity.StringFromVector());
 			base.WriteActionXml(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

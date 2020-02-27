@@ -63,14 +63,10 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("Filename", Filename.GetRelFilename());
 		}
-
-#endif
 
 		#endregion //Methods
 	}

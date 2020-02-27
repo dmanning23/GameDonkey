@@ -61,14 +61,10 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			Direction.WriteXmlNodes(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

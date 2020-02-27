@@ -37,7 +37,7 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-		
+
 		public override void ParseXmlNode(XmlNode node)
 		{
 			//what is in this node?
@@ -59,14 +59,10 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			TimeDelta.WriteXmlNodes(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

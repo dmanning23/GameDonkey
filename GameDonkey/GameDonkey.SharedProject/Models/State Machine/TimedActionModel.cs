@@ -59,14 +59,10 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("TimeDelta", TimeDelta.ToString());
 		}
-
-#endif
 
 		#endregion //Methods
 	}

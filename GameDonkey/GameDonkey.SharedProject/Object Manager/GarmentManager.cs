@@ -66,6 +66,15 @@ namespace GameDonkeyLib
 			}
 		}
 
+		public void RemoveGarment(GarmentModel garmentModel)
+		{
+			var garment = CheckForXmlGarment(garmentModel.Filename);
+			if (null != garment)
+			{
+				RemoveGarment(garment);
+			}
+		}
+
 		public void RemoveGarment(Garment garment)
 		{
 			garment.RemoveFromSkeleton();
@@ -205,6 +214,26 @@ namespace GameDonkeyLib
 			{
 				//create a new one
 				garment = new Garment(content, garmentFile, Owner.AnimationContainer.Skeleton, renderer);
+			}
+
+			//store and return the garment
+			AllGarments.Add(garment);
+			return garment;
+		}
+
+		public Garment LoadGarment(GarmentModel garmentModel, IRenderer renderer)
+		{
+			//first check if the garment is already loaded
+			var garment = CheckForXmlGarment(garmentModel.Filename);
+			if (null != garment)
+			{
+				//found a garment already loaded
+				return garment;
+			}
+			else
+			{
+				//create a new one
+				garment = new Garment(garmentModel, Owner.AnimationContainer.Skeleton, renderer);
 			}
 
 			//store and return the garment

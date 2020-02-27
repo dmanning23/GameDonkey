@@ -129,8 +129,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("Bone", Bone);
@@ -143,8 +141,6 @@ namespace GameDonkeyLib
 			xmlWriter.WriteAttributeString("MinBrightness", MinBrightness.ToString());
 			xmlWriter.WriteAttributeString("MaxBrightness", MaxBrightness.ToString());
 		}
-
-#endif
 
 		#endregion //Methods
 	}

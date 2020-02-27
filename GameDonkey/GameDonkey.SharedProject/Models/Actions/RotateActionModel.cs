@@ -59,14 +59,10 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("Rotation", Rotation.ToString());
 		}
-
-#endif
 
 		#endregion //Methods
 	}

@@ -88,8 +88,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("Filename", Filename.GetRelFilename());
@@ -97,8 +95,6 @@ namespace GameDonkeyLib
 			xmlWriter.WriteAttributeString("Scale", Scale.ToString());
 			Direction.WriteXmlNodes(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

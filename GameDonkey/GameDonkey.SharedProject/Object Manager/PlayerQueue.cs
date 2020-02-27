@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using RenderBuddy;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameDonkeyLib
 {
@@ -191,6 +192,25 @@ namespace GameDonkeyLib
 					Inactive.Add(Active[i]);
 					Active.RemoveAt(i);
 					return;
+				}
+			}
+		}
+
+		public void DeactivateObjects(string objectType)
+		{
+			//go through the active list, look for that object
+			var i = 0;
+			while (i < Active.Count)
+			{
+				if (Active[i].ObjectType == objectType)
+				{
+					//pop into the inactive list, remove from the active list
+					Inactive.Add(Active[i]);
+					Active.RemoveAt(i);
+				}
+				else
+				{
+					i++;
 				}
 			}
 		}
@@ -493,40 +513,49 @@ namespace GameDonkeyLib
 
 		public BaseObject LoadXmlObject(Filename fileName, IGameDonkey engine, string objectType, ContentManager xmlContent)
 		{
-			//try to load all that stuff
-			PlayerFactory(fileName, objectType, out BaseObject gameObject, out BaseObjectModel gameObjectModel);
-
-			//load the object data
+			//load the model
+			ObjectModelFactory(fileName, objectType, out BaseObjectModel gameObjectModel);
 			gameObjectModel.ReadXmlFile(xmlContent);
 
-			//load the object data into the thing
-			gameObject.PlayerQueue = this;
-			gameObject.ParseXmlData(gameObjectModel, engine, xmlContent);
+			return LoadXmlObject(gameObjectModel, engine, objectType, xmlContent);
+		}
 
-			//add to the correct list
-			if (objectType == "Level")
+		public BaseObject LoadXmlObject(BaseObjectModel gameObjectModel, IGameDonkey engine, string objectType, ContentManager xmlContent)
+		{
+			var gameObject = Inactive.FirstOrDefault(x => x.ObjectType == objectType);
+			if (null == gameObject)
 			{
-				Active.Add(gameObject);
-			}
-			else
-			{
-				Inactive.Add(gameObject);
-			}
+				//try to load the object
+				ObjectFactory(objectType, out gameObject);
 
-			//set the color too
-			gameObject.PlayerColor = PlayerColor;
+				//load the object data into the thing
+				gameObject.PlayerQueue = this;
+				gameObject.ParseXmlData(gameObjectModel, engine, xmlContent);
+
+				//add to the correct list
+				if (objectType == "Level")
+				{
+					Active.Add(gameObject);
+				}
+				else
+				{
+					Inactive.Add(gameObject);
+				}
+
+				//set the color too
+				gameObject.PlayerColor = PlayerColor;
+			}
 
 			return gameObject;
 		}
 
-		protected virtual void PlayerFactory(Filename fileName, string objectType, out BaseObject gameObject, out BaseObjectModel gameObjectModel)
+		protected virtual void ObjectFactory(string objectType, out BaseObject gameObject)
 		{
 			switch (objectType)
 			{
 				case "Human":
 					{
 						gameObject = CreateHumanPlayer();
-						gameObjectModel = CreatePlayerObjectModel(fileName);
 
 						//set as the main character
 						AddCharacterToList(gameObject);
@@ -535,7 +564,6 @@ namespace GameDonkeyLib
 				case "AI":
 					{
 						gameObject = CreateAiPlayer();
-						gameObjectModel = CreatePlayerObjectModel(fileName);
 
 						//set as the main character
 						AddCharacterToList(gameObject);
@@ -544,18 +572,47 @@ namespace GameDonkeyLib
 				case "Projectile":
 					{
 						gameObject = new ProjectileObject(CharacterClock, Character, QueueId);
-						gameObjectModel = new ProjectileObjectModel(fileName);
 					}
 					break;
 				case "Level":
 					{
 						gameObject = new LevelObject(CharacterClock, QueueId);
+					}
+					break;
+				default:
+					{
+						throw new Exception($"Unknown objectType passed to ObjectFactory: {objectType}");
+					}
+			}
+		}
+
+		protected virtual void ObjectModelFactory(Filename fileName, string objectType, out BaseObjectModel gameObjectModel)
+		{
+			switch (objectType)
+			{
+				case "Human":
+					{
+						gameObjectModel = CreatePlayerObjectModel(fileName);
+					}
+					break;
+				case "AI":
+					{
+						gameObjectModel = CreatePlayerObjectModel(fileName);
+					}
+					break;
+				case "Projectile":
+					{
+						gameObjectModel = new ProjectileObjectModel(fileName);
+					}
+					break;
+				case "Level":
+					{
 						gameObjectModel = new LevelObjectModel(fileName);
 					}
 					break;
 				default:
 					{
-						throw new Exception($"Unknown objectType passed to PlayerFactory: {objectType}");
+						throw new Exception($"Unknown objectType passed to ObjectModelFactory: {objectType}");
 					}
 			}
 		}

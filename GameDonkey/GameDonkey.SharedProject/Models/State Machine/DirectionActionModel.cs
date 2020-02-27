@@ -58,8 +58,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteStartElement("Direction");
@@ -67,8 +65,6 @@ namespace GameDonkeyLib
 			xmlWriter.WriteAttributeString("DirectionType", DirectionType.ToString());
 			xmlWriter.WriteEndElement();
 		}
-
-#endif
 
 		#endregion //Methods
 	}

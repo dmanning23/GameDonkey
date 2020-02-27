@@ -67,15 +67,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("Animation", Animation);
 			xmlWriter.WriteAttributeString("Playback", Playback.ToString());
 		}
-
-#endif
 
 		#endregion //Methods
 	}

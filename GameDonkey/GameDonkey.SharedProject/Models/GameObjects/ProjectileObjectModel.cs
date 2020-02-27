@@ -46,20 +46,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-//#if !WINDOWS_UWP
-//		/// <summary>
-//		/// Write this dude out to the xml format
-//		/// </summary>
-//		/// <param name="xmlWriter">the xml file to add this dude as a child of</param>
-//		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
-//		{
-//			//write out the item tag
-//			xmlWriter.WriteStartElement("joint");
-//			xmlWriter.WriteAttributeString("name", Name);
-//			xmlWriter.WriteEndElement();
-//		}
-//#endif
-
 		#endregion //File IO
 	}
 }

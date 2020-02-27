@@ -34,13 +34,9 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 		}
-
-#endif
 
 		#endregion //Methods
 	}

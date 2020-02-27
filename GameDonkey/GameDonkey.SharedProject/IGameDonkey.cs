@@ -82,12 +82,15 @@ namespace GameDonkeyLib
 
 		SoundEffect LoadSound(Filename cueName);
 
+		PlayerObjectModel LoadModel(Filename characterFile, ContentManager xmlContent = null);
+
 		PlayerQueue LoadPlayer(Color color,
 		   Filename characterFile,
-		   PlayerIndex index,
+		   int playerIndex,
 		   string playerName,
 		   GameObjectType playerType = GameObjectType.Human,
-		   ContentManager xmlContent = null);
+		   ContentManager xmlContent = null,
+		   bool useKeyboard = false);
 
 		void LoadBoard(Filename boardFile, ContentManager xmlContent = null);
 

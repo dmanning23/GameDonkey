@@ -66,16 +66,12 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("ThrowMessage", ThrowMessage);
 			xmlWriter.WriteAttributeString("ReleaseTimeDelta", ReleaseTimeDelta.ToString());
 			base.WriteActionXml(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

@@ -9,14 +9,16 @@ namespace GameDonkeyLib
 {
 	public class LevelObject : BaseObject
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// how fast players will pop out of a level object, pixels/second
 		/// </summary>
 		private const float MoveSpeed = 1750.0f;
 
-		#endregion //Members
+		public const string LevelObjec
+
+		#endregion //Properties
 
 		#region Methods
 

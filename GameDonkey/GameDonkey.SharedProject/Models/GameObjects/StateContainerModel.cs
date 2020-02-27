@@ -76,7 +76,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
 		/// <summary>
 		/// Write this dude out to the xml format
 		/// </summary>
@@ -89,7 +88,6 @@ namespace GameDonkeyLib
 			xmlWriter.WriteAttributeString("stateActions", StateActionsFilename.GetRelFilename());
 			xmlWriter.WriteEndElement();
 		}
-#endif
 
 		#endregion //File IO
 	}

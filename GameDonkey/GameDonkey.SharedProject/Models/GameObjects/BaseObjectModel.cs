@@ -127,7 +127,6 @@ namespace GameDonkeyLib
 			States.Add(states);
 		}
 
-#if !WINDOWS_UWP
 		/// <summary>
 		/// Write this dude out to the xml format
 		/// </summary>
@@ -139,7 +138,6 @@ namespace GameDonkeyLib
 			//			xmlWriter.WriteAttributeString("name", Name);
 			//			xmlWriter.WriteEndElement();
 		}
-#endif
 
 		#endregion //File IO
 	}

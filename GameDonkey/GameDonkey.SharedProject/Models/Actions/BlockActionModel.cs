@@ -58,15 +58,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("BoneName", BoneName);
 			base.WriteActionXml(xmlWriter);
 		}
-
-#endif
 
 		#endregion //Methods
 	}

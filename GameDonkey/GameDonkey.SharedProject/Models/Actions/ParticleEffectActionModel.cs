@@ -97,8 +97,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-#if !WINDOWS_UWP
-
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteAttributeString("Bone", Bone);
@@ -110,8 +108,6 @@ namespace GameDonkeyLib
 			Emitter.WriteXmlNodes(xmlWriter);
 			xmlWriter.WriteEndElement();
 		}
-
-#endif
 
 		#endregion //Methods
 	}
