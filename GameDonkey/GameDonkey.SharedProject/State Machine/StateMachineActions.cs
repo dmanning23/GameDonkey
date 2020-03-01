@@ -83,6 +83,17 @@ namespace GameDonkeyLib
 			}
 		}
 
+		public void RemoveStateMachineActions(SingleStateContainerModel stateMachineActions)
+		{
+			foreach (var singleStateAction in stateMachineActions.StatesActions)
+			{
+				if (Actions.ContainsKey(singleStateAction.StateName))
+				{
+					Actions.Remove(singleStateAction.StateName);
+				}
+			}
+		}
+
 		#endregion //Initialization
 
 		#region Methods

@@ -105,13 +105,13 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public virtual void Activate(PlayerQueue player, IGameDonkey engine)
+		public virtual void Activate(PlayerQueue player, IGameDonkey engine, ContentManager content)
 		{
 			AddAnimations(player);
 			AddGarments(player, engine);
-			ActivateCharacter(player);
+			ActivateCharacter(player, engine);
 			AddStateMachine(player);
-			AddStateActions(player);
+			AddStateActions(player, engine, content);
 			AddInput(player);
 		}
 
@@ -141,24 +141,32 @@ namespace GameDonkeyLib
 			}
 		}
 
-		protected void ActivateCharacter(PlayerQueue player, IGameDonkey engine)
+		protected virtual BaseObject ActivateCharacter(PlayerQueue player, IGameDonkey engine)
 		{
-			//load the character into the playerqueue
-			using (var content = new ContentManager(engine.Game.Services))
+			BaseObject summonedObject = null;
+			if (null != ObjectModel)
 			{
-				var summonedObject = player.LoadXmlObject(ObjectModel, engine, ObjectType, content);
+				//load the character into the playerqueue
+				using (var content = new ContentManager(engine.Game.Services, "Content"))
+				{
+					summonedObject = player.LoadXmlObject(ObjectModel, engine, ObjectType, content);
 
-				//set the position of the object
-				summonedObject.Flip = player.Character.Flip;
-				summonedObject.Position = player.Character.Position;
+					//set the position of the object
+					summonedObject.Flip = player.Character.Flip;
+					summonedObject.Position = player.Character.Position;
 
-				player.ActivateObject(summonedObject);
+					player.ActivateObject(summonedObject);
+				}
 			}
+			return summonedObject;
 		}
 
 		protected void RemoveCharacter(PlayerQueue player)
 		{
-			player.DeactivateObjects(ObjectType);
+			if (null != ObjectModel)
+			{
+				player.DeactivateObjects(ObjectType);
+			}
 		}
 
 		protected void AddStateMachine(PlayerQueue player)
@@ -183,24 +191,28 @@ namespace GameDonkeyLib
 			}
 		}
 
-		protected void AddStateActions(PlayerQueue player)
+		protected void AddStateActions(PlayerQueue player, IGameDonkey engine, ContentManager content)
 		{
-			if (null != StateActions)
+			if (null != StateContainerModel)
 			{
+				var stateActions = new StateMachineActions();
+				stateActions.LoadStateActions(StateChanges.StateNames, StateContainerModel, player.Character, player.Character.States);
+				stateActions.LoadContent(engine, content);
+
 				foreach (var container in player.Character.States.StateContainers)
 				{
-					container.Actions.AddStateMachineActions(StateActions);
+					container.Actions.AddStateMachineActions(stateActions);
 				}
 			}
 		}
 
 		protected void RemoveStateActions(PlayerQueue player)
 		{
-			if (null != StateActions)
+			if (null != StateContainerModel)
 			{
 				foreach (var container in player.Character.States.StateContainers)
 				{
-					container.Actions.RemoveStateMachineActions(StateActions);
+					container.Actions.RemoveStateMachineActions(StateContainerModel);
 				}
 			}
 		}

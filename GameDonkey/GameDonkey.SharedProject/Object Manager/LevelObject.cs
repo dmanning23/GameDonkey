@@ -16,8 +16,6 @@ namespace GameDonkeyLib
 		/// </summary>
 		private const float MoveSpeed = 1750.0f;
 
-		public const string LevelObjec
-
 		#endregion //Properties
 
 		#region Methods

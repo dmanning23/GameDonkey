@@ -181,7 +181,7 @@ namespace GameDonkeyLib
 		/// <param name="otherGuy"></param>
 		public virtual void CheckCollisions(BasePhysicsContainer otherGuy)
 		{
-			if (GameObjectType.Level == otherGuy.Owner.ObjectType)
+			if (GameObjectType.Level.ToString() == otherGuy.Owner.ObjectType)
 			{
 				//recurse through the whole model, starting with the root bone
 				IterateLevelCollisions(otherGuy);

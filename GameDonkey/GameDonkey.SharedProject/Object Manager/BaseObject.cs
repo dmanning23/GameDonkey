@@ -345,7 +345,7 @@ namespace GameDonkeyLib
 		public BaseObject(GameObjectType gamGameObjectType, BaseObject human)
 		{
 			//grab all this shit
-			ObjectType = gamGameObjectType;
+			ObjectType = gamGameObjectType.ToString();
 			Id = human.Id;
 			QueueId = human.QueueId;
 			CurrentAttacks = human.CurrentAttacks;

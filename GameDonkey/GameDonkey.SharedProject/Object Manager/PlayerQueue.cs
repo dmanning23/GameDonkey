@@ -98,6 +98,7 @@ namespace GameDonkeyLib
 			}
 		}
 
+
 		public float Scale
 		{
 			set
