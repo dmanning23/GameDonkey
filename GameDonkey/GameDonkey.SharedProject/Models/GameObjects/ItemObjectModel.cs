@@ -1,13 +1,9 @@
 ﻿using AnimationLib;
 using FilenameBuddy;
-using GameDonkeyLib;
-using GameTimer;
 using HadoukInput;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace GameDonkeyLib
 {
