@@ -10,6 +10,8 @@ namespace GameDonkeyLib
 		Relative, //the direction is based on the direction the character is facing
 		Velocity, //the direction is based on the direction the character is travelling
 		Controller, //the direction is based on the direction the controller is pointing
-		NegController //the direction is the opposite of the direction the controller is pointing
+		NegController, //the direction is the opposite of the direction the controller is pointing
+		ControllerOrVelocity, // the direction is based on the controller, but if null direction uses the characters velocity
+		NegControllerOrVelocity
 	}
 }

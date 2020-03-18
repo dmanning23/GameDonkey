@@ -76,33 +76,51 @@ namespace GameDonkeyLib
 			switch (DirectionType)
 			{
 				case EDirectionType.Controller:
-				{
-					return ControllerDirection(owner) * owner.Scale;
-				}
-
+					{
+						return ControllerDirection(owner) * owner.Scale;
+					}
+				case EDirectionType.ControllerOrVelocity:
+					{
+						return ControllerOrVelocityDirection(owner) * owner.Scale;
+					}
 				case EDirectionType.NegController:
-				{
-					return NegControllerDirection(owner) * owner.Scale;
-				}
-
+					{
+						return NegControllerDirection(owner) * owner.Scale;
+					}
+				case EDirectionType.NegControllerOrVelocity:
+					{
+						return NegControllerOrVelocityDirection(owner) * owner.Scale;
+					}
 				case EDirectionType.Velocity:
-				{
-					return VelocityDirection(owner) * owner.Scale;
-				}
-
+					{
+						return VelocityDirection(owner) * owner.Scale;
+					}
 				case EDirectionType.Relative:
-				{
-					return RelativeDirection(owner) * owner.Scale;
-				}
-
+					{
+						return RelativeDirection(owner) * owner.Scale;
+					}
 				default: //absolute
-				{
-					return AbsoluteDirection(owner) * owner.Scale;
-				}
+					{
+						return AbsoluteDirection(owner) * owner.Scale;
+					}
 			}
 		}
 
 		private Vector2 ControllerDirection(BaseObject owner)
+		{
+			if (owner.Direction() != Vector2.Zero)
+			{
+				//use the thumbstick direction from the object
+				return owner.Direction() * VelocityLength;
+			}
+			else
+			{
+				//use the velocity from this action
+				return RelativeDirection(owner);
+			}
+		}
+
+		private Vector2 ControllerOrVelocityDirection(BaseObject owner)
 		{
 			if (owner.Direction() != Vector2.Zero)
 			{
@@ -122,6 +140,20 @@ namespace GameDonkeyLib
 		}
 
 		private Vector2 NegControllerDirection(BaseObject owner)
+		{
+			if (owner.Direction() != Vector2.Zero)
+			{
+				//use the opposite thumbstick direction from the object
+				return owner.Direction() * -VelocityLength;
+			}
+			else
+			{
+				//use the velocity from this action
+				return -1.0f * RelativeDirection(owner);
+			}
+		}
+
+		private Vector2 NegControllerOrVelocityDirection(BaseObject owner)
 		{
 			if (owner.Direction() != Vector2.Zero)
 			{
