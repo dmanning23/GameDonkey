@@ -433,13 +433,10 @@ namespace GameDonkeyLib
 		/// </summary>
 		private void UpdatePlayers()
 		{
-			List<Task> tasks = new List<Task>();
 			foreach (var player in Players)
 			{
-				tasks.Add(Task.Factory.StartNew(() => { UpdatePlayer(player); }));
+				UpdatePlayer(player);
 			}
-
-			Task.WaitAll(tasks.ToArray());
 		}
 
 		/// <summary>
