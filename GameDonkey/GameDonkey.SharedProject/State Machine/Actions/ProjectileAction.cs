@@ -11,10 +11,7 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
-		/// <summary>
-		/// the projectile to add
-		/// </summary>
-		private BaseObject Projectile;
+		protected ProjectileObjectModel ProjectileObjectModel { get; set; }
 
 		/// <summary>
 		/// the filename of the projectile data.xml file to use
@@ -36,19 +33,9 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// How much to scale the projectile.  Read in from the xml file, not the "runtime scale"
 		/// </summary>
-		private float _scale;
-		public float Scale
-		{
-			get { return _scale; }
-			set
-			{
-				_scale = value;
-				if (null != Projectile)
-				{
-					Projectile.Scale = Scale * Owner.Scale;
-				}
-			}
-		}
+		public float Scale { get; set; }
+
+		private IGameDonkey Engine { get; set; }
 
 		#endregion //Properties
 
@@ -79,12 +66,14 @@ namespace GameDonkeyLib
 
 		public override void LoadContent(IGameDonkey engine, ContentManager content)
 		{
+			Engine = engine;
+
 			//try to load the file into the particle effect
 			if ((null != engine) && !String.IsNullOrEmpty(FileName.File))
 			{
 				//load object into player queue!
-				Projectile = Owner.PlayerQueue.LoadXmlObject(FileName, engine, GameObjectType.Projectile, 0, content);
-				Projectile.Scale = Scale * Owner.Scale;
+				ProjectileObjectModel = new ProjectileObjectModel(FileName);
+				ProjectileObjectModel.ReadXmlFile(content);
 			}
 		}
 
@@ -98,39 +87,44 @@ namespace GameDonkeyLib
 		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
-			if (null == Projectile)
+			//load the character into the playerqueue
+			ProjectileObject projectile = null;
+			if (!Engine.ToolMode)
 			{
-				//boo... you need to have a projectile loaded
-				return true;
+				using (var xmlContent = new ContentManager(Engine.Game.Services, "Content"))
+				{
+					projectile = Owner.PlayerQueue.LoadXmlObject(ProjectileObjectModel, Engine, "Projectile", xmlContent) as ProjectileObject;
+				}
+			}
+			else
+			{
+				projectile = Owner.PlayerQueue.LoadXmlObject(ProjectileObjectModel, Engine, "Projectile", null) as ProjectileObject;
 			}
 
-			//activate the projectile
-			bool bActivated = Owner.PlayerQueue.ActivateObject(Projectile);
+			Owner.PlayerQueue.ActivateObject(projectile);
 
-			//if it was activated (wont be activated if already active)
-			if (bActivated)
-			{
-				//get the start position for the projectile
-				var ProjectilePosition = StartOffset * Projectile.Scale;
-				ProjectilePosition.Y = Owner.Position.Y + ProjectilePosition.Y;
-				ProjectilePosition.X = Owner.Position.X + (Owner.Flip ? -ProjectilePosition.X : ProjectilePosition.X);
+			projectile.Scale = Scale * Owner.Scale;
 
-				//set the position
-				Projectile.Position = ProjectilePosition;
-				Projectile.Flip = Owner.Flip;
+			//get the start position for the projectile
+			var ProjectilePosition = StartOffset * projectile.Scale;
+			ProjectilePosition.Y = Owner.Position.Y + ProjectilePosition.Y;
+			ProjectilePosition.X = Owner.Position.X + (Owner.Flip ? -ProjectilePosition.X : ProjectilePosition.X);
 
-				Projectile.Velocity = (Velocity.GetDirection(Owner) / Owner.Scale) * Projectile.Scale;
+			//set the position
+			projectile.Position = ProjectilePosition;
+			projectile.Flip = Owner.Flip;
 
-				//run the animation container so all the bones will be in the correct position when it updates
-				//This way, any particle effects created will be in correct location.
-				var animationName = Projectile.AnimationContainer.Animations.First().Key;
-				Projectile.AnimationContainer.SetAnimation(animationName, EPlayback.Loop);
-				Projectile.AnimationContainer.Update(Owner.PlayerQueue.CharacterClock,
-					Projectile.Position,
-					Projectile.Flip,
+			projectile.Velocity = (Velocity.GetDirection(Owner) / Owner.Scale) * projectile.Scale;
+
+			//run the animation container so all the bones will be in the correct position when it updates
+			//This way, any particle effects created will be in correct location.
+			var animationName = projectile.AnimationContainer.Animations.First().Key;
+			projectile.AnimationContainer.SetAnimation(animationName, EPlayback.Loop);
+			projectile.AnimationContainer.Update(Owner.PlayerQueue.CharacterClock,
+					projectile.Position,
+					projectile.Flip,
 					0f,
 					true);
-			}
 
 			return base.Execute();
 		}

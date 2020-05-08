@@ -13,7 +13,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// hello, standard constructor!
 		/// </summary>
-		public InstanceObjectModel(Filename filename) : base("model", filename)
+		public InstanceObjectModel(Filename filename, string contentName = "model") : base(contentName, filename)
 		{
 		}
 	}

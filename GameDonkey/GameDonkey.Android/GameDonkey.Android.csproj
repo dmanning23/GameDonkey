@@ -52,7 +52,7 @@
       <HintPath>..\packages\FilenameBuddy.2.0.8\lib\MonoAndroid10\FilenameBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="FontBuddyLib.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FontBuddy.2.0.16\lib\MonoAndroid10\FontBuddyLib.Android.dll</HintPath>
+      <HintPath>..\packages\FontBuddy.2.0.17\lib\MonoAndroid10\FontBuddyLib.Android.dll</HintPath>
     </Reference>
     <Reference Include="GameTimer.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GameTimer.2.0.0\lib\MonoAndroid10\GameTimer.Android.dll</HintPath>
@@ -71,7 +71,7 @@
       <HintPath>..\packages\ParticleBuddy.2.0.5\lib\MonoAndroid10\ParticleBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="PrimitiveBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PrimitiveBuddy.2.0.0\lib\MonoAndroid10\PrimitiveBuddy.Android.dll</HintPath>
+      <HintPath>..\packages\PrimitiveBuddy.2.0.1\lib\MonoAndroid10\PrimitiveBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="RandomExtensions.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RandomExtensions.dmanning23.2.0.0\lib\MonoAndroid10\RandomExtensions.Android.dll</HintPath>

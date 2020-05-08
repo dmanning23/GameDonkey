@@ -61,7 +61,15 @@ namespace GameDonkeyLib
 		{
 			//load up the animations from file
 			ObjectType = objectType;
-			ObjectModel = new PlayerObjectModel(new Filename(objectFile));
+
+			if (objectType == "Projectile")
+			{
+				ObjectModel = new ProjectileObjectModel(new Filename(objectFile));
+			}
+			else
+			{
+				ObjectModel = new PlayerObjectModel(new Filename(objectFile));
+			}
 			ObjectModel.ReadXmlFile(xmlContent);
 		}
 

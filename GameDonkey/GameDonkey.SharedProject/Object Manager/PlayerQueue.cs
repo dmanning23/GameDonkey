@@ -190,7 +190,11 @@ namespace GameDonkeyLib
 				if (Active[i].Id == gameObject.Id)
 				{
 					//pop into the inactive list, remove from the active list
-					Inactive.Add(Active[i]);
+					if (!(Active[i] is ProjectileObject))
+					{
+						Inactive.Add(Active[i]);
+					}
+					
 					Active.RemoveAt(i);
 					return;
 				}
@@ -206,7 +210,10 @@ namespace GameDonkeyLib
 				if (Active[i].ObjectType == objectType)
 				{
 					//pop into the inactive list, remove from the active list
-					Inactive.Add(Active[i]);
+					if (!(Active[i] is ProjectileObject))
+					{
+						Inactive.Add(Active[i]);
+					}
 					Active.RemoveAt(i);
 				}
 				else
@@ -222,7 +229,10 @@ namespace GameDonkeyLib
 			{
 				//put the first obect in the inactive list and remove from active
 				var gameObject = Active[0];
-				Inactive.Add(gameObject);
+				if (!(gameObject is ProjectileObject))
+				{
+					Inactive.Add(gameObject);
+				}
 				Active.RemoveAt(0);
 
 				//reset the thing back to it's start state

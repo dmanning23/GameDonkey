@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace GameDonkeyLib
 {
-	public class ProjectileObjectModel : BaseObjectModel
+	public class ProjectileObjectModel : InstanceObjectModel
 	{
 		#region Properties
 
@@ -17,13 +17,9 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// hello, standard constructor!
 		/// </summary>
-		public ProjectileObjectModel(Filename filename) : base("projectileObject", filename)
+		public ProjectileObjectModel(Filename filename) : base(filename, "projectileObject")
 		{
 		}
-
-		#endregion //Methods
-
-		#region File IO
 
 		public override void ParseXmlNode(XmlNode node)
 		{
@@ -46,6 +42,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-		#endregion //File IO
+		#endregion //Methods
 	}
 }
