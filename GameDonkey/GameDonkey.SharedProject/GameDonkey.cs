@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace GameDonkeyLib
 {
-	public abstract class GameDonkey : IGameDonkey
+	public abstract class GameDonkey : IGameDonkey, IDisposable
 	{
 		#region Members
 
@@ -215,11 +215,18 @@ namespace GameDonkeyLib
 
 		public virtual void UnloadContent()
 		{
-			if (null != SoundContent)
-			{
-				SoundContent.Dispose();
-				SoundContent = null;
-			}
+			SoundContent?.Dispose();
+			SoundContent = null;
+
+			Renderer?.UnloadContent();
+			Renderer = null;
+
+			Players = null;
+		}
+
+		public void Dispose()
+		{
+			UnloadContent();
 		}
 
 		public virtual void Start()

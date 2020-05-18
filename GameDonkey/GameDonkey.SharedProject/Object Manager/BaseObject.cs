@@ -277,6 +277,8 @@ namespace GameDonkeyLib
 			return CurrentRotation;
 		}
 
+		public virtual bool Targettable => true;
+
 		#endregion //Positional Data
 
 		#endregion //Properties

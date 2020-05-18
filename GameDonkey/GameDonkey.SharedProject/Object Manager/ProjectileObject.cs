@@ -40,6 +40,15 @@ namespace GameDonkeyLib
 			States.StateChangedEvent += this.StateChanged;
 		}
 
+		public override void CheckCollisions(BaseObject badGuy)
+		{
+			//Don't check for collisions with other projectiles >:)
+			if (!(badGuy is ProjectileObject))
+			{
+				base.CheckCollisions(badGuy);
+			}
+		}
+
 		protected override void RespondToGroundHit(Hit groundHit, IGameDonkey engine)
 		{
 			base.RespondToGroundHit(groundHit, engine);

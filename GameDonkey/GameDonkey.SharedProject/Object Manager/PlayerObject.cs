@@ -458,7 +458,7 @@ namespace GameDonkeyLib
 				}
 
 				//add the damage
-				HealthChangedEvent?.Invoke(this, new HealthEventArgs(attack.Strength));
+				HealthChanged(attack.Strength);
 				TakeDamage(attack.Strength);
 
 				//add the velocity
@@ -503,6 +503,11 @@ namespace GameDonkeyLib
 
 			//clear out the rest of the hits so that the player isn't hit multiple times by the same attack
 			Physics.Reset();
+		}
+
+		protected void HealthChanged(float attackStrength)
+		{
+			HealthChangedEvent?.Invoke(this, new HealthEventArgs(attackStrength));
 		}
 
 		private Vector2 AttackedVector(Hit attack)

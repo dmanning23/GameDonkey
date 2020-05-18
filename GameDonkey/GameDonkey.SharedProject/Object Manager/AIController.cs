@@ -13,7 +13,7 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
-		protected BaseObject Player { get; set; }
+		protected PlayerObject Player { get; set; }
 
 		/// <summary>
 		/// Used to update the AI on a schedule instead of every frame.
@@ -101,6 +101,8 @@ namespace GameDonkeyLib
 
 		protected Vector2 BadGuyDistance { get; set; }
 
+		protected virtual bool TargetProjectiles => true;
+
 		#endregion //Properties
 
 		#region Methods
@@ -111,7 +113,7 @@ namespace GameDonkeyLib
 			UpdateTimer = new CountdownTimer();
 			AimTimer = new CountdownTimer();
 
-			UpdateDelta = 1.0f;
+			UpdateDelta = 0.5f;
 		}
 
 		public virtual void Update()
@@ -129,6 +131,12 @@ namespace GameDonkeyLib
 		/// <param name="listBadGuys">list of all the players (ignored for human players)</param>
 		public void GetPlayerInput(List<PlayerQueue> listBadGuys, bool ignoreAttackInput)
 		{
+			//check if the character is dead
+			if (Player.CheckIfDead())
+			{
+				SendDeathMessage();
+			}
+
 			//check if we should update the target
 			if (!AimTimer.HasTimeRemaining && (0.0f <= UpdateAimDelta))
 			{
@@ -148,12 +156,17 @@ namespace GameDonkeyLib
 					//go through ALL the active objects in the player queue so AI will react correctly to projectiles
 					for (var j = 0; j < listBadGuys[i].Active.Count; j++)
 					{
-						//get the distance to this dude
-						var distance = listBadGuys[i].Active[j].Position - Player.Position;
-						if ((null == BadGuy) || (BadGuyDistance.LengthSquared() > distance.LengthSquared()))
+						//Check if this object is targettable and if we even want to target it
+						if (listBadGuys[i].Active[j].Targettable &&
+							(TargetProjectiles || !(listBadGuys[i].Active[j] is ProjectileObject)))
 						{
-							BadGuy = listBadGuys[i].Active[j];
-							BadGuyDistance = distance;
+							//get the distance to this dude
+							var distance = listBadGuys[i].Active[j].Position - Player.Position;
+							if ((null == BadGuy) || (BadGuyDistance.LengthSquared() > distance.LengthSquared()))
+							{
+								BadGuy = listBadGuys[i].Active[j];
+								BadGuyDistance = distance;
+							}
 						}
 					}
 				}
@@ -230,7 +243,10 @@ namespace GameDonkeyLib
 				}
 
 				//If we aren't trying to block an attack and the target is in distance, take a swing at them.
-				if (!blocking && BadGuyDistance.LengthSquared() <= (AttackDistance * AttackDistance) && !ignoreAttackInput)
+				if (!blocking && 
+					BadGuyDistance.LengthSquared() <= (AttackDistance * AttackDistance) &&
+					!ignoreAttackInput && 
+					!(BadGuy is ProjectileObject))
 				{
 					//the target must be close! try to attack the target
 					SelectOffensiveOption();
@@ -266,20 +282,21 @@ namespace GameDonkeyLib
 		
 
 		protected abstract void SelectOffensiveOption();
-		
-			////select a random attack and execute it
-			//int iMin = (TurnAroundMessage - m_States.StateMachine.MessageOffset) + 1;
-			//int iMax = m_States.StateMachine.NumMessages - iMin;
 
-			//int iAttack = ((g_Random.Next() % iMax) + iMin);
-			//Debug.Assert(iAttack >= 0);
-			//Debug.Assert(iAttack > (TurnAroundMessage - m_States.StateMachine.MessageOffset));
-			//Debug.Assert(iAttack < m_States.StateMachine.NumMessages);
+		////select a random attack and execute it
+		//int iMin = (TurnAroundMessage - m_States.StateMachine.MessageOffset) + 1;
+		//int iMax = m_States.StateMachine.NumMessages - iMin;
 
-			//SendAttackMessage(iAttack + m_States.StateMachine.MessageOffset);
+		//int iAttack = ((g_Random.Next() % iMax) + iMin);
+		//Debug.Assert(iAttack >= 0);
+		//Debug.Assert(iAttack > (TurnAroundMessage - m_States.StateMachine.MessageOffset));
+		//Debug.Assert(iAttack < m_States.StateMachine.NumMessages);
 
-			//SendAttackMessage((int)EState.Quick);
-		
+		//SendAttackMessage(iAttack + m_States.StateMachine.MessageOffset);
+
+		//SendAttackMessage((int)EState.Quick);
+
+		protected abstract void SendDeathMessage();
 
 		///// <summary>
 		///// This is used to send attack moves from the input queue to the state machine, through the combo engine
@@ -301,46 +318,46 @@ namespace GameDonkeyLib
 		//{
 		//	var currentState = States.CurrentState;
 
-			////check if forward button is held down, add forward movement to the player 
-			//if (m_bMoveTowards)
-			//{
-			//    //only check for standing, walking, falling states
-			//    if ((iCurrentState == WalkingState) ||
-			//        FallingState ||
-			//        (iCurrentState == JumpingState) ||
-			//        (iCurrentState == HighJumpState))
-			//    {
-			//        Accelerate();
-			//    }
-			//    else
-			//    {
-			//        SendStateMessage(WalkMessage);
-			//    }
-			//}
-			//else
-			//{
-			//    //user is no longer holding the forward direction
-			//    if (iCurrentState == WalkingState)
-			//    {
-			//        SendStateMessage(DoneMessage);
-			//    }
-			//    else if (!States.IsStateAttack(iCurrentState) && 
-			//        (StunnedState != iCurrentState) &&
-			//        !DashState)
-			//    {
-			//        //move the x velocity to 0
-			//        Deccelerate();
-			//    }
-			//}
+		////check if forward button is held down, add forward movement to the player 
+		//if (m_bMoveTowards)
+		//{
+		//    //only check for standing, walking, falling states
+		//    if ((iCurrentState == WalkingState) ||
+		//        FallingState ||
+		//        (iCurrentState == JumpingState) ||
+		//        (iCurrentState == HighJumpState))
+		//    {
+		//        Accelerate();
+		//    }
+		//    else
+		//    {
+		//        SendStateMessage(WalkMessage);
+		//    }
+		//}
+		//else
+		//{
+		//    //user is no longer holding the forward direction
+		//    if (iCurrentState == WalkingState)
+		//    {
+		//        SendStateMessage(DoneMessage);
+		//    }
+		//    else if (!States.IsStateAttack(iCurrentState) && 
+		//        (StunnedState != iCurrentState) &&
+		//        !DashState)
+		//    {
+		//        //move the x velocity to 0
+		//        Deccelerate();
+		//    }
+		//}
 
-			//if (BlockingState)
-			//{
-			//    //check the block button
-			//    if (!m_bBlocking)
-			//    {
-			//        SendStateMessage(DoneMessage);
-			//    }
-			//}
+		//if (BlockingState)
+		//{
+		//    //check the block button
+		//    if (!m_bBlocking)
+		//    {
+		//        SendStateMessage(DoneMessage);
+		//    }
+		//}
 
 		//	base.CheckHardCodedStates();
 		//}
