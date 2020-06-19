@@ -85,6 +85,8 @@ namespace GameDonkeyLib
 		/// </summary>
 		public GarmentManager Garments { get; protected set; }
 
+		public string Name { get; set; }
+
 		#endregion //Required Data Structures
 
 		#region State Data
@@ -97,7 +99,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// List of this dude's currently active attacks
 		/// </summary>
-		public List<CreateAttackAction> CurrentAttacks { get; set; }
+		public TimedActionList<CreateAttackAction> CurrentAttacks { get; set; }
 
 		/// <summary>
 		/// If this dude is in a blocking state, this is a reference to that state
@@ -107,7 +109,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// If this timer is running, it means attacks don't hit
 		/// </summary>
-		protected ShieldAction ShieldAction { get; set; }
+		public TimedActionList<ShieldAction> ShieldActions { get; set; }
 
 		/// <summary>
 		/// evasion timer, if this is running it means there are no push collsions
@@ -298,14 +300,14 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="eType">the type of this object</param>
 		/// <param name="clock">a character clock.</param>
-		public BaseObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId)
+		public BaseObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId, string name)
 		{
 			ObjectType = gameObjectType.ToString();
 			Id = BaseObject._idCounter++;
 			QueueId = queueId;
-			CurrentAttacks = new List<CreateAttackAction>();
+			CurrentAttacks = new TimedActionList<CreateAttackAction>();
 			CurrentBlocks = new TimedActionList<BlockAction>();
-			ShieldAction = null;
+			ShieldActions = new TimedActionList<ShieldAction>();
 			EvasionTimer = new CountdownTimer();
 			CurrentThrow = null;
 			AnimationContainer = new AnimationContainer();
@@ -322,6 +324,7 @@ namespace GameDonkeyLib
 			_height = 0.0f;
 			RotationPerSecond = 0.0f;
 			CurrentRotation = 0.0f;
+			Name = name;
 
 			DrawList = new DrawList();
 			Scale = 1f;
@@ -349,10 +352,11 @@ namespace GameDonkeyLib
 			//grab all this shit
 			ObjectType = gamGameObjectType.ToString();
 			Id = human.Id;
+			Name = human.Name;
 			QueueId = human.QueueId;
 			CurrentAttacks = human.CurrentAttacks;
 			CurrentBlocks = human.CurrentBlocks;
-			ShieldAction = human.ShieldAction;
+			ShieldActions = human.ShieldActions;
 			EvasionTimer = human.EvasionTimer;
 			CurrentThrow = human.CurrentThrow;
 			AnimationContainer = human.AnimationContainer;
@@ -404,9 +408,9 @@ namespace GameDonkeyLib
 		/// </summary>
 		public virtual void Reset()
 		{
-			CurrentAttacks.Clear();
+			CurrentAttacks.Reset();
 			CurrentBlocks.Reset();
-			ShieldAction = null;
+			ShieldActions.Reset();
 			EvasionTimer.Stop();
 			CurrentThrow = null;
 			States.Reset();
@@ -551,25 +555,7 @@ namespace GameDonkeyLib
 		/// <param name="attackAction">the attack action to perform</param>
 		public void AddAttack(CreateAttackAction attackAction)
 		{
-			CurrentAttacks.Add(attackAction);
-		}
-
-		/// <summary>
-		/// set the block action of this object
-		/// </summary>
-		/// <param name="shieldAction">the block action to perform</param>
-		public void AddShield(ShieldAction shieldAction)
-		{
-			ShieldAction = shieldAction;
-			ShieldAction.SetDoneTime(CharacterClock);
-		}
-
-		/// <summary>
-		/// return the block state to false
-		/// </summary>
-		protected void ClearBlocks()
-		{
-			ShieldAction = null;
+			CurrentAttacks.AddAction(attackAction, CharacterClock);
 		}
 
 		/// <summary>
@@ -577,10 +563,10 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="iMessage">the message to send to the state machine</param>
 		/// <returns>bool: whether or not this dude changed states</returns>
-		public void SendStateMessage(string message)
+		public bool SendStateMessage(string message)
 		{
 			//send the message to the state machine
-			States.SendStateMessage(message);
+			return States.SendStateMessage(message);
 		}
 
 		public void ForceStateChange(string state)
@@ -601,12 +587,11 @@ namespace GameDonkeyLib
 			}
 
 			//clear the attacks
-			CurrentAttacks.Clear();
-
-			CurrentBlocks.Reset();
+			CurrentAttacks.Reset();
 
 			//clear the blocks
-			ClearBlocks();
+			CurrentBlocks.Reset();
+			ShieldActions.Reset();
 
 			//clear the evades
 			EvasionTimer.Stop();
@@ -689,7 +674,7 @@ namespace GameDonkeyLib
 				if (attackAction.ExecuteSuccessActions(otherObject.Owner))
 				{
 					//if a state change occurred while the success actions were running, the attack list will be empty
-					CurrentAttacks.Clear();
+					CurrentAttacks.Reset();
 				}
 			}
 		}
@@ -759,18 +744,19 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="attackIndex"></param>
 		/// <returns>True if it was able to remove the attack.</returns>
-		public bool RemoveAttack(int attackIndex)
+		public bool RemoveAttack(int attackIndex, bool forceRemove = false)
 		{
-			if (attackIndex < CurrentAttacks.Count)
+			if (attackIndex < CurrentAttacks.CurrentActions.Count)
 			{
 				//Only remove attacks if they are not AoE, otherwise they should be able to hit multiple enemies.
-				if (!CurrentAttacks[attackIndex].AoE)
+				if (!CurrentAttacks.CurrentActions[attackIndex].AoE || forceRemove)
 				{
-					CurrentAttacks.RemoveAt(attackIndex);
+					CurrentAttacks.CurrentActions.RemoveAt(attackIndex);
+					return true;
 				}
 			}
 
-			return (attackIndex < CurrentAttacks.Count) && !CurrentAttacks[attackIndex].AoE;
+			return false;
 		}
 
 		#region Hit Response
@@ -796,22 +782,24 @@ namespace GameDonkeyLib
 				RespondToRightWallHit(Physics.Hits[(int)EHitType.RightWallHit], engine);
 			}
 
-			//remove finished attacks from the list
-			int i = 0;
-			while (i < CurrentAttacks.Count)
-			{
-				if (CurrentAttacks[i].DoneTime <= CharacterClock.CurrentTime)
-				{
-					CurrentAttacks.RemoveAt(i);
-				}
-				else
-				{
-					i++;
-				}
-			}
+			////remove finished attacks from the list
+			//int i = 0;
+			//while (i < CurrentAttacks.Count)
+			//{
+			//	if (CurrentAttacks[i].DoneTime <= CharacterClock.CurrentTime)
+			//	{
+			//		CurrentAttacks.RemoveAt(i);
+			//	}
+			//	else
+			//	{
+			//		i++;
+			//	}
+			//}
 
 			//remove finished blocks from list
+			CurrentAttacks.Update(CharacterClock);
 			CurrentBlocks.Update(CharacterClock);
+			ShieldActions.Update(CharacterClock);
 
 			if (null != CurrentThrow)
 			{
@@ -916,7 +904,7 @@ namespace GameDonkeyLib
 
 		public virtual bool IsShielded()
 		{
-			return (null != ShieldAction && (CharacterClock.CurrentTime <= ShieldAction.DoneTime));
+			return ShieldActions.CurrentActions.Count > 0;
 		}
 
 		/// <summary>
@@ -983,11 +971,11 @@ namespace GameDonkeyLib
 
 		public void RenderAttacks(IRenderer renderer)
 		{
-			for (var i = 0; i < CurrentAttacks.Count; i++)
+			for (var i = 0; i < CurrentAttacks.CurrentActions.Count; i++)
 			{
-				if (null != CurrentAttacks[i].GetCircle())
+				if (null != CurrentAttacks.CurrentActions[i].GetCircle())
 				{
-					CurrentAttacks[i].GetCircle().Render(renderer, Color.Red);
+					CurrentAttacks.CurrentActions[i].GetCircle().Render(renderer, Color.Red);
 				}
 			}
 
@@ -1141,16 +1129,16 @@ namespace GameDonkeyLib
 		/// <returns>float, either part of the height or the distance to the edge of the nearest attack</returns>
 		public float MinDistance()
 		{
-			if (CurrentAttacks.Count > 0)
+			if (CurrentAttacks.CurrentActions.Count > 0)
 			{
 				//get teh distance to the nearest attack
 				var minDistance = 0f;
-				for (var i = 0; i < CurrentAttacks.Count; i++)
+				for (var i = 0; i < CurrentAttacks.CurrentActions.Count; i++)
 				{
-					if (null != CurrentAttacks[i].GetCircle())
+					if (null != CurrentAttacks.CurrentActions[i].GetCircle())
 					{
 						//get the distance along the x axis to the edge of the attack
-						var attackDistance = CurrentAttacks[i].GetCircle().GetXDistance(Position);
+						var attackDistance = CurrentAttacks.CurrentActions[i].GetCircle().GetXDistance(Position);
 						if ((attackDistance > minDistance) && (attackDistance != 0.0f))
 						{
 							minDistance = attackDistance;
@@ -1161,7 +1149,7 @@ namespace GameDonkeyLib
 				//get the distance to the nearest block
 				for (var i = 0; i < CurrentBlocks.CurrentActions.Count; i++)
 				{
-					if (null != CurrentAttacks[i].GetCircle())
+					if (null != CurrentAttacks.CurrentActions[i].GetCircle())
 					{
 						//get the distance along the x axis to the edge of the attack
 						var attackDistance = CurrentBlocks.CurrentActions[i].GetCircle().GetXDistance(Position);
@@ -1209,6 +1197,11 @@ namespace GameDonkeyLib
 		/// Kill this dude!
 		/// </summary>
 		public abstract void KillPlayer();
+
+		public override string ToString()
+		{
+			return Name;
+		}
 
 		#region Tools
 

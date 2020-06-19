@@ -131,10 +131,10 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <param name="message">message to send to the state machine, 
 		/// should be offset by the message offset of this dude</param>
-		public void SendStateMessage(string message)
+		public bool SendStateMessage(string message)
 		{
 			//check if the state change causes a state machine switch
-			StateContainers[CurrentStateMachine].SendStateMessage(message);
+			return StateContainers[CurrentStateMachine].SendStateMessage(message);
 		}
 
 		public void ForceStateChange(string state)

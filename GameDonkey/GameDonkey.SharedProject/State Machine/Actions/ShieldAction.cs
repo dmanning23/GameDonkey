@@ -67,7 +67,8 @@ namespace GameDonkeyLib
 
 		protected virtual void AddBlock()
 		{
-			Owner.AddShield(this);
+			//add this action to the list of block states
+			Owner.ShieldActions.AddAction(this, Owner.CharacterClock);
 		}
 
 		/// <summary>

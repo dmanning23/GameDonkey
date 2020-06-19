@@ -97,6 +97,10 @@ namespace GameDonkeyLib
 
 		protected abstract int DefendDistance { get; }
 
+		protected abstract float AttackPause { get; }
+
+		private CountdownTimer AttackTimer { get; set; }
+
 		protected BaseObject BadGuy { get; set; }
 
 		protected Vector2 BadGuyDistance { get; set; }
@@ -112,14 +116,16 @@ namespace GameDonkeyLib
 			Player = player;
 			UpdateTimer = new CountdownTimer();
 			AimTimer = new CountdownTimer();
+			AttackTimer = new CountdownTimer();
 
-			UpdateDelta = 0.5f;
+			UpdateDelta = 0.25f;
 		}
 
 		public virtual void Update()
 		{
 			UpdateTimer.Update(Player.CharacterClock);
 			AimTimer.Update(Player.CharacterClock);
+			AttackTimer.Update(Player.CharacterClock);
 		}
 
 		/// <summary>
@@ -211,29 +217,6 @@ namespace GameDonkeyLib
 					}
 				}
 
-				//shoudl i move towards the target?
-				if ((BadGuyDistance.X > HalfHeight) || (BadGuyDistance.X < (-1.0 * HalfHeight)))
-				{
-					//the bad guy is to the left or right, move towards the target
-					SendWalkMessage();
-				}
-				else
-				{
-					//SendDoneMessage();
-				}
-
-				//the target is far away, but is it above me?
-				if (BadGuyDistance.Y < (-2.0f * HalfHeight))
-				{
-					//teh bad guy is waaay above me, super jump at them
-					SendHighJumpMessage();
-				}
-				else if (BadGuyDistance.Y < (-1.0f * HalfHeight))
-				{
-					//jump at the target
-					SendJumpMessage();
-				}
-
 				//is the target attacking?
 				var blocking = false;
 				if (BadGuy.States.IsCurrentStateAttack() && BadGuyDistance.LengthSquared() <= (DefendDistance * DefendDistance))
@@ -242,14 +225,50 @@ namespace GameDonkeyLib
 					blocking = SelectDefensiveOption();
 				}
 
-				//If we aren't trying to block an attack and the target is in distance, take a swing at them.
-				if (!blocking && 
-					BadGuyDistance.LengthSquared() <= (AttackDistance * AttackDistance) &&
-					!ignoreAttackInput && 
-					!(BadGuy is ProjectileObject))
+				var attacking = false;
+				if (!blocking)
 				{
-					//the target must be close! try to attack the target
-					SelectOffensiveOption();
+					//If we aren't trying to block an attack and the target is in distance, take a swing at them.
+					if (BadGuyDistance.LengthSquared() <= (AttackDistance * AttackDistance) &&
+						!ignoreAttackInput &&
+						!(BadGuy is ProjectileObject))
+					{
+						attacking = true;
+						if (!AttackTimer.HasTimeRemaining)
+						{
+							//the target must be close! try to attack the target
+							if (SelectOffensiveOption())
+							{
+								AttackTimer.Start(AttackPause);
+							}
+						}
+					}
+				}
+
+				if (!attacking && !blocking)
+				{
+					//shoudl i move towards the target?
+					if ((BadGuyDistance.X > HalfHeight) || (BadGuyDistance.X < (-1.0 * HalfHeight)))
+					{
+						//the bad guy is to the left or right, move towards the target
+						SendWalkMessage();
+					}
+					else
+					{
+						//SendDoneMessage();
+					}
+
+					//the target is far away, but is it above me?
+					if (BadGuyDistance.Y < (-2.0f * HalfHeight))
+					{
+						//teh bad guy is waaay above me, super jump at them
+						SendHighJumpMessage();
+					}
+					else if (BadGuyDistance.Y < (-1.0f * HalfHeight))
+					{
+						//jump at the target
+						SendJumpMessage();
+					}
 				}
 			}
 		}
@@ -281,7 +300,7 @@ namespace GameDonkeyLib
 			//}
 		
 
-		protected abstract void SelectOffensiveOption();
+		protected abstract bool SelectOffensiveOption();
 
 		////select a random attack and execute it
 		//int iMin = (TurnAroundMessage - m_States.StateMachine.MessageOffset) + 1;

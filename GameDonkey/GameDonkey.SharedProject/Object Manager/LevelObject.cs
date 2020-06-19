@@ -20,7 +20,7 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public LevelObject(HitPauseClock clock, int queueID) : base(GameObjectType.Level, clock, queueID)
+		public LevelObject(HitPauseClock clock, int queueID, string name) : base(GameObjectType.Level, clock, queueID, name)
 		{
 		}
 

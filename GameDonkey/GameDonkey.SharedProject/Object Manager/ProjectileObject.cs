@@ -28,7 +28,7 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public ProjectileObject(HitPauseClock clock, BaseObject playerOwner, int queueId) : base(GameObjectType.Projectile, clock, queueId)
+		public ProjectileObject(HitPauseClock clock, BaseObject playerOwner, int queueId, string name) : base(GameObjectType.Projectile, clock, queueId, name)
 		{
 			PlayerOwner = playerOwner;
 		}

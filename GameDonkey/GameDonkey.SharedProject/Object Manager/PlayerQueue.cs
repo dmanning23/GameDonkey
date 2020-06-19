@@ -142,9 +142,9 @@ namespace GameDonkeyLib
 			ScoreTimer = new CountdownTimer();
 		}
 
-		public abstract PlayerObject CreateHumanPlayer();
+		public abstract PlayerObject CreateHumanPlayer(string name);
 
-		public abstract PlayerObject CreateAiPlayer();
+		public abstract PlayerObject CreateAiPlayer(string name);
 
 		public virtual PlayerObjectModel CreatePlayerObjectModel(Filename filename)
 		{
@@ -537,7 +537,7 @@ namespace GameDonkeyLib
 			if (null == gameObject)
 			{
 				//try to load the object
-				ObjectFactory(objectType, out gameObject);
+				ObjectFactory(objectType, out gameObject, gameObjectModel.Filename.GetFileNoExt());
 
 				//load the object data into the thing
 				gameObject.PlayerQueue = this;
@@ -560,13 +560,13 @@ namespace GameDonkeyLib
 			return gameObject;
 		}
 
-		protected virtual void ObjectFactory(string objectType, out BaseObject gameObject)
+		protected virtual void ObjectFactory(string objectType, out BaseObject gameObject, string name)
 		{
 			switch (objectType)
 			{
 				case "Human":
 					{
-						gameObject = CreateHumanPlayer();
+						gameObject = CreateHumanPlayer(name);
 
 						//set as the main character
 						AddCharacterToList(gameObject);
@@ -574,7 +574,7 @@ namespace GameDonkeyLib
 					break;
 				case "AI":
 					{
-						gameObject = CreateAiPlayer();
+						gameObject = CreateAiPlayer(name);
 
 						//set as the main character
 						AddCharacterToList(gameObject);
@@ -582,12 +582,12 @@ namespace GameDonkeyLib
 					break;
 				case "Projectile":
 					{
-						gameObject = new ProjectileObject(CharacterClock, Character, QueueId);
+						gameObject = new ProjectileObject(CharacterClock, Character, QueueId, name);
 					}
 					break;
 				case "Level":
 					{
-						gameObject = new LevelObject(CharacterClock, QueueId);
+						gameObject = new LevelObject(CharacterClock, QueueId, name);
 					}
 					break;
 				default:

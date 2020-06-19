@@ -264,12 +264,12 @@ namespace GameDonkeyLib
 		{
 			//Check my attacks against the other character's blocks
 			var attackIndex = 0;
-			while (attackIndex < Owner.CurrentAttacks.Count)
+			while (attackIndex < Owner.CurrentAttacks.CurrentActions.Count)
 			{
-				if (CheckBlockedAttack(Owner.CurrentAttacks[attackIndex], otherGuy))
+				if (CheckBlockedAttack(Owner.CurrentAttacks.CurrentActions[attackIndex], otherGuy))
 				{
 					//the attack was blocked, remove from the list
-					if (!Owner.RemoveAttack(attackIndex))
+					if (!Owner.RemoveAttack(attackIndex, true))
 					{
 						++attackIndex;
 					}
@@ -282,12 +282,12 @@ namespace GameDonkeyLib
 
 			//check the other charcters attacks against my dude's blocks
 			var otherAttackIndex = 0;
-			while (otherAttackIndex < otherGuy.Owner.CurrentAttacks.Count)
+			while (otherAttackIndex < otherGuy.Owner.CurrentAttacks.CurrentActions.Count)
 			{
-				if (otherGuy.CheckBlockedAttack(otherGuy.Owner.CurrentAttacks[otherAttackIndex], this))
+				if (otherGuy.CheckBlockedAttack(otherGuy.Owner.CurrentAttacks.CurrentActions[otherAttackIndex], this))
 				{
 					//the attack was blocked, remove from the list
-					if (!otherGuy.Owner.RemoveAttack(otherAttackIndex))
+					if (!otherGuy.Owner.RemoveAttack(otherAttackIndex, true))
 					{
 						++otherAttackIndex;
 					}
@@ -338,13 +338,13 @@ namespace GameDonkeyLib
 			//check my attacks against his attacks to check for weapon clashes
 			var myAttackIndex = 0;
 			var otherAttackIndex = 0;
-			if ((Owner.CurrentAttacks.Count > 0) && (otherGuy.Owner.CurrentAttacks.Count > 0))
+			if ((Owner.CurrentAttacks.CurrentActions.Count > 0) && (otherGuy.Owner.CurrentAttacks.CurrentActions.Count > 0))
 			{
 				//check my list of attacks against the other dudes list of attacks
-				while (myAttackIndex < Owner.CurrentAttacks.Count)
+				while (myAttackIndex < Owner.CurrentAttacks.CurrentActions.Count)
 				{
 					//get my attack
-					var myAttack = Owner.CurrentAttacks[myAttackIndex];
+					var myAttack = Owner.CurrentAttacks.CurrentActions[myAttackIndex];
 
 					//get my circle
 					var myCircle = myAttack.GetCircle();
@@ -356,10 +356,10 @@ namespace GameDonkeyLib
 					}
 
 					otherAttackIndex = 0;
-					while (otherAttackIndex < otherGuy.Owner.CurrentAttacks.Count)
+					while (otherAttackIndex < otherGuy.Owner.CurrentAttacks.CurrentActions.Count)
 					{
 						//get his attack
-						var hisAttack = otherGuy.Owner.CurrentAttacks[otherAttackIndex];
+						var hisAttack = otherGuy.Owner.CurrentAttacks.CurrentActions[otherAttackIndex];
 
 						//get his circle
 						var hisCircle = hisAttack.GetCircle();
@@ -404,9 +404,9 @@ namespace GameDonkeyLib
 
 			//Check my attacks against the other character
 			myAttackIndex = 0;
-			while (myAttackIndex < Owner.CurrentAttacks.Count)
+			while (myAttackIndex < Owner.CurrentAttacks.CurrentActions.Count)
 			{
-				if (CheckAttackCollisions(Owner.CurrentAttacks[myAttackIndex], otherGuy))
+				if (CheckAttackCollisions(Owner.CurrentAttacks.CurrentActions[myAttackIndex], otherGuy))
 				{
 					//the attack connected, remove from the list
 					if (!Owner.RemoveAttack(myAttackIndex))
@@ -422,9 +422,9 @@ namespace GameDonkeyLib
 
 			//check the other charcters attacks against my dude
 			otherAttackIndex = 0;
-			while (otherAttackIndex < otherGuy.Owner.CurrentAttacks.Count)
+			while (otherAttackIndex < otherGuy.Owner.CurrentAttacks.CurrentActions.Count)
 			{
-				if (otherGuy.CheckAttackCollisions(otherGuy.Owner.CurrentAttacks[otherAttackIndex], this))
+				if (otherGuy.CheckAttackCollisions(otherGuy.Owner.CurrentAttacks.CurrentActions[otherAttackIndex], this))
 				{
 					//the attack connected, remove from the list
 					if (!otherGuy.Owner.RemoveAttack(otherAttackIndex))

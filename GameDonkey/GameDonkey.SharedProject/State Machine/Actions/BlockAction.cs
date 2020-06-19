@@ -39,7 +39,6 @@ namespace GameDonkeyLib
 		public BlockAction(BaseObject owner) :
 			base(owner, EActionType.Block)
 		{
-			
 		}
 
 		public BlockAction(BaseObject owner, BlockActionModel actionModel, IStateContainer container) :

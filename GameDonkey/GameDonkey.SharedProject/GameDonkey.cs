@@ -789,7 +789,7 @@ namespace GameDonkeyLib
 			}
 
 			//render all the character trails, start another spritebatch
-			Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix, sortMode);
+			Renderer.SpriteBatchBeginNoEffect(BlendState.NonPremultiplied, cameraMatrix, sortMode);
 			for (int i = 0; i < Players.Count; i++)
 			{
 				Players[i].RenderCharacterShadows(this);

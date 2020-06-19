@@ -71,7 +71,7 @@ namespace GameDonkeyLib
 		/// method to send a message
 		/// </summary>
 		/// <param name="message">message to send to the state machine</param>
-		void SendStateMessage(string message);
+		bool SendStateMessage(string message);
 
 		void ForceStateChange(string state);
 

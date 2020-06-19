@@ -53,14 +53,14 @@ namespace GameDonkeyLib
 
 		#region Methods
 
-		public PlayerObject(HitPauseClock clock, int queueId)
-			: base(GameObjectType.Human, clock, queueId)
+		public PlayerObject(HitPauseClock clock, int queueId, string name)
+			: base(GameObjectType.Human, clock, queueId, name)
 		{
 			//init is called by the base class, which will set everything up
 		}
 
-		public PlayerObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId)
-			: base(gameObjectType, clock, queueId)
+		public PlayerObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId, string name)
+			: base(gameObjectType, clock, queueId, name)
 		{
 			//init is called by the base class, which will set everything up
 		}
@@ -468,8 +468,11 @@ namespace GameDonkeyLib
 				SendStateMessage("Hit");
 
 				//do a hit pause
-				CharacterClock.AddHitPause(HitPause);
-				attack.Attacker.CharacterClock.AddHitPause(HitPause);
+				if (!attack.AttackAction.AoE)
+				{
+					CharacterClock.AddHitPause(HitPause);
+					attack.Attacker.CharacterClock.AddHitPause(HitPause);
+				}
 
 				//add camera shake
 				engine.AddCameraShake(0.25f);
@@ -565,8 +568,11 @@ namespace GameDonkeyLib
 			Velocity = hitDirection;
 
 			//do a hit pause
-			CharacterClock.AddHitPause(HitPause);
-			weaponHit.Attacker.CharacterClock.AddHitPause(HitPause);
+			if (!weaponHit.AttackAction.AoE)
+			{
+				CharacterClock.AddHitPause(HitPause);
+				weaponHit.Attacker.CharacterClock.AddHitPause(HitPause);
+			}
 
 			//add camera shake
 			engine.AddCameraShake(0.08f);
@@ -586,8 +592,11 @@ namespace GameDonkeyLib
 			Velocity = AttackedVector(attack) * 0.9f;
 
 			//do a hit pause
-			CharacterClock.AddHitPause(HitPause * 0.8f);
-			attack.Attacker.CharacterClock.AddHitPause(HitPause * 0.8f);
+			if (!attack.AttackAction.AoE)
+			{
+				CharacterClock.AddHitPause(HitPause * 0.8f);
+				attack.Attacker.CharacterClock.AddHitPause(HitPause * 0.8f);
+			}
 
 			//play the particle effect
 			engine.PlayParticleEffect(DefaultParticleEffect.Block,

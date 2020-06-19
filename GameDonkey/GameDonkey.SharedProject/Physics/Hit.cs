@@ -32,7 +32,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// if this is an attack action, this will point to the attack
 		/// </summary>
-		public BaseAction AttackAction { get; private set; }
+		public CreateAttackAction AttackAction { get; private set; }
 
 		/// <summary>
 		/// world coordinates of where the hit happened
@@ -64,7 +64,7 @@ namespace GameDonkeyLib
 			Attacker = null;
 		}
 
-		public void Set(Vector2 direction, BaseAction attackAction, float strength, EHitType hitType, BaseObject attacker, Vector2 position)
+		public void Set(Vector2 direction, CreateAttackAction attackAction, float strength, EHitType hitType, BaseObject attacker, Vector2 position)
 		{
 			_direction = direction;
 			Strength = strength;

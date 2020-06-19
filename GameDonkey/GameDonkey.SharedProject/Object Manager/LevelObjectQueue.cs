@@ -8,12 +8,12 @@ namespace GameDonkeyLib
 		{
 		}
 
-		public override PlayerObject CreateAiPlayer()
+		public override PlayerObject CreateAiPlayer(string name)
 		{
 			throw new System.NotImplementedException();
 		}
 
-		public override PlayerObject CreateHumanPlayer()
+		public override PlayerObject CreateHumanPlayer(string name)
 		{
 			throw new System.NotImplementedException();
 		}
