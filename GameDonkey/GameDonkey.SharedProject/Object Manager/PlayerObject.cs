@@ -447,6 +447,7 @@ namespace GameDonkeyLib
 			if (IsShielded())
 			{
 				//do a block!
+				ShieldActions.CurrentActions[0].ExecuteSuccessActions();
 				RespondToBlockedAttack(attack, engine);
 			}
 			else if (EvasionTimer.RemainingTime <= 0.0f) //make sure the character is not evading

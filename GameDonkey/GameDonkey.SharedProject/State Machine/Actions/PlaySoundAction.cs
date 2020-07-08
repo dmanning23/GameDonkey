@@ -24,7 +24,9 @@ namespace GameDonkeyLib
 			set
 			{
 				_soundCueName = value;
-				if (null != _engine && !string.IsNullOrEmpty(SoundCueName.File))
+				if (null != _engine && 
+					!_engine.ToolMode &&
+					!string.IsNullOrEmpty(SoundCueName.File))
 				{
 					Sound = _engine.LoadSound(SoundCueName);
 				}
@@ -61,7 +63,7 @@ namespace GameDonkeyLib
 		public override void LoadContent(IGameDonkey engine, ContentManager content)
 		{
 			_engine = engine;
-			if (!string.IsNullOrEmpty(SoundCueName.File))
+			if (!string.IsNullOrEmpty(SoundCueName.File) && !_engine.ToolMode)
 			{
 				Sound = engine.LoadSound(SoundCueName);
 			}

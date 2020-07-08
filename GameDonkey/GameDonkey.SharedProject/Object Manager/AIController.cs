@@ -253,9 +253,9 @@ namespace GameDonkeyLib
 						//the bad guy is to the left or right, move towards the target
 						SendWalkMessage();
 					}
-					else
+					else if (IsWalking())
 					{
-						//SendDoneMessage();
+						SendDoneMessage();
 					}
 
 					//the target is far away, but is it above me?
@@ -276,6 +276,8 @@ namespace GameDonkeyLib
 		protected abstract void SendTurnAroundMessage();
 
 		protected abstract void SendWalkMessage();
+
+		protected abstract bool IsWalking();
 
 		protected abstract void SendDoneMessage();
 

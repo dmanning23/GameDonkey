@@ -456,7 +456,7 @@ namespace GameDonkeyLib
 			if (renderMain)
 			{
 				//render all the main drawlists
-				for (var i = 0; i < Active.Count; i++)
+				for (var i = Active.Count - 1; i >= 0; i--)
 				{
 					Active[i].Render(renderer);
 				}
@@ -464,7 +464,7 @@ namespace GameDonkeyLib
 			else
 			{
 				//render all the trail drawlists
-				for (var i = 0; i < TrailDrawLists.Count; i++)
+				for (var i = TrailDrawLists.Count - 1; i >= 0; i--)
 				{
 					TrailDrawLists[i].Render(renderer);
 				}

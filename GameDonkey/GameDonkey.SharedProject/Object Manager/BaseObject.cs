@@ -671,7 +671,7 @@ namespace GameDonkeyLib
 				otherObject.Hits[(int)EHitType.AttackHit].Set(direction, attackAction, attackAction.Damage, EHitType.AttackHit, this, firstCollisionPoint);
 
 				//perform all the success actions
-				if (attackAction.ExecuteSuccessActions(otherObject.Owner))
+				if (!otherObject.Owner.IsShielded() && attackAction.ExecuteSuccessActions(otherObject.Owner))
 				{
 					//if a state change occurred while the success actions were running, the attack list will be empty
 					CurrentAttacks.Reset();
