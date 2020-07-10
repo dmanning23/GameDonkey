@@ -178,6 +178,26 @@ namespace GameDonkeyLib
 			return false;
 		}
 
+		public void SendToBack(BaseObject gameObject)
+		{
+			//go through the active list, look for that object
+			bool found = false;
+			for (var i = 0; i < Active.Count; i++)
+			{
+				if (Active[i].Id == gameObject.Id)
+				{
+					Active.RemoveAt(i);
+					found = true;
+					break;
+				}
+			}
+
+			if (found)
+			{
+				Active.Insert(0, gameObject);
+			}
+		}
+
 		/// <summary>
 		/// Take an object out of the active list, put it in the inactive list
 		/// </summary>
@@ -456,7 +476,7 @@ namespace GameDonkeyLib
 			if (renderMain)
 			{
 				//render all the main drawlists
-				for (var i = Active.Count - 1; i >= 0; i--)
+				for (var i = 0; i < Active.Count; i++)
 				{
 					Active[i].Render(renderer);
 				}
@@ -464,7 +484,7 @@ namespace GameDonkeyLib
 			else
 			{
 				//render all the trail drawlists
-				for (var i = TrailDrawLists.Count - 1; i >= 0; i--)
+				for (var i = 0; i < TrailDrawLists.Count; i++)
 				{
 					TrailDrawLists[i].Render(renderer);
 				}

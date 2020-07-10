@@ -26,6 +26,7 @@ namespace GameDonkeyLib
 		TargetRotation,
 		CameraShake,
 		KillPlayer,
-		Random
+		Random,
+		SendToBack
 	}
 }

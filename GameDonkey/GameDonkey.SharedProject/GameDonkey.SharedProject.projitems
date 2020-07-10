@@ -9,6 +9,7 @@
     <Import_RootNamespace>GameDonkey.SharedProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\SendToBackActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\RandomActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Actions\PointLightActionModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameObjects\BackgroundLayerModel.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ParticleEffects\ParticleEffectCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sounds\DefaultSounds.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sounds\SoundCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\SendToBackAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\RandomAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\Actions\PointLightAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)State Machine\EMessage.cs" />

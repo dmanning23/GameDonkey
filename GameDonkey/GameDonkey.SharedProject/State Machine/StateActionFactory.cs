@@ -46,6 +46,7 @@ namespace GameDonkeyLib
 				case EActionType.Random: { return new RandomActionModel(); }
 				case EActionType.Rotate: { return new RotateActionModel(); }
 				case EActionType.SendStateMessage: { return new SendStateMessageActionModel(); }
+				case EActionType.SendToBack: { return new SendToBackActionModel(); }
 				case EActionType.SetVelocity: { return new SetVelocityActionModel(); }
 				case EActionType.TargetRotation: { return new TargetRotationActionModel(); }
 				case EActionType.Trail: { return new TrailActionModel(); }
@@ -108,6 +109,7 @@ namespace GameDonkeyLib
 				case EActionType.Random: { return new RandomActionModel(actionModel); }
 				case EActionType.Rotate: { return new RotateActionModel(actionModel); }
 				case EActionType.SendStateMessage: { return new SendStateMessageActionModel(actionModel); }
+				case EActionType.SendToBack: { return new SendToBackActionModel(actionModel); }
 				case EActionType.SetVelocity: { return new SetVelocityActionModel(actionModel); }
 				case EActionType.TargetRotation: { return new TargetRotationActionModel(actionModel); }
 				case EActionType.Trail: { return new TrailActionModel(actionModel); }
@@ -147,6 +149,7 @@ namespace GameDonkeyLib
 				case EActionType.Random: { return new RandomAction(owner, actionModel, stateContainer); }
 				case EActionType.Rotate: { return new RotateAction(owner, actionModel); }
 				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner, actionModel, stateContainer); }
+				case EActionType.SendToBack: { return new SendToBackAction(owner, actionModel); }
 				case EActionType.SetVelocity: { return new SetVelocityAction(owner, actionModel); }
 				case EActionType.TargetRotation: { return new TargetRotationAction(owner, actionModel); }
 				case EActionType.Trail: { return new TrailAction(owner, actionModel); }
@@ -185,6 +188,7 @@ namespace GameDonkeyLib
 				case EActionType.Random: { return new RandomAction(owner); }
 				case EActionType.Rotate: { return new RotateAction(owner); }
 				case EActionType.SendStateMessage: { return new SendStateMessageAction(owner); }
+				case EActionType.SendToBack: { return new SendToBackAction(owner); }
 				case EActionType.SetVelocity: { return new SetVelocityAction(owner); }
 				case EActionType.TargetRotation: { return new TargetRotationAction(owner); }
 				case EActionType.Trail: { return new TrailAction(owner); }
