@@ -9,7 +9,6 @@ namespace GameDonkeyLib
 	{
 		HitCloud,
 		HitSpark,
-		Death,
 		Block,
 		WeaponHit,
 		StunnedBounce,

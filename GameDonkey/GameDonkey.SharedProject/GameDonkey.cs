@@ -128,11 +128,6 @@ namespace GameDonkeyLib
 		protected ContentManager SoundContent { get; private set; }
 
 		/// <summary>
-		/// The noise to play when a character falls off the board
-		/// </summary>
-		private string DeathNoise { get; set; }
-
-		/// <summary>
 		/// The velocity of the center point
 		/// </summary>
 		public Vector2 CenterVelocity { get; set; }
