@@ -6,11 +6,13 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ParallaxBackgroundBuddy;
 using ParticleBuddy;
 using RenderBuddy;
 using ResolutionBuddy;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameDonkeyLib
@@ -95,6 +97,15 @@ namespace GameDonkeyLib
 		/// the spawn points for characters
 		/// </summary>
 		public List<Vector2> SpawnPoints { get; set; }
+
+		/// <summary>
+		/// the center point between all the players
+		/// </summary>
+		private Vector2 CenterPoint { get; set; }
+
+		private ParallaxBackground Background { get; set; }
+
+		private ParallaxBackground Foreground { get; set; }
 
 		/// <summary>
 		/// The max amount of time a game will last
@@ -206,6 +217,9 @@ namespace GameDonkeyLib
 
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
 			Renderer.LoadContent(graphics);
+
+			Background = new ParallaxBackground();
+			Foreground = new ParallaxBackground();
 		}
 
 		public virtual void UnloadContent()
@@ -504,6 +518,8 @@ namespace GameDonkeyLib
 				Players[i].RespondToHits(this);
 			}
 			LevelObjects.RespondToHits(this);
+
+			CenterPoint = Renderer.Camera.Center;
 		}
 
 		protected virtual bool CheckForWinner()
@@ -735,15 +751,32 @@ namespace GameDonkeyLib
 
 			RenderParticleEffects(cameraMatrix);
 
-			//RenderForeground();
+			RenderForeground();
 		}
 
 		protected virtual void RenderBackground()
 		{
+			if (Background.Layers.Count > 0)
+			{
+				Renderer.SpriteBatchBeginNoEffect(BlendState.AlphaBlend, GetCameraMatrix());
+
+				//draw the background to take up the whole board
+				Background.Draw(Renderer.SpriteBatch, WorldBoundaries, CenterPoint);
+
+				Renderer.SpriteBatchEnd();
+			}
 		}
 
 		protected virtual void RenderForeground()
 		{
+			if (Foreground.Layers.Count > 0)
+			{
+				Renderer.SpriteBatchBeginNoEffect(BlendState.AlphaBlend, GetCameraMatrix());
+
+				Foreground.Draw(Renderer.SpriteBatch, WorldBoundaries, CenterPoint);
+
+				Renderer.SpriteBatchEnd();
+			}
 		}
 
 		protected virtual void RenderLevel(Matrix cameraMatrix, SpriteSortMode sortMode)
@@ -976,6 +1009,18 @@ namespace GameDonkeyLib
 			foreach (var spawnPointModel in boardModel.SpawnPoints)
 			{
 				SpawnPoints.Add(spawnPointModel.Location);
+			}
+
+			//load the background images
+			foreach (var backgroundLayer in boardModel.Background)
+			{
+				Background.AddLayer(backgroundLayer.ImageFile, backgroundLayer.Scale, Renderer);
+			}
+
+			//load the foreground images
+			foreach (var foregroundLayer in boardModel.Foreground)
+			{
+				Foreground.AddLayer(foregroundLayer.ImageFile, foregroundLayer.Scale, Renderer);
 			}
 		}
 

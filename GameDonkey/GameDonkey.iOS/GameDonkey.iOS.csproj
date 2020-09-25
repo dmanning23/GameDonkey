@@ -53,10 +53,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AnimationLib.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AnimationLib.2.0.33\lib\Xamarin.iOS10\AnimationLib.iOS.dll</HintPath>
+      <HintPath>..\packages\AnimationLib.2.0.34\lib\Xamarin.iOS10\AnimationLib.iOS.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CameraBuddy.2.0.6\lib\Xamarin.iOS10\CameraBuddy.iOS.dll</HintPath>
+      <HintPath>..\packages\CameraBuddy.2.0.9\lib\Xamarin.iOS10\CameraBuddy.iOS.dll</HintPath>
     </Reference>
     <Reference Include="CollisionBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CollisionBuddy.2.0.2\lib\Xamarin.iOS10\CollisionBuddy.iOS.dll</HintPath>
@@ -71,7 +71,7 @@
       <HintPath>..\packages\FontBuddy.2.0.18\lib\Xamarin.iOS10\FontBuddyLib.iOS.dll</HintPath>
     </Reference>
     <Reference Include="GameTimer.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GameTimer.2.0.0\lib\Xamarin.iOS10\GameTimer.iOS.dll</HintPath>
+      <HintPath>..\packages\GameTimer.2.1.0\lib\Xamarin.iOS10\GameTimer.iOS.dll</HintPath>
     </Reference>
     <Reference Include="HadoukInput.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HadoukInput.2.0.32\lib\Xamarin.iOS10\HadoukInput.iOS.dll</HintPath>
@@ -82,6 +82,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Framework.iOS.3.7.1.189\lib\XamariniOS\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="ParallaxBackgroundBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ParallaxBackgroundBuddy.2.0.1\lib\Xamarin.iOS10\ParallaxBackgroundBuddy.iOS.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ParticleBuddy.2.0.5\lib\Xamarin.iOS10\ParticleBuddy.iOS.dll</HintPath>

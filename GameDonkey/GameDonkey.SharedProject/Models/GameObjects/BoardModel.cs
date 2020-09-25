@@ -177,14 +177,14 @@ namespace GameDonkeyLib
 
 		public void ReadBackground(XmlNode node)
 		{
-			var spawnPoint = new BackgroundLayerModel();
+			var spawnPoint = new BackgroundLayerModel(this);
 			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
 			Background.Add(spawnPoint);
 		}
 
 		public void ReadForeground(XmlNode node)
 		{
-			var spawnPoint = new BackgroundLayerModel();
+			var spawnPoint = new BackgroundLayerModel(this);
 			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
 			Foreground.Add(spawnPoint);
 		}

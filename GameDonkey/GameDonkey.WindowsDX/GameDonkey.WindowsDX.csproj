@@ -35,10 +35,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AnimationLib.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AnimationLib.2.0.33\lib\net451\AnimationLib.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\AnimationLib.2.0.34\lib\net451\AnimationLib.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CameraBuddy.2.0.6\lib\net451\CameraBuddy.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\CameraBuddy.2.0.9\lib\net451\CameraBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="CollisionBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CollisionBuddy.2.0.2\lib\net451\CollisionBuddy.WindowsDX.dll</HintPath>
@@ -53,7 +53,7 @@
       <HintPath>..\packages\FontBuddy.2.0.18\lib\net451\FontBuddyLib.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="GameTimer.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GameTimer.2.0.0\lib\net452\GameTimer.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\GameTimer.2.1.0\lib\net452\GameTimer.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="HadoukInput.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HadoukInput.2.0.32\lib\net451\HadoukInput.WindowsDX.dll</HintPath>
@@ -63,6 +63,9 @@
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Framework.WindowsDX.3.7.1.189\lib\net45\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="ParallaxBackgroundBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ParallaxBackgroundBuddy.2.0.1\lib\net451\ParallaxBackgroundBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ParticleBuddy.2.0.5\lib\net451\ParticleBuddy.WindowsDX.dll</HintPath>

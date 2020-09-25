@@ -11,6 +11,8 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
+		BoardModel BoardModel { get; set; }
+
 		public Filename ImageFile { get; set; }
 
 		public float Scale { get; set; }
@@ -22,9 +24,10 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// hello, standard constructor!
 		/// </summary>
-		public BackgroundLayerModel()
+		public BackgroundLayerModel(BoardModel boardModel)
 		{
 			ImageFile = new Filename();
+			BoardModel = boardModel;
 		}
 
 		#endregion //Methods
@@ -47,6 +50,12 @@ namespace GameDonkeyLib
 				case "image":
 					{
 						ImageFile.SetRelFilename(value);
+					}
+					break;
+				case "imageFile1":
+					{
+						//read in a relative to the model file
+						ImageFile.SetFilenameRelativeToPath(BoardModel.Filename, value);
 					}
 					break;
 				case "scale":

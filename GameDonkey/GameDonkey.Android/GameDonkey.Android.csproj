@@ -37,10 +37,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AnimationLib.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AnimationLib.2.0.33\lib\MonoAndroid10\AnimationLib.Android.dll</HintPath>
+      <HintPath>..\packages\AnimationLib.2.0.34\lib\MonoAndroid10\AnimationLib.Android.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CameraBuddy.2.0.6\lib\MonoAndroid10\CameraBuddy.Android.dll</HintPath>
+      <HintPath>..\packages\CameraBuddy.2.0.9\lib\MonoAndroid10\CameraBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="CollisionBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CollisionBuddy.2.0.2\lib\MonoAndroid10\CollisionBuddy.Android.dll</HintPath>
@@ -55,7 +55,7 @@
       <HintPath>..\packages\FontBuddy.2.0.18\lib\MonoAndroid10\FontBuddyLib.Android.dll</HintPath>
     </Reference>
     <Reference Include="GameTimer.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GameTimer.2.0.0\lib\MonoAndroid10\GameTimer.Android.dll</HintPath>
+      <HintPath>..\packages\GameTimer.2.1.0\lib\MonoAndroid10\GameTimer.Android.dll</HintPath>
     </Reference>
     <Reference Include="HadoukInput.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HadoukInput.2.0.32\lib\MonoAndroid10\HadoukInput.Android.dll</HintPath>
@@ -66,6 +66,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Framework.Android.3.7.1.189\lib\MonoAndroid\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="ParallaxBackgroundBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ParallaxBackgroundBuddy.2.0.1\lib\MonoAndroid10\ParallaxBackgroundBuddy.Android.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ParticleBuddy.2.0.5\lib\MonoAndroid10\ParticleBuddy.Android.dll</HintPath>
