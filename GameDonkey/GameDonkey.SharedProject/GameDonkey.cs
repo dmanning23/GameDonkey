@@ -21,7 +21,7 @@ namespace GameDonkeyLib
 	{
 		#region Members
 
-		static protected Random _random = new Random(DateTime.Now.Millisecond);
+		public Random Rand { get; private set; } = new Random(DateTime.Now.Millisecond);
 
 		//debugging flags
 		protected KeyboardState _lastKeyboardState;
@@ -102,6 +102,8 @@ namespace GameDonkeyLib
 		/// the center point between all the players
 		/// </summary>
 		private Vector2 CenterPoint { get; set; }
+
+		private Texture2D BackgroundImage { get; set; }
 
 		private ParallaxBackground Background { get; set; }
 
@@ -659,7 +661,7 @@ namespace GameDonkeyLib
 		public void RespawnPlayer(PlayerQueue playerQueue)
 		{
 			//respawn the player
-			int spawnIndex = _random.Next(SpawnPoints.Count);
+			int spawnIndex = Rand.Next(SpawnPoints.Count);
 			playerQueue.Reset(SpawnPoints[spawnIndex]);
 		}
 
@@ -756,6 +758,14 @@ namespace GameDonkeyLib
 
 		protected virtual void RenderBackground()
 		{
+			if (null != BackgroundImage)
+			{
+				//draw the background first 
+				Renderer.SpriteBatch.Begin();
+				Renderer.SpriteBatch.Draw(BackgroundImage, Resolution.ScreenArea, Color.White);
+				Renderer.SpriteBatchEnd();
+			}
+
 			if (Background.Layers.Count > 0)
 			{
 				Renderer.SpriteBatchBeginNoEffect(BlendState.AlphaBlend, GetCameraMatrix());
@@ -963,9 +973,16 @@ namespace GameDonkeyLib
 
 		public void LoadBoard(Filename boardFile, ContentManager xmlContent = null)
 		{
-			var boardModel = new BoardModel(boardFile);
-			boardModel.ReadXmlFile(xmlContent);
-			LoadBoard(boardModel, xmlContent);
+			try
+			{
+				var boardModel = new BoardModel(boardFile);
+				boardModel.ReadXmlFile(xmlContent);
+				LoadBoard(boardModel, xmlContent);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"There was an error loading { boardFile.GetFile() }", ex);
+			}
 		}
 
 		protected virtual void LoadBoard(BoardModel boardModel, ContentManager xmlContent)
@@ -991,13 +1008,6 @@ namespace GameDonkeyLib
 			//	//TODO: load the music
 			//}
 
-			////next node is the death noise
-			//DeathNoise = boardModel.DeathNoise;
-			//if (!string.IsNullOrEmpty(DeathNoise))
-			//{
-			//	//TODO: load the death noise
-			//}
-
 			//load all the level objects
 			foreach (var levelObjectFile in boardModel.LevelObjects)
 			{
@@ -1009,6 +1019,12 @@ namespace GameDonkeyLib
 			foreach (var spawnPointModel in boardModel.SpawnPoints)
 			{
 				SpawnPoints.Add(spawnPointModel.Location);
+			}
+
+			//Load the background that will be drawn behind the game.
+			if (boardModel.BackgroundImage.HasFilename)
+			{
+				BackgroundImage = Renderer.Content.Load<Texture2D>(boardModel.BackgroundImage.GetRelPathFileNoExt());
 			}
 
 			//load the background images

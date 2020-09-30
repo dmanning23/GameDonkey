@@ -26,6 +26,8 @@ namespace GameDonkeyLib
 		public List<Filename> LevelObjects { get; private set; }
 		public List<SpawnPointModel> SpawnPoints { get; private set; }
 
+
+		public Filename BackgroundImage { get; private set; }
 		public List<BackgroundLayerModel> Background { get; private set; }
 		public List<BackgroundLayerModel> Foreground { get; private set; }
 
@@ -41,6 +43,7 @@ namespace GameDonkeyLib
 			BackgroundColor = Color.White;
 			LevelObjects = new List<Filename>();
 			SpawnPoints = new List<SpawnPointModel>();
+			BackgroundImage = new Filename();
 			Background = new List<BackgroundLayerModel>();
 			Foreground = new List<BackgroundLayerModel>();
 		}
@@ -103,6 +106,11 @@ namespace GameDonkeyLib
 						DeathNoise.SetRelFilename(value);
 					}
 					break;
+				case "backgroundImage":
+					{
+						BackgroundImage.SetFilenameRelativeToPath(Filename, value);
+					}
+					break;
 				case "background":
 					{
 						XmlFileBuddy.ReadChildNodes(node, ReadBackground);
@@ -115,7 +123,7 @@ namespace GameDonkeyLib
 					break;
 				case "backgroundTile":
 					{
-						BackgroundTile.SetRelFilename(value);
+						BackgroundTile.SetFilenameRelativeToPath(Filename, value);
 					}
 					break;
 				case "BackgroundColor":

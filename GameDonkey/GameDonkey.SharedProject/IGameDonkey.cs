@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ParticleBuddy;
 using RenderBuddy;
+using System;
 using System.Collections.Generic;
 
 namespace GameDonkeyLib
@@ -14,6 +15,8 @@ namespace GameDonkeyLib
 	public interface IGameDonkey
 	{
 		#region Properties
+
+		Random Rand { get; }
 
 		Game Game { get; }
 
