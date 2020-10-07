@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using XmlBuddy;
 
@@ -71,20 +72,27 @@ namespace GameDonkeyLib
 
 		public void ParseStateAction(XmlNode node)
 		{
-			//what is the type of action?
-			var actionType = node.Name;
-
-			if ("Item" == actionType)
+			try
 			{
-				//legacy shit
-				var typeNode = node.FirstChild;
-				actionType = typeNode.InnerXml;
-			}
+				//what is the type of action?
+				var actionType = node.Name;
 
-			//create the correct action
-			var stateAction = StateActionFactory.CreateActionModel(actionType);
-			XmlFileBuddy.ReadChildNodes(node, stateAction.ParseXmlNode);
-			ActionModels.Add(stateAction);
+				if ("Item" == actionType)
+				{
+					//legacy shit
+					var typeNode = node.FirstChild;
+					actionType = typeNode.InnerXml;
+				}
+
+				//create the correct action
+				var stateAction = StateActionFactory.CreateActionModel(actionType);
+				XmlFileBuddy.ReadChildNodes(node, stateAction.ParseXmlNode);
+				ActionModels.Add(stateAction);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"Error in {node.Name}", ex);
+			}
 		}
 
 		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
