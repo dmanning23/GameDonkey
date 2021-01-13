@@ -51,10 +51,7 @@ namespace GameDonkeyLib
 
 		static private Random _random = new Random(DateTime.Now.Millisecond);
 
-		protected float HalfHeight
-		{
-			get { return Player.Height * 0.5f; }
-		}
+		protected float HalfHeight { get; private set; }
 
 		public int Difficulty
 		{
@@ -119,6 +116,8 @@ namespace GameDonkeyLib
 			AttackTimer = new CountdownTimer();
 
 			UpdateDelta = 0.25f;
+
+			HalfHeight = Math.Min(Player.Height * 0.5f, AttackDistance);
 		}
 
 		public virtual void Update()
@@ -229,7 +228,8 @@ namespace GameDonkeyLib
 				if (!blocking)
 				{
 					//If we aren't trying to block an attack and the target is in distance, take a swing at them.
-					if (BadGuyDistance.LengthSquared() <= (AttackDistance * AttackDistance) &&
+					var distanceSquared = BadGuyDistance.LengthSquared();
+					if (distanceSquared <= (AttackDistance * AttackDistance) &&
 						!ignoreAttackInput &&
 						!(BadGuy is ProjectileObject))
 					{
@@ -237,7 +237,7 @@ namespace GameDonkeyLib
 						if (!AttackTimer.HasTimeRemaining)
 						{
 							//the target must be close! try to attack the target
-							if (SelectOffensiveOption())
+							if (SelectOffensiveOption(distanceSquared))
 							{
 								AttackTimer.Start(AttackPause);
 							}
@@ -248,7 +248,7 @@ namespace GameDonkeyLib
 				if (!attacking && !blocking)
 				{
 					//shoudl i move towards the target?
-					if ((BadGuyDistance.X > HalfHeight) || (BadGuyDistance.X < (-1.0 * HalfHeight)))
+					if (BadGuyDistance.LengthSquared() > (HalfHeight * HalfHeight))
 					{
 						//the bad guy is to the left or right, move towards the target
 						SendWalkMessage();
@@ -302,7 +302,7 @@ namespace GameDonkeyLib
 			//}
 		
 
-		protected abstract bool SelectOffensiveOption();
+		protected abstract bool SelectOffensiveOption(float distanceSquared);
 
 		////select a random attack and execute it
 		//int iMin = (TurnAroundMessage - m_States.StateMachine.MessageOffset) + 1;
