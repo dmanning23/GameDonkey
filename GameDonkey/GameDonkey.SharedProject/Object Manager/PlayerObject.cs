@@ -28,12 +28,6 @@ namespace GameDonkeyLib
 		protected virtual float HitPause => 0.2f;
 
 		/// <summary>
-		/// The sound that gets played when a player dies
-		/// </summary>
-		/// <value>The death sound.</value>
-		public SoundEffect DeathSound { get; protected set; }
-
-		/// <summary>
 		/// texture to hold the portrait for the HUD
 		/// </summary>
 		public Texture2D Portrait { get; protected set; }
@@ -639,11 +633,6 @@ namespace GameDonkeyLib
 			{
 				var textureInfo = engine.Renderer.LoadImage(data.Portrait);
 				Portrait = textureInfo.Texture;
-			}
-
-			if (null != data.DeathSound)
-			{
-				DeathSound = engine.LoadSound(data.DeathSound);
 			}
 
 			base.ParseXmlData(model, engine, content);
