@@ -21,6 +21,9 @@ namespace GameDonkeyLib
 
 		public string Bone { get; set; }
 		public bool UseBoneRotation { get; set; }
+
+		public bool UsePlayerColor { get; set; }
+
 		public Vector2 StartOffset { get; set; }
 		public DirectionActionModel Direction  { get; set; }
 		public EmitterTemplate Emitter { get; set; }
@@ -34,12 +37,15 @@ namespace GameDonkeyLib
 			Direction = new DirectionActionModel();
 			StartOffset = Vector2.Zero;
 			Emitter = new EmitterTemplate();
+			UseBoneRotation = false;
+			UsePlayerColor = false;
 		}
 
 		public ParticleEffectActionModel(ParticleEffectAction action) : base(action)
 		{
 			Bone = action.BoneName;
 			UseBoneRotation = action.UseBoneRotation;
+			UsePlayerColor = action.UsePlayerColor;
 			StartOffset = action.StartOffset;
 			Direction = new DirectionActionModel(action.Velocity);
 			Emitter = new EmitterTemplate(action.Emitter);
@@ -72,6 +78,11 @@ namespace GameDonkeyLib
 						UseBoneRotation = Convert.ToBoolean(value);
 					}
 					break;
+				case "UsePlayerColor":
+					{
+						UsePlayerColor = Convert.ToBoolean(value);
+					}
+					break;
 				case "StartOffset":
 					{
 						StartOffset = value.ToVector2();
@@ -99,9 +110,23 @@ namespace GameDonkeyLib
 
 		protected override void WriteActionXml(XmlTextWriter xmlWriter)
 		{
-			xmlWriter.WriteAttributeString("Bone", Bone);
-			xmlWriter.WriteAttributeString("UseBoneRotation", UseBoneRotation.ToString());
-			xmlWriter.WriteAttributeString("StartOffset", StartOffset.StringFromVector());
+			if (null != Bone)
+			{
+				xmlWriter.WriteAttributeString("Bone", Bone);
+			}
+			if (UseBoneRotation)
+			{
+				xmlWriter.WriteAttributeString("UseBoneRotation", UseBoneRotation.ToString());
+			}
+			if (UsePlayerColor)
+			{
+				xmlWriter.WriteAttributeString("UsePlayerColor", UsePlayerColor.ToString());
+			}
+			if (StartOffset.X != 0f || StartOffset.Y != 0f)
+			{
+				xmlWriter.WriteAttributeString("StartOffset", StartOffset.StringFromVector());
+			}
+
 			Direction.WriteXmlNodes(xmlWriter);
 
 			xmlWriter.WriteStartElement("Emitter");

@@ -59,6 +59,11 @@ namespace GameDonkeyLib
 		/// </summary>
 		public bool UseBoneRotation { get; set; }
 
+		/// <summary>
+		/// Flag to use the player's color instead of the emitter color
+		/// </summary>
+		public bool UsePlayerColor { get; set; }
+
 		#endregion //Properties
 
 		#region Initialization
@@ -71,6 +76,7 @@ namespace GameDonkeyLib
 			Velocity = new ActionDirection();
 			StartOffset = Vector2.Zero;
 			UseBoneRotation = false;
+			UsePlayerColor = false;
 		}
 
 		public ParticleEffectAction(BaseObject owner, ParticleEffectActionModel actionModel) :
@@ -81,6 +87,7 @@ namespace GameDonkeyLib
 			Velocity = new ActionDirection(actionModel.Direction);
 			StartOffset = actionModel.StartOffset;
 			UseBoneRotation = actionModel.UseBoneRotation;
+			UsePlayerColor = actionModel.UsePlayerColor;
 		}
 
 		public ParticleEffectAction(BaseObject owner, BaseActionModel actionModel) :
@@ -109,7 +116,7 @@ namespace GameDonkeyLib
 				Velocity.GetDirection(Owner),
 				Owner.Position,
 				StartOffset,
-				Emitter.ParticleColor,
+				GetColor(),
 				GetFlip(),
 				GetPosDelegate(),
 				GetRotationDelegate(),
@@ -121,6 +128,11 @@ namespace GameDonkeyLib
 			}
 
 			return base.Execute();
+		}
+
+		private Color GetColor()
+		{
+			return UsePlayerColor ? Owner.PlayerColor : Emitter.ParticleColor;
 		}
 
 		private PositionDelegate GetPosDelegate()
