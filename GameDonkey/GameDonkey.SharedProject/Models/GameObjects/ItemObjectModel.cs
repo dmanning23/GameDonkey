@@ -1,6 +1,7 @@
 ﻿using AnimationLib;
 using FilenameBuddy;
 using HadoukInput;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using System.Collections.Generic;
