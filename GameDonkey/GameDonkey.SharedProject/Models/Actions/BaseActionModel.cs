@@ -14,6 +14,8 @@ namespace GameDonkeyLib
 		public abstract EActionType ActionType { get; }
 		public float Time { get; set; }
 
+		public string Id { get; set; }
+
 		#endregion //Properties
 
 		#region Initialization
@@ -25,6 +27,7 @@ namespace GameDonkeyLib
 		public BaseActionModel(BaseAction action)
 		{
 			Time = action.Time;
+			Id = action.Id;
 		}
 
 		#endregion //Initialization
@@ -49,6 +52,11 @@ namespace GameDonkeyLib
 						Time = Convert.ToSingle(value);
 					}
 					break;
+					case "id":
+					{
+						Id = value;
+					}
+					break;
 				default:
 					{
 						base.ParseXmlNode(node);
@@ -61,6 +69,11 @@ namespace GameDonkeyLib
 		{
 			//write out the type
 			xmlWriter.WriteStartElement(ActionType.ToString());
+
+			if (!string.IsNullOrEmpty(Id))
+			{
+				xmlWriter.WriteAttributeString("id", Id);
+			}
 
 			if (Time != 0f)
 			{

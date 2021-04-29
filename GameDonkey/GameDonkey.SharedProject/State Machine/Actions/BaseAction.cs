@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
+using System.Text;
 
 namespace GameDonkeyLib
 {
@@ -24,6 +25,8 @@ namespace GameDonkeyLib
 		/// </summary>
 		public bool AlreadyRun { get; set; }
 
+		public string Id { get; set; }
+
 		/// <summary>
 		/// the time from the start of the state that this action ocuurs
 		/// </summary>
@@ -44,6 +47,7 @@ namespace GameDonkeyLib
 		protected BaseAction(BaseObject owner, BaseActionModel actionModel) : this(owner, actionModel.ActionType)
 		{
 			Time = actionModel.Time;
+			Id = actionModel.Id;
 		}
 
 		public abstract void LoadContent(IGameDonkey engine, ContentManager content);
@@ -60,7 +64,14 @@ namespace GameDonkeyLib
 
 		public override string ToString()
 		{
-			return $"{Time.ToString()}: {ActionType.ToString()}";
+			var result = new StringBuilder();
+			if (!string.IsNullOrEmpty(Id))
+			{
+				result.Append($"{Id} ");
+			}
+			result.Append($"{Time.ToString()}: {ActionType.ToString()}");
+
+			return result.ToString();
 		}
 
 		#endregion //Methods

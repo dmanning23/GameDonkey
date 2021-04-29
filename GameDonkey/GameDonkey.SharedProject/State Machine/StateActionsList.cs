@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameDonkeyLib
 {
@@ -86,6 +87,11 @@ namespace GameDonkeyLib
 		public void Sort()
 		{
 			Actions.Sort(new ActionSort());
+		}
+
+		public BaseAction FindAction(string id)
+		{
+			return Actions.FirstOrDefault(x => x.Id == id);
 		}
 
 		#endregion //Tool Methods
