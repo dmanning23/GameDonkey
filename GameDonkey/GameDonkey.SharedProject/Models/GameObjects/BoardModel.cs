@@ -24,8 +24,7 @@ namespace GameDonkeyLib
 		public Color BackgroundColor { get; private set; }
 		public int NumTiles { get; private set; }
 		public List<Filename> LevelObjects { get; private set; }
-		public List<SpawnPointModel> SpawnPoints { get; private set; }
-
+		public List<SpawnPointModel> SpawnPoints { get; set; }
 
 		public Filename BackgroundImage { get; private set; }
 		public List<BackgroundLayerModel> Background { get; private set; }
@@ -35,7 +34,17 @@ namespace GameDonkeyLib
 
 		#region Methods
 
+		public BoardModel() : base("board")
+		{
+			Init();
+		}
+
 		public BoardModel(Filename filename) : base("board", filename)
+		{
+			Init();
+		}
+
+		private void Init()
 		{
 			Music = new Filename();
 			DeathNoise = new Filename();

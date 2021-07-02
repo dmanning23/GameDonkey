@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AnimationLib.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AnimationLib.2.0.35\lib\net451\AnimationLib.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\AnimationLib.2.0.36\lib\net451\AnimationLib.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="CameraBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CameraBuddy.2.0.10\lib\net451\CameraBuddy.WindowsDX.dll</HintPath>
@@ -48,7 +48,7 @@
       <HintPath>..\packages\Cyotek.Drawing.BitmapFont.2.0.2\lib\net452\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
     <Reference Include="DiffEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c7a34512ecd69090, processorArchitecture=MSIL">
-      <HintPath>..\packages\DiffEngine.6.7.0\lib\net461\DiffEngine.dll</HintPath>
+      <HintPath>..\packages\DiffEngine.6.8.2\lib\net461\DiffEngine.dll</HintPath>
     </Reference>
     <Reference Include="DrawListBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DrawlistBuddy.2.0.0\lib\net451\DrawListBuddy.WindowsDX.dll</HintPath>
@@ -90,7 +90,7 @@
       <HintPath>..\packages\ParallaxBackgroundBuddy.2.0.1\lib\net451\ParallaxBackgroundBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="ParticleBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParticleBuddy.2.0.7\lib\net451\ParticleBuddy.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\ParticleBuddy.2.0.8\lib\net451\ParticleBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="PrimitiveBuddy.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PrimitiveBuddy.2.0.1\lib\net451\PrimitiveBuddy.WindowsDX.dll</HintPath>

@@ -1,4 +1,5 @@
 ﻿using FilenameBuddy;
+using GameDonkey.SharedProject.ObjectManager;
 using GameTimer;
 using HadoukInput;
 using Microsoft.Xna.Framework;
@@ -19,7 +20,7 @@ namespace GameDonkeyLib
 {
 	public abstract class GameDonkey : IGameDonkey, IDisposable
 	{
-		#region Members
+		#region Properties
 
 		public Random Rand { get; private set; } = new Random(DateTime.Now.Millisecond);
 
@@ -34,10 +35,6 @@ namespace GameDonkeyLib
 		protected bool _renderWorldBoundaries;
 		protected bool _renderSpawnPoints;
 
-		#endregion //Members
-
-		#region Properties
-
 		public Game Game { get; set; }
 
 		public bool ToolMode { get; set; }
@@ -48,33 +45,20 @@ namespace GameDonkeyLib
 
 		public GameClock MasterClock { get; protected set; }
 
+		public IBoard Board { get; set; }
+
 		/// <summary>
 		/// the world boundaries
 		/// </summary>
-		private Rectangle _worldBoundaries;
 		public Rectangle WorldBoundaries
 		{
-			get { return _worldBoundaries; }
+			get { return Board.WorldBoundaries; }
 			set
 			{
-				_worldBoundaries = value;
-				CollisionBoundaries = value;
+				Board.WorldBoundaries = value;
 
 				//make the camera rect a little bit smaller so we can see more of the ground
-				Renderer.Camera.WorldBoundary = new Rectangle(_worldBoundaries.X, _worldBoundaries.Y, _worldBoundaries.Width, _worldBoundaries.Height);
-			}
-		}
-
-		private Rectangle _collisionBoundaries;
-		public Rectangle CollisionBoundaries
-		{
-			get
-			{
-				return _collisionBoundaries;
-			}
-			set
-			{
-				_collisionBoundaries = value;
+				Renderer.Camera.WorldBoundary = new Rectangle(WorldBoundaries.X, WorldBoundaries.Y, WorldBoundaries.Width, WorldBoundaries.Height);
 			}
 		}
 
@@ -87,27 +71,6 @@ namespace GameDonkeyLib
 		/// list of all the player objects in the game
 		/// </summary>
 		public List<PlayerQueue> Players { get; private set; }
-
-		/// <summary>
-		/// player queue for updating level objects
-		/// </summary>
-		public PlayerQueue LevelObjects { get; private set; }
-
-		/// <summary>
-		/// the spawn points for characters
-		/// </summary>
-		public List<Vector2> SpawnPoints { get; set; }
-
-		/// <summary>
-		/// the center point between all the players
-		/// </summary>
-		private Vector2 CenterPoint { get; set; }
-
-		private Texture2D BackgroundImage { get; set; }
-
-		private ParallaxBackground Background { get; set; }
-
-		private ParallaxBackground Foreground { get; set; }
 
 		/// <summary>
 		/// The max amount of time a game will last
@@ -139,11 +102,6 @@ namespace GameDonkeyLib
 		/// </summary>
 		/// <value>The content of the sound.</value>
 		protected ContentManager SoundContent { get; private set; }
-
-		/// <summary>
-		/// The velocity of the center point
-		/// </summary>
-		public Vector2 CenterVelocity { get; set; }
 
 		protected ParticleEffectCollection ParticleEffects { get; set; }
 
@@ -179,8 +137,6 @@ namespace GameDonkeyLib
 
 			Renderer = renderer;
 			Players = new List<PlayerQueue>();
-			LevelObjects = new LevelObjectQueue();
-			SpawnPoints = new List<Vector2>();
 
 			ParticleEffects = new ParticleEffectCollection();
 
@@ -215,13 +171,8 @@ namespace GameDonkeyLib
 		/// </summary>
 		public virtual void LoadContent(GraphicsDevice graphics, ContentManager xmlContent)
 		{
-			WorldBoundaries = new Rectangle();
-
 			//load up the renderer graphics content, so we can use its conent manager to load all our graphics
 			Renderer.LoadContent(graphics);
-
-			Background = new ParallaxBackground();
-			Foreground = new ParallaxBackground();
 		}
 
 		public virtual void UnloadContent()
@@ -255,7 +206,7 @@ namespace GameDonkeyLib
 			CharacterClock.Start();
 
 			//reset teh level objects
-			LevelObjects.Reset();
+			Board.Start();
 
 			//force the camera to fit the whole scene
 			for (int i = 0; i < Players.Count; i++)
@@ -268,31 +219,7 @@ namespace GameDonkeyLib
 
 		public void StartAtSpawnPoints()
 		{
-			//reset the players
-			int spawnIndex = 0;
-			for (int i = 0; i < Players.Count; i++)
-			{
-				if (null != Players[i].InputQueue)
-				{
-					Players[i].InputQueue.Controller.ResetController();
-				}
-				Players[i].Reset(SpawnPoints[spawnIndex]);
-
-				if (SpawnPoints[spawnIndex].X > WorldBoundaries.Center.X)
-				{
-					Players[i].Character.Flip = true;
-				}
-
-				//increment to the next spawn point
-				if (spawnIndex < (SpawnPoints.Count - 1))
-				{
-					++spawnIndex;
-				}
-				else
-				{
-					spawnIndex = 0;
-				}
-			}
+			Board.StartAtSpawnPoints(Players);
 		}
 
 		public SoundEffect LoadSound(Filename cueName)
@@ -370,7 +297,7 @@ namespace GameDonkeyLib
 				CheckForWinner();
 
 				//update the level objects
-				LevelObjects.Update(GameTimer);
+				Board.LevelObjects.Update(GameTimer);
 
 				UpdatePlayers();
 			}
@@ -483,7 +410,7 @@ namespace GameDonkeyLib
 			{
 				tasks.Add(Task.Factory.StartNew(() => { player.UpdateRagdoll(); }));
 			}
-			tasks.Add(Task.Factory.StartNew(() => { LevelObjects.UpdateRagdoll(); }));
+			tasks.Add(Task.Factory.StartNew(() => { Board.LevelObjects.UpdateRagdoll(); }));
 			Task.WaitAll(tasks.ToArray());
 		}
 
@@ -508,10 +435,10 @@ namespace GameDonkeyLib
 				}
 
 				//check for collisions with level objects
-				Players[i].CheckCollisions(LevelObjects);
+				Players[i].CheckCollisions(Board.LevelObjects);
 
 				//check for world collisions
-				Players[i].CheckWorldCollisions(CollisionBoundaries);
+				Players[i].CheckWorldCollisions(Board.CollisionBoundaries);
 			}
 
 			//respond to hits!
@@ -519,9 +446,8 @@ namespace GameDonkeyLib
 			{
 				Players[i].RespondToHits(this);
 			}
-			LevelObjects.RespondToHits(this);
 
-			CenterPoint = Renderer.Camera.Center;
+			Board.CollisionDetection(this);
 		}
 
 		protected virtual bool CheckForWinner()
@@ -661,8 +587,7 @@ namespace GameDonkeyLib
 		public void RespawnPlayer(PlayerQueue playerQueue)
 		{
 			//respawn the player
-			int spawnIndex = Rand.Next(SpawnPoints.Count);
-			playerQueue.Reset(SpawnPoints[spawnIndex]);
+			Board.RespawnPlayer(this, playerQueue);
 		}
 
 		protected void StopTimers()
@@ -696,7 +621,7 @@ namespace GameDonkeyLib
 			{
 				tasks.Add(Task.Factory.StartNew(() => { player.UpdateDrawlists(); }));
 			}
-			tasks.Add(Task.Factory.StartNew(() => { LevelObjects.UpdateDrawlists(); }));
+			tasks.Add(Task.Factory.StartNew(() => { Board.LevelObjects.UpdateDrawlists(); }));
 			Task.WaitAll(tasks.ToArray());
 		}
 
@@ -758,49 +683,20 @@ namespace GameDonkeyLib
 
 		protected virtual void RenderBackground()
 		{
-			if (null != BackgroundImage)
-			{
-				//draw the background first 
-				Renderer.SpriteBatch.Begin();
-				Renderer.SpriteBatch.Draw(BackgroundImage, Resolution.ScreenArea, Color.White);
-				Renderer.SpriteBatchEnd();
-			}
-
-			if (Background.Layers.Count > 0)
-			{
-				Renderer.SpriteBatchBeginNoEffect(BlendState.AlphaBlend, GetCameraMatrix());
-
-				//draw the background to take up the whole board
-				Background.Draw(Renderer.SpriteBatch, WorldBoundaries, CenterPoint);
-
-				Renderer.SpriteBatchEnd();
-			}
+			Board.RenderBackground(this);
 		}
 
 		protected virtual void RenderForeground()
 		{
-			if (Foreground.Layers.Count > 0)
-			{
-				Renderer.SpriteBatchBeginNoEffect(BlendState.AlphaBlend, GetCameraMatrix());
-
-				Foreground.Draw(Renderer.SpriteBatch, WorldBoundaries, CenterPoint);
-
-				Renderer.SpriteBatchEnd();
-			}
+			Board.RenderForeground(this);
 		}
 
 		protected virtual void RenderLevel(Matrix cameraMatrix, SpriteSortMode sortMode)
 		{
-			if (!LevelObjects.HasActive)
-			{
-				return;
-			}
-
-			//draw the level
-			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
-			LevelObjects.Render(Renderer, true);
+			Board.RenderLevel(this, cameraMatrix, sortMode);
 
 #if DEBUG
+			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
 			//draw the world boundaries in debug mode?
 			if (_renderWorldBoundaries)
 			{
@@ -810,13 +706,13 @@ namespace GameDonkeyLib
 			//draw the spawn points for debug mode
 			if (_renderSpawnPoints)
 			{
-				for (int i = 0; i < SpawnPoints.Count; i++)
+				for (int i = 0; i < Board.SpawnPoints.Count; i++)
 				{
-					Renderer.Primitive.Circle(SpawnPoints[i], 10, Color.Red);
+					Renderer.Primitive.Circle(Board.SpawnPoints[i], 10, Color.Red);
 				}
 			}
-#endif
 			Renderer.SpriteBatchEnd();
+#endif
 		}
 
 		protected virtual void RenderCharacterShadows(Matrix cameraMatrix, SpriteSortMode sortMode)
@@ -971,73 +867,19 @@ namespace GameDonkeyLib
 			return player;
 		}
 
-		public void LoadBoard(Filename boardFile, ContentManager xmlContent = null)
+		public virtual IBoard CreateBoard()
 		{
-			try
-			{
-				var boardModel = new BoardModel(boardFile);
-				boardModel.ReadXmlFile(xmlContent);
-				LoadBoard(boardModel, xmlContent);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception($"There was an error loading { boardFile.GetFile() }", ex);
-			}
+			return new Board();
 		}
 
-		protected virtual void LoadBoard(BoardModel boardModel, ContentManager xmlContent)
+		public IBoard LoadBoard(Filename boardFile, ContentManager xmlContent = null)
 		{
-			//First node is the name
-			LevelObjects.PlayerName = boardModel.Name;
+			Board = CreateBoard();
+			Board.LoadBoard(boardFile, this, xmlContent);
 
-			//grab the world boundaries
-			WorldBoundaries = new Rectangle((-1 * (boardModel.BoardWidth / 2)),
-				(-1 * (boardModel.BoardHeight / 2)),
-				boardModel.BoardWidth,
-				boardModel.BoardHeight);
+			Renderer.Camera.WorldBoundary = new Rectangle(WorldBoundaries.X, WorldBoundaries.Y, WorldBoundaries.Width, WorldBoundaries.Height);
 
-			if (boardModel.Floor > 0)
-			{
-				_collisionBoundaries.Height = boardModel.Floor;
-			}
-
-			////next node is the music
-			//Music = boardModel.Music;
-			//if (!string.IsNullOrEmpty(Music))
-			//{
-			//	//TODO: load the music
-			//}
-
-			//load all the level objects
-			foreach (var levelObjectFile in boardModel.LevelObjects)
-			{
-				//load the level object
-				var levelObject = LevelObjects.LoadXmlObject(levelObjectFile, this, GameObjectType.Level, 0, xmlContent);
-			}
-
-			//spawn points
-			foreach (var spawnPointModel in boardModel.SpawnPoints)
-			{
-				SpawnPoints.Add(spawnPointModel.Location);
-			}
-
-			//Load the background that will be drawn behind the game.
-			if (boardModel.BackgroundImage.HasFilename)
-			{
-				BackgroundImage = Renderer.Content.Load<Texture2D>(boardModel.BackgroundImage.GetRelPathFileNoExt());
-			}
-
-			//load the background images
-			foreach (var backgroundLayer in boardModel.Background)
-			{
-				Background.AddLayer(backgroundLayer.ImageFile, backgroundLayer.Scale, Renderer);
-			}
-
-			//load the foreground images
-			foreach (var foregroundLayer in boardModel.Foreground)
-			{
-				Foreground.AddLayer(foregroundLayer.ImageFile, foregroundLayer.Scale, Renderer);
-			}
+			return Board;
 		}
 
 		#endregion //File IO

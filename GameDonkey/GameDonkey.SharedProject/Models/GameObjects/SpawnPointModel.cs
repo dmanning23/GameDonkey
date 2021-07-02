@@ -22,6 +22,11 @@ namespace GameDonkeyLib
 		{
 		}
 
+		public SpawnPointModel(Vector2 location)
+		{
+			Location = location;
+		}
+
 		#endregion //Methods
 
 		#region File IO

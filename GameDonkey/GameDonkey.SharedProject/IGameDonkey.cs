@@ -1,4 +1,5 @@
 ﻿using FilenameBuddy;
+using GameDonkey.SharedProject.ObjectManager;
 using GameTimer;
 using HadoukInput;
 using Microsoft.Xna.Framework;
@@ -28,15 +29,11 @@ namespace GameDonkeyLib
 
 		GameClock MasterClock { get; }
 
+		IBoard Board { get; set; }
+
 		Rectangle WorldBoundaries { get; set; }
 
-		Rectangle CollisionBoundaries { get; set; }
-
 		List<PlayerQueue> Players { get; }
-
-		List<Vector2> SpawnPoints { get; set; }
-
-		Vector2 CenterVelocity { get; set; }
 
 		PlayerQueue Winner { get; }
 
@@ -95,11 +92,13 @@ namespace GameDonkeyLib
 		   ContentManager xmlContent = null,
 		   bool useKeyboard = false);
 
-		void LoadBoard(Filename boardFile, ContentManager xmlContent = null);
+		IBoard LoadBoard(Filename boardFile, ContentManager xmlContent = null);
 
 		void RespawnPlayer(PlayerQueue playerQueue);
 
 		void UpdateCameraMatrix(bool forceToScreen = false);
+
+		Matrix GetCameraMatrix();
 
 		void Render(BlendState characterBlendState, SpriteSortMode sortMode = SpriteSortMode.Immediate);
 
