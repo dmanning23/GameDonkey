@@ -72,7 +72,7 @@ namespace GameDonkeyLib
 				if (!meStunned)
 				{
 					//is this the biggest push hit so far?
-					if (!HitFlags[(int)EHitType.PushHit] || (collisionDelta > Hits[(int)EHitType.PushHit].Strength))
+					if (!Hits[(int)HitType.Push].Active || (collisionDelta > Hits[(int)HitType.Push].Strength))
 					{
 						//ok, push this dude away from that other dude
 
@@ -80,15 +80,14 @@ namespace GameDonkeyLib
 						objVect.Normalize();
 
 						//add to my list of hits
-						HitFlags[(int)EHitType.PushHit] = true;
-						Hits[(int)EHitType.PushHit].Set(objVect, null, collisionDelta, EHitType.PushHit, otherGuy.Owner, Owner.Position);
+						Hits[(int)HitType.Push].Set(objVect, null, collisionDelta, HitType.Push, otherGuy.Owner, Owner.Position);
 					}
 				}
 
 				//push hit the other dude?
 				if (!himStunned)
 				{
-					if (!otherGuy.HitFlags[(int)EHitType.PushHit] || (collisionDelta > otherGuy.Hits[(int)EHitType.PushHit].Strength))
+					if (!otherGuy.Hits[(int)HitType.Push].Active || (collisionDelta > otherGuy.Hits[(int)HitType.Push].Strength))
 					{
 						//ok, push this dude away from that other dude
 
@@ -97,8 +96,7 @@ namespace GameDonkeyLib
 						objVect.Normalize();
 
 						//add to my list of hits
-						otherGuy.HitFlags[(int)EHitType.PushHit] = true;
-						otherGuy.Hits[(int)EHitType.PushHit].Set(objVect, null, collisionDelta, EHitType.PushHit, Owner, otherGuy.Owner.Position);
+						otherGuy.Hits[(int)HitType.Push].Set(objVect, null, collisionDelta, HitType.Push, Owner, otherGuy.Owner.Position);
 					}
 				}
 			}

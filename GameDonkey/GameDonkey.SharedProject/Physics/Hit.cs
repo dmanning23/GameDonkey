@@ -1,77 +1,116 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GameDonkeyLib
 {
 	//The different types of hits
-	public enum EHitType
+	public enum HitType
 	{
-		AttackHit,  //an object got attacked by another object
-		GroundHit,  //an object's feet hit the ground
-		PushHit,    //an object hit another object and should be pushed away
-		WeaponHit,  //an object's attacking weapon hit another object's attacking weapon
-		BlockHit,   //an object's attacking weapon hit another object's blocking weapon
-		CeilingHit, //an object hit the ceiling
-		LeftWallHit,    //an object hit the left wall
-		RightWallHit,   //an object hit the right wall
-		NumHits
+		/// <summary>
+		/// an object got attacked by another object
+		/// </summary>
+		Attack,
+
+		/// <summary>
+		/// an object's feet hit the ground
+		/// </summary>
+		Ground,
+
+		/// <summary>
+		/// an object hit another object and should be pushed away
+		/// </summary>
+		Push,
+
+		/// <summary>
+		/// an object's attacking weapon hit another object's attacking weapon
+		/// </summary>
+		Weapon,
+
+		/// <summary>
+		/// an object's attacking weapon hit another object's blocking weapon
+		/// </summary>
+		Block,
+
+		/// <summary>
+		/// an object hit the ceiling
+		/// </summary>
+		Ceiling,
+
+		/// <summary>
+		/// an object hit the left wall
+		/// </summary>
+		LeftWall,
+
+		/// <summary>
+		/// an object hit the right wall
+		/// </summary>
+		RightWall,
 	};
 
 	public class Hit
 	{
 		#region Properties
 
-		//The direction of the hit
-		private Vector2 _direction;
+		/// <summary>
+		/// The type of hit
+		/// </summary>
+		public HitType HitType { get; set; }
 
-		//The type of hit
-		public EHitType HitType { get; private set; }
-
-		//teh guy that did the hitting
-		public BaseObject Attacker { get; private set; }
+		/// <summary>
+		/// teh guy that did the hitting
+		/// </summary>
+		public BaseObject Attacker { get; set; }
 
 		/// <summary>
 		/// if this is an attack action, this will point to the attack
 		/// </summary>
-		public CreateAttackAction AttackAction { get; private set; }
+		private CreateAttackAction AttackAction { get; set; }
+
+		public float Strength { get; private set; }
+
+		/// <summary>
+		/// The direction of the hit
+		/// </summary>
+		public Vector2 Direction { get; set; }
 
 		/// <summary>
 		/// world coordinates of where the hit happened
 		/// </summary>
-		private Vector2 _position;
+		public Vector2 Position { get; set; }
 
-		public float Strength { get; private set; }
+		public bool IsThrow => (null != AttackAction && AttackAction.ActionType == EActionType.CreateThrow);
 
-		public Vector2 Direction
-		{
-			get { return _direction; }
-		}
+		public bool IsAoE => (null != AttackAction && AttackAction.AoE);
 
-		public Vector2 Position
-		{
-			get { return _position; }
-		}
+		/// <summary>
+		/// flag for whether the hits are active this frame
+		/// </summary>
+		public bool Active { get; set; } = false;
+
+		public SoundEffect HitSound => (null != AttackAction) ? AttackAction.HitSound : null;
 
 		#endregion //Properties
 
 		#region Methods
-
-		public Hit()
+		public Hit(Vector2 direction, CreateAttackAction attackAction, float strength, HitType hitType, BaseObject attacker, Vector2 position)
 		{
-			_direction = Vector2.Zero;
-			Strength = 0.0f;
-			HitType = EHitType.AttackHit;
-			AttackAction = null;
-			Attacker = null;
+			Set(direction, attackAction, strength, hitType, attacker, position);
 		}
 
-		public void Set(Vector2 direction, CreateAttackAction attackAction, float strength, EHitType hitType, BaseObject attacker, Vector2 position)
+		public Hit() : this(Vector2.Zero, null, 0f, HitType.Attack, null, Vector2.Zero)
 		{
-			_direction = direction;
+			Active = false;
+		}
+
+		public void Set(Vector2 direction, CreateAttackAction attackAction, float strength, HitType hitType, BaseObject attacker, Vector2 position)
+		{
+			Active = true;
+			Direction = direction;
 			Strength = strength;
 			HitType = hitType;
 			Attacker = attacker;
 			AttackAction = attackAction;
-			_position = position;
+			Position = position;
 		}
 
 		#endregion //Methods

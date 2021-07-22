@@ -1,12 +1,10 @@
 ﻿using GameTimer;
 using HadoukInput;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -241,59 +239,52 @@ namespace GameDonkeyLib
 		public override void HitResponse(IGameDonkey engine)
 		{
 			//iterate through the hits, parsing as we go
-			for (EHitType i = 0; i < EHitType.NumHits; i++)
+			for (var i = 0; i < Physics.Hits.Length; i++)
 			{
-				if (Physics.HitFlags[(int)i])
+				if (Physics.Hits[i].Active)
 				{
-					switch (i)
+					switch ((HitType)i)
 					{
-						case EHitType.AttackHit:
+						case HitType.Attack:
 							{
 								//is this a grab or an attack?
-								if (EActionType.CreateThrow == Physics.Hits[(int)i].AttackAction.ActionType)
+								if (Physics.Hits[i].IsThrow)
 								{
 									//process grab hit
-									RespondToGrab(Physics.Hits[(int)i]);
+									RespondToGrab(Physics.Hits[i]);
 								}
 								else
 								{
 									//process attack hit
-									RespondToAttack(Physics.Hits[(int)i], engine);
+									RespondToAttack(Physics.Hits[i], engine);
 								}
 							}
 							break;
 
-						case EHitType.GroundHit:
-						case EHitType.CeilingHit:
-						case EHitType.LeftWallHit:
-						case EHitType.RightWallHit:
+						case HitType.Ground:
+						case HitType.Ceiling:
+						case HitType.LeftWall:
+						case HitType.RightWall:
 							{
 								//taken care of in the base class
 							}
 							break;
 
-						case EHitType.PushHit:
+						case HitType.Push:
 							{
-								RespondToPushHit(Physics.Hits[(int)i]);
+								RespondToPushHit(Physics.Hits[i]);
 							}
 							break;
 
-						case EHitType.WeaponHit:
+						case HitType.Weapon:
 							{
-								RespondToWeaponHit(Physics.Hits[(int)i], engine);
+								RespondToWeaponHit(Physics.Hits[i], engine);
 							}
 							break;
 
-						case EHitType.BlockHit:
+						case HitType.Block:
 							{
-								RespondToBlockedAttack(Physics.Hits[(int)i], engine);
-							}
-							break;
-
-						default:
-							{
-								//fuckass
-								Debug.Assert(false);
+								RespondToBlockedAttack(Physics.Hits[i], engine);
 							}
 							break;
 					}
@@ -463,7 +454,7 @@ namespace GameDonkeyLib
 				SendStateMessage("Hit");
 
 				//do a hit pause
-				if (!attack.AttackAction.AoE)
+				if (!attack.IsAoE)
 				{
 					CharacterClock.AddHitPause(HitPause);
 					attack.Attacker.CharacterClock.AddHitPause(HitPause);
@@ -491,11 +482,9 @@ namespace GameDonkeyLib
 					Color.Yellow);
 
 				//play the hit noise
-				var attackAction = attack.AttackAction as CreateAttackAction;
-
-				if (null != attackAction.HitSound)
+				if (null != attack.HitSound)
 				{
-					attackAction.HitSound.Play();
+					attack.HitSound.Play();
 				}
 			}
 
@@ -508,9 +497,9 @@ namespace GameDonkeyLib
 			HealthChangedEvent?.Invoke(this, new HealthEventArgs(attackStrength));
 		}
 
-		private Vector2 AttackedVector(Hit attack)
+		protected virtual Vector2 AttackedVector(Hit attack)
 		{
-			var HitDirection = attack.Direction;
+			var hitDirection = attack.Direction;
 
 			//if this player is already stunned, strengthen the hit
 			if (States.CurrentState == "Stunned")
@@ -520,7 +509,7 @@ namespace GameDonkeyLib
 
 				//add the combo multiplier to the hit direction
 				float multiplier = 1.0f + (0.3f * ComboCounter);
-				HitDirection *= multiplier;
+				hitDirection *= multiplier;
 			}
 			else
 			{
@@ -529,9 +518,9 @@ namespace GameDonkeyLib
 			}
 
 			//add the attacking player's velocity to the hit direction
-			HitDirection += (attack.Attacker.Velocity * 0.5f);
+			hitDirection += (attack.Attacker.Velocity * 0.5f);
 
-			return HitDirection;
+			return hitDirection;
 		}
 
 		/// <summary>
@@ -563,7 +552,7 @@ namespace GameDonkeyLib
 			Velocity = hitDirection;
 
 			//do a hit pause
-			if (!weaponHit.AttackAction.AoE)
+			if (!weaponHit.IsAoE)
 			{
 				CharacterClock.AddHitPause(HitPause);
 				weaponHit.Attacker.CharacterClock.AddHitPause(HitPause);
@@ -587,7 +576,7 @@ namespace GameDonkeyLib
 			Velocity = AttackedVector(attack) * 0.9f;
 
 			//do a hit pause
-			if (!attack.AttackAction.AoE)
+			if (!attack.IsAoE)
 			{
 				CharacterClock.AddHitPause(HitPause * 0.8f);
 				attack.Attacker.CharacterClock.AddHitPause(HitPause * 0.8f);

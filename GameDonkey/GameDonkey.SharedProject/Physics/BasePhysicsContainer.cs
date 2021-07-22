@@ -3,7 +3,6 @@ using CollisionBuddy;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
@@ -20,11 +19,6 @@ namespace GameDonkeyLib
 		/// the list of hits for this dude
 		/// </summary>
 		public Hit[] Hits { get; protected set; }
-
-		/// <summary>
-		/// flag for whether the hits are active this frame
-		/// </summary>
-		public bool[] HitFlags { get; protected set; }
 
 		/// <summary>
 		/// A list of bones that have collision information and are labelled as "weapons"
@@ -58,10 +52,11 @@ namespace GameDonkeyLib
 		{
 			BonesSorted = false;
 			Owner = baseObject;
-			HitFlags = new bool[(int)EHitType.NumHits];
 
-			Hits = new Hit[(int)EHitType.NumHits];
-			for (int i = 0; i < (int)EHitType.NumHits; i++)
+			int numHits = Enum.GetValues(typeof(HitType)).Length;
+
+			Hits = new Hit[numHits];
+			for (int i = 0; i < Hits.Length; i++)
 			{
 				Hits[i] = new Hit();
 			}
@@ -139,9 +134,9 @@ namespace GameDonkeyLib
 		/// </summary>
 		public void Reset()
 		{
-			for (int i = 0; i < (int)EHitType.NumHits; i++)
+			for (int i = 0; i < Hits.Length; i++)
 			{
-				HitFlags[i] = false;
+				Hits[i].Active = false;
 			}
 		}
 
@@ -531,14 +526,13 @@ namespace GameDonkeyLib
 
 						//get the delta between the current pos and the ground
 						var overlap = (worldBoundaries.Bottom - bottom);
-						if (!HitFlags[(int)EHitType.GroundHit] || (Math.Abs(overlap) > Math.Abs(Hits[(int)EHitType.GroundHit].Strength)))
+						if (!Hits[(int)HitType.Ground].Active || (Math.Abs(overlap) > Math.Abs(Hits[(int)HitType.Ground].Strength)))
 						{
-							HitFlags[(int)EHitType.GroundHit] = true;
-							Hits[(int)EHitType.GroundHit].Set(
+							Hits[(int)HitType.Ground].Set(
 								new Vector2(0.0f, 1.0f),
 								null,
 								overlap,
-								EHitType.GroundHit,
+								HitType.Ground,
 								null,
 								new Vector2(image.Circles[i].Pos.X, worldBoundaries.Bottom));
 						}
@@ -555,14 +549,13 @@ namespace GameDonkeyLib
 							var top = image.Circles[i].Pos.Y - image.Circles[i].Radius;
 
 							var overlap = (top - worldBoundaries.Top);
-							if (!HitFlags[(int)EHitType.CeilingHit] || (Math.Abs(overlap) > Math.Abs(Hits[(int)EHitType.CeilingHit].Strength)))
+							if (!Hits[(int)HitType.Ceiling].Active || (Math.Abs(overlap) > Math.Abs(Hits[(int)HitType.Ceiling].Strength)))
 							{
-								HitFlags[(int)EHitType.CeilingHit] = true;
-								Hits[(int)EHitType.CeilingHit].Set(
+								Hits[(int)HitType.Ceiling].Set(
 									new Vector2(0.0f, -1.0f),
 									null,
 									overlap,
-									EHitType.CeilingHit,
+									HitType.Ceiling,
 									null,
 									new Vector2(image.Circles[i].Pos.X, worldBoundaries.Top));
 							}
@@ -582,14 +575,13 @@ namespace GameDonkeyLib
 
 						//get the delta between the current pos and the right wall
 						var overlap = (worldBoundaries.Right - fastRight);
-						if (!HitFlags[(int)EHitType.RightWallHit] || (Math.Abs(overlap) > Math.Abs(Hits[(int)EHitType.RightWallHit].Strength)))
+						if (!Hits[(int)HitType.RightWall].Active || (Math.Abs(overlap) > Math.Abs(Hits[(int)HitType.RightWall].Strength)))
 						{
-							HitFlags[(int)EHitType.RightWallHit] = true;
-							Hits[(int)EHitType.RightWallHit].Set(
+							Hits[(int)HitType.RightWall].Set(
 								new Vector2(1.0f, 0.0f),
 								null,
 								overlap,
-								EHitType.RightWallHit,
+								HitType.RightWall,
 								null,
 								new Vector2(worldBoundaries.Right, image.Circles[i].Pos.Y));
 						}
@@ -606,14 +598,13 @@ namespace GameDonkeyLib
 							var left = image.Circles[i].Pos.X - image.Circles[i].Radius;
 
 							var overlap = (left - worldBoundaries.Left);
-							if (!HitFlags[(int)EHitType.LeftWallHit] || (Math.Abs(overlap) > Math.Abs(Hits[(int)EHitType.LeftWallHit].Strength)))
+							if (!Hits[(int)HitType.LeftWall].Active || (Math.Abs(overlap) > Math.Abs(Hits[(int)HitType.LeftWall].Strength)))
 							{
-								HitFlags[(int)EHitType.LeftWallHit] = true;
-								Hits[(int)EHitType.LeftWallHit].Set(
+								Hits[(int)HitType.LeftWall].Set(
 									new Vector2(-1.0f, 0.0f),
 									null,
 									overlap,
-									EHitType.LeftWallHit,
+									HitType.LeftWall,
 									null,
 									new Vector2(worldBoundaries.Left, image.Circles[i].Pos.Y));
 							}

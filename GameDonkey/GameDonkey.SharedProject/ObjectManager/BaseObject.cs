@@ -655,10 +655,9 @@ namespace GameDonkeyLib
 			//set "attack landed" flag for this state for combo engine
 			var player = AttackLanded();
 
-			if (!otherObject.HitFlags[(int)EHitType.AttackHit] || (attackAction.Damage > otherObject.Hits[(int)EHitType.AttackHit].Strength))
+			if (!otherObject.Hits[(int)HitType.Attack].Active || (attackAction.Damage > otherObject.Hits[(int)HitType.Attack].Strength))
 			{
 				//i just punched the other object
-				otherObject.HitFlags[(int)EHitType.AttackHit] = true;
 
 				//am I facing left or right?
 				var direction = attackAction.Direction;
@@ -668,7 +667,7 @@ namespace GameDonkeyLib
 				}
 
 				//the base object should be the player if this object is a projectile
-				otherObject.Hits[(int)EHitType.AttackHit].Set(direction, attackAction, attackAction.Damage, EHitType.AttackHit, this, firstCollisionPoint);
+				otherObject.Hits[(int)HitType.Attack].Set(direction, attackAction, attackAction.Damage, HitType.Attack, this, firstCollisionPoint);
 
 				//perform all the success actions
 				if (!otherObject.Owner.IsShielded() && attackAction.ExecuteSuccessActions(otherObject.Owner))
@@ -688,7 +687,6 @@ namespace GameDonkeyLib
 			var rPlayer = AttackLanded();
 
 			//my weapon just collided with that other dude's weapon
-			otherObject.HitFlags[(int)EHitType.WeaponHit] = true;
 
 			//am I facing left or right?
 			var direction = attackAction.Direction;
@@ -698,7 +696,7 @@ namespace GameDonkeyLib
 			}
 
 			//the base object should be the player if this object is a projectile
-			otherObject.Hits[(int)EHitType.WeaponHit].Set(direction, attackAction, attackAction.Damage, EHitType.WeaponHit, rPlayer, firstCollisionPoint);
+			otherObject.Hits[(int)HitType.Weapon].Set(direction, attackAction, attackAction.Damage, HitType.Weapon, rPlayer, firstCollisionPoint);
 		}
 
 		/// <summary>
@@ -717,10 +715,9 @@ namespace GameDonkeyLib
 			//set "attack landed" flag for this state for combo engine
 			var player = AttackLanded();
 
-			if (!otherObject.HitFlags[(int)EHitType.BlockHit] || (attackAction.Damage > otherObject.Hits[(int)EHitType.BlockHit].Strength))
+			if (!otherObject.Hits[(int)HitType.Block].Active || (attackAction.Damage > otherObject.Hits[(int)HitType.Block].Strength))
 			{
 				//i just punched the other object
-				otherObject.HitFlags[(int)EHitType.BlockHit] = true;
 
 				//am I facing left or right?
 				var direction = attackAction.Direction;
@@ -730,7 +727,7 @@ namespace GameDonkeyLib
 				}
 
 				//the base object should be the player if this object is a projectile
-				otherObject.Hits[(int)EHitType.BlockHit].Set(direction, attackAction, attackAction.Damage, EHitType.AttackHit, player, firstCollisionPoint);
+				otherObject.Hits[(int)HitType.Block].Set(direction, attackAction, attackAction.Damage, HitType.Attack, player, firstCollisionPoint);
 
 				//perform all the success actions for the BLOCKING action not the ATTACKING action!
 				otherDudesAction.ExecuteSuccessActions();
@@ -764,22 +761,22 @@ namespace GameDonkeyLib
 		public virtual void HitResponse(IGameDonkey engine)
 		{
 			//do boundary hits here in the base class
-			if (Physics.HitFlags[(int)EHitType.GroundHit])
+			if (Physics.Hits[(int)HitType.Ground].Active)
 			{
-				RespondToGroundHit(Physics.Hits[(int)EHitType.GroundHit], engine);
+				RespondToGroundHit(Physics.Hits[(int)HitType.Ground], engine);
 			}
-			else if (Physics.HitFlags[(int)EHitType.CeilingHit])
+			else if (Physics.Hits[(int)HitType.Ceiling].Active)
 			{
-				RespondToCeilingHit(Physics.Hits[(int)EHitType.CeilingHit], engine);
+				RespondToCeilingHit(Physics.Hits[(int)HitType.Ceiling], engine);
 			}
 
-			if (Physics.HitFlags[(int)EHitType.LeftWallHit])
+			if (Physics.Hits[(int)HitType.LeftWall].Active)
 			{
-				RespondToLeftWallHit(Physics.Hits[(int)EHitType.LeftWallHit], engine);
+				RespondToLeftWallHit(Physics.Hits[(int)HitType.LeftWall], engine);
 			}
-			else if (Physics.HitFlags[(int)EHitType.RightWallHit])
+			else if (Physics.Hits[(int)HitType.RightWall].Active)
 			{
-				RespondToRightWallHit(Physics.Hits[(int)EHitType.RightWallHit], engine);
+				RespondToRightWallHit(Physics.Hits[(int)HitType.RightWall], engine);
 			}
 
 			////remove finished attacks from the list
@@ -1068,37 +1065,24 @@ namespace GameDonkeyLib
 			//set the y velocity
 			if (Velocity.Y <= DeccelAction.MinYVelocity)
 			{
-				//
-				decceleration.Y += Velocity.Y;
-
-				//only deccelerate to minY
+				decceleration.Y = Velocity.Y + Math.Abs(decceleration.Y);
 				_velocity.Y = MathHelper.Clamp(decceleration.Y, Velocity.Y, DeccelAction.MinYVelocity);
 			}
 			else
 			{
-				//moving left -x, flip the Y decceleration
-				decceleration.Y *= -1.0f;
-				decceleration.Y += Velocity.Y;
-
-				//only deccelerate to minY
+				decceleration.Y = Velocity.Y - Math.Abs(decceleration.Y);
 				_velocity.Y = MathHelper.Clamp(decceleration.Y, DeccelAction.MinYVelocity, Velocity.Y);
 			}
 
 			//set the X velocity
 			if (Velocity.X <= 0.0f)
 			{
-				//moving left -x, flip the x decceleration
-				//decceleration.X *= -1.0f;
-				decceleration.X += Velocity.X;
-
-				//only deccelerate to 0
+				decceleration.X = Velocity.X + Math.Abs(decceleration.X);
 				_velocity.X = MathHelper.Clamp(decceleration.X, Velocity.X, 0.0f);
 			}
 			else
 			{
-				decceleration.X += Velocity.X;
-
-				//only deccelerate to 0
+				decceleration.X = Velocity.X - Math.Abs(decceleration.X);
 				_velocity.X = MathHelper.Clamp(decceleration.X, 0.0f, Velocity.X);
 			}
 		}

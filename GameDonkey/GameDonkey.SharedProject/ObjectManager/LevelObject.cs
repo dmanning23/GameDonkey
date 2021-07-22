@@ -63,14 +63,13 @@ namespace GameDonkeyLib
 			//add a "ground hit" to the other object?
 			levelToObject.Y = -1.0f * Math.Abs(levelToObject.Y);
 			levelToObject.Normalize();
-			if (!otherObject.HitFlags[(int)EHitType.GroundHit] || (moveSpeed > otherObject.Hits[(int)EHitType.GroundHit].Strength))
+			if (!otherObject.Hits[(int)HitType.Ground].Active || (moveSpeed > otherObject.Hits[(int)HitType.Ground].Strength))
 			{
-				otherObject.HitFlags[(int)EHitType.GroundHit] = true;
-				otherObject.Hits[(int)EHitType.GroundHit].Set(
+				otherObject.Hits[(int)HitType.Ground].Set(
 					levelToObject,
 					null,
 					moveSpeed,
-					EHitType.GroundHit,
+					HitType.Ground,
 					null,
 					firstCollisionPoint);
 			}
