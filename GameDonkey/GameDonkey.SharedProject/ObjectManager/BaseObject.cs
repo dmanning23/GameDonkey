@@ -1243,7 +1243,7 @@ namespace GameDonkeyLib
 		public Garment LoadXmlGarment(IGameDonkey engine, Filename garmentFile, ContentManager content)
 		{
 			//load the garment
-			var myGarment = new Garment(content, garmentFile, AnimationContainer.Skeleton, engine.Renderer);
+			var myGarment = new Garment(garmentFile, AnimationContainer.Skeleton, engine.Renderer, content);
 
 			//add the garment to the dude
 			myGarment.AddToSkeleton();

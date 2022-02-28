@@ -213,7 +213,7 @@ namespace GameDonkeyLib
 			else
 			{
 				//create a new one
-				garment = new Garment(content, garmentFile, Owner.AnimationContainer.Skeleton, renderer);
+				garment = new Garment(garmentFile, Owner.AnimationContainer.Skeleton, renderer, content);
 			}
 
 			//store and return the garment
