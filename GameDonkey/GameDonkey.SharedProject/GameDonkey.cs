@@ -29,15 +29,29 @@ namespace GameDonkeyLib
 
 		//debug shit
 		protected bool _renderJointSkeleton;
-		protected bool _renderPhysics;
+		public bool DebugPhysics { get; set; } = false;
+		public bool DebugWorldBoundaries { get; set; } = false;
 		protected bool _renderAI;
 		protected bool _drawCameraInfo;
-		protected bool _renderWorldBoundaries;
 		protected bool _renderSpawnPoints;
 
 		public Game Game { get; set; }
 
-		public bool ToolMode { get; set; }
+		private bool _toolMode = false;
+		public bool ToolMode
+		{
+			get
+			{
+				return _toolMode;
+			}
+			set
+			{
+				_toolMode = value;
+				ProjectileXML = ToolMode;
+			}
+		}
+
+		public bool ProjectileXML { get; set; } = false;
 
 		public IRenderer Renderer { get; private set; }
 
@@ -144,10 +158,10 @@ namespace GameDonkeyLib
 
 			//debugging stuff
 			_renderJointSkeleton = false;
-			_renderPhysics = false;
+			DebugPhysics = false;
 			_renderAI = false;
 			_drawCameraInfo = false;
-			_renderWorldBoundaries = false;
+			DebugWorldBoundaries = false;
 			_renderSpawnPoints = false;
 
 			//game over stuff
@@ -330,17 +344,14 @@ namespace GameDonkeyLib
 			{
 				_renderJointSkeleton = !_renderJointSkeleton;
 			}
-			if (currentState.IsKeyDown(Keys.I) && _lastKeyboardState.IsKeyUp(Keys.I))
-			{
-				_renderPhysics = !_renderPhysics;
-			}
+			
 			if (currentState.IsKeyDown(Keys.O) && _lastKeyboardState.IsKeyUp(Keys.O))
 			{
 				_drawCameraInfo = !_drawCameraInfo;
 			}
 			if (currentState.IsKeyDown(Keys.P) && _lastKeyboardState.IsKeyUp(Keys.P))
 			{
-				_renderWorldBoundaries = !_renderWorldBoundaries;
+				DebugWorldBoundaries = !DebugWorldBoundaries;
 			}
 			if (currentState.IsKeyDown(Keys.T) && _lastKeyboardState.IsKeyUp(Keys.T))
 			{
@@ -696,22 +707,25 @@ namespace GameDonkeyLib
 			Board.RenderLevel(this, cameraMatrix, sortMode);
 
 #if DEBUG
-			Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
 			//draw the world boundaries in debug mode?
-			if (_renderWorldBoundaries)
+			if (DebugWorldBoundaries)
 			{
+				Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
 				Renderer.Primitive.Rectangle(WorldBoundaries, Color.Red);
+				Renderer.SpriteBatchEnd();
 			}
 
 			//draw the spawn points for debug mode
 			if (_renderSpawnPoints)
 			{
+				Renderer.SpriteBatchBegin(BlendState.AlphaBlend, cameraMatrix, sortMode);
 				for (int i = 0; i < Board.SpawnPoints.Count; i++)
 				{
 					Renderer.Primitive.Circle(Board.SpawnPoints[i], 10, Color.Red);
 				}
+				Renderer.SpriteBatchEnd();
 			}
-			Renderer.SpriteBatchEnd();
+			
 #endif
 		}
 
@@ -764,7 +778,7 @@ namespace GameDonkeyLib
 
 #if DEBUG
 				//draw debug info?
-				if (_renderPhysics)
+				if (DebugPhysics)
 				{
 					for (int j = 0; j < Players[i].Active.Count; j++)
 					{

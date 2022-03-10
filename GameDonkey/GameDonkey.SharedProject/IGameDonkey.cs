@@ -22,6 +22,7 @@ namespace GameDonkeyLib
 		Game Game { get; }
 
 		bool ToolMode { get; set; }
+		bool ProjectileXML { get; set; }
 
 		IRenderer Renderer { get; }
 

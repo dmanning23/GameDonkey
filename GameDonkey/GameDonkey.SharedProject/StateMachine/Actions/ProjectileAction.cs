@@ -89,7 +89,7 @@ namespace GameDonkeyLib
 		{
 			//load the character into the playerqueue
 			ProjectileObject projectile = null;
-			if (!Engine.ToolMode)
+			if (!Engine.ProjectileXML)
 			{
 				using (var xmlContent = new ContentManager(Engine.Game.Services, "Content"))
 				{
