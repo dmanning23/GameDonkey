@@ -859,13 +859,13 @@ namespace GameDonkeyLib
 			Filename characterFile,
 			int playerIndex,
 			string playerName,
-			GameObjectType playerType,
+			string playerType,
 			ContentManager xmlContent,
 			bool useKeyboard)
 		{
 			//create and load a player
 			PlayerQueue player = CreatePlayerQueue(color);
-			player.LoadXmlObject(characterFile, this, playerType, 0, xmlContent);
+			player.LoadXmlObject(characterFile, this, playerType, xmlContent);
 			Players.Add(player);
 
 			//create a controller for that player

@@ -141,6 +141,11 @@ namespace GameDonkeyLib
 				StartOffset.Z);
 		}
 
+		public void UpdateLightColor(Color color)
+		{
+			LightColor = new Color(color.R, color.G, color.B, LightColor.A);
+		}
+
 		#endregion //Methods
 	}
 }

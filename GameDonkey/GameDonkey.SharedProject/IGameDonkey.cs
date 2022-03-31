@@ -89,7 +89,7 @@ namespace GameDonkeyLib
 		   Filename characterFile,
 		   int playerIndex,
 		   string playerName,
-		   GameObjectType playerType = GameObjectType.Human,
+		   string playerType = "Human",
 		   ContentManager xmlContent = null,
 		   bool useKeyboard = false);
 

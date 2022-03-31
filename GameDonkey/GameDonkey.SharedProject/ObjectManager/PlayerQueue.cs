@@ -45,7 +45,7 @@ namespace GameDonkeyLib
 		/// <summary>
 		/// this is the player's character
 		/// </summary>
-		public PlayerObject Character { get; protected set; }
+		public PlayerObject Character { get; set; }
 
 		/// <summary>
 		/// This clock synchronizes the clocks between all the dudes this guy contains

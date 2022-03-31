@@ -175,6 +175,11 @@ namespace GameDonkeyLib
 			return Owner.Rotation;
 		}
 
+		public void UpdateParticleEffectColor(Color color)
+		{
+			Emitter.ParticleColor = new Color(color.R, color.G, color.B, Emitter.ParticleColor.A);
+		}
+
 		#endregion //Methods
 	}
 }

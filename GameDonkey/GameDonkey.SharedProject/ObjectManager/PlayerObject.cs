@@ -627,6 +627,11 @@ namespace GameDonkeyLib
 			base.ParseXmlData(model, engine, content);
 		}
 
+		protected T FindAction<T>(IStateContainer container, string stateName, string actionName) where T : BaseAction
+		{
+			return container.Actions.GetStateActions(stateName).FindAction(actionName) as T;
+		}
+
 		#endregion //File IO
 	}
 }
