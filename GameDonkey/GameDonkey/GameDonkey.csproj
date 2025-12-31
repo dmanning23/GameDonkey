@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <PackageId>GameDonkey</PackageId>
-    <Version>5.0.0</Version>
+    <Version>5.0.3</Version>
     <Title>GameDonkey</Title>
     <Authors>dmanning23</Authors>
     <description>A simple MonoGame game engine for character-based games</description>

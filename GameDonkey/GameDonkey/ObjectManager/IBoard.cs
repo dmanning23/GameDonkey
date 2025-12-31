@@ -1,42 +1,41 @@
 ﻿using FilenameBuddy;
-using GameDonkeyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GameDonkey.SharedProject.ObjectManager
+namespace GameDonkeyLib
 {
-	public interface IBoard
-	{
-		Rectangle WorldBoundaries { get; set; }
+    public interface IBoard
+    {
+        Rectangle WorldBoundaries { get; set; }
 
-		Rectangle CollisionBoundaries { get; set; }
+        Rectangle CollisionBoundaries { get; set; }
 
-		PlayerQueue LevelObjects { get; }
+        PlayerQueue LevelObjects { get; }
 
-		List<Vector2> SpawnPoints { get; set; }
+        List<Vector2> SpawnPoints { get; set; }
 
-		Vector2 CenterPoint { get; }
+        Vector2 CenterPoint { get; }
 
-		string Music { get; set; }
+        string Music { get; set; }
 
-		Vector2 CenterVelocity { get; }
+        Vector2 CenterVelocity { get; }
 
-		void Start();
+        void Start();
 
-		void StartAtSpawnPoints(List<PlayerQueue> players);
+        void StartAtSpawnPoints(List<IPlayerQueue> players);
 
-		void RespawnPlayer(IGameDonkey engine, PlayerQueue playerQueue);
+        void RespawnPlayer(IGameDonkey engine, IPlayerQueue playerQueue);
 
-		void CollisionDetection(IGameDonkey engine);
+        void CollisionDetection(IGameDonkey engine);
 
-		void RenderBackground(IGameDonkey engine);
+        void RenderBackground(IGameDonkey engine);
 
-		void RenderForeground(IGameDonkey engine);
+        void RenderForeground(IGameDonkey engine);
 
-		void RenderLevel(IGameDonkey engine, Matrix cameraMatrix, SpriteSortMode sortMode);
+        void RenderLevel(IGameDonkey engine, Matrix cameraMatrix, SpriteSortMode sortMode);
 
-		void LoadBoard(Filename boardFile, IGameDonkey engine, ContentManager xmlContent = null);
-	}
+        void LoadBoard(Filename boardFile, IGameDonkey engine, ContentManager xmlContent = null);
+    }
 }

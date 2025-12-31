@@ -7,109 +7,105 @@ using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
-	public class LevelObject : BaseObject
-	{
-		#region Properties
+    public class LevelObject : BaseObject
+    {
+        #region Properties
 
-		/// <summary>
-		/// how fast players will pop out of a level object, pixels/second
-		/// </summary>
-		private const float MoveSpeed = 1750.0f;
+        /// <summary>
+        /// how fast players will pop out of a level object, pixels/second
+        /// </summary>
+        private const float MoveSpeed = 1750.0f;
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Methods
+        #region Methods
 
-		public LevelObject(HitPauseClock clock, int queueID, string name) : base(GameObjectType.Level, clock, queueID, name)
-		{
-		}
+        public LevelObject(HitPauseClock clock, int queueID, string name) : base(GameObjectType.Level, clock, queueID, name)
+        {
+        }
 
-		protected override void Init()
-		{
-			Physics = new LevelObjectPhysicsContainer(this);
-			States = new ObjectStateContainer(new HybridStateMachine());
-			States.StateChangedEvent += this.StateChanged;
-		}
+        protected override void Init()
+        {
+            Physics = new LevelObjectPhysicsContainer(this);
+            States = new StateContainer("Level Object");
+            States.StateChangedEvent += this.StateChanged;
+        }
 
-		public override void KillPlayer()
-		{
-		}
+        public override void CollisionResponse(BasePhysicsContainer otherObject,
+            CreateAttackAction attackAction,
+            Vector2 firstCollisionPoint,
+            Vector2 secondCollisionPoint)
+        {
+            //get a vector from the level object to the object
+            var levelToObject = firstCollisionPoint - secondCollisionPoint;
 
-		public override void CollisionResponse(BasePhysicsContainer otherObject,
-			CreateAttackAction attackAction,
-			Vector2 firstCollisionPoint,
-			Vector2 secondCollisionPoint)
-		{
-			//get a vector from the level object to the object
-			var levelToObject = firstCollisionPoint - secondCollisionPoint;
+            //set how far to move the other object
+            var moveSpeed = levelToObject.Length();
+            if (moveSpeed <= 0.0f)
+            {
+                return;
+            }
 
-			//set how far to move the other object
-			var moveSpeed = levelToObject.Length();
-			if (moveSpeed <= 0.0f)
-			{
-				return;
-			}
+            if (levelToObject.Y > 0.0f)
+            {
+                //set the distance to diameter of the circle minus the current y
+                moveSpeed += (CharacterClock.TimeDelta * MoveSpeed);
+            }
+            //if (fMoveSpeed > (CharacterClock.TimeDelta * m_fMoveSpeed))
+            //{
+            //    fMoveSpeed = (CharacterClock.TimeDelta * m_fMoveSpeed);
+            //}
 
-			if (levelToObject.Y > 0.0f)
-			{
-				//set the distance to diameter of the circle minus the current y
-				moveSpeed += (CharacterClock.TimeDelta * MoveSpeed);
-			}
-			//if (fMoveSpeed > (CharacterClock.TimeDelta * m_fMoveSpeed))
-			//{
-			//    fMoveSpeed = (CharacterClock.TimeDelta * m_fMoveSpeed);
-			//}
+            //add a "ground hit" to the other object?
+            levelToObject.Y = -1.0f * Math.Abs(levelToObject.Y);
+            levelToObject.Normalize();
+            if (!otherObject.Hits[(int)HitType.Ground].Active || (moveSpeed > otherObject.Hits[(int)HitType.Ground].Strength))
+            {
+                otherObject.Hits[(int)HitType.Ground].Set(
+                    levelToObject,
+                    null,
+                    moveSpeed,
+                    HitType.Ground,
+                    null,
+                    firstCollisionPoint);
+            }
+        }
 
-			//add a "ground hit" to the other object?
-			levelToObject.Y = -1.0f * Math.Abs(levelToObject.Y);
-			levelToObject.Normalize();
-			if (!otherObject.Hits[(int)HitType.Ground].Active || (moveSpeed > otherObject.Hits[(int)HitType.Ground].Strength))
-			{
-				otherObject.Hits[(int)HitType.Ground].Set(
-					levelToObject,
-					null,
-					moveSpeed,
-					HitType.Ground,
-					null,
-					firstCollisionPoint);
-			}
-		}
+        protected override void RespondToGroundHit(Hit groundHit, IGameDonkey engine)
+        {
+            //should never get here
+            Debug.Assert(false);
+        }
 
-		protected override void RespondToGroundHit(Hit groundHit, IGameDonkey engine)
-		{
-			//should never get here
-			Debug.Assert(false);
-		}
-		
-		#endregion //Methods
+        #endregion //Methods
 
-		#region File IO
+        #region File IO
 
-		/// <summary>
-		/// Given an xml node, parse the contents.
-		/// Override in child classes to read object-specific node types.
-		/// </summary>
-		/// <param name="childNode">the xml data to read</param>
-		/// <param name="engine">the engine we are using to load</param>
-		/// <param name="messageOffset">the message offset of this object's state machine</param>
-		/// <returns></returns>
-		public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content = null)
-		{
-			var data = model as LevelObjectModel;
-			if (null == data)
-			{
-				throw new Exception("must pass LevelObjectModel to LevelObject.ParseXmlData");
-			}
+        /// <summary>
+        /// Given an xml node, parse the contents.
+        /// Override in child classes to read object-specific node types.
+        /// </summary>
+        /// <param name="childNode">the xml data to read</param>
+        /// <param name="engine">the engine we are using to load</param>
+        /// <param name="messageOffset">the message offset of this object's state machine</param>
+        /// <returns></returns>
+        public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content = null)
+        {
+            var data = model as LevelObjectModel;
+            if (null == data)
+            {
+                throw new Exception("must pass LevelObjectModel to LevelObject.ParseXmlData");
+            }
 
-			//set the scale
-			Scale = data.Size;
-		
-			//set teh position
-			Position = data.Position;
+            //set the scale
+            Scale = data.Size;
 
-			base.ParseXmlData(model, engine, content);
-		}
+            //set teh position
+            Position = data.Position;
 
-		#endregion //File IO
-	}
+            base.ParseXmlData(model, engine, content);
+        }
+
+        #endregion //File IO
+    }
 }
