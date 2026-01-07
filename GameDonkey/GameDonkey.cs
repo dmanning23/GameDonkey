@@ -370,7 +370,7 @@ namespace GameDonkeyLib
         /// update a single player
         /// </summary>
         /// <param name="PlayerQueue"></param>
-        private void UpdatePlayer(IPlayerQueue playerQueue)
+        protected virtual void UpdatePlayer(IPlayerQueue playerQueue)
         {
             //update the characters
             playerQueue.Update(CharacterClock);
