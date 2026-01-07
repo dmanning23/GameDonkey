@@ -84,11 +84,6 @@ namespace GameDonkeyLib
         public List<IPlayerQueue> Players { get; private set; }
 
         /// <summary>
-        /// The max amount of time a game will last
-        /// </summary>
-        //public float MaxTime { get; private set; }
-
-        /// <summary>
         /// Timer used to countdown to end of game
         /// </summary>
         public CountdownTimer GameTimer { get; private set; }
@@ -102,11 +97,6 @@ namespace GameDonkeyLib
         /// the music resource for the current board
         /// </summary>
         public string Music { get; private set; }
-
-        //Game over stuff!!!
-        //public PlayerQueue Winner { get; protected set; }
-        //public bool Tie { get; protected set; }
-        //public bool GameOver { get; protected set; }
 
         /// <summary>
         /// dumb thing for loading sound effects.
@@ -163,10 +153,6 @@ namespace GameDonkeyLib
 
             //game over stuff
             GameTimer = new CountdownTimer();
-            //MaxTime = 186.0f;
-            //Winner = null;
-            //GameOver = false;
-            //Tie = false;
         }
 
         /// <summary>
@@ -284,7 +270,7 @@ namespace GameDonkeyLib
         /// The client class will not check for game over.
         /// </summary>
         /// <returns>bool: whether or not this update resulted in a game over situation</returns>
-        protected bool Update()
+        protected virtual bool Update()
         {
             //update the camera stuff
             Renderer.Camera.Update(MasterClock);
@@ -295,18 +281,6 @@ namespace GameDonkeyLib
 
             Renderer.Update(CharacterClock);
 
-            //TODO: check for a winner
-            //if (!GameOver)
-            //{
-            //				//warn about time almost over?
-            //				if (EGameMode.Time == GameMode)
-            //				{
-            //					if ((GameTimer.RemainingTime() < 20.0f) && (fOldTime >= 20.0f))
-            //					{
-            //						PlaySound("twenty");
-            //					}
-            //				}
-
             //check if anyone has won
             CheckForWinner();
 
@@ -314,14 +288,10 @@ namespace GameDonkeyLib
             Board.LevelObjects.Update(GameTimer);
 
             UpdatePlayers();
-            //}
 
             //TODO: update animation with master clock if game is over
 
-            //if (!GameOver)
-            //{
             CollisionDetection();
-            //}
 
             UpdateRagdoll();
 
@@ -388,7 +358,7 @@ namespace GameDonkeyLib
         /// <summary>
         /// update all the player stuff
         /// </summary>
-        private void UpdatePlayers()
+        protected void UpdatePlayers()
         {
             foreach (var player in Players)
             {
@@ -402,20 +372,14 @@ namespace GameDonkeyLib
         /// <param name="PlayerQueue"></param>
         private void UpdatePlayer(IPlayerQueue playerQueue)
         {
-            // if (!CheckIfPlayerStockOut(playerQueue))
-            // {
-            //     //TODO: check if the player is dead
-            //     CheckIfDead(playerQueue);
-
             //update the characters
             playerQueue.Update(CharacterClock);
-            //}
         }
 
         /// <summary>
         /// update all the ragdoll stuff
         /// </summary>
-        private void UpdateRagdoll()
+        protected void UpdateRagdoll()
         {
             List<Task> tasks = new List<Task>();
             foreach (var player in Players)
@@ -464,44 +428,6 @@ namespace GameDonkeyLib
 
         protected virtual bool CheckForWinner()
         {
-            // //check if only one player remains
-            // int numPlayers = 0;
-            // for (int i = 0; i < Players.Count; i++)
-            // {
-            //     if (!CheckIfPlayerStockOut(Players[i]))
-            //     {
-            //         numPlayers++;
-            //     }
-            // }
-
-            // //there can be only one winner!
-            // if (1 >= numPlayers && !ToolMode)
-            // {
-            //     StopTimers();
-            //     GameOver = true;
-
-            //     //find the winner!
-            //     for (int i = 0; i < Players.Count; i++)
-            //     {
-            //         if (!CheckIfPlayerStockOut(Players[i]))
-            //         {
-            //             Winner = Players[i];
-            //         }
-            //     }
-
-            //     if (0 == numPlayers)
-            //     {
-            //         //all the players died the same exact frame
-            //         Tie = true;
-            //     }
-            // }
-            // else
-            // {
-            //     CheckForTimeOver();
-            // }
-
-            // return GameOver;
-
             return false;
         }
 
@@ -511,34 +437,6 @@ namespace GameDonkeyLib
         /// </summary>
         protected virtual void CheckForTimeOver()
         {
-            // //check for time over
-            // if ((null == Winner) && (GameTimer.RemainingTime <= 0.0f) && !ToolMode)
-            // {
-            //     //find winner
-            //     int currentMaxStock = 0;
-            //     for (int i = 0; i < Players.Count; i++)
-            //     {
-            //         if (Players[i].Stock >= currentMaxStock)
-            //         {
-            //             //found someone with the max points, but is it a tie?
-            //             if ((Winner != null) && (Winner != Players[i]))
-            //             {
-            //                 if (Winner.Stock == Players[i].Stock)
-            //                 {
-            //                     Tie = true;
-            //                 }
-            //             }
-
-            //             //TODO: whenever a winner is found, set their animation to the win animation
-
-            //             Winner = Players[i];
-            //             currentMaxStock = Winner.Stock;
-            //         }
-            //     }
-
-            //     StopTimers();
-            //     GameOver = true;
-            //}
         }
 
         /// <summary>
@@ -548,7 +446,6 @@ namespace GameDonkeyLib
         /// <returns>true if the player has run out of stock</returns>
         protected virtual bool CheckIfPlayerStockOut(IPlayerQueue playerQueue)
         {
-            //return (0 >= playerQueue.Stock);
             return false;
         }
 
@@ -576,30 +473,6 @@ namespace GameDonkeyLib
         /// <param name="rPlayerQueue">the player to kill</param>
         protected virtual void KillPlayer(IPlayerQueue playerQueue)
         {
-            // var playerCharacter = playerQueue.Character;
-
-            // //TODO: play the death particle effect
-            // //PlayParticleEffect(EDefaultParticleEffects.Death,
-            // //	Vector2.Zero,
-            // //	rObject.Position,
-            // //	rObject.PlayerColor);
-
-            // //TODO: Play death squish, and the players death sound
-            // //PlaySound(m_strDeathNoise);
-            // //PlaySound(rObject.DeathSound);
-
-            // //Do the correct score calculation
-            // playerQueue.SubtractStock();
-
-            // if (!CheckIfPlayerStockOut(playerQueue))
-            // {
-            //     RespawnPlayer(playerQueue);
-            // }
-            // else
-            // {
-            //     playerQueue.Character.Reset();
-            //     playerQueue.DeactivateAllObjects();
-            // }
         }
 
         public void RespawnPlayer(IPlayerQueue playerQueue)
@@ -648,22 +521,10 @@ namespace GameDonkeyLib
         /// </summary>
         public virtual void UpdateCameraMatrix(bool forceToScreen)
         {
-            // //set up the camera
-            // if (GameOver && !Tie)
-            // {
-            //     //TODO: only show the winner!
-            //     Winner.AddToCamera(Renderer.Camera);
-            // }
-            // else
-            // {
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].AddToCamera(Renderer.Camera);
             }
-            //}
-
-            //draw the background before the camera is set
-            //DrawBackground();
 
             //Get the camera matrix we are gonna use
             Renderer.Camera.BeginScene(forceToScreen);

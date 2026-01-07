@@ -35,8 +35,6 @@ namespace GameDonkeyLib
         /// </summary>
         protected Vector2 ThumbstickDirection;
 
-        //public float Health { get; set; }
-
         public event EventHandler<HealthEventArgs> HealthChangedEvent;
 
         public AIController AI { get; set; }
@@ -86,7 +84,6 @@ namespace GameDonkeyLib
         public override void Reset()
         {
             base.Reset();
-            //ResetHealth();
         }
 
         public override void Update()
@@ -593,10 +590,6 @@ namespace GameDonkeyLib
         }
 
         #endregion //Hit Response
-
-        //public abstract void ResetHealth();
-
-        //public abstract bool CheckIfDead();
 
         public virtual void TakeDamage(float damage)
         {

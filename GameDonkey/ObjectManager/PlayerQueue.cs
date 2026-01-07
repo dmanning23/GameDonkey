@@ -53,21 +53,6 @@ namespace GameDonkeyLib
         public HitPauseClock CharacterClock { get; protected set; }
 
         /// <summary>
-        /// the number of points this player has
-        /// </summary>
-        //public int Points { get; private set; }
-
-        /// <summary>
-        /// the number of stock this player has.  This starts at 0 and gets incremented every time the player dies.
-        /// </summary>
-        //public int Stock { get; set; }
-
-        /// <summary>
-        /// This timer gets started for a few seconds every time the player scores.  Used to color the hud.
-        /// </summary>
-        //private CountdownTimer ScoreTimer { get; set; }
-
-        /// <summary>
         /// The player's name, either their gamertag, "AI", or name of the level
         /// </summary>
         public string PlayerName { get; set; }
@@ -134,12 +119,8 @@ namespace GameDonkeyLib
             Character = null;
             CharacterClock = new HitPauseClock();
             PlayerColor = playerColor;
-            //Points = 0;
-            //Stock = 1;
             InputQueue = null;
             QueueId = _nextQueueId++;
-
-            //ScoreTimer = new CountdownTimer();
         }
 
         public virtual PlayerObject CreateHumanPlayer(string name)
@@ -338,7 +319,6 @@ namespace GameDonkeyLib
         {
             //update the clock
             CharacterClock.Update(clock);
-            //ScoreTimer.Update(clock);
 
             //update all the active objects in this dude
             for (var i = 0; i < Active.Count; i++)
@@ -353,7 +333,6 @@ namespace GameDonkeyLib
         /// <returns>whether or not the thing is dead</returns>
         public virtual bool CheckIfDead()
         {
-            //return Character.CheckIfDead();
             return false;
         }
 
@@ -498,15 +477,6 @@ namespace GameDonkeyLib
                 }
             }
         }
-
-        /// <summary>
-        /// add one stock to this player.
-        /// </summary>
-        //public virtual void SubtractStock()
-        //{
-        //Stock--;
-        //ScoreTimer.Start(3.0f);
-        //}
 
         public virtual void RenderCharacterShadows(IGameDonkey engine)
         {
