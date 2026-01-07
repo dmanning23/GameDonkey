@@ -351,10 +351,11 @@ namespace GameDonkeyLib
         /// Check if an object is dead (out of bounds)
         /// </summary>
         /// <returns>whether or not the thing is dead</returns>
-        //public bool CheckIfDead()
-        //{
-        //return Character.CheckIfDead();
-        //}
+        public virtual bool CheckIfDead()
+        {
+            //return Character.CheckIfDead();
+            return false;
+        }
 
         public void UpdateInput(IInputState input)
         {

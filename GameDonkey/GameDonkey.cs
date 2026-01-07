@@ -556,12 +556,15 @@ namespace GameDonkeyLib
         /// Check if an object is dead (out of bounds) and process the death
         /// </summary>
         /// <param name="rObject">the object to check for death</param>
-        private void CheckIfDead(IPlayerQueue playerQueue)
+        protected virtual bool CheckIfDead(IPlayerQueue playerQueue)
         {
-            // if (playerQueue.CheckIfDead())
-            // {
-            //     KillPlayer(playerQueue);
-            // }
+            var deathOcurred = false;
+            if (playerQueue.CheckIfDead())
+            {
+                KillPlayer(playerQueue);
+                deathOcurred = true;
+            }
+            return deathOcurred;
         }
 
         /// <summary>

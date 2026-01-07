@@ -26,6 +26,9 @@ namespace GameDonkeyLib
         bool ActivateObject(BaseObject gameObject);
         void AddToCamera(ICamera camera);
         void CheckCollisions(IPlayerQueue otherGuy);
+
+        public bool CheckIfDead();
+
         void CheckHardCodedStates();
         //bool CheckIfDead();
         bool CheckListForObject(BaseObject gameObject, bool activeList);

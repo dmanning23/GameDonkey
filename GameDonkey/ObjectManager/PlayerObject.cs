@@ -342,6 +342,11 @@ namespace GameDonkeyLib
             {
                 //if the player's velocity is +y, it is set to 0
                 _velocity.Y = 0.0f;
+
+                if (States.StateMachine.Messages.Contains("HitGround"))
+                {
+                    SendStateMessage("HitGround");
+                }
             }
         }
 
