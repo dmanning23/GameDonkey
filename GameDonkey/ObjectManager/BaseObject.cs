@@ -578,7 +578,7 @@ namespace GameDonkeyLib
         /// <summary>
         /// Call this when the state changes to reset everything for the new state
         /// </summary>
-        protected virtual void StateChanged(object sender, HybridStateChangeEventArgs eventArgs)
+        protected virtual void StateChanged(object sender, StateChangeEventArgs<string> eventArgs)
         {
             //was this a turn around message?
             if (States.CurrentState == "TurningAround" || States.CurrentState == "AirTurningAround")

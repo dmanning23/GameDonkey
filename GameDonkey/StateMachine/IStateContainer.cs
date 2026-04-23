@@ -16,7 +16,7 @@ namespace GameDonkeyLib
         /// <summary>
         /// Event raised when current state changes
         /// </summary>
-        event EventHandler<HybridStateChangeEventArgs> StateChangedEvent;
+        event EventHandler<StateChangeEventArgs<string>> StateChangedEvent;
 
         #endregion //Events
 
@@ -32,7 +32,7 @@ namespace GameDonkeyLib
         /// <summary>
         /// Get the current state machine for this container
         /// </summary>
-        HybridStateMachine StateMachine { get; }
+        StringStateMachine StateMachine { get; }
 
         string CurrentState { get; }
 
@@ -57,7 +57,7 @@ namespace GameDonkeyLib
         /// <summary>
         /// The states have changed, go through and set all the actions of the new state to "not run"
         /// </summary>
-        void StateChange(object sender, HybridStateChangeEventArgs e);
+        void StateChange(object sender, StateChangeEventArgs<string> e);
 
         /// <summary>
         /// Execute the actions for the current state
@@ -101,7 +101,7 @@ namespace GameDonkeyLib
 
         void LoadContent(BaseObjectModel baseObjectmodel, BaseObject owner, IGameDonkey engine, ContentManager content);
 
-        void WriteXml(bool addAllMessages = false);
+        void WriteXml();
 
         #endregion //Methods
     }

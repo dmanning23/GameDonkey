@@ -26,7 +26,7 @@ namespace GameDonkeyLib
             Actions = new Dictionary<string, SingleStateActions>();
         }
 
-        public void LoadStateActions(IEnumerable<string> stateNames, SingleStateContainerModel stateContainerModel, BaseObject owner, IStateContainer stateContainer)
+        public void LoadStateActions(IEnumerable<string> stateNames, StateContainerModel stateContainerModel, BaseObject owner, IStateContainer stateContainer)
         {
             for (int i = 0; i < stateContainerModel.StatesActions.Count; i++)
             {
@@ -83,7 +83,7 @@ namespace GameDonkeyLib
             }
         }
 
-        public void RemoveStateMachineActions(SingleStateContainerModel stateMachineActions)
+        public void RemoveStateMachineActions(StateContainerModel stateMachineActions)
         {
             foreach (var singleStateAction in stateMachineActions.StatesActions)
             {

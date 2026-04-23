@@ -27,12 +27,12 @@ namespace GameDonkeyLib
         /// <summary>
         /// Occurs when the state changes in the state machine.
         /// </summary>
-        public event EventHandler<HybridStateChangeEventArgs> StateChangedEvent;
+        public event EventHandler<StateChangeEventArgs<string>> StateChangedEvent;
 
         /// <summary>
         /// Get the current state machine for this container
         /// </summary>
-        public HybridStateMachine StateMachine { get; private set; }
+        public StringStateMachine StateMachine { get; private set; }
 
         public StateMachineActions Actions { get; private set; }
 
@@ -82,11 +82,11 @@ namespace GameDonkeyLib
 
         #region Initialization
 
-        public StateContainer(string containerName = "") : this(new HybridStateMachine(), containerName)
+        public StateContainer(string containerName = "") : this(new StringStateMachine(), containerName)
         {
         }
 
-        public StateContainer(HybridStateMachine stateMachine, string containerName = "")
+        public StateContainer(StringStateMachine stateMachine, string containerName = "")
         {
             StateMachine = stateMachine;
             Actions = new StateMachineActions();
@@ -115,7 +115,7 @@ namespace GameDonkeyLib
             LoadStateMachine(StateMachine, StateMachineFilename, content);
 
             //Create the statecontainer model and load it
-            using (var singleStateContainerModel = new SingleStateContainerModel(StateContainerFilename))
+            using (var singleStateContainerModel = new StateContainerModel(StateContainerFilename))
             {
                 singleStateContainerModel.ReadXmlFile(content);
 
@@ -127,31 +127,24 @@ namespace GameDonkeyLib
             Actions.LoadContent(engine, content);
         }
 
-        protected virtual void LoadContainer(SingleStateContainerModel stateContainerModel, BaseObject owner)
+        protected virtual void LoadContainer(StateContainerModel stateContainerModel, BaseObject owner)
         {
             //load into the statemachineactions object
             Actions.LoadStateActions(StateMachine.States, stateContainerModel, owner, this);
         }
 
-        public virtual void LoadStateMachine(HybridStateMachine machine, Filename file, ContentManager content)
+        public virtual void LoadStateMachine(StringStateMachine machine, Filename file, ContentManager content)
         {
             if (file.HasFilename)
             {
-                //Load the state machine model
-                using (var model = new StateMachineModel(file))
-                {
-                    model.ReadXmlFile(content);
-                    machine.AddStateMachine(model);
-
-                    machine.SetInitialState(model.Initial);
-                }
+                machine.LoadXml(file, content);
             }
         }
 
-        public void WriteXml(bool addAllMessages = false)
+        public void WriteXml()
         {
             //create the model
-            using (var model = new SingleStateContainerModel(StateContainerFilename, this))
+            using (var model = new StateContainerModel(StateContainerFilename, this))
             {
                 //write the model out
                 model.WriteXml();
@@ -160,7 +153,7 @@ namespace GameDonkeyLib
             //write out the state machine
             if (StateMachineFilename.HasFilename)
             {
-                using (var model = new StateMachineModel(StateMachineFilename, StateMachine, addAllMessages))
+                using (var model = new StateMachineModel(StateMachineFilename, StateMachine))
                 {
                     //write the model out
                     model.WriteXml();
@@ -197,7 +190,7 @@ namespace GameDonkeyLib
         /// The states have changed, go through and set all the actions of the new state to "not run"
         /// </summary>
         /// <param name="iCurState">the new state of the object</param>
-        public void StateChange(object sender, HybridStateChangeEventArgs eventArgs)
+        public void StateChange(object sender, StateChangeEventArgs<string> eventArgs)
         {
             //set the new state actions to 'not run'
             Actions.StateChange(eventArgs.NewState);

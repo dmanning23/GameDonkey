@@ -35,7 +35,7 @@ namespace GameDonkeyLib
         /// <summary>
         /// A list of state actions that will be added to the main character
         /// </summary>
-        protected SingleStateContainerModel StateContainerModel { get; set; }
+        protected StateContainerModel StateContainerModel { get; set; }
 
         /// <summary>
         /// A list of all the garments to add to the main character
@@ -89,7 +89,7 @@ namespace GameDonkeyLib
 
         protected void LoadStateActions(string stateActionsFile, ContentManager xmlContent)
         {
-            StateContainerModel = new SingleStateContainerModel(new Filename(stateActionsFile));
+            StateContainerModel = new StateContainerModel(new Filename(stateActionsFile));
             StateContainerModel.ReadXmlFile(xmlContent);
         }
 
