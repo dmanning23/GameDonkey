@@ -5,76 +5,76 @@ using Shouldly;
 
 namespace GameDonkey.Tests
 {
-	[TestFixture]
-	public class EvadeTests
-	{
-		const float time = 1f;
-		const float timeDelta = 2f;
+    [TestFixture]
+    public class EvadeTests
+    {
+        const float time = 1f;
+        const float timeDelta = 2f;
 
-		[SetUp]
-		public void Setup()
-		{
-			Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
-		}
+        [SetUp]
+        public void Setup()
+        {
+            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+        }
 
-		[Test]
-		public void ModelToAction()
-		{
-			var model = new EvadeActionModel()
-			{
-				Time = time,
-				TimeDelta = new TimedActionModel(timeDelta)
-			};
+        [Test]
+        public void ModelToAction()
+        {
+            var model = new EvadeActionModel()
+            {
+                Time = time,
+                TimeDelta = new TimedActionModel(timeDelta)
+            };
 
-			var action = new EvadeAction(null, model);
+            var action = new EvadeAction(null, model);
 
-			action.Time.ShouldBe(time);
-			action.TimeDelta.ShouldBe(timeDelta);
-		}
+            action.Time.ShouldBe(time);
+            action.TimeDelta.ShouldBe(timeDelta);
+        }
 
-		[Test]
-		public void ActionToModel()
-		{
-			var action = new EvadeAction(null)
-			{
-				Time = time,
-				TimeDelta = timeDelta
-			};
+        [Test]
+        public void ActionToModel()
+        {
+            var action = new EvadeAction(null)
+            {
+                Time = time,
+                TimeDelta = timeDelta
+            };
 
-			var model = new EvadeActionModel(action);
+            var model = new EvadeActionModel(action);
 
-			model.Time.ShouldBe(time);
-			model.TimeDelta.TimeDelta.ShouldBe(timeDelta);
-		}
+            model.Time.ShouldBe(time);
+            model.TimeDelta.TimeDelta.ShouldBe(timeDelta);
+        }
 
-		[Test]
-		public void Persist()
-		{
-			var model = new EvadeActionModel()
-			{
-				Time = time,
-				TimeDelta = new TimedActionModel(timeDelta)
-			};
+        [Test]
+        public void Persist()
+        {
+            var model = new EvadeActionModel()
+            {
+                Time = time,
+                TimeDelta = new TimedActionModel(timeDelta)
+            };
 
-			//write the action out
-			var container = new SingleStateContainerModel(new Filename("EvadeTests.xml"));
-			var actions = new SingleStateActionsModel();
-			container.StatesActions.Add(actions);
-			actions.ActionModels.Add(model);
-			container.WriteXml();
+            //write the action out
+            var container = new StateContainerModel(new Filename("EvadeTests.xml"));
+            var actions = new SingleStateActionsModel();
+            container.StatesActions.Add(actions);
+            actions.ActionModels.Add(model);
+            container.WriteXml();
 
-			//read it back in
-			var container2 = new SingleStateContainerModel(new Filename("EvadeTests.xml"));
-			container2.ReadXmlFile();
+            //read it back in
+            var container2 = new StateContainerModel(new Filename("EvadeTests.xml"));
+            container2.ReadXmlFile();
 
-			//get the action
-			container2.StatesActions.Count.ShouldBe(1);
-			container2.StatesActions[0].ActionModels.Count.ShouldBe(1);
-			var model2 = container2.StatesActions[0].ActionModels[0] as EvadeActionModel;
-			model2.ShouldNotBeNull();
-			model2.ActionType.ShouldBe(EActionType.Evade);
-			model2.Time.ShouldBe(time);
-			model2.TimeDelta.TimeDelta.ShouldBe(timeDelta);
-		}
-	}
+            //get the action
+            container2.StatesActions.Count.ShouldBe(1);
+            container2.StatesActions[0].ActionModels.Count.ShouldBe(1);
+            var model2 = container2.StatesActions[0].ActionModels[0] as EvadeActionModel;
+            model2.ShouldNotBeNull();
+            model2.ActionType.ShouldBe(EActionType.Evade);
+            model2.Time.ShouldBe(time);
+            model2.TimeDelta.TimeDelta.ShouldBe(timeDelta);
+        }
+    }
 }

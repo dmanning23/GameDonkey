@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDonkey", "GameDonkey\GameDonkey.csproj", "{BF99A720-B78F-48D6-BE45-C1956046F319}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDonkey.Tests", "GameDonkey.Tests\GameDonkey.Tests.csproj", "{CCB83996-26CA-4D83-B346-5FB33E31E12F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{BF99A720-B78F-48D6-BE45-C1956046F319}.Release|x64.Build.0 = Release|Any CPU
 		{BF99A720-B78F-48D6-BE45-C1956046F319}.Release|x86.ActiveCfg = Release|Any CPU
 		{BF99A720-B78F-48D6-BE45-C1956046F319}.Release|x86.Build.0 = Release|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Debug|x64.Build.0 = Debug|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Debug|x86.Build.0 = Debug|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Release|x64.ActiveCfg = Release|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Release|x64.Build.0 = Release|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Release|x86.ActiveCfg = Release|Any CPU
+		{CCB83996-26CA-4D83-B346-5FB33E31E12F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
