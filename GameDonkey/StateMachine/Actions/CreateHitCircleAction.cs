@@ -4,16 +4,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// This is an attack action that uses a unattached circle instead of a bone
-	/// </summary>
 	public class CreateHitCircleAction : CreateAttackAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// this dudes hit circle that will be floating around
-		/// </summary>
 		protected PhysicsCircle HitCircle;
 
 		public float Radius
@@ -27,15 +20,7 @@ namespace GameDonkeyLib
 				HitCircle.Radius = value;
 			}
 		}
-
-		/// <summary>
-		/// the offset from the attached bone location to start this circle at
-		/// </summary>
 		public Vector2 StartOffset { get; set; }
-
-		/// <summary>
-		/// speed and direction of this circle
-		/// </summary>
 		public Vector2 Velocity { get; set; }
 
 		#endregion //Properties
@@ -74,11 +59,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			SetAttackBone();

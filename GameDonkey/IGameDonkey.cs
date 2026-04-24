@@ -35,19 +35,10 @@ namespace GameDonkeyLib
 
         List<IPlayerQueue> Players { get; }
 
-        //PlayerQueue Winner { get; }
-
-        //bool Tie { get; }
-
-        //bool GameOver { get; }
-
-        #endregion //Properties
+#endregion //Properties
 
         #region Methods
 
-        /// <summary>
-        /// load all the content in a windows forms game
-        /// </summary>
         void LoadContent(GraphicsDevice device, ContentManager xmlContent);
 
         void UnloadContent();
@@ -56,18 +47,8 @@ namespace GameDonkeyLib
 
         void Start();
 
-        /// <summary>
-        /// update the game engine
-        /// </summary>
-        /// <param name="time">current gametime</param>
-        /// <returns>bool: true if the game is over, false if it isn't</returns>
         bool Update(GameTime time);
 
-        /// <summary>
-        /// update the game engine
-        /// </summary>
-        /// <param name="time">current gametime</param>
-        /// <returns>bool: true if the game is over, false if it isn't</returns>
         bool Update(TimeUpdater time);
 
         void UpdateInput(IInputState input);

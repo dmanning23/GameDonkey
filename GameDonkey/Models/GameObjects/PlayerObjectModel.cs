@@ -14,10 +14,6 @@ namespace GameDonkeyLib
 		#endregion //Properties
 
 		#region Methods
-
-		/// <summary>
-		/// hello, standard constructor!
-		/// </summary>
 		public PlayerObjectModel(Filename filename) : base("playerObject", filename)
 		{
 		}

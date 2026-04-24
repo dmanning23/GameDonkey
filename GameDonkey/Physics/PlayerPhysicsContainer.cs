@@ -3,9 +3,6 @@ using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// Manages physics for player objects
-	/// </summary>
 	public class PlayerPhysicsContainer : BasePhysicsContainer
 	{
 		#region Methods
@@ -14,12 +11,6 @@ namespace GameDonkeyLib
 			: base(baseObecjt)
 		{
 		}
-
-		/// <summary>
-		/// check if a push hit occurs between me an another guy, or if we even need to check collisions
-		/// </summary>
-		/// <param name="otherGuy">the guy to check against</param>
-		/// <returns>bool: whether or not I should even check for collisions between these two objects</returns>
 		protected override bool CheckPushCollisions(BasePhysicsContainer otherGuy)
 		{
 			//if either of these dudes are evading, don't bother checking for collisions
@@ -103,11 +94,6 @@ namespace GameDonkeyLib
 
 			return true;
 		}
-
-		/// <summary>
-		/// Recursive function to check if the owner is hitting a level object
-		/// </summary>
-		/// <param name="levelObject">the level object to check against</param>
 		protected override void IterateLevelCollisions(BasePhysicsContainer levelObject)
 		{
 			//For player objects, only check feet against level objects

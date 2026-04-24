@@ -7,9 +7,6 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// This object describes all the items needed for a board
-	/// </summary>
 	public class BoardModel : XmlFileBuddy
 	{
 		#region Properties
@@ -205,11 +202,6 @@ namespace GameDonkeyLib
 			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
 			Foreground.Add(spawnPoint);
 		}
-
-		/// <summary>
-		/// Write this dude out to the xml format
-		/// </summary>
-		/// <param name="xmlWriter">the xml file to add this dude as a child of</param>
 		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
 		{
 			//write out the item tag

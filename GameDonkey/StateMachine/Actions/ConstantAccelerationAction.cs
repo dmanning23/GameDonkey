@@ -6,15 +6,7 @@ namespace GameDonkeyLib
 	public class ConstantAccelerationAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// The pixels/second to add to this characters velocity every second.
-		/// </summary>
 		public ActionDirection Velocity { get; set; }
-
-		/// <summary>
-		/// The point at which to stop adding velocity to the character
-		/// </summary>
 		public float MaxVelocity { get; set; }
 
 		#endregion //Properties
@@ -46,11 +38,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//set the constant accleration variable in the base object

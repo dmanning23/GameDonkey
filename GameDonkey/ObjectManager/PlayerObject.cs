@@ -8,31 +8,12 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-    /// <summary>
-    /// this is a player game token, either human or AI
-    /// </summary>
     public class PlayerObject : BaseObject
     {
         #region Properties
-
-        /// <summary>
-        /// Number of times the player has been hit in a row
-        /// </summary>
         public int ComboCounter { get; private set; }
-
-        /// <summary>
-        /// how long hit pause is in this game
-        /// </summary>
         protected virtual float HitPause => 0.2f;
-
-        /// <summary>
-        /// texture to hold the portrait for the HUD
-        /// </summary>
         public Texture2D Portrait { get; protected set; }
-
-        /// <summary>
-        /// the direction the thumbstick was held this frame
-        /// </summary>
         protected Vector2 ThumbstickDirection;
 
         public event EventHandler<HealthEventArgs> HealthChangedEvent;
@@ -54,11 +35,6 @@ namespace GameDonkeyLib
         {
             //init is called by the base class, which will set everything up
         }
-
-        /// <summary>
-        /// Replace all the base object pointers in this dude to point to a replacement object
-        /// </summary>
-        /// <param name="myBot">the replacement dude</param>
         public override void ReplaceOwner(PlayerObject myBot)
         {
             //replace in the state container
@@ -77,10 +53,6 @@ namespace GameDonkeyLib
 
             Reset();
         }
-
-        /// <summary>
-        /// Reset the object for game start, character death
-        /// </summary>
         public override void Reset()
         {
             base.Reset();
@@ -107,30 +79,14 @@ namespace GameDonkeyLib
 
             UpdateAnimation();
         }
-
-        /// <summary>
-        /// update an input wrapper
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <param name="input"></param>
         public override void UpdateInput(InputWrapper controller, IInputState input)
         {
             controller.Update(input, Flip);
         }
-
-        /// <summary>
-        /// Check if the character should be sent a "fall" message
-        /// Overload this in your child class
-        /// </summary>
         public virtual void UpdateFallMessage()
         {
             //Overload in child classes!
         }
-
-        /// <summary>
-        /// Update the character rotation before they are animated.
-        /// Overload this function in the child class for your game
-        /// </summary>
         public virtual void UpdateRotation()
         {
             //Overload in child classes!
@@ -165,23 +121,10 @@ namespace GameDonkeyLib
                 }
             }
         }
-
-        /// <summary>
-        /// fucntion to get the 'direction' this dude wants to go.
-        /// for players this will be thumbstick direction
-        /// for ai this will be direction they want to go
-        /// for projectile this will be direction player thumbstick was held when rpojectile was shot
-        /// </summary>
-        /// <returns></returns>
         public override Vector2 Direction()
         {
             return new Vector2(ThumbstickDirection.X, ThumbstickDirection.Y * -1f);
         }
-
-        /// <summary>
-        /// This is used to send attack moves from the input queue to the state machine, through the combo engine
-        /// </summary>
-        /// <param name="iMessage"></param>
         protected virtual void SendAttackMessage(string nextMoov)
         {
             //am i currently in an attack state? 
@@ -522,11 +465,6 @@ namespace GameDonkeyLib
 
             return hitDirection;
         }
-
-        /// <summary>
-        /// I got grabbed by a bad guy
-        /// </summary>
-        /// <param name="rGrab">hit with all the grab info</param>
         private void RespondToGrab(Hit grab)
         {
             //TODO: does any grab logic need to be performed?
@@ -598,15 +536,6 @@ namespace GameDonkeyLib
         #endregion //Methods
 
         #region File IO
-
-        /// <summary>
-        /// Given an xml node, parse the contents.
-        /// Override in child classes to read object-specific node types.
-        /// </summary>
-        /// <param name="childNode">the xml data to read</param>
-        /// <param name="engine">the engine we are using to load</param>
-        /// <param name="messageOffset">the message offset of this object's state machine</param>
-        /// <returns></returns>
         public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content)
         {
             PlayerObjectModel data = model as PlayerObjectModel;

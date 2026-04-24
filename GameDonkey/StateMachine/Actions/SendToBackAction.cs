@@ -28,11 +28,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//get that dude's characterqeueu and deactiuvate it

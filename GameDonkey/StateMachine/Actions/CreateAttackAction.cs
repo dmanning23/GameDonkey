@@ -9,10 +9,6 @@ namespace GameDonkeyLib
 	public class CreateAttackAction : TimedAction, IStateActionsList
 	{
 		#region Properties
-
-		/// <summary>
-		/// the name of the bone to use
-		/// </summary>
 		private string _boneName;
 		public string BoneName
 		{
@@ -25,17 +21,7 @@ namespace GameDonkeyLib
 				AttackBone = null;
 			}
 		}
-
-		/// <summary>
-		/// The bone this attack uses.  Has to be a weapon bone!
-		/// Starts out as null, and is set at runtime the first time this action is run.
-		/// Since it can be a garment bone, these might not actually be in the model at startup
-		/// </summary>
 		public Bone AttackBone { get; protected set; }
-
-		/// <summary>
-		/// the vector to set another object to when this attack connects
-		/// </summary>
 		public ActionDirection ActionDirection { get; set; }
 		public Vector2 Direction
 		{
@@ -46,23 +32,10 @@ namespace GameDonkeyLib
 		}
 
 		public SoundEffect HitSound { get; private set; }
-
-		/// <summary>
-		/// A list of actions that will be run if this attack connects (sound effects, particle effects, etc)
-		/// This list of actions is played whether the attack is blocked or not.
-		/// </summary>
 		private StateActionsList StateActionsList { get; set; }
 
 		public List<BaseAction> Actions => StateActionsList.Actions;
-
-		/// <summary>
-		/// the amount of damage to deal when this attack connects
-		/// </summary>
 		public float Damage { get; set; }
-
-		/// <summary>
-		/// True if this attack can hit multiple enemies, false if only hits one
-		/// </summary>
 		public bool AoE { get; set; }
 
 		#endregion //Properties
@@ -101,11 +74,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			SetAttackBone();
@@ -166,12 +134,6 @@ namespace GameDonkeyLib
 
 			return circle;
 		}
-
-		/// <summary>
-		/// execute all the success actions after this attack lands
-		/// </summary>
-		/// <param name="characterHit">The dude that got nailed by this attack</param>
-		/// <returns>bool: whether or not a state change occurred while this dude was running</returns>
 		public virtual bool ExecuteSuccessActions(BaseObject characterHit)
 		{
 			var result = false;

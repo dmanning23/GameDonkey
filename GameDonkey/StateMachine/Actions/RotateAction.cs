@@ -6,10 +6,6 @@ namespace GameDonkeyLib
 	public class RotateAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// The radians/second to rotate
-		/// </summary>
 		public float Rotation { get; set; }
 
 		#endregion //Properties
@@ -39,11 +35,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//set the rotation action variable in the base object

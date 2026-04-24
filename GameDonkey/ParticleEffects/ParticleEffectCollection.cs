@@ -11,10 +11,6 @@ namespace GameDonkeyLib
 	public class ParticleEffectCollection
 	{
 		#region Properties
-
-		/// <summary>
-		/// a list of all the default particle effects used int he game
-		/// </summary>
 		private List<EmitterTemplate> DefaultParticles { get; set; }
 
 		#endregion //Properties

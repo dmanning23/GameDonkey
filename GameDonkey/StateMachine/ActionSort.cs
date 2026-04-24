@@ -2,9 +2,6 @@
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// class for sorting actions in a 
-	/// </summary>
 	class ActionSort : IComparer<BaseAction>
 	{
 		public int Compare(BaseAction action1, BaseAction action2)

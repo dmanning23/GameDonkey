@@ -6,10 +6,6 @@ namespace GameDonkeyLib
 	public class TargetRotationAction : TimedAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// The rotation this action will aim for
-		/// </summary>
 		public ActionDirection TargetRotation { get; set; }
 
 		#endregion //Properties
@@ -40,11 +36,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//get the direction

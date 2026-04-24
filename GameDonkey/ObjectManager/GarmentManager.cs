@@ -7,43 +7,20 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// This is a class to make it easier to add/remove garments from a baseobject
-	/// </summary>
 	public class GarmentManager : TimedActionList<AddGarmentAction>
 	{
 		#region Members
-
-		/// <summary>
-		/// A list of all the garments loaded from all the add garment actions
-		/// Used so that actions can share garments, instead of loading an instance of the same garment for each action
-		/// </summary>
 		private List<Garment> AllGarments { get; set; }
-
-		/// <summary>
-		/// The base object that owns this dude
-		/// </summary>
 		private BaseObject Owner { get; set; }
 
 		#endregion //Members
 
 		#region Methods
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="owner">the object that owns this guy.  Cannot be null</param>
 		public GarmentManager(BaseObject owner)
 		{
 			Owner = owner;
 			AllGarments = new List<Garment>();
 		}
-
-		/// <summary>
-		/// Add a garment to be managed.  Adds it to the object and sets up removal time
-		/// </summary>
-		/// <param name="action">The garment to be added.  Cannot be null</param>
-		/// <param name="clock"></param>
 		public override void AddAction(AddGarmentAction action, GameClock clock)
 		{
 			//Store the garment
@@ -92,10 +69,6 @@ namespace GameDonkeyLib
 				Owner.Physics.SortBones(Owner.AnimationContainer.Skeleton.RootBone);
 			}
 		}
-
-		/// <summary>
-		/// Reset the garment manager.  Removes all the current garments.
-		/// </summary>
 		public override void Reset()
 		{
 			//remove all the garments from the model
@@ -120,11 +93,6 @@ namespace GameDonkeyLib
 			//clear out the list
 			base.Reset();
 		}
-
-		/// <summary>
-		/// Update the garment manager.  Checks if any garments are ready to be removed
-		/// </summary>
-		/// <param name="clock"></param>
 		public override void Update(GameClock clock)
 		{
 			var hasPhysics = false; //flag to check if any physics need to be updated
@@ -163,11 +131,6 @@ namespace GameDonkeyLib
 		}
 
 		#region Tools
-
-		/// <summary>
-		/// Get a list of all the weapon
-		/// </summary>
-		/// <param name="listWeapons"></param>
 		public void GetAllWeaponBones(List<string> listWeapons)
 		{
 			foreach (var garment in AllGarments)
@@ -181,12 +144,6 @@ namespace GameDonkeyLib
 		#endregion //Methods
 
 		#region File IO
-
-		/// <summary>
-		/// check if a garment is already loaded
-		/// </summary>
-		/// <param name="garmentFile">filename of the garment to check for</param>
-		/// <returns>the matching object if found, otherwise null</returns>
 		private Garment CheckForXmlGarment(Filename garmentFile)
 		{
 			foreach (var garment in AllGarments)

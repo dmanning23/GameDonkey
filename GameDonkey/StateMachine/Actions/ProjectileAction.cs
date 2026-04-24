@@ -12,27 +12,9 @@ namespace GameDonkeyLib
 		#region Properties
 
 		protected ProjectileObjectModel ProjectileObjectModel { get; set; }
-
-		/// <summary>
-		/// the filename of the projectile data.xml file to use
-		/// </summary>
 		public Filename FileName { get; set; }
-
-		/// <summary>
-		/// the offset from the bone to start the particle effect from
-		/// this is ignored if the bone thing is set
-		/// </summary>
 		public Vector2 StartOffset { get; set; }
-
-		/// <summary>
-		/// The direction to set the projectile's initial velocity when this action is run.
-		/// This is only used if the thumbstick flag is false
-		/// </summary>
 		public ActionDirection Velocity { get; set; }
-
-		/// <summary>
-		/// How much to scale the projectile.  Read in from the xml file, not the "runtime scale"
-		/// </summary>
 		public float Scale { get; set; }
 
 		private IGameDonkey Engine { get; set; }
@@ -80,11 +62,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//load the character into the playerqueue

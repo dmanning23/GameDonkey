@@ -4,16 +4,9 @@ using System.Linq;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// A list of actions
-	/// </summary>
 	public class StateActionsList : IStateActionsList
 	{
 		#region Properties
-
-		/// <summary>
-		/// List of all the actions to perform when in this state
-		/// </summary>
 		public List<BaseAction> Actions { get; private set; }
 
 		#endregion //Properties
@@ -21,10 +14,6 @@ namespace GameDonkeyLib
 		#region Methods
 
 		#region Initialization
-
-		/// <summary>
-		/// standard constructor!
-		/// </summary>
 		public StateActionsList()
 		{
 			Actions = new List<BaseAction>();
@@ -52,13 +41,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Tool Methods
-
-		/// <summary>
-		/// Given an action type, add a blank action to this list of actions
-		/// </summary>
-		/// <param name="actionType">the type of action to add</param>
-		/// <param name="owner">the owner of this action list</param>
-		/// <returns>IBaseAction: reference to the action that was created</returns>
 		public BaseAction AddNewActionFromType(EActionType actionType, BaseObject owner, IGameDonkey engine, ContentManager content)
 		{
 			//get the correct action type
@@ -74,11 +56,6 @@ namespace GameDonkeyLib
 			//return the newly created dude
 			return action;
 		}
-
-		/// <summary>
-		/// remove an item from the state actions
-		/// </summary>
-		/// <param name="iActionIndex">index of the item to remove</param>
 		public bool RemoveAction(BaseAction action)
 		{
 			return Actions.Remove(action);

@@ -15,21 +15,13 @@ using System.Diagnostics;
 
 namespace GameDonkeyLib
 {
-    /// <summary>
-    /// this is a game token, either player or projectile
-    /// </summary>
     public abstract class BaseObject
     {
         #region Fields
 
-        /// <summary>
-        /// this is a counter for assigning round-robin item ids, this is the next id to use
-        /// </summary>
         private static uint _idCounter;
 
-        /// <summary>
-        /// Whether or not an attack has landed during the current state.  Used for combo engine.
-        /// </summary>
+        // tracks whether an attack landed this state, used by combo engine
         protected bool _attackLanded;
 
         protected Queue<string> _queuedInput;
@@ -40,49 +32,22 @@ namespace GameDonkeyLib
 
         #region Required Data Structures
 
-        /// <summary>
-        /// the global id of this instance of a base object
-        /// </summary>
         public uint Id { get; private set; }
 
-        /// <summary>
-        /// the id of this base object in teh player queue that owns it
-        /// </summary>
         public int QueueId { get; private set; }
 
-        /// <summary>
-        /// The type of thing this is
-        /// </summary>
         public string ObjectType { get; private set; }
 
-        /// <summary>
-        /// the animation container for this dude
-        /// </summary>
         public AnimationContainer AnimationContainer { get; private set; }
 
-        /// <summary>
-        /// The state machine and state actions for this dude
-        /// </summary>
         public IStateContainer States { get; set; }
 
-        /// <summary>
-        /// The player queue that owns this object
-        /// </summary>
         public PlayerQueue PlayerQueue { get; set; }
 
-        /// <summary>
-        /// thing for managing all the collisions, hits for this dude
-        /// </summary>
         public BasePhysicsContainer Physics { get; set; }
 
-        /// <summary>
-        /// drawlists used to draw the main character
-        /// </summary>
         protected DrawList DrawList { get; set; }
 
-        /// <summary>
-        /// the garment manager for this guy, used to make life easier
-        /// </summary>
         public GarmentManager Garments { get; protected set; }
 
         public string Name { get; set; }
@@ -91,45 +56,22 @@ namespace GameDonkeyLib
 
         #region State Data
 
-        /// <summary>
-        /// Reference to a clock that synchronizes all the different clocks in the dude
-        /// </summary>
         public HitPauseClock CharacterClock { get; protected set; }
 
-        /// <summary>
-        /// List of this dude's currently active attacks
-        /// </summary>
         public TimedActionList<CreateAttackAction> CurrentAttacks { get; set; }
 
-        /// <summary>
-        /// If this dude is in a blocking state, this is a reference to that state
-        /// </summary>
         public TimedActionList<BlockAction> CurrentBlocks { get; set; }
 
-        /// <summary>
-        /// If this timer is running, it means attacks don't hit
-        /// </summary>
+        // when running, attacks don't hit
         public TimedActionList<ShieldAction> ShieldActions { get; set; }
 
-        /// <summary>
-        /// evasion timer, if this is running it means there are no push collsions
-        /// </summary>
+        // when running, no push collisions
         public CountdownTimer EvasionTimer { get; protected set; }
 
-        /// <summary>
-        /// pointer to the current "throw" action (this dude is being thrown)
-        /// </summary>
         public CreateThrowAction CurrentThrow { get; set; }
 
-        /// <summary>
-        /// When this timer runs out, 
-        /// check the CharacterTrail object to see if we should drop another character image
-        /// </summary>
         public CountdownTimer TrailTimer { get; private set; }
 
-        /// <summary>
-        /// pointer to the current "character trail" object
-        /// </summary>
         protected TrailAction _trailAction;
         public TrailAction TrailAction
         {
@@ -144,49 +86,28 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// Acceleration to apply to this dude for the current state
-        /// </summary>
         public ConstantAccelerationAction AccelAction { get; set; }
 
-        /// <summary>
-        /// Decceleration to apply to this dude for the current state
-        /// </summary>
         public ConstantDeccelerationAction DeccelAction { get; set; }
 
-        /// <summary>
-        /// The last player to attack this guy.  Used to calculate points when someone dies.
-        /// </summary>
         public PlayerQueue LastAttacker { get; protected set; }
 
-        /// <summary>
-        /// a list of all the current particle effect emitters launched from state actions
-        /// Used to kill particle emitters when state changes
-        /// </summary>
+        // killed on state change
         public List<Emitter> Emitters { get; private set; }
 
-        /// <summary>
-        /// a list of all the current point lights launched from state actions
-        /// Used to kill lights when state changes
-        /// </summary>
+        // killed on state change
         public List<FlarePointLight> Lights { get; private set; }
 
         #endregion //State Data
 
         #region Positional Data
 
-        /// <summary>
-        /// How tall this character is (pixels)
-        /// </summary>
         protected float _height;
         public float Height
         {
             get { return (_height * _scale); }
         }
 
-        /// <summary>
-        /// How big to draw, do physics at
-        /// </summary>
         protected float _scale;
         public float Scale
         {
@@ -198,9 +119,6 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// The current color of this dude
-        /// </summary>
         private Color _playerColor;
         public Color PlayerColor
         {
@@ -215,9 +133,6 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// this dude's position
-        /// </summary>
         protected Vector2 _position;
         public virtual Vector2 Position
         {
@@ -231,14 +146,8 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// this dude's orientation
-        /// </summary>
         public bool Flip { get; set; }
 
-        /// <summary>
-        /// the velocity vector of this object
-        /// </summary>
         protected Vector2 _velocity;
         public Vector2 Velocity
         {
@@ -252,15 +161,9 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// rotation to apply to this dude for the current state
-        /// stored in radians/second
-        /// </summary>
+        // radians/second
         public float RotationPerSecond { get; set; }
 
-        /// <summary>
-        /// The current rotation of this dude.
-        /// </summary>
         private float _currentRotation = 0.0f;
         public float CurrentRotation
         {
@@ -287,19 +190,11 @@ namespace GameDonkeyLib
 
         #region Methods
 
-        /// <summary>
-        /// initialize static member variables
-        /// </summary>
         static BaseObject()
         {
             _idCounter = 0;
         }
 
-        /// <summary>
-        /// hello, standard constructor!
-        /// </summary>
-        /// <param name="eType">the type of this object</param>
-        /// <param name="clock">a character clock.</param>
         public BaseObject(GameObjectType gameObjectType, HitPauseClock clock, int queueId, string name)
         {
             ObjectType = gameObjectType.ToString();
@@ -343,13 +238,9 @@ namespace GameDonkeyLib
             Init();
         }
 
-        /// <summary>
-        /// Constructor for replacing a network player when they leave the game
-        /// </summary>
-        /// <param name="rHuman">the dude to be replaced, copy all his shit</param>
+        // replaces a network player on disconnect, copying their state
         public BaseObject(GameObjectType gamGameObjectType, BaseObject human)
         {
-            //grab all this shit
             ObjectType = gamGameObjectType.ToString();
             Id = human.Id;
             Name = human.Name;
@@ -393,19 +284,12 @@ namespace GameDonkeyLib
             States.StateChangedEvent += this.StateChanged;
         }
 
-        /// <summary>
-        /// Replace all the base object pointers in this dude to point to a replacement object
-        /// </summary>
-        /// <param name="myBot">the replacement dude</param>
         public virtual void ReplaceOwner(PlayerObject myBot)
         {
             //should only be called in the child classes!
             Debug.Assert(false);
         }
 
-        /// <summary>
-        /// Reset the object for game start, character death
-        /// </summary>
         public virtual void Reset()
         {
             CurrentAttacks.Reset();
@@ -427,14 +311,12 @@ namespace GameDonkeyLib
             RotationPerSecond = 0.0f;
             CurrentRotation = 0.0f;
 
-            //kill all the particle effects and clear out that list
             foreach (var emitter in Emitters)
             {
                 emitter.EmitterTimer.Stop();
             }
             Emitters.Clear();
 
-            //kill all the lights and clear out that list
             foreach (var light in Lights)
             {
                 light.Kill();
@@ -444,14 +326,11 @@ namespace GameDonkeyLib
 
         public virtual void Update()
         {
-            //update all our clocks
             EvasionTimer.Update(CharacterClock);
             TrailTimer.Update(CharacterClock);
 
-            //update the garments of this dude
             Garments.Update(CharacterClock);
 
-            //update the state actions of this dude
             States.ExecuteActions(CharacterClock);
 
             UpdateEmitters();
@@ -459,18 +338,11 @@ namespace GameDonkeyLib
             UpdateAnimation();
         }
 
-        /// <summary>
-        /// update the animation container.
-        /// </summary>
         public virtual void UpdateAnimation()
         {
-            //update the animations
             AnimationContainer.Update(CharacterClock, Position, Flip, CurrentRotation, false);
         }
 
-        /// <summary>
-        /// Clear out all the dead particle emitters
-        /// </summary>
         protected void UpdateEmitters()
         {
             int i = 0;
@@ -488,9 +360,6 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// Clear out all the dead particle emitters
-        /// </summary>
         protected void UpdateLights()
         {
             int i = 0;
@@ -508,24 +377,10 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// Do all the specific processing to get player input.
-        /// For human players, this means getting info from the controller.
-        /// For AI players, this means reacting to info in the list of "bad guys"
-        /// Also can ignore attack input to have times when players can move but not attack, like at beginning of match
-        /// </summary>
-        /// <param name="controller">the controller for this player (bullshit and ignored for AI)</param>
-        /// <param name="listBadGuys">list of all the players (ignored for human players)</param>
-        /// <param name="ignoreAttackInput">If true, the object should only move and not attack anything</param>
         public virtual void GetPlayerInput(InputWrapper controller, List<IPlayerQueue> listBadGuys, bool ignoreAttackInput)
         {
         }
 
-        /// <summary>
-        /// update an input wrapper
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <param name="input"></param>
         public virtual void UpdateInput(InputWrapper controller, IInputState input)
         {
         }
@@ -534,13 +389,10 @@ namespace GameDonkeyLib
         {
             //TODO: move all this hardcode states junk into update
 
-            //Apply acceleration to the character
             Accelerate();
 
-            //apply decceleration to the character
             Deccelerate();
 
-            //rorate the object
             ApplyRotation();
         }
 
@@ -549,63 +401,42 @@ namespace GameDonkeyLib
             AnimationContainer.UpdateRagdoll();
         }
 
-        /// <summary>
-        /// Add an attack to this dude's list of active attacks
-        /// </summary>
-        /// <param name="attackAction">the attack action to perform</param>
         public void AddAttack(CreateAttackAction attackAction)
         {
             CurrentAttacks.AddAction(attackAction, CharacterClock);
         }
 
-        /// <summary>
-        /// Send a message to this dudes state machine
-        /// </summary>
-        /// <param name="iMessage">the message to send to the state machine</param>
-        /// <returns>bool: whether or not this dude changed states</returns>
         public bool SendStateMessage(string message)
         {
-            //send the message to the state machine
             return States.SendStateMessage(message);
         }
 
         public void ForceStateChange(string state)
         {
-            //force the state change in the state machine
             States.ForceStateChange(state);
         }
 
-        /// <summary>
-        /// Call this when the state changes to reset everything for the new state
-        /// </summary>
         protected virtual void StateChanged(object sender, StateChangeEventArgs<string> eventArgs)
         {
-            //was this a turn around message?
             if (States.CurrentState == "TurningAround" || States.CurrentState == "AirTurningAround")
             {
                 Flip = !Flip;
             }
 
-            //clear the attacks
             CurrentAttacks.Reset();
 
-            //clear the blocks
             CurrentBlocks.Reset();
             ShieldActions.Reset();
 
-            //clear the evades
             EvasionTimer.Stop();
 
-            //clear the trail action
             TrailTimer.Stop();
             TrailAction = null;
 
-            //clear the accel & deccel
             AccelAction = null;
             DeccelAction = null;
             RotationPerSecond = 0.0f;
 
-            //remove any state specific garments
             Garments.Reset();
 
             //make sure to update this dude, 
@@ -616,14 +447,12 @@ namespace GameDonkeyLib
             }
             _attackLanded = false;
 
-            //kill all the particle effects and clear out that list
             foreach (var emitter in Emitters)
             {
                 emitter.EmitterTimer.Stop();
             }
             Emitters.Clear();
 
-            //kill all the lights and clear out that list
             foreach (var light in Lights)
             {
                 light.Kill();
@@ -633,7 +462,6 @@ namespace GameDonkeyLib
 
         public virtual void CheckCollisions(BaseObject badGuy)
         {
-            //make sure not to check collisions against ourselves
             if (Id != badGuy.Id)
             {
                 Physics.CheckCollisions(badGuy.Physics);
@@ -652,21 +480,17 @@ namespace GameDonkeyLib
             Vector2 firstCollisionPoint,
             Vector2 secondCollisionPoint)
         {
-            //set "attack landed" flag for this state for combo engine
             var player = AttackLanded();
 
             if (!otherObject.Hits[(int)HitType.Attack].Active || (attackAction.Damage > otherObject.Hits[(int)HitType.Attack].Strength))
             {
-                //i just punched the other object
 
-                //am I facing left or right?
                 var direction = attackAction.Direction;
                 if (Flip)
                 {
                     direction.X *= -1.0f;
                 }
 
-                //the base object should be the player if this object is a projectile
                 otherObject.Hits[(int)HitType.Attack].Set(direction, attackAction, attackAction.Damage, HitType.Attack, this, firstCollisionPoint);
 
                 //perform all the success actions
@@ -683,50 +507,36 @@ namespace GameDonkeyLib
             Vector2 firstCollisionPoint,
             Vector2 secondCollisionPoint)
         {
-            //set "attack landed" flag for this state for combo engine
             var rPlayer = AttackLanded();
 
             //my weapon just collided with that other dude's weapon
 
-            //am I facing left or right?
             var direction = attackAction.Direction;
             if (Flip)
             {
                 direction.X *= -1.0f;
             }
 
-            //the base object should be the player if this object is a projectile
             otherObject.Hits[(int)HitType.Weapon].Set(direction, attackAction, attackAction.Damage, HitType.Weapon, rPlayer, firstCollisionPoint);
         }
 
-        /// <summary>
-        /// i just attacked another dude but he blocked it
-        /// </summary>
-        /// <param name="otherObject"></param>
-        /// <param name="attackAction"></param>
-        /// <param name="firstCollisionPoint"></param>
-        /// <param name="secondCollisionPoint"></param>
         public virtual void BlockResponse(BasePhysicsContainer otherObject,
             CreateAttackAction attackAction,
             BlockAction otherDudesAction,
             Vector2 firstCollisionPoint,
             Vector2 secondCollisionPoint)
         {
-            //set "attack landed" flag for this state for combo engine
             var player = AttackLanded();
 
             if (!otherObject.Hits[(int)HitType.Block].Active || (attackAction.Damage > otherObject.Hits[(int)HitType.Block].Strength))
             {
-                //i just punched the other object
 
-                //am I facing left or right?
                 var direction = attackAction.Direction;
                 if (Flip)
                 {
                     direction.X *= -1.0f;
                 }
 
-                //the base object should be the player if this object is a projectile
                 otherObject.Hits[(int)HitType.Block].Set(direction, attackAction, attackAction.Damage, HitType.Attack, player, firstCollisionPoint);
 
                 //perform all the success actions for the BLOCKING action not the ATTACKING action!
@@ -736,11 +546,6 @@ namespace GameDonkeyLib
 
         #endregion //Collision Responses
 
-        /// <summary>
-        /// Remove an attack from the list
-        /// </summary>
-        /// <param name="attackIndex"></param>
-        /// <returns>True if it was able to remove the attack.</returns>
         public bool RemoveAttack(int attackIndex, bool forceRemove = false)
         {
             if (attackIndex < CurrentAttacks.CurrentActions.Count)
@@ -760,7 +565,6 @@ namespace GameDonkeyLib
 
         public virtual void HitResponse(IGameDonkey engine)
         {
-            //do boundary hits here in the base class
             if (Physics.Hits[(int)HitType.Ground].Active)
             {
                 RespondToGroundHit(Physics.Hits[(int)HitType.Ground], engine);
@@ -778,22 +582,6 @@ namespace GameDonkeyLib
             {
                 RespondToRightWallHit(Physics.Hits[(int)HitType.RightWall], engine);
             }
-
-            ////remove finished attacks from the list
-            //int i = 0;
-            //while (i < CurrentAttacks.Count)
-            //{
-            //	if (CurrentAttacks[i].DoneTime <= CharacterClock.CurrentTime)
-            //	{
-            //		CurrentAttacks.RemoveAt(i);
-            //	}
-            //	else
-            //	{
-            //		i++;
-            //	}
-            //}
-
-            //remove finished blocks from list
             CurrentAttacks.Update(CharacterClock);
             CurrentBlocks.Update(CharacterClock);
             ShieldActions.Update(CharacterClock);
@@ -879,10 +667,6 @@ namespace GameDonkeyLib
 
         #endregion //Hit Response
 
-        /// <summary>
-        /// add all the data for this dude to the camera
-        /// </summary>
-        /// <param name="camera"></param>
         public virtual void AddToCamera(ICamera camera)
         {
             //get half the height
@@ -904,11 +688,7 @@ namespace GameDonkeyLib
             return ShieldActions.CurrentActions.Count > 0;
         }
 
-        /// <summary>
-        /// called when this object lands an attack on another object
-        /// Set the attack landed flag in the owner character for the combo engine
-        /// </summary>
-        /// <returns>The player who landed the attack.</returns>
+        // sets _attackLanded for combo engine tracking
         public virtual BaseObject AttackLanded()
         {
             _attackLanded = true;
@@ -917,10 +697,6 @@ namespace GameDonkeyLib
 
         #region Rendering
 
-        /// <summary>
-        /// Check whether or not this dude should render a character trail
-        /// </summary>
-        /// <returns>bool: whether or not this dude needs to render a character trail</returns>
         public bool DoesNeedCharacterTrail()
         {
             //if there is no trail object, we definitly don't need this
@@ -953,10 +729,6 @@ namespace GameDonkeyLib
             AnimationContainer.Render(DrawList);
         }
 
-        /// <summary>
-        /// Do the actual drawing of the dude
-        /// </summary>
-        /// <param name="renderer"></param>
         public virtual void Render(IRenderer renderer)
         {
             DrawList.Render(renderer);
@@ -1107,10 +879,6 @@ namespace GameDonkeyLib
             CurrentRotation = Helper.ClampAngle(CurrentRotation);
         }
 
-        /// <summary>
-        /// Get how far other objects need to stay away from this dude
-        /// </summary>
-        /// <returns>float, either part of the height or the distance to the edge of the nearest attack</returns>
         public float MinDistance()
         {
             if (CurrentAttacks.CurrentActions.Count > 0)
@@ -1153,10 +921,6 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// Get how far other objects are before we dont care about them
-        /// </summary>
-        /// <returns>float, part of the height or the distance to the edge of the nearest attack</returns>
         public float MaxDistance()
         {
             float maxDistance = Height * 0.55f;
@@ -1165,21 +929,11 @@ namespace GameDonkeyLib
             return maxDistance;
         }
 
-        /// <summary>
-        /// fucntion to get the 'direction' this dude wants to go.
-        /// for players this will be thumbstick direction
-        /// for ai this will be direction they want to go
-        /// for projectile this will be direction player thumbstick was held when rpojectile was shot
-        /// </summary>
-        /// <returns></returns>
         virtual public Vector2 Direction()
         {
             return Vector2.Zero;
         }
 
-        /// <summary>
-        /// Kill this dude!
-        /// </summary>
         public virtual void KillPlayer()
         {
         }
@@ -1191,10 +945,6 @@ namespace GameDonkeyLib
 
         #region Tools
 
-        /// <summary>
-        /// Get a list of all the weapon
-        /// </summary>
-        /// <param name="listWeapons"></param>
         public void GetAllWeaponBones(List<string> listWeapons)
         {
             //get all the weapons from this dude's model
@@ -1210,14 +960,6 @@ namespace GameDonkeyLib
 
         #region File IO
 
-        /// <summary>
-        /// Given an xml node, parse the contents.
-        /// Override in child classes to read object-specific node types.
-        /// </summary>
-        /// <param name="model">the xml data to read</param>
-        /// <param name="engine">the engine we are using to load</param>
-        /// <param name="messageOffset">the message offset of this object's state machine</param>
-        /// <returns></returns>
         public virtual void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content)
         {
             //read in the model

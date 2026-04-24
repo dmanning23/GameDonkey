@@ -3,27 +3,11 @@ using Microsoft.Xna.Framework;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// This is a class to wrap up getting a direction for directional actions.
-	/// </summary>
 	public class ActionDirection
 	{
 		#region Properties
-
-		/// <summary>
-		/// Whether or not we want this action to use the left thumbstick to get its direction.
-		/// </summary>
 		public EDirectionType DirectionType { get; set; }
-
-		/// <summary>
-		/// The direction to use
-		/// </summary>
 		private Vector2 _velocity;
-
-		/// <summary>
-		/// The length of the velocity to add to the character.
-		/// This is only used if the thumbstick flag is true
-		/// </summary>
 		private float _velocityLength;
 
 		public Vector2 Velocity
@@ -44,19 +28,11 @@ namespace GameDonkeyLib
 		#endregion //Properties
 
 		#region Initialization
-
-		/// <summary>
-		/// Standard constructor
-		/// </summary>
 		public ActionDirection()
 		{
 			Velocity = new Vector2(0.0f);
 			DirectionType = EDirectionType.Absolute;
 		}
-
-		/// <summary>
-		/// Standard constructor
-		/// </summary>
 		public ActionDirection(DirectionActionModel direction)
 		{
 			Velocity = new Vector2(direction.Velocity.X, direction.Velocity.Y); ;
@@ -66,11 +42,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public Vector2 GetDirection(BaseObject owner)
 		{
 			switch (DirectionType)

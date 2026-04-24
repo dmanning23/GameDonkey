@@ -4,16 +4,9 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// This state is when the character blocks with one bone.
-	/// </summary>
 	public class BlockAction : ShieldAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// the name of the bone to use
-		/// </summary>
 		protected string _boneName;
 		public string BoneName
 		{
@@ -26,10 +19,6 @@ namespace GameDonkeyLib
 				AttackBone = null;
 			}
 		}
-
-		/// <summary>
-		/// The bone this attack uses
-		/// </summary>
 		public Bone AttackBone { get; private set; }
 
 		#endregion //Properties
@@ -60,11 +49,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			return base.Execute();

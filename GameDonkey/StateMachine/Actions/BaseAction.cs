@@ -3,33 +3,18 @@ using System.Text;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// The base interface for state machine actions
-	/// </summary>
 	public abstract class BaseAction
 	{
 		#region Properties
 
-		/// <summary>
-		/// the type of this action
-		/// </summary>
 		public EActionType ActionType { get; private set; }
 
-		/// <summary>
-		/// The game object that owns this action
-		/// </summary>
 		public BaseObject Owner { get; set; }
 
-		/// <summary>
-		/// whether or not this action has been run 
-		/// </summary>
 		public bool AlreadyRun { get; set; }
 
 		public string Id { get; set; }
 
-		/// <summary>
-		/// the time from the start of the state that this action ocuurs
-		/// </summary>
 		public float Time { get; set; }
 
 		#endregion //Properties
@@ -52,10 +37,6 @@ namespace GameDonkeyLib
 
 		public abstract void LoadContent(IGameDonkey engine, ContentManager content);
 
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public virtual bool Execute()
 		{
 			AlreadyRun = true;

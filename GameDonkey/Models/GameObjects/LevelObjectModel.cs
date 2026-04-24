@@ -6,9 +6,6 @@ using Vector2Extensions;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// This object stores all the information to load a level object
-	/// </summary>
 	public class LevelObjectModel : BaseObjectModel
 	{
 		#region Members

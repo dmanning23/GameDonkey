@@ -8,43 +8,16 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-    /// <summary>
-    /// This is a model of an "item", which is something that can be instanced.
-    /// </summary>
     public abstract class ItemObjectModel
     {
         #region Properties
-
-        /// <summary>
-        /// The model of this object if it is a summons
-        /// </summary>
         protected BaseObjectModel ObjectModel { get; set; }
 
         protected string ObjectType { get; set; }
-
-        /// <summary>
-        /// Animations that will be added to the main characer
-        /// </summary>
         protected AnimationsModel Animations { get; set; }
-
-        /// <summary>
-        /// A set of state changes that will be added to the main character
-        /// </summary>
         protected StateMachineModel StateChanges { get; set; }
-
-        /// <summary>
-        /// A list of state actions that will be added to the main character
-        /// </summary>
         protected StateContainerModel StateContainerModel { get; set; }
-
-        /// <summary>
-        /// A list of all the garments to add to the main character
-        /// </summary>
         protected List<GarmentModel> GarmentModels { get; set; }
-
-        /// <summary>
-        /// A list of moves to add to the input for the player
-        /// </summary>
         protected MoveListModel Moves { get; set; }
 
         #endregion //Properties

@@ -7,20 +7,8 @@ namespace GameDonkeyLib
 		#region Properties
 
 		//After the throw connects:
-
-		/// <summary>
-		/// The message to send to the state machine when this grab connects, to switch to the throw
-		/// </summary>
 		public string ThrowMessage { get; set; }
-
-		/// <summary>
-		/// the time delta after the grab connects to release the other characters
-		/// </summary>
 		public float ReleaseTimeDelta { get; set; }
-
-		/// <summary>
-		/// the time to let go of the character, set at runtime when throw is activated
-		/// </summary>
 		public float TimeToRelease { get; protected set; }
 
 		#endregion //Properties
@@ -52,12 +40,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute all the success actions after this attack lands
-		/// </summary>
-		/// <param name="characterHit">The dude that got nailed by this attack</param>
-		/// <returns>bool: whether or not a state change occurred while this dude was running</returns>
 		public override bool ExecuteSuccessActions(BaseObject characterHit)
 		{
 			//send the state message

@@ -2,9 +2,6 @@
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// this thing does a lot of sorting between different enums and state action objects, etc.
-	/// </summary>
 	public static class StateActionFactory
 	{
 		#region Methods
@@ -116,13 +113,6 @@ namespace GameDonkeyLib
 				default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
 			}
 		}
-
-		/// <summary>
-		/// factory method to create the correct action given an action type
-		/// </summary>
-		/// <param name="actionType">the type of action to add</param>
-		/// <param name="owner">the owner of this action list</param>
-		/// <returns>IBaseAction: reference to the action that was created</returns>
 		public static BaseAction CreateStateAction(BaseActionModel actionModel, BaseObject owner, IStateContainer stateContainer)
 		{
 			//get the correct action type
@@ -156,13 +146,6 @@ namespace GameDonkeyLib
 				default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
 			}
 		}
-
-		/// <summary>
-		/// factory method to create the correct action given an action type
-		/// </summary>
-		/// <param name="actionType">the type of action to add</param>
-		/// <param name="owner">the owner of this action list</param>
-		/// <returns>IBaseAction: reference to the action that was created</returns>
 		public static BaseAction CreateStateAction(EActionType actionType, BaseObject owner)
 		{
 			switch (actionType)

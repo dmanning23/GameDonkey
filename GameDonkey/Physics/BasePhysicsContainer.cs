@@ -10,44 +10,22 @@ namespace GameDonkeyLib
 	{
 		#region Properties
 
-		/// <summary>
-		/// the guy that owns this dude
-		/// </summary>
 		public BaseObject Owner { get; private set; }
 
-		/// <summary>
-		/// the list of hits for this dude
-		/// </summary>
 		public Hit[] Hits { get; protected set; }
 
-		/// <summary>
-		/// A list of bones that have collision information and are labelled as "weapons"
-		/// </summary>
 		public List<Bone> Weapons { get; private set; }
 
-		/// <summary>
-		/// A list of bones that have collision information and are labelled as "feet"
-		/// </summary>
 		public List<Bone> Feet { get; private set; }
 
-		/// <summary>
-		/// A list of bones that have collision information and aren't weapons
-		/// </summary>
 		public List<Bone> CollisionBones { get; private set; }
 
-		/// <summary>
-		/// Whether or not the bones have been sorted
-		/// </summary>
 		protected bool BonesSorted { get; set; }
 
 		#endregion //
 
 		#region Methods
 
-		/// <summary>
-		/// constructor
-		/// </summary>
-		/// <param name="object">the dude who owns this physics container</param>
 		public BasePhysicsContainer(BaseObject baseObject)
 		{
 			BonesSorted = false;
@@ -68,9 +46,6 @@ namespace GameDonkeyLib
 			Reset();
 		}
 
-		/// <summary>
-		/// Clear out all the physics data.
-		/// </summary>
 		public void ClearPhysicsLists()
 		{
 			Feet.Clear();
@@ -79,10 +54,6 @@ namespace GameDonkeyLib
 			BonesSorted = false;
 		}
 
-		/// <summary>
-		/// sort the bones into the appropriate lists at startup
-		/// </summary>
-		/// <param name="bone"></param>
 		public virtual void SortBones(Bone bone)
 		{
 			if (bone.HasPhysicsData())
@@ -116,10 +87,7 @@ namespace GameDonkeyLib
 			BonesSorted = true;
 		}
 
-		/// <summary>
-		/// The garment of the owner changed, resort the physics lists
-		/// This gets called AFTER the garment has been added or removed from the model
-		/// </summary>
+		// called AFTER the garment is added/removed — not before
 		public void GarmentChange(Garment garment)
 		{
 			if (garment.HasPhysics)
@@ -129,9 +97,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-		/// <summary>
-		/// Reset all the hits to false
-		/// </summary>
 		public void Reset()
 		{
 			for (int i = 0; i < Hits.Length; i++)
@@ -140,20 +105,11 @@ namespace GameDonkeyLib
 			}
 		}
 
-		/// <summary>
-		/// Replace all the base object pointers in this dude to point to a replacement object
-		/// </summary>
-		/// <param name="bot">the replacement dude</param>
 		public void ReplaceOwner(BaseObject bot)
 		{
 			Owner = bot;
 		}
 
-		/// <summary>
-		/// Find a weapon bone at runtime
-		/// </summary>
-		/// <param name="weaponName">name of the bone to find</param>
-		/// <returns>bone with matching name, else null</returns>
 		public Bone FindWeapon(string weaponName)
 		{
 			foreach (var weapon in Weapons)
@@ -170,10 +126,6 @@ namespace GameDonkeyLib
 
 		#region Collision Methods
 
-		/// <summary>
-		/// Check for collisions against another dude
-		/// </summary>
-		/// <param name="otherGuy"></param>
 		public virtual void CheckCollisions(BasePhysicsContainer otherGuy)
 		{
 			if (GameObjectType.Level.ToString() == otherGuy.Owner.ObjectType)
@@ -198,24 +150,10 @@ namespace GameDonkeyLib
 			}
 		}
 
-		/// <summary>
-		/// check if a push hit occurs between me an another guy, or if we even need to check collisions
-		/// </summary>
-		/// <param name="otherGuy">the guy to check against</param>
-		/// <returns>bool: whether or not I should even check for collisions between these two objects</returns>
 		protected abstract bool CheckPushCollisions(BasePhysicsContainer otherGuy);
 
-		/// <summary>
-		/// Recursive function to check if the owner is hitting a level object
-		/// </summary>
-		/// <param name="levelObjects">the level object to check against</param>
 		protected abstract void IterateLevelCollisions(BasePhysicsContainer levelObjects);
 
-		/// <summary>
-		/// recursive function check if a single bone is hitting another bone in a level object.
-		/// </summary>
-		/// <param name="bone">my bone</param>
-		/// <param name="levelObjects">the level object being checked against</param>
 		protected virtual void CheckLevelCollision(Bone bone, BasePhysicsContainer levelObjects)
 		{
 			//get the image we are checking of this bone
@@ -294,12 +232,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-		/// <summary>
-		/// recursively check one of my attacks against another characters current blocks
-		/// </summary>
-		/// <param name="attack">my attack to check</param>
-		/// <param name="otherGuy">the other guys physics container</param>
-		/// <returns>bool: true if the attack connected, false if there was no connection</returns>
 		private bool CheckBlockedAttack(CreateAttackAction attack, BasePhysicsContainer otherGuy)
 		{
 			foreach (var otherBlock in otherGuy.Owner.CurrentBlocks.CurrentActions)
@@ -434,12 +366,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-		/// <summary>
-		/// recursively check one of my attacks against another characters skeletal structure
-		/// </summary>
-		/// <param name="attack">my attack to check</param>
-		/// <param name="otherGuy">the other guys physics container</param>
-		/// <returns>bool: true if the attack connected, false if there was no connection</returns>
 		private bool CheckAttackCollisions(CreateAttackAction attack, BasePhysicsContainer otherGuy)
 		{
 			foreach (var otherBone in otherGuy.CollisionBones)
@@ -484,11 +410,6 @@ namespace GameDonkeyLib
 			return false;
 		}
 
-		/// <summary>
-		/// Check if this object is colliding with the world
-		/// </summary>
-		/// <param name="velocity">the current velocity of this dude</param>
-		/// <param name="worldBoundaries">rectangle of teh world boundaries</param>
 		public void CheckWorldCollisions(Vector2 velocity, Rectangle worldBoundaries)
 		{
 			float velocityLength = (velocity.Length() * Owner.CharacterClock.TimeDelta);
@@ -616,11 +537,6 @@ namespace GameDonkeyLib
 			}
 		}
 
-		/// <summary>
-		/// Check if a circle is hitting this dude
-		/// </summary>
-		/// <param name="circle"></param>
-		/// <returns></returns>
 		public bool CheckCircleCollision(Circle circle)
 		{
 			//loop through all my collision bones

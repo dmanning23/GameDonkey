@@ -6,20 +6,8 @@ namespace GameDonkeyLib
 	public class CameraShakeAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// the length of time to shake the camera
-		/// </summary>
 		public float TimeDelta { get; set; }
-
-		/// <summary>
-		/// how hard to shake the camera
-		/// </summary>
 		public float ShakeAmount { get; set; }
-
-		/// <summary>
-		/// the camera to shake
-		/// </summary>
 		public ICamera Camera { get; set; }
 
 		#endregion //Properties
@@ -53,11 +41,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			Camera.AddCameraShake(TimeDelta, ShakeAmount);

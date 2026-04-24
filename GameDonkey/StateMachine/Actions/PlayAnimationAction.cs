@@ -6,15 +6,7 @@ namespace GameDonkeyLib
 	public class PlayAnimationAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// Name of the animation to play
-		/// </summary>
 		public string AnimationName { get; set; }
-
-		/// <summary>
-		/// which playback mode to use
-		/// </summary>
 		public EPlayback PlaybackMode { get; set; }
 
 		#endregion //Properties
@@ -45,11 +37,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			Owner.AnimationContainer.SetAnimation(AnimationName, PlaybackMode);

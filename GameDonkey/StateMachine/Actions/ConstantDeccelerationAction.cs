@@ -6,17 +6,7 @@ namespace GameDonkeyLib
 	public class ConstantDeccelerationAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// The pixels/second to add to this characters velocity every second.
-		/// should be -x and +y
-		/// </summary>
 		public ActionDirection Velocity { get; set; }
-
-		/// <summary>
-		/// The point at which to stop adding y velocity to the character
-		/// should be +y.  Don't care about x, that will always slow down to 0.0
-		/// </summary>
 		public float MinYVelocity { get; set; }
 
 		#endregion //Properties
@@ -48,11 +38,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//set the constant accleration variable in the base object

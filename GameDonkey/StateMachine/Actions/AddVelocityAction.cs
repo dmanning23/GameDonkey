@@ -6,10 +6,6 @@ namespace GameDonkeyLib
 	public class AddVelocityAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// The direction to add to the players velocity to when this action is run.
-		/// </summary>
 		public ActionDirection Velocity { get; set; }
 
 		#endregion //Properties
@@ -40,11 +36,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//the final velocity we will add to the character

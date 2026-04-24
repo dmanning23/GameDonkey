@@ -4,73 +4,61 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	public class SingleStateActionsModel : StateActionsListModel
-	{
-		#region Properties
+    public class SingleStateActionsModel : StateActionsListModel
+    {
+        #region Properties
 
-		public string StateName { get; private set; }
+        public string StateName { get; private set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public SingleStateActionsModel()
-		{
-		}
+        public SingleStateActionsModel()
+        {
+        }
 
-		public SingleStateActionsModel(SingleStateActions stateActions) : base(stateActions.Actions)
-		{
-			StateName = stateActions.StateName;
-		}
+        public SingleStateActionsModel(SingleStateActions stateActions) : base(stateActions.Actions)
+        {
+            StateName = stateActions.StateName;
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
+        #region Methods
 
-		public override void ParseXmlNode(XmlNode node)
-		{
-			//what is in this node?
-			var name = node.Name;
-			var value = node.InnerText;
+        public override void ParseXmlNode(XmlNode node)
+        {
+            //what is in this node?
+            var name = node.Name;
+            var value = node.InnerText;
 
-			switch (name)
-			{
-				case "Asset":
-					{
-						//skip these old ass nodes
-						XmlFileBuddy.ReadChildNodes(node, ParseXmlNode);
-					}
-					break;
-				case "Type":
-					{
-						//Really skip these old ass nodes
-					}
-					break;
-				case "name":
-				case "StateName":
-					{
-						StateName = value;
-					}
-					break;
-				default:
-					{
-						base.ParseXmlNode(node);
-					}
-					break;
-			}
-		}
+            switch (name)
+            {
+                case "name":
+                    {
+                        StateName = value;
+                    }
+                    break;
+                default:
+                    {
+                        base.ParseXmlNode(node);
+                    }
+                    break;
+            }
+        }
 
-		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
-		{
-			xmlWriter.WriteStartElement("State");
+        public override void WriteXmlNodes(XmlTextWriter xmlWriter)
+        {
+            xmlWriter.WriteStartElement("state");
 
-			xmlWriter.WriteAttributeString("StateName", StateName);
+            xmlWriter.WriteAttributeString("name", StateName);
 
-			base.WriteXmlNodes(xmlWriter);
+            base.WriteXmlNodes(xmlWriter);
 
-			xmlWriter.WriteEndElement();
-		}
+            xmlWriter.WriteEndElement();
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

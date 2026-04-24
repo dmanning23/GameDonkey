@@ -3,16 +3,9 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// This action makes a character temporarily invulnerable
-	/// </summary>
 	public class ShieldAction : TimedAction, IStateActionsList
 	{
 		#region Properties
-
-		/// <summary>
-		/// A list of actions that will be run if this action blocks an attack (sound effects, particle effects, etc)
-		/// </summary>
 		private StateActionsList StateActionsList { get; set; }
 
 		public List<BaseAction> Actions => StateActionsList.Actions;
@@ -47,11 +40,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			AddBlock();
@@ -70,11 +58,6 @@ namespace GameDonkeyLib
 			//add this action to the list of block states
 			Owner.ShieldActions.AddAction(this, Owner.CharacterClock);
 		}
-
-		/// <summary>
-		/// execute all the success actions after this attack lands
-		/// </summary>
-		/// <returns>bool: whether or not a state change occurred while this dude was running</returns>
 		public bool ExecuteSuccessActions()
 		{
 			var result = false;

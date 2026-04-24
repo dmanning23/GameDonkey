@@ -5,7 +5,7 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-    public class SingleStateContainerModel : XmlFileBuddy
+    public class StateContainerModel : XmlFileBuddy
     {
         #region Properties
 
@@ -15,12 +15,12 @@ namespace GameDonkeyLib
 
         #region Initialization
 
-        public SingleStateContainerModel(Filename filename) : base("SingleStateContainer", filename)
+        public StateContainerModel(Filename filename) : base("stateContainer", filename)
         {
             StatesActions = new List<SingleStateActionsModel>();
         }
 
-        public SingleStateContainerModel(Filename filename, StateContainer stateContainer) : this(filename)
+        public StateContainerModel(Filename filename, StateContainer stateContainer) : this(filename)
         {
             foreach (var stateActions in stateContainer.Actions.Actions)
             {
@@ -28,7 +28,7 @@ namespace GameDonkeyLib
             }
         }
 
-        public SingleStateContainerModel(Filename filename, StateMachineActions stateActions) : this(filename)
+        public StateContainerModel(Filename filename, StateMachineActions stateActions) : this(filename)
         {
             foreach (var singleStateActions in stateActions.Actions)
             {
@@ -48,19 +48,7 @@ namespace GameDonkeyLib
 
             switch (name)
             {
-                case "Asset":
-                    {
-                        //skip these old ass nodes
-                        XmlFileBuddy.ReadChildNodes(node, ParseXmlNode);
-                    }
-                    break;
-                case "Type":
-                    {
-                        //Really skip these old ass nodes
-                    }
-                    break;
                 case "states":
-                case "States":
                     {
                         XmlFileBuddy.ReadChildNodes(node, ParseStates);
                     }
@@ -82,7 +70,7 @@ namespace GameDonkeyLib
 
         public override void WriteXmlNodes(XmlTextWriter xmlWriter)
         {
-            xmlWriter.WriteStartElement("States");
+            xmlWriter.WriteStartElement("states");
 
             foreach (var stateActions in StatesActions)
             {

@@ -5,15 +5,7 @@ namespace GameDonkeyLib
 	public class SendStateMessageAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// name of the message this dude sends
-		/// </summary>
 		public string Message { get; set; }
-
-		/// <summary>
-		/// This is the state container that will get sent the message
-		/// </summary>
 		IStateContainer StateContainer { get; set; }
 
 		#endregion //Properties
@@ -44,11 +36,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//The message offset is added to this message when it is read in, so dont add anything

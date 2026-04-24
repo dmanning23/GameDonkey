@@ -9,10 +9,6 @@ namespace GameDonkeyLib
 		#region Properties
 
 		Random _random = new Random();
-
-		/// <summary>
-		/// When this action is run, it will choose one random action from this list.
-		/// </summary>
 		private StateActionsList StateActionsList { get; set; }
 
 		public List<BaseAction> Actions => StateActionsList.Actions;
@@ -47,11 +43,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//reset teh success actions

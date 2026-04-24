@@ -13,10 +13,6 @@ namespace GameDonkeyLib
 		#endregion //Properties
 
 		#region Methods
-
-		/// <summary>
-		/// hello, standard constructor!
-		/// </summary>
 		public ProjectileObjectModel(Filename filename) : base(filename, "projectileObject")
 		{
 		}

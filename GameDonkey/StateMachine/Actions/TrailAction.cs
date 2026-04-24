@@ -6,20 +6,8 @@ namespace GameDonkeyLib
 	public class TrailAction : TimedAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// the start color of this trail
-		/// </summary>
 		public Color StartColor { get; set; }
-
-		/// <summary>
-		/// how long each individual trail lasts
-		/// </summary>
 		public float TrailLifeDelta { get; set; }
-
-		/// <summary>
-		/// how often to spawn a new trail
-		/// </summary>
 		public float SpawnDelta { get; set; }
 
 		#endregion //Properties
@@ -52,11 +40,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//activate the trail

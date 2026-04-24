@@ -4,9 +4,6 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// Contains all the base variables for serializing a state action
-	/// </summary>
 	public abstract class BaseActionModel : XmlObject
 	{
 		#region Properties
@@ -84,11 +81,6 @@ namespace GameDonkeyLib
 
 			xmlWriter.WriteEndElement();
 		}
-
-		/// <summary>
-		/// overloaded in child classes to write out action specific stuff
-		/// </summary>
-		/// <param name="rXMLFile"></param>
 		protected abstract void WriteActionXml(XmlTextWriter xmlWriter);
 
 		#endregion //Methods

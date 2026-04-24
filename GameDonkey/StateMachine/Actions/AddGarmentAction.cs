@@ -4,17 +4,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// This action adds a garment for either a set amount of time, or when the state ends.
-	/// </summary>
 	public class AddGarmentAction : TimedAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// Reference to the garment to add.
-		/// These are loaded from the base object's garment manager
-		/// </summary>
 		public Garment Garment { get; private set; }
 
 		public Filename Filename { get; set; }
@@ -49,11 +41,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//add this actionto the list of garments

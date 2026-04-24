@@ -9,15 +9,7 @@ namespace GameDonkeyLib
 	public class ParticleEffectAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// the particle effect template to use
-		/// </summary>
 		public EmitterTemplate Emitter { get; set; }
-
-		/// <summary>
-		/// the name of the bone to emanate from
-		/// </summary>
 		private string _boneName;
 		public string BoneName
 		{
@@ -35,33 +27,12 @@ namespace GameDonkeyLib
 				}
 			}
 		}
-
-		/// <summary>
-		/// the bone to attach the particle emitter to
-		/// </summary>
 		public Bone Bone { get; private set; }
-
-		/// <summary>
-		/// the direction to shoot the particle effect
-		/// </summary>
 		public ActionDirection Velocity { get; set; }
-
-		/// <summary>
-		/// the offset from the character origin to start the particle effect from
-		/// ignored if the source bone is set
-		/// </summary>
 		public Vector2 StartOffset { get; set; }
 
 		private ParticleEngine ParticleEngine { get; set; }
-
-		/// <summary>
-		/// When a particle is fired, whether or not it should match the rotation of the specified bone.
-		/// </summary>
 		public bool UseBoneRotation { get; set; }
-
-		/// <summary>
-		/// Flag to use the player's color instead of the emitter color
-		/// </summary>
 		public bool UsePlayerColor { get; set; }
 
 		#endregion //Properties
@@ -104,11 +75,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			var emitter = ParticleEngine.PlayParticleEffect(

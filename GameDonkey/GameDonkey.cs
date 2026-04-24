@@ -21,10 +21,8 @@ namespace GameDonkeyLib
 
         public Random Rand { get; private set; } = new Random(DateTime.Now.Millisecond);
 
-        //debugging flags
         protected KeyboardState _lastKeyboardState;
 
-        //debug shit
         protected bool _renderJointSkeleton;
         public bool DebugPhysics { get; set; } = false;
         public bool DebugWorldBoundaries { get; set; } = false;
@@ -58,9 +56,6 @@ namespace GameDonkeyLib
 
         public IBoard Board { get; set; }
 
-        /// <summary>
-        /// the world boundaries
-        /// </summary>
         public Rectangle WorldBoundaries
         {
             get { return Board.WorldBoundaries; }
@@ -78,30 +73,14 @@ namespace GameDonkeyLib
             get { return Players[0]; }
         }
 
-        /// <summary>
-        /// list of all the player objects in the game
-        /// </summary>
         public List<IPlayerQueue> Players { get; private set; }
 
-        /// <summary>
-        /// Timer used to countdown to end of game
-        /// </summary>
         public CountdownTimer GameTimer { get; private set; }
 
-        /// <summary>
-        /// Clock used to update all the characters & board objects
-        /// </summary>
         public GameClock CharacterClock { get; protected set; }
 
-        /// <summary>
-        /// the music resource for the current board
-        /// </summary>
         public string Music { get; private set; }
 
-        /// <summary>
-        /// dumb thing for loading sound effects.
-        /// </summary>
-        /// <value>The content of the sound.</value>
         protected ContentManager SoundContent { get; private set; }
 
         protected ParticleEffectCollection ParticleEffects { get; set; }
@@ -143,7 +122,6 @@ namespace GameDonkeyLib
 
             CharacterClock = new GameClock();
 
-            //debugging stuff
             _renderJointSkeleton = false;
             DebugPhysics = false;
             _renderAI = false;
@@ -151,27 +129,16 @@ namespace GameDonkeyLib
             DebugWorldBoundaries = false;
             _renderSpawnPoints = false;
 
-            //game over stuff
             GameTimer = new CountdownTimer();
         }
 
-        /// <summary>
-        /// factory method
-        /// </summary>
-        /// <param name="myColor"></param>
-        /// <param name="iQueueID"></param>
-        /// <returns></returns>
         public virtual IPlayerQueue CreatePlayerQueue(Color color)
         {
             return new PlayerQueue(color);
         }
 
-        /// <summary>
-        /// load all the content in a windows forms game
-        /// </summary>
         public virtual void LoadContent(GraphicsDevice graphics, ContentManager xmlContent)
         {
-            //load up the renderer graphics content, so we can use its conent manager to load all our graphics
             Renderer.LoadContent(graphics);
         }
 
@@ -198,17 +165,12 @@ namespace GameDonkeyLib
             MasterClock.Start();
             MasterClock.TimeDelta = 0.0f;
 
-            //speed up the character clock
             SetClockSpeed(1.0f);
 
-            //reset the game timer
-            //GameTimer.Start(MaxTime);
             CharacterClock.Start();
 
-            //reset teh level objects
             Board.Start();
 
-            //force the camera to fit the whole scene
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].AddToCamera(Renderer.Camera);
@@ -236,20 +198,12 @@ namespace GameDonkeyLib
             Renderer.Camera.AddCameraShake(shakeAmount);
         }
 
-        /// <summary>
-        /// Change the speed of the character clock
-        /// </summary>
-        /// <param name="fSpeed">multiplier to speed up/slow down the character clock</param>
         public void SetClockSpeed(float speed)
         {
             CharacterClock.TimerSpeed = speed;
         }
 
-        /// <summary>
-        /// this is a hack put in just for local testing.
-        /// In the real game, each individual player queue will be updated in the network game loop.
-        /// </summary>
-        /// <param name="rInput"></param>
+        // hack for local testing: in the real game each player queue is updated in the network game loop
         public void UpdateInput(IInputState input)
         {
             var tasks = new List<Task>();
@@ -263,28 +217,18 @@ namespace GameDonkeyLib
             Task.WaitAll(tasks.ToArray());
         }
 
-        /// <summary>
-        /// update the game engine.  
-        /// This function is overridden in child classes.  
-        /// The server class checks for game over and updates the client class
-        /// The client class will not check for game over.
-        /// </summary>
-        /// <returns>bool: whether or not this update resulted in a game over situation</returns>
+        // overridden in child classes: server checks for game over, client does not
         protected virtual bool Update()
         {
-            //update the camera stuff
             Renderer.Camera.Update(MasterClock);
 
-            //update all our clocks
             GameTimer.Update(MasterClock);
             CharacterClock.Update(GameTimer);
 
             Renderer.Update(CharacterClock);
 
-            //check if anyone has won
             CheckForWinner();
 
-            //update the level objects
             Board.LevelObjects.Update(GameTimer);
 
             UpdatePlayers();
@@ -297,13 +241,10 @@ namespace GameDonkeyLib
 
             UpdateDrawlists();
 
-            //update the particle engine!!
             ParticleEngine.Update(MasterClock);
 
-            //update everything else!
             UpdateStuff();
 
-            //debugging stuff!!!
 #if DEBUG
             KeyboardState currentState = Keyboard.GetState();
             if (currentState.IsKeyDown(Keys.Y) && _lastKeyboardState.IsKeyUp(Keys.Y))
@@ -329,35 +270,21 @@ namespace GameDonkeyLib
             }
 #endif
 
-            //return GameOver;
             return false;
         }
 
-        /// <summary>
-        /// update the game engine
-        /// </summary>
-        /// <param name="rGameTime">current gametime</param>
-        /// <returns>bool: true if the game is over, false if it isn't</returns>
         public bool Update(GameTime time)
         {
             MasterClock.Update(time);
             return Update();
         }
 
-        /// <summary>
-        /// update the game engine
-        /// </summary>
-        /// <param name="rTime">current gametime</param>
-        /// <returns>bool: true if the game is over, false if it isn't</returns>
         public bool Update(TimeUpdater time)
         {
             MasterClock.Update(time);
             return Update();
         }
 
-        /// <summary>
-        /// update all the player stuff
-        /// </summary>
         protected void UpdatePlayers()
         {
             foreach (var player in Players)
@@ -366,19 +293,11 @@ namespace GameDonkeyLib
             }
         }
 
-        /// <summary>
-        /// update a single player
-        /// </summary>
-        /// <param name="PlayerQueue"></param>
         protected virtual void UpdatePlayer(IPlayerQueue playerQueue)
         {
-            //update the characters
             playerQueue.Update(CharacterClock);
         }
 
-        /// <summary>
-        /// update all the ragdoll stuff
-        /// </summary>
         protected void UpdateRagdoll()
         {
             List<Task> tasks = new List<Task>();
@@ -390,34 +309,23 @@ namespace GameDonkeyLib
             Task.WaitAll(tasks.ToArray());
         }
 
-        /// <summary>
-        /// Update enything else in a child class
-        /// </summary>
         protected virtual void UpdateStuff()
         {
         }
 
-        /// <summary>
-        /// check for collisions and respond!
-        /// </summary>
         protected virtual void CollisionDetection()
         {
             for (int i = 0; i < Players.Count; i++)
             {
-                //check for collisions between players
                 for (int j = i + 1; j < Players.Count; j++)
                 {
                     Players[i].CheckCollisions(Players[j]);
                 }
 
-                //check for collisions with level objects
                 Players[i].CheckCollisions(Board.LevelObjects);
-
-                //check for world collisions
                 Players[i].CheckWorldCollisions(Board.CollisionBoundaries);
             }
 
-            //respond to hits!
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].RespondToHits(this);
@@ -431,28 +339,15 @@ namespace GameDonkeyLib
             return false;
         }
 
-        /// <summary>
-        /// Check if time has run out and determine a winner if it has.
-        /// Called from the CheckForWinner method
-        /// </summary>
         protected virtual void CheckForTimeOver()
         {
         }
 
-        /// <summary>
-        /// Check if a player has run out of stock
-        /// </summary>
-        /// <param name="rPlayerQueue">the player queue to check</param>
-        /// <returns>true if the player has run out of stock</returns>
         protected virtual bool CheckIfPlayerStockOut(IPlayerQueue playerQueue)
         {
             return false;
         }
 
-        /// <summary>
-        /// Check if an object is dead (out of bounds) and process the death
-        /// </summary>
-        /// <param name="rObject">the object to check for death</param>
         protected virtual bool CheckIfDead(IPlayerQueue playerQueue)
         {
             var deathOcurred = false;
@@ -464,20 +359,12 @@ namespace GameDonkeyLib
             return deathOcurred;
         }
 
-        /// <summary>
-        /// Play the death particle effect
-        ///	Respawn the player
-        /// Do the correct score calculation
-        /// Play the players death sound
-        /// </summary>
-        /// <param name="rPlayerQueue">the player to kill</param>
         protected virtual void KillPlayer(IPlayerQueue playerQueue)
         {
         }
 
         public void RespawnPlayer(IPlayerQueue playerQueue)
         {
-            //respawn the player
             Board.RespawnPlayer(this, playerQueue);
         }
 
@@ -493,18 +380,12 @@ namespace GameDonkeyLib
             Vector2 position,
             Color color)
         {
-            //get the particle effect
             var emitterTemplate = ParticleEffects.GetEmitterTemplate(effect);
-
-            //play the particle effect
             ParticleEngine.PlayParticleEffect(emitterTemplate, velocity, position, Vector2.Zero, color, false);
         }
 
         #region Draw
 
-        /// <summary>
-        /// update all the drawlists
-        /// </summary>
         public void UpdateDrawlists()
         {
             List<Task> tasks = new List<Task>();
@@ -516,9 +397,6 @@ namespace GameDonkeyLib
             Task.WaitAll(tasks.ToArray());
         }
 
-        /// <summary>
-        /// update the camera before rendering
-        /// </summary>
         public virtual void UpdateCameraMatrix(bool forceToScreen)
         {
             for (int i = 0; i < Players.Count; i++)
@@ -530,10 +408,6 @@ namespace GameDonkeyLib
             Renderer.Camera.BeginScene(forceToScreen);
         }
 
-        /// <summary>
-        /// get the gameplay matrix
-        /// </summary>
-        /// <returns></returns>
         public Matrix GetCameraMatrix()
         {
             return Renderer.Camera.TranslationMatrix * Resolution.TransformationMatrix();
@@ -604,7 +478,6 @@ namespace GameDonkeyLib
                 return;
             }
 
-            //render all the character trails, start another spritebatch
             Renderer.SpriteBatchBeginNoEffect(BlendState.NonPremultiplied, cameraMatrix, sortMode);
             for (int i = 0; i < Players.Count; i++)
             {
@@ -613,9 +486,6 @@ namespace GameDonkeyLib
             Renderer.SpriteBatchEnd();
         }
 
-        /// <summary>
-        /// draw the hud
-        /// </summary>
         protected virtual void RenderHUD()
         {
         }
@@ -627,7 +497,6 @@ namespace GameDonkeyLib
                 return;
             }
 
-            //render all the character trails, start another spritebatch
             Renderer.SpriteBatchBegin(BlendState.NonPremultiplied, cameraMatrix, sortMode);
             for (int i = 0; i < Players.Count; i++)
             {
@@ -638,7 +507,6 @@ namespace GameDonkeyLib
 
         protected void RenderCharacters(Matrix cameraMatrix, BlendState blendState, SpriteSortMode sortMode)
         {
-            //render all the players
             Renderer.SpriteBatchBegin(blendState, cameraMatrix, sortMode);
             for (int i = 0; i < Players.Count; i++)
             {
@@ -704,7 +572,6 @@ namespace GameDonkeyLib
                 return;
             }
 
-            //draw all the particles, start another spritebatch for the particles
             Renderer.SpriteBatchBeginNoEffect(BlendState.NonPremultiplied, cameraMatrix, SpriteSortMode.Deferred);
             ParticleEngine.Render(Renderer.SpriteBatch);
             Renderer.SpriteBatchEnd();
@@ -731,12 +598,10 @@ namespace GameDonkeyLib
             ContentManager xmlContent,
             bool useKeyboard)
         {
-            //create and load a player
             var player = CreatePlayerQueue(color);
             player.LoadXmlObject(characterFile, this, playerType, xmlContent);
             Players.Add(player);
 
-            //create a controller for that player
             InputWrapper queue = new InputWrapper(new ControllerWrapper(playerIndex), MasterClock.GetCurrentTime)
             {
                 BufferedInputExpire = 0.0f,

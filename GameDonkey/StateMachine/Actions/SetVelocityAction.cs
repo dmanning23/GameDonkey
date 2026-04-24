@@ -5,10 +5,6 @@ namespace GameDonkeyLib
 	public class SetVelocityAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// The direction to set the players velocity to when this action is run
-		/// </summary>
 		public ActionDirection Velocity { get; set; }
 
 		#endregion //Properties
@@ -39,11 +35,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			Owner.Velocity = Velocity.GetDirection(Owner);

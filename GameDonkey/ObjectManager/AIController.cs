@@ -6,24 +6,12 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-    /// <summary>
-    /// This is a controller thing that is used to control a PlayerObject
-    /// </summary>
     public abstract class AIController
     {
         #region Properties
 
         protected PlayerObject Player { get; set; }
-
-        /// <summary>
-        /// Used to update the AI on a schedule instead of every frame.
-        /// by making time length longer, AI will be easier, short time makes the AI harder
-        /// </summary>
         private CountdownTimer UpdateTimer { get; set; }
-
-        /// <summary>
-        /// how often the update loop should be run on this dude
-        /// </summary>
         private float _updateDelta;
         private float UpdateDelta
         {
@@ -37,16 +25,7 @@ namespace GameDonkeyLib
                 UpdateAimDelta = UpdateDelta * 0.3f;
             }
         }
-
-        /// <summary>
-        /// Used to update the AI on a schedule instead of every frame.
-        /// by making time length longer, AI will be easier, short time makes the AI harder
-        /// </summary>
         private CountdownTimer AimTimer { get; set; }
-
-        /// <summary>
-        /// how often the update loop should be run on this dude
-        /// </summary>
         private float UpdateAimDelta { get; set; }
 
         static private Random _random = new Random(DateTime.Now.Millisecond);
@@ -73,10 +52,6 @@ namespace GameDonkeyLib
                 }
             }
         }
-
-        /// <summary>
-        /// The direction this AI wants to go
-        /// </summary>
         private Vector2 _direction;
         public Vector2 Direction
         {
@@ -126,14 +101,6 @@ namespace GameDonkeyLib
             AimTimer.Update(Player.CharacterClock);
             AttackTimer.Update(Player.CharacterClock);
         }
-
-        /// <summary>
-        /// Do all the specific processing to get player input.
-        /// For human players, this means getting info from the controller.
-        /// For AI players, this means reacting to info in the list of "bad guys"
-        /// </summary>
-        /// <param name="controller">the controller for this player (bullshit and ignored for AI)</param>
-        /// <param name="listBadGuys">list of all the players (ignored for human players)</param>
         public void GetPlayerInput(List<IPlayerQueue> listBadGuys, bool ignoreAttackInput)
         {
             // //TODO: check if the character is dead
@@ -303,8 +270,6 @@ namespace GameDonkeyLib
 
 
         protected abstract bool SelectOffensiveOption(float distanceSquared);
-
-        ////select a random attack and execute it
         //int iMin = (TurnAroundMessage - m_States.StateMachine.MessageOffset) + 1;
         //int iMax = m_States.StateMachine.NumMessages - iMin;
 
@@ -318,11 +283,6 @@ namespace GameDonkeyLib
         //SendAttackMessage((int)EState.Quick);
 
         protected abstract void SendDeathMessage();
-
-        ///// <summary>
-        ///// This is used to send attack moves from the input queue to the state machine, through the combo engine
-        ///// </summary>
-        ///// <param name="iMessage"></param>
         //protected override void SendAttackMessage(int iNextMoov)
         //{
         //    if (0.0f <= m_fUpdateDelta)
@@ -330,16 +290,9 @@ namespace GameDonkeyLib
         //        base.SendAttackMessage(iNextMoov);
         //    }
         //}
-
-        /// <summary>
-        /// Check if the play is in a hard coded state,
-        /// if so, check if its button is still being held down
-        /// </summary>
         //public override void CheckHardCodedStates()
         //{
         //	var currentState = States.CurrentState;
-
-        ////check if forward button is held down, add forward movement to the player 
         //if (m_bMoveTowards)
         //{
         //    //only check for standing, walking, falling states
@@ -382,11 +335,6 @@ namespace GameDonkeyLib
 
         //	base.CheckHardCodedStates();
         //}
-
-        /// <summary>
-        /// convert the ai difficulty to an integer
-        /// </summary>
-        /// <returns>int: number bewteen 1 and 10 signifying the difficulty of the AI</returns>
         public int ConvertAIToInt()
         {
             if ((UpdateDelta >= 0.0f) && (UpdateDelta < 0.2f))
@@ -430,11 +378,6 @@ namespace GameDonkeyLib
                 return 0;
             }
         }
-
-        /// <summary>
-        /// Change the ai difficulty
-        /// </summary>
-        /// <param name="increase">whether to increase or decrease the AI difficulty</param>
         public void ChangeAIDifficulty(bool increase)
         {
             if (UpdateDelta <= 0.1f)

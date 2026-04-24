@@ -10,10 +10,6 @@ namespace GameDonkeyLib
     public class LevelObject : BaseObject
     {
         #region Properties
-
-        /// <summary>
-        /// how fast players will pop out of a level object, pixels/second
-        /// </summary>
         private const float MoveSpeed = 1750.0f;
 
         #endregion //Properties
@@ -80,15 +76,6 @@ namespace GameDonkeyLib
         #endregion //Methods
 
         #region File IO
-
-        /// <summary>
-        /// Given an xml node, parse the contents.
-        /// Override in child classes to read object-specific node types.
-        /// </summary>
-        /// <param name="childNode">the xml data to read</param>
-        /// <param name="engine">the engine we are using to load</param>
-        /// <param name="messageOffset">the message offset of this object's state machine</param>
-        /// <returns></returns>
         public override void ParseXmlData(BaseObjectModel model, IGameDonkey engine, ContentManager content = null)
         {
             var data = model as LevelObjectModel;

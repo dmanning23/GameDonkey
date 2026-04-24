@@ -1,9 +1,6 @@
 ﻿
 namespace GameDonkeyLib
 {
-	/// <summary>
-	/// These are all the different ways to get a direcion for an action
-	/// </summary>
 	public enum EDirectionType
 	{
 		Absolute = 0, //the direction is exactly as stated

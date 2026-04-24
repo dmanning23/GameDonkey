@@ -10,10 +10,6 @@ namespace GameDonkeyLib
 	public class PointLightAction : BaseAction
 	{
 		#region Properties
-
-		/// <summary>
-		/// the name of the bone to emanate from
-		/// </summary>
 		private string _boneName;
 		public string BoneName
 		{
@@ -31,16 +27,7 @@ namespace GameDonkeyLib
 				}
 			}
 		}
-
-		/// <summary>
-		/// the bone to attach the particle emitter to
-		/// </summary>
 		public Bone Bone { get; private set; }
-
-		/// <summary>
-		/// the offset from the character origin to start the particle effect from
-		/// ignored if the source bone is set
-		/// </summary>
 		public Vector3 StartOffset { get; set; }
 
 		private IRenderer Renderer { get; set; }
@@ -100,11 +87,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			var light = new FlarePointLight(StartPosition(), LightColor, FlareTimeDelta, AttackTimeDelta, SustainTimeDelta, DelayTimeDelta, MinBrightness, MaxBrightness, GetPosDelegate());

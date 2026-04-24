@@ -11,10 +11,6 @@ namespace GameDonkeyLib
 		IGameDonkey _engine;
 
 		private Filename _soundCueName;
-
-		/// <summary>
-		/// the filename of the sound file to use
-		/// </summary>		/// <value>The name of the sound cue.</value>
 		public Filename SoundCueName
 		{
 			get
@@ -32,11 +28,6 @@ namespace GameDonkeyLib
 				}
 			}
 		}
-
-		/// <summary>
-		/// Gets the sound.
-		/// </summary>
-		/// <value>The sound.</value>
 		public SoundEffect Sound { get; private set; }
 
 		#endregion //Properties
@@ -72,11 +63,6 @@ namespace GameDonkeyLib
 		#endregion //Initialization
 
 		#region Methods
-
-		/// <summary>
-		/// execute this action (overridden in all child classes)
-		/// </summary>
-		/// <returns>bool: whether or not to continue running actions after this dude runs</returns>
 		public override bool Execute()
 		{
 			//execute sound action
