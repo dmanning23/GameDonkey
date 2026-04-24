@@ -38,10 +38,20 @@ namespace GameDonkeyLib
             {
                 case "stateMachine":
                     {
-                        StateMachineFilename.SetFilenameRelativeToPath(BaseObject.Filename, value);
+                        StateMachineFilename.SetRelFilename(value);
                     }
                     break;
                 case "stateContainer":
+                    {
+                        StateContainerFilename.SetRelFilename(value);
+                    }
+                    break;
+                case "stateMachine1":
+                    {
+                        StateMachineFilename.SetFilenameRelativeToPath(BaseObject.Filename, value);
+                    }
+                    break;
+                case "stateContainer1":
                     {
                         StateContainerFilename.SetFilenameRelativeToPath(BaseObject.Filename, value);
                     }

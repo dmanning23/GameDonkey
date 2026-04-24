@@ -44,10 +44,20 @@ namespace GameDonkeyLib
             {
                 case "model":
                     {
-                        Model.SetFilenameRelativeToPath(Filename, value);
+                        Model.SetRelFilename(value);
                     }
                     break;
                 case "animations":
+                    {
+                        Animations.SetRelFilename(value);
+                    }
+                    break;
+                case "model1":
+                    {
+                        Model.SetFilenameRelativeToPath(Filename, value);
+                    }
+                    break;
+                case "animations1":
                     {
                         Animations.SetFilenameRelativeToPath(Filename, value);
                     }

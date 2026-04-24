@@ -7,209 +7,203 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	public class BoardModel : XmlFileBuddy
-	{
-		#region Properties
+    public class BoardModel : XmlFileBuddy
+    {
+        #region Properties
 
-		public string Name { get; private set; }
-		public int BoardHeight { get; private set; }
-		public int BoardWidth { get; private set; }
-		public int Floor { get; private set; }
-		public Filename Music { get; private set; }
-		public Filename DeathNoise { get; private set; }
-		public Filename BackgroundTile { get; private set; }
-		public Color BackgroundColor { get; private set; }
-		public int NumTiles { get; private set; }
-		public List<Filename> LevelObjects { get; private set; }
-		public List<SpawnPointModel> SpawnPoints { get; set; }
+        public string Name { get; private set; }
+        public int BoardHeight { get; private set; }
+        public int BoardWidth { get; private set; }
+        public int Floor { get; private set; }
+        public Filename Music { get; private set; }
+        public Filename DeathNoise { get; private set; }
+        public Filename BackgroundTile { get; private set; }
+        public Color BackgroundColor { get; private set; }
+        public int NumTiles { get; private set; }
+        public List<Filename> LevelObjects { get; private set; }
+        public List<SpawnPointModel> SpawnPoints { get; set; }
 
-		public Filename BackgroundImage { get; private set; }
-		public List<BackgroundLayerModel> Background { get; private set; }
-		public List<BackgroundLayerModel> Foreground { get; private set; }
+        public Filename BackgroundImage { get; private set; }
+        public List<BackgroundLayerModel> Background { get; private set; }
+        public List<BackgroundLayerModel> Foreground { get; private set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Methods
+        #region Methods
 
-		public BoardModel() : base("board")
-		{
-			Init();
-		}
+        public BoardModel() : base("board")
+        {
+            Init();
+        }
 
-		public BoardModel(Filename filename) : base("board", filename)
-		{
-			Init();
-		}
+        public BoardModel(Filename filename) : base("board", filename)
+        {
+            Init();
+        }
 
-		private void Init()
-		{
-			Music = new Filename();
-			DeathNoise = new Filename();
-			BackgroundTile = new Filename();
-			BackgroundColor = Color.White;
-			LevelObjects = new List<Filename>();
-			SpawnPoints = new List<SpawnPointModel>();
-			BackgroundImage = new Filename();
-			Background = new List<BackgroundLayerModel>();
-			Foreground = new List<BackgroundLayerModel>();
-		}
+        private void Init()
+        {
+            Music = new Filename();
+            DeathNoise = new Filename();
+            BackgroundTile = new Filename();
+            BackgroundColor = Color.White;
+            LevelObjects = new List<Filename>();
+            SpawnPoints = new List<SpawnPointModel>();
+            BackgroundImage = new Filename();
+            Background = new List<BackgroundLayerModel>();
+            Foreground = new List<BackgroundLayerModel>();
+        }
 
-		public override string ToString()
-		{
-			return Name;
-		}
+        public override string ToString()
+        {
+            return Name;
+        }
 
-		#endregion //Methods
+        #endregion //Methods
 
-		#region File IO
+        #region File IO
 
-		public override void ParseXmlNode(XmlNode node)
-		{
-			//what is in this node?
-			var name = node.Name;
-			var value = node.InnerText;
+        public override void ParseXmlNode(XmlNode node)
+        {
+            //what is in this node?
+            var name = node.Name;
+            var value = node.InnerText;
 
-			switch (name)
-			{
-				case "Asset":
-					{
-						//skip these old ass nodes
-						XmlFileBuddy.ReadChildNodes(node, ParseXmlNode);
-					}
-					break;
-				case "Type":
-					{
-						//Really skip these old ass nodes
-					}
-					break;
-				case "name":
-					{
-						Name = value;
-					}
-					break;
-				case "boardHeight":
-					{
-						BoardHeight = Convert.ToInt32(value);
-					}
-					break;
-				case "floor":
-					{
-						Floor = Convert.ToInt32(value);
-					}
-					break;
-				case "boardWidth":
-					{
-						BoardWidth = Convert.ToInt32(value);
-					}
-					break;
-				case "music":
-					{
-						Music.SetRelFilename(value);
-					}
-					break;
-				case "deathNoise":
-					{
-						DeathNoise.SetRelFilename(value);
-					}
-					break;
-				case "backgroundImage":
-					{
-						BackgroundImage.SetFilenameRelativeToPath(Filename, value);
-					}
-					break;
-				case "background":
-					{
-						XmlFileBuddy.ReadChildNodes(node, ReadBackground);
-					}
-					break;
-				case "foreground":
-					{
-						XmlFileBuddy.ReadChildNodes(node, ReadForeground);
-					}
-					break;
-				case "backgroundTile":
-					{
-						BackgroundTile.SetFilenameRelativeToPath(Filename, value);
-					}
-					break;
-				case "BackgroundColor":
-					{
-						//BackgroundColor = Color.
-					}
-					break;
-				case "backgroundR":
-					{
-						BackgroundColor = new Color(Convert.ToByte(value), BackgroundColor.G, BackgroundColor.B);
-					}
-					break;
-				case "backgroundG":
-					{
-						BackgroundColor = new Color(BackgroundColor.R, Convert.ToByte(value), BackgroundColor.B);
-					}
-					break;
-				case "backgroundB":
-					{
-						BackgroundColor = new Color(BackgroundColor.R, BackgroundColor.G, Convert.ToByte(value));
-					}
-					break;
-				case "numTiles":
-				case "NumTiles":
-					{
-						NumTiles = Convert.ToInt32(value);
-					}
-					break;
-				case "objects":
-				case "levelObjects":
-					{
-						XmlFileBuddy.ReadChildNodes(node, ReadLevelObjects);
-					}
-					break;
-				case "spawnPoints":
-					{
-						XmlFileBuddy.ReadChildNodes(node, ReadSpawnPoints);
-					}
-					break;
-				default:
-					{
-						NodeError(node);
-					}
-					break;
-			}
-		}
+            switch (name)
+            {
+                case "name":
+                    {
+                        Name = value;
+                    }
+                    break;
+                case "boardHeight":
+                    {
+                        BoardHeight = Convert.ToInt32(value);
+                    }
+                    break;
+                case "floor":
+                    {
+                        Floor = Convert.ToInt32(value);
+                    }
+                    break;
+                case "boardWidth":
+                    {
+                        BoardWidth = Convert.ToInt32(value);
+                    }
+                    break;
+                case "music":
+                    {
+                        Music.SetRelFilename(value);
+                    }
+                    break;
+                case "deathNoise":
+                    {
+                        DeathNoise.SetRelFilename(value);
+                    }
+                    break;
+                case "backgroundImage":
+                    {
+                        BackgroundImage.SetRelFilename(value);
+                    }
+                    break;
+                case "backgroundImage1":
+                    {
+                        BackgroundImage.SetFilenameRelativeToPath(Filename, value);
+                    }
+                    break;
+                case "background":
+                    {
+                        XmlFileBuddy.ReadChildNodes(node, ReadBackground);
+                    }
+                    break;
+                case "foreground":
+                    {
+                        XmlFileBuddy.ReadChildNodes(node, ReadForeground);
+                    }
+                    break;
+                case "backgroundTile":
+                    {
+                        BackgroundTile.SetRelFilename(value);
+                    }
+                    break;
+                case "backgroundTile1":
+                    {
+                        BackgroundTile.SetFilenameRelativeToPath(Filename, value);
+                    }
+                    break;
+                case "backgroundR":
+                    {
+                        BackgroundColor = new Color(Convert.ToByte(value), BackgroundColor.G, BackgroundColor.B);
+                    }
+                    break;
+                case "backgroundG":
+                    {
+                        BackgroundColor = new Color(BackgroundColor.R, Convert.ToByte(value), BackgroundColor.B);
+                    }
+                    break;
+                case "backgroundB":
+                    {
+                        BackgroundColor = new Color(BackgroundColor.R, BackgroundColor.G, Convert.ToByte(value));
+                    }
+                    break;
+                case "numTiles":
+                case "NumTiles":
+                    {
+                        NumTiles = Convert.ToInt32(value);
+                    }
+                    break;
+                case "objects":
+                case "levelObjects":
+                    {
+                        XmlFileBuddy.ReadChildNodes(node, ReadLevelObjects);
+                    }
+                    break;
+                case "spawnPoints":
+                    {
+                        XmlFileBuddy.ReadChildNodes(node, ReadSpawnPoints);
+                    }
+                    break;
+                default:
+                    {
+                        NodeError(node);
+                    }
+                    break;
+            }
+        }
 
-		public void ReadLevelObjects(XmlNode node)
-		{
-			LevelObjects.Add(new Filename(node.InnerText));
-		}
+        public void ReadLevelObjects(XmlNode node)
+        {
+            LevelObjects.Add(new Filename(node.InnerText));
+        }
 
-		public void ReadSpawnPoints(XmlNode node)
-		{
-			var spawnPoint = new SpawnPointModel();
-			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
-			SpawnPoints.Add(spawnPoint);
-		}
+        public void ReadSpawnPoints(XmlNode node)
+        {
+            var spawnPoint = new SpawnPointModel();
+            XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
+            SpawnPoints.Add(spawnPoint);
+        }
 
-		public void ReadBackground(XmlNode node)
-		{
-			var spawnPoint = new BackgroundLayerModel(this);
-			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
-			Background.Add(spawnPoint);
-		}
+        public void ReadBackground(XmlNode node)
+        {
+            var spawnPoint = new BackgroundLayerModel(this);
+            XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
+            Background.Add(spawnPoint);
+        }
 
-		public void ReadForeground(XmlNode node)
-		{
-			var spawnPoint = new BackgroundLayerModel(this);
-			XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
-			Foreground.Add(spawnPoint);
-		}
-		public override void WriteXmlNodes(XmlTextWriter xmlWriter)
-		{
-			//write out the item tag
-			xmlWriter.WriteStartElement("joint");
-			xmlWriter.WriteAttributeString("name", Name);
-			xmlWriter.WriteEndElement();
-		}
+        public void ReadForeground(XmlNode node)
+        {
+            var spawnPoint = new BackgroundLayerModel(this);
+            XmlFileBuddy.ReadChildNodes(node, spawnPoint.ParseXmlNode);
+            Foreground.Add(spawnPoint);
+        }
+        public override void WriteXmlNodes(XmlTextWriter xmlWriter)
+        {
+            //write out the item tag
+            xmlWriter.WriteStartElement("joint");
+            xmlWriter.WriteAttributeString("name", Name);
+            xmlWriter.WriteEndElement();
+        }
 
-		#endregion //File IO
-	}
+        #endregion //File IO
+    }
 }

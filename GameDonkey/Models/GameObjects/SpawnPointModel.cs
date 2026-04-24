@@ -35,11 +35,6 @@ namespace GameDonkeyLib
 
 			switch (name)
 			{
-				case "Type":
-					{
-						//throw these attributes out
-					}
-					break;
 				case "location":
 					{
 						Location = Vector2Ext.ToVector2(value);
