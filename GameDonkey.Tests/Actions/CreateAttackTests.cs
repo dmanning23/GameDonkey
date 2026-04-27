@@ -21,7 +21,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-
+            TestHelpers.InitFilePaths();
         }
 
         [Test]

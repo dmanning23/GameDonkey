@@ -418,7 +418,9 @@ namespace GameDonkeyLib
 
         protected virtual void StateChanged(object sender, StateChangeEventArgs<string> eventArgs)
         {
-            if (States.CurrentState == "TurningAround" || States.CurrentState == "AirTurningAround")
+            if (States.CurrentState == "TurningAround" ||
+                States.CurrentState == "AirTurningAround" ||
+                States.CurrentState == "GroundTurningAround")
             {
                 Flip = !Flip;
             }

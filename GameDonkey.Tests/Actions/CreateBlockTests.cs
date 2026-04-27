@@ -16,7 +16,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [Test]
@@ -63,6 +63,19 @@ namespace GameDonkey.Tests
             var subAction = model.ActionModels.ActionModels[0] as DeactivateActionModel;
             subAction.ShouldNotBeNull();
             subAction.Time.ShouldBe(subTime);
+        }
+
+        [Test]
+        public void Execute_AddsToOwnerShieldActions()
+        {
+            var owner = new TestObject();
+            var action = new ShieldAction(owner);
+
+            action.Execute(0f);
+
+            owner.ShieldActions.CurrentActions.Count.ShouldBe(1);
+            owner.ShieldActions.CurrentActions[0].ShouldBeSameAs(action);
+            action.AlreadyRun.ShouldBeTrue();
         }
 
         [Test]

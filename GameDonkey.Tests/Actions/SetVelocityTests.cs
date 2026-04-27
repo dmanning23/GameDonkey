@@ -17,7 +17,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [Test]
@@ -96,6 +96,25 @@ namespace GameDonkey.Tests
             model2.Direction.DirectionType.ShouldBe(directionType);
             model2.Direction.Velocity.X.ShouldBe(X);
             model2.Direction.Velocity.Y.ShouldBe(Y);
+        }
+
+        [Test]
+        public void Execute_SetsOwnerVelocity()
+        {
+            var owner = new TestObject();
+            var action = new SetVelocityAction(owner)
+            {
+                Velocity = new ActionDirection()
+                {
+                    DirectionType = EDirectionType.Absolute,
+                    Velocity = new Vector2(5f, 3f)
+                }
+            };
+
+            action.Execute(0f);
+
+            owner.Velocity.X.ShouldBe(5f);
+            owner.Velocity.Y.ShouldBe(3f);
         }
     }
 }

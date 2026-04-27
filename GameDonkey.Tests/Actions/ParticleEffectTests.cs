@@ -23,7 +23,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [TestCase(1f, 2f, 3, 4f, true, 5f, 6f, 7f, 8f, 9f, 10f, 11f, 12f, 13f, "catpants.jpg")]

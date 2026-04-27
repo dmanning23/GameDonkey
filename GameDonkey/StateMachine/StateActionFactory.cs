@@ -37,6 +37,7 @@ namespace GameDonkeyLib
                 case EActionType.SendToBack: { return new SendToBackActionModel(); }
                 case EActionType.SetVelocity: { return new SetVelocityActionModel(); }
                 case EActionType.TargetRotation: { return new TargetRotationActionModel(); }
+                case EActionType.TemplateAction: { return new TemplateActionModel(); }
                 case EActionType.Trail: { return new TrailActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
@@ -70,6 +71,7 @@ namespace GameDonkeyLib
                 case EActionType.SendToBack: { return new SendToBackActionModel(actionModel); }
                 case EActionType.SetVelocity: { return new SetVelocityActionModel(actionModel); }
                 case EActionType.TargetRotation: { return new TargetRotationActionModel(actionModel); }
+                case EActionType.TemplateAction: { return new TemplateActionModel(actionModel); }
                 case EActionType.Trail: { return new TrailActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
@@ -103,6 +105,7 @@ namespace GameDonkeyLib
                 case EActionType.SendToBack: { return new SendToBackAction(owner, actionModel); }
                 case EActionType.SetVelocity: { return new SetVelocityAction(owner, actionModel); }
                 case EActionType.TargetRotation: { return new TargetRotationAction(owner, actionModel); }
+                case EActionType.TemplateAction: { return new TemplateAction(owner, actionModel, stateContainer); }
                 case EActionType.Trail: { return new TrailAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
@@ -135,6 +138,7 @@ namespace GameDonkeyLib
                 case EActionType.SendToBack: { return new SendToBackAction(owner); }
                 case EActionType.SetVelocity: { return new SetVelocityAction(owner); }
                 case EActionType.TargetRotation: { return new TargetRotationAction(owner); }
+                case EActionType.TemplateAction: { return new TemplateAction(owner); }
                 case EActionType.Trail: { return new TrailAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }

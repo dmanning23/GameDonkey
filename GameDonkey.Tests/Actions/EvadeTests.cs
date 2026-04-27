@@ -14,7 +14,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [Test]
@@ -75,6 +75,18 @@ namespace GameDonkey.Tests
             model2.ActionType.ShouldBe(EActionType.Evade);
             model2.Time.ShouldBe(time);
             model2.TimeDelta.TimeDelta.ShouldBe(timeDelta);
+        }
+
+        [Test]
+        public void Execute_StartsEvasionTimer()
+        {
+            var owner = new TestObject();
+            var action = new EvadeAction(owner) { TimeDelta = timeDelta };
+
+            action.Execute(0f);
+
+            owner.EvasionTimer.HasTimeRemaining.ShouldBeTrue();
+            owner.EvasionTimer.RemainingTime.ShouldBe(timeDelta);
         }
     }
 }

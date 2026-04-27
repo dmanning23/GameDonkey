@@ -2,46 +2,46 @@
 
 namespace GameDonkeyLib
 {
-	public class SetVelocityAction : BaseAction
-	{
-		#region Properties
-		public ActionDirection Velocity { get; set; }
+    public class SetVelocityAction : BaseAction
+    {
+        #region Properties
+        public ActionDirection Velocity { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public SetVelocityAction(BaseObject owner) :
-			base(owner, EActionType.SetVelocity)
-		{
-			Velocity = new ActionDirection();
-		}
+        public SetVelocityAction(BaseObject owner) :
+            base(owner, EActionType.SetVelocity)
+        {
+            Velocity = new ActionDirection();
+        }
 
-		public SetVelocityAction(BaseObject owner, SetVelocityActionModel actionModel) :
-			base(owner, actionModel)
-		{
-			Velocity = new ActionDirection(actionModel.Direction);
-		}
+        public SetVelocityAction(BaseObject owner, SetVelocityActionModel actionModel) :
+            base(owner, actionModel)
+        {
+            Velocity = new ActionDirection(actionModel.Direction);
+        }
 
-		public SetVelocityAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as SetVelocityActionModel)
-		{
-		}
+        public SetVelocityAction(BaseObject owner, BaseActionModel actionModel) :
+            this(owner, actionModel as SetVelocityActionModel)
+        {
+        }
 
-		public override void LoadContent(IGameDonkey engine, ContentManager content)
-		{
-		}
+        public override void LoadContent(IGameDonkey engine, ContentManager content)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
-		public override bool Execute()
-		{
-			Owner.Velocity = Velocity.GetDirection(Owner);
+        #region Methods
+        public override bool Execute(float currentTime)
+        {
+            Owner.Velocity = Velocity.GetDirection(Owner);
 
-			return base.Execute();
-		}
+            return base.Execute(currentTime);
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

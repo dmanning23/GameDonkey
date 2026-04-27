@@ -3,47 +3,47 @@ using Microsoft.Xna.Framework.Content;
 
 namespace GameDonkeyLib
 {
-	public class PlayAnimationAction : BaseAction
-	{
-		#region Properties
-		public string AnimationName { get; set; }
-		public EPlayback PlaybackMode { get; set; }
+    public class PlayAnimationAction : BaseAction
+    {
+        #region Properties
+        public string AnimationName { get; set; }
+        public EPlayback PlaybackMode { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public PlayAnimationAction(BaseObject owner) :
-			base(owner, EActionType.PlayAnimation)
-		{
-		}
+        public PlayAnimationAction(BaseObject owner) :
+            base(owner, EActionType.PlayAnimation)
+        {
+        }
 
-		public PlayAnimationAction(BaseObject owner, PlayAnimationActionModel actionModel) :
-			base(owner, actionModel)
-		{
-			AnimationName = actionModel.Animation;
-			PlaybackMode = actionModel.Playback;
-		}
+        public PlayAnimationAction(BaseObject owner, PlayAnimationActionModel actionModel) :
+            base(owner, actionModel)
+        {
+            AnimationName = actionModel.Animation;
+            PlaybackMode = actionModel.Playback;
+        }
 
-		public PlayAnimationAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as PlayAnimationActionModel)
-		{
-		}
+        public PlayAnimationAction(BaseObject owner, BaseActionModel actionModel) :
+            this(owner, actionModel as PlayAnimationActionModel)
+        {
+        }
 
-		public override void LoadContent(IGameDonkey engine, ContentManager content)
-		{
-		}
+        public override void LoadContent(IGameDonkey engine, ContentManager content)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
-		public override bool Execute()
-		{
-			Owner.AnimationContainer.SetAnimation(AnimationName, PlaybackMode);
+        #region Methods
+        public override bool Execute(float currentTime)
+        {
+            Owner.AnimationContainer.SetAnimation(AnimationName, PlaybackMode);
 
-			return base.Execute();
-		}
+            return base.Execute(currentTime);
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

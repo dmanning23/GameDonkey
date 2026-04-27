@@ -14,7 +14,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [Test]
@@ -75,6 +75,20 @@ namespace GameDonkey.Tests
             model2.ActionType.ShouldBe(EActionType.SendStateMessage);
             model2.Time.ShouldBe(time);
             model2.Message.ShouldBe(message);
+        }
+
+        [Test]
+        public void Execute_SendsMessageToStateContainer()
+        {
+            var stub = new StubStateContainer();
+            var model = new SendStateMessageActionModel() { Message = message };
+            var action = new SendStateMessageAction(null, model, stub);
+
+            var result = action.Execute(0f);
+
+            result.ShouldBeTrue();
+            stub.ReceivedMessages.Count.ShouldBe(1);
+            stub.ReceivedMessages[0].ShouldBe(message);
         }
     }
 }

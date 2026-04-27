@@ -14,7 +14,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [Test]
@@ -45,6 +45,16 @@ namespace GameDonkey.Tests
 
             model.Time.ShouldBe(time);
             model.Filename.GetFile().ShouldBe(filename);
+        }
+
+        [Test]
+        public void Execute_WithNoSoundLoaded_SetsAlreadyRunTrue()
+        {
+            var action = new PlaySoundAction(null);
+
+            action.Execute(0f);
+
+            action.AlreadyRun.ShouldBeTrue();
         }
 
         [Test]

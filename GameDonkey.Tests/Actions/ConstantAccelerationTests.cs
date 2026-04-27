@@ -18,7 +18,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [Test]
@@ -103,6 +103,17 @@ namespace GameDonkey.Tests
             model2.Direction.Velocity.X.ShouldBe(X);
             model2.Direction.Velocity.Y.ShouldBe(Y);
             model2.MaxVelocity.ShouldBe(max);
+        }
+
+        [Test]
+        public void Execute_SetsAccelActionOnOwner()
+        {
+            var owner = new TestObject();
+            var action = new ConstantAccelerationAction(owner);
+
+            action.Execute(0f);
+
+            owner.AccelAction.ShouldBeSameAs(action);
         }
     }
 }

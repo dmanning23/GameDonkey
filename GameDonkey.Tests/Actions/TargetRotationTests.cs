@@ -25,7 +25,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [Test]
@@ -72,6 +72,26 @@ namespace GameDonkey.Tests
             model.Direction.DirectionType.ShouldBe(directionType);
             model.Direction.Velocity.X.ShouldBe(X);
             model.Direction.Velocity.Y.ShouldBe(Y);
+        }
+
+        [Test]
+        public void Execute_SetsRotationPerSecond()
+        {
+            var owner = new TestObject();
+            var action = new TargetRotationAction(owner)
+            {
+                TargetRotation = new ActionDirection()
+                {
+                    DirectionType = EDirectionType.Absolute,
+                    Velocity = new Vector2(1f, 1f)
+                },
+                TimeDelta = 1f
+            };
+
+            action.Execute(0f);
+
+            owner.RotationPerSecond.ShouldBeGreaterThan(0f);
+            action.AlreadyRun.ShouldBeTrue();
         }
 
         [Test]

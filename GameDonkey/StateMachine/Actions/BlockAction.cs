@@ -4,95 +4,95 @@ using System.Collections.Generic;
 
 namespace GameDonkeyLib
 {
-	public class BlockAction : ShieldAction
-	{
-		#region Properties
-		protected string _boneName;
-		public string BoneName
-		{
-			get { return _boneName; }
-			set
-			{
-				_boneName = value;
+    public class BlockAction : ShieldAction
+    {
+        #region Properties
+        protected string _boneName;
+        public string BoneName
+        {
+            get { return _boneName; }
+            set
+            {
+                _boneName = value;
 
-				//if the bone name is changed, it means the bone needs to be reset too...
-				AttackBone = null;
-			}
-		}
-		public Bone AttackBone { get; private set; }
+                //if the bone name is changed, it means the bone needs to be reset too...
+                AttackBone = null;
+            }
+        }
+        public Bone AttackBone { get; private set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public BlockAction(BaseObject owner) :
-			base(owner, EActionType.Block)
-		{
-		}
+        public BlockAction(BaseObject owner) :
+            base(owner, EActionType.Block)
+        {
+        }
 
-		public BlockAction(BaseObject owner, BlockActionModel actionModel, IStateContainer container) :
-			base(owner, actionModel, container)
-		{
-			BoneName = actionModel.BoneName;
-		}
+        public BlockAction(BaseObject owner, BlockActionModel actionModel, IStateContainer container) :
+            base(owner, actionModel, container)
+        {
+            BoneName = actionModel.BoneName;
+        }
 
-		public BlockAction(BaseObject owner, BaseActionModel actionModel, IStateContainer container) :
-			this(owner, actionModel as BlockActionModel, container)
-		{
-		}
+        public BlockAction(BaseObject owner, BaseActionModel actionModel, IStateContainer container) :
+            this(owner, actionModel as BlockActionModel, container)
+        {
+        }
 
-		public override void LoadContent(IGameDonkey engine, ContentManager content)
-		{
-			base.LoadContent(engine, content);
-		}
+        public override void LoadContent(IGameDonkey engine, ContentManager content)
+        {
+            base.LoadContent(engine, content);
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
-		public override bool Execute()
-		{
-			return base.Execute();
-		}
+        #region Methods
+        public override bool Execute(float currentTime)
+        {
+            return base.Execute(currentTime);
+        }
 
-		protected override void AddBlock()
-		{
-			SetAttackBone();
+        protected override void AddBlock()
+        {
+            SetAttackBone();
 
-			//add this action to the list of block states
-			Owner.CurrentBlocks.AddAction(this, Owner.CharacterClock);
-		}
+            //add this action to the list of block states
+            Owner.CurrentBlocks.AddAction(this, Owner.CharacterClock);
+        }
 
-		public virtual PhysicsCircle GetCircle()
-		{
-			//return the first circle from this dude's image
+        public virtual PhysicsCircle GetCircle()
+        {
+            //return the first circle from this dude's image
 
-			if (null == AttackBone)
-			{
-				return null;
-			}
+            if (null == AttackBone)
+            {
+                return null;
+            }
 
-			//get the current image
-			var image = AttackBone.GetCurrentImage();
+            //get the current image
+            var image = AttackBone.GetCurrentImage();
 
-			//hit bones and images must have one circle
-			if ((null == image) || (image.Circles.Count < 1))
-			{
-				return null;
-			}
+            //hit bones and images must have one circle
+            if ((null == image) || (image.Circles.Count < 1))
+            {
+                return null;
+            }
 
-			//get the circle
-			return image.Circles[0]; ;
-		}
+            //get the circle
+            return image.Circles[0]; ;
+        }
 
-		public void SetAttackBone()
-		{
-			//Check if the bone is set, if not try and find it...
-			if (null == AttackBone)
-			{
-				AttackBone = Owner.Physics.FindWeapon(BoneName);
-			}
-		}
+        public void SetAttackBone()
+        {
+            //Check if the bone is set, if not try and find it...
+            if (null == AttackBone)
+            {
+                AttackBone = Owner.Physics.FindWeapon(BoneName);
+            }
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

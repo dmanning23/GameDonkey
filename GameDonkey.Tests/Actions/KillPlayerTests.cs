@@ -13,7 +13,7 @@ namespace GameDonkey.Tests
         [SetUp]
         public void Setup()
         {
-            Filename.SetCurrentDirectory(@"C:\Projects\gamedonkey\GameDonkey\GameDonkey.Tests\");
+            TestHelpers.InitFilePaths();
         }
 
         [Test]
@@ -68,6 +68,17 @@ namespace GameDonkey.Tests
             model2.ShouldNotBeNull();
             model2.ActionType.ShouldBe(EActionType.KillPlayer);
             model2.Time.ShouldBe(time);
+        }
+
+        [Test]
+        public void Execute_CallsKillPlayer()
+        {
+            var owner = new TestObject();
+            var action = new KillPlayerAction(owner);
+
+            action.Execute(0f);
+
+            owner.KillPlayerCalled.ShouldBeTrue();
         }
     }
 }

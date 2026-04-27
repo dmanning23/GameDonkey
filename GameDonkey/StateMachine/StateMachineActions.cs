@@ -96,7 +96,7 @@ namespace GameDonkeyLib
         public void ExecuteActions(GameClock clock, string currentState)
         {
             //execute the correct action container
-            Actions[currentState].ExecuteAction(clock.PreviousTime, clock.CurrentTime);
+            Actions[currentState].ExecuteAction(clock.CurrentTime);
         }
         public bool IsStateAttack(string state)
         {

@@ -3,54 +3,54 @@ using Microsoft.Xna.Framework.Content;
 
 namespace GameDonkeyLib
 {
-	public class ConstantAccelerationAction : BaseAction
-	{
-		#region Properties
-		public ActionDirection Velocity { get; set; }
-		public float MaxVelocity { get; set; }
+    public class ConstantAccelerationAction : BaseAction
+    {
+        #region Properties
+        public ActionDirection Velocity { get; set; }
+        public float MaxVelocity { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public ConstantAccelerationAction(BaseObject owner) :
-			base(owner, EActionType.ConstantAcceleration)
-		{
-			Velocity = new ActionDirection();
-		}
+        public ConstantAccelerationAction(BaseObject owner) :
+            base(owner, EActionType.ConstantAcceleration)
+        {
+            Velocity = new ActionDirection();
+        }
 
-		public ConstantAccelerationAction(BaseObject owner, ConstantAccelerationActionModel actionModel) :
-			base(owner, actionModel)
-		{
-			Velocity = new ActionDirection(actionModel.Direction);
-			MaxVelocity = actionModel.MaxVelocity;
-		}
+        public ConstantAccelerationAction(BaseObject owner, ConstantAccelerationActionModel actionModel) :
+            base(owner, actionModel)
+        {
+            Velocity = new ActionDirection(actionModel.Direction);
+            MaxVelocity = actionModel.MaxVelocity;
+        }
 
-		public ConstantAccelerationAction(BaseObject owner, BaseActionModel actionModel) :
-			this(owner, actionModel as ConstantAccelerationActionModel)
-		{
-		}
+        public ConstantAccelerationAction(BaseObject owner, BaseActionModel actionModel) :
+            this(owner, actionModel as ConstantAccelerationActionModel)
+        {
+        }
 
-		public override void LoadContent(IGameDonkey engine, ContentManager content)
-		{
-		}
+        public override void LoadContent(IGameDonkey engine, ContentManager content)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
-		public override bool Execute()
-		{
-			//set the constant accleration variable in the base object
-			Owner.AccelAction = this;
+        #region Methods
+        public override bool Execute(float currentTime)
+        {
+            //set the constant accleration variable in the base object
+            Owner.AccelAction = this;
 
-			return base.Execute();
-		}
+            return base.Execute(currentTime);
+        }
 
-		public Vector2 GetVelocity()
-		{
-			return Velocity.GetDirection(Owner);
-		}
+        public Vector2 GetVelocity()
+        {
+            return Velocity.GetDirection(Owner);
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

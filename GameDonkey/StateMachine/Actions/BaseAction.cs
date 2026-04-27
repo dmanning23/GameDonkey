@@ -3,58 +3,63 @@ using System.Text;
 
 namespace GameDonkeyLib
 {
-	public abstract class BaseAction
-	{
-		#region Properties
+    public abstract class BaseAction
+    {
+        #region Properties
 
-		public EActionType ActionType { get; private set; }
+        public EActionType ActionType { get; private set; }
 
-		public BaseObject Owner { get; set; }
+        public BaseObject Owner { get; set; }
 
-		public bool AlreadyRun { get; set; }
+        public bool AlreadyRun { get; protected set; }
 
-		public string Id { get; set; }
+        public string Id { get; set; }
 
-		public float Time { get; set; }
+        public float Time { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Methods
+        #region Methods
 
-		public BaseAction(BaseObject owner, EActionType actionType)
-		{
-			ActionType = actionType;
-			Time = 0.0f;
-			AlreadyRun = true;
-			Owner = owner;
-		}
+        public BaseAction(BaseObject owner, EActionType actionType)
+        {
+            ActionType = actionType;
+            Time = 0.0f;
+            AlreadyRun = true;
+            Owner = owner;
+        }
 
-		protected BaseAction(BaseObject owner, BaseActionModel actionModel) : this(owner, actionModel.ActionType)
-		{
-			Time = actionModel.Time;
-			Id = actionModel.Id;
-		}
+        protected BaseAction(BaseObject owner, BaseActionModel actionModel) : this(owner, actionModel.ActionType)
+        {
+            Time = actionModel.Time;
+            Id = actionModel.Id;
+        }
 
-		public abstract void LoadContent(IGameDonkey engine, ContentManager content);
+        public abstract void LoadContent(IGameDonkey engine, ContentManager content);
 
-		public virtual bool Execute()
-		{
-			AlreadyRun = true;
-			return false;
-		}
+        public virtual bool Execute(float currentTime)
+        {
+            AlreadyRun = true;
+            return false;
+        }
 
-		public override string ToString()
-		{
-			var result = new StringBuilder();
-			if (!string.IsNullOrEmpty(Id))
-			{
-				result.Append($"{Id} ");
-			}
-			result.Append($"{Time.ToString()}: {ActionType.ToString()}");
+        public override string ToString()
+        {
+            var result = new StringBuilder();
+            if (!string.IsNullOrEmpty(Id))
+            {
+                result.Append($"{Id} ");
+            }
+            result.Append($"{Time.ToString()}: {ActionType.ToString()}");
 
-			return result.ToString();
-		}
+            return result.ToString();
+        }
 
-		#endregion //Methods
-	}
+        public virtual void Reset()
+        {
+            AlreadyRun = false;
+        }
+
+        #endregion //Methods
+    }
 }
