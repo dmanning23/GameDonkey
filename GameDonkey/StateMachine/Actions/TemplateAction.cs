@@ -13,7 +13,7 @@ namespace GameDonkeyLib
     {
         #region Properties
 
-        private StateActionsList StateActionsList { get; set; }
+        public StateActionsList StateActionsList { get; private set; }
 
         public List<BaseAction> Actions => StateActionsList.Actions;
 
@@ -35,7 +35,7 @@ namespace GameDonkeyLib
             base(owner, actionModel)
         {
             StateActionsList = new StateActionsList();
-
+            FileName = new Filename(actionModel.Filename);
         }
 
         public TemplateAction(BaseObject owner, BaseActionModel actionModel, IStateContainer stateContainer) :
@@ -47,7 +47,7 @@ namespace GameDonkeyLib
         {
             //Load the actions from the template
             Engine = engine;
-            if ((null != engine) && !String.IsNullOrEmpty(FileName.File))
+            if ((null != engine) && !String.IsNullOrEmpty(FileName?.File))
             {
                 var templateContainerModel = new TemplateContainerModel(this.FileName);
                 templateContainerModel.ReadXmlFile(content);

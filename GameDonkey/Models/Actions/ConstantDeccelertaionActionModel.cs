@@ -5,84 +5,82 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	public class ConstantDeccelerationActionModel : BaseActionModel, IDirectionalActionModel
-	{
-		#region Properties
+    public class ConstantDeccelerationActionModel : BaseActionModel, IDirectionalActionModel
+    {
+        #region Properties
 
-		public override EActionType ActionType
-		{
-			get
-			{
-				return EActionType.ConstantDecceleration;
-			}
-		}
+        public override EActionType ActionType
+        {
+            get
+            {
+                return EActionType.ConstantDecceleration;
+            }
+        }
 
-		public float MinYVelocity { get; set; }
-		public DirectionActionModel Direction { get; set; }
+        public float MinYVelocity { get; set; }
+        public DirectionActionModel Direction { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public ConstantDeccelerationActionModel()
-		{
-			Direction = new DirectionActionModel();
-		}
+        public ConstantDeccelerationActionModel()
+        {
+            Direction = new DirectionActionModel();
+        }
 
-		public ConstantDeccelerationActionModel(ConstantDeccelerationAction action) : base(action)
-		{
-			MinYVelocity = action.MinYVelocity;
-			Direction = new DirectionActionModel(action.Velocity);
-		}
+        public ConstantDeccelerationActionModel(ConstantDeccelerationAction action) : base(action)
+        {
+            MinYVelocity = action.MinYVelocity;
+            Direction = new DirectionActionModel(action.Velocity);
+        }
 
-		public ConstantDeccelerationActionModel(BaseAction action) : this(action as ConstantDeccelerationAction)
-		{
-		}
+        public ConstantDeccelerationActionModel(BaseAction action) : this(action as ConstantDeccelerationAction)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
+        #region Methods
 
-		public override void ParseXmlNode(XmlNode node)
-		{
-			//what is in this node?
-			var name = node.Name;
-			var value = node.InnerText;
+        public override void ParseXmlNode(XmlNode node)
+        {
+            //what is in this node?
+            var name = node.Name;
+            var value = node.InnerText;
 
-			switch (name)
-			{
-				case "minYVelocity":
-				case "MinYVelocity":
-					{
-						MinYVelocity = Convert.ToSingle(value);
-					}
-					break;
-				case "velocity":
-				case "direction":
-					{
-						Direction.Velocity = value.ToVector2();
-						Direction.DirectionType = EDirectionType.Relative;
-					}
-					break;
-				case "Direction":
-					{
-						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
-					}
-					break;
-				default:
-					{
-						base.ParseXmlNode(node);
-					}
-					break;
-			}
-		}
+            switch (name.ToLower())
+            {
+                case "minyvelocity":
+                    {
+                        MinYVelocity = Convert.ToSingle(value);
+                    }
+                    break;
+                case "velocity":
+                    {
+                        Direction.Velocity = value.ToVector2();
+                        Direction.DirectionType = EDirectionType.Relative;
+                    }
+                    break;
+                case "direction":
+                    {
+                        XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
+                    }
+                    break;
+                default:
+                    {
+                        base.ParseXmlNode(node);
+                    }
+                    break;
+            }
+        }
 
-		protected override void WriteActionXml(XmlTextWriter xmlWriter)
-		{
-			xmlWriter.WriteAttributeString("MinYVelocity", MinYVelocity.ToString());
-			Direction.WriteXmlNodes(xmlWriter);
-		}
+        protected override void WriteActionXml(XmlTextWriter xmlWriter)
+        {
+            xmlWriter.WriteAttributeString("MinYVelocity", MinYVelocity.ToString());
+            Direction.WriteXmlNodes(xmlWriter);
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

@@ -5,86 +5,86 @@ using Vector2Extensions;
 
 namespace GameDonkeyLib
 {
-	public class CreateHitCircleActionModel : CreateAttackActionModel
-	{
-		#region Properties
+    public class CreateHitCircleActionModel : CreateAttackActionModel
+    {
+        #region Properties
 
-		public override EActionType ActionType
-		{
-			get
-			{
-				return EActionType.CreateHitCircle;
-			}
-		}
+        public override EActionType ActionType
+        {
+            get
+            {
+                return EActionType.CreateHitCircle;
+            }
+        }
 
-		public float Radius { get; set; }
-		public Vector2 StartOffset { get; set; }
-		public Vector2 Velocity { get; set; }
+        public float Radius { get; set; }
+        public Vector2 StartOffset { get; set; }
+        public Vector2 Velocity { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public CreateHitCircleActionModel()
-		{
-			StartOffset = Vector2.Zero;
-			Velocity = Vector2.Zero;
-		}
+        public CreateHitCircleActionModel()
+        {
+            StartOffset = Vector2.Zero;
+            Velocity = Vector2.Zero;
+        }
 
-		public CreateHitCircleActionModel(CreateHitCircleAction action) : base(action)
-		{
-			Radius = action.Radius;
-			StartOffset = action.StartOffset;
-			Velocity = action.Velocity;
-		}
+        public CreateHitCircleActionModel(CreateHitCircleAction action) : base(action)
+        {
+            Radius = action.Radius;
+            StartOffset = action.StartOffset;
+            Velocity = action.Velocity;
+        }
 
-		public CreateHitCircleActionModel(BaseAction action) : this(action as CreateHitCircleAction)
-		{
-		}
+        public CreateHitCircleActionModel(BaseAction action) : this(action as CreateHitCircleAction)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
+        #region Methods
 
-		public override void ParseXmlNode(XmlNode node)
-		{
-			//what is in this node?
-			var name = node.Name;
-			var value = node.InnerText;
+        public override void ParseXmlNode(XmlNode node)
+        {
+            //what is in this node?
+            var name = node.Name;
+            var value = node.InnerText;
 
-			switch (name)
-			{
-				case "Radius":
-					{
-						Radius = Convert.ToSingle(value);
-					}
-					break;
-				case "StartOffset":
-					{
-						StartOffset = value.ToVector2();
-					}
-					break;
-				case "Velocity":
-					{
-						Velocity = value.ToVector2();
-					}
-					break;
-				default:
-					{
-						base.ParseXmlNode(node);
-					}
-					break;
-			}
-		}
+            switch (name.ToLower())
+            {
+                case "radius":
+                    {
+                        Radius = Convert.ToSingle(value);
+                    }
+                    break;
+                case "startoffset":
+                    {
+                        StartOffset = value.ToVector2();
+                    }
+                    break;
+                case "velocity":
+                    {
+                        Velocity = value.ToVector2();
+                    }
+                    break;
+                default:
+                    {
+                        base.ParseXmlNode(node);
+                    }
+                    break;
+            }
+        }
 
-		protected override void WriteActionXml(XmlTextWriter xmlWriter)
-		{
-			xmlWriter.WriteAttributeString("Radius", Radius.ToString());
-			xmlWriter.WriteAttributeString("StartOffset", StartOffset.StringFromVector());
-			xmlWriter.WriteAttributeString("Velocity", Velocity.StringFromVector());
-			base.WriteActionXml(xmlWriter);
-		}
+        protected override void WriteActionXml(XmlTextWriter xmlWriter)
+        {
+            xmlWriter.WriteAttributeString("Radius", Radius.ToString());
+            xmlWriter.WriteAttributeString("StartOffset", StartOffset.StringFromVector());
+            xmlWriter.WriteAttributeString("Velocity", Velocity.StringFromVector());
+            base.WriteActionXml(xmlWriter);
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

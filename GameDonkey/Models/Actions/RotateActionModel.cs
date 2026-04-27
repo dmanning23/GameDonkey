@@ -3,67 +3,67 @@ using System.Xml;
 
 namespace GameDonkeyLib
 {
-	public class RotateActionModel : BaseActionModel
-	{
-		#region Properties
+    public class RotateActionModel : BaseActionModel
+    {
+        #region Properties
 
-		public override EActionType ActionType
-		{
-			get
-			{
-				return EActionType.Rotate;
-			}
-		}
+        public override EActionType ActionType
+        {
+            get
+            {
+                return EActionType.Rotate;
+            }
+        }
 
-		public float Rotation { get; set; }
+        public float Rotation { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public RotateActionModel()
-		{
-		}
+        public RotateActionModel()
+        {
+        }
 
-		public RotateActionModel(RotateAction action) : base(action)
-		{
-			Rotation = action.Rotation;
-		}
+        public RotateActionModel(RotateAction action) : base(action)
+        {
+            Rotation = action.Rotation;
+        }
 
-		public RotateActionModel(BaseAction action) : this(action as RotateAction)
-		{
-		}
+        public RotateActionModel(BaseAction action) : this(action as RotateAction)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
+        #region Methods
 
-		public override void ParseXmlNode(XmlNode node)
-		{
-			//what is in this node?
-			var name = node.Name;
-			var value = node.InnerText;
+        public override void ParseXmlNode(XmlNode node)
+        {
+            //what is in this node?
+            var name = node.Name;
+            var value = node.InnerText;
 
-			switch (name)
-			{
-				case "Rotation":
-					{
-						Rotation = Convert.ToSingle(value);
-					}
-					break;
-				default:
-					{
-						base.ParseXmlNode(node);
-					}
-					break;
-			}
-		}
+            switch (name.ToLower())
+            {
+                case "rotation":
+                    {
+                        Rotation = Convert.ToSingle(value);
+                    }
+                    break;
+                default:
+                    {
+                        base.ParseXmlNode(node);
+                    }
+                    break;
+            }
+        }
 
-		protected override void WriteActionXml(XmlTextWriter xmlWriter)
-		{
-			xmlWriter.WriteAttributeString("Rotation", Rotation.ToString());
-		}
+        protected override void WriteActionXml(XmlTextWriter xmlWriter)
+        {
+            xmlWriter.WriteAttributeString("Rotation", Rotation.ToString());
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

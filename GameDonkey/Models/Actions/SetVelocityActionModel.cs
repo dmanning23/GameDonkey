@@ -3,69 +3,68 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	public class SetVelocityActionModel : BaseActionModel, IDirectionalActionModel
-	{
-		#region Properties
+    public class SetVelocityActionModel : BaseActionModel, IDirectionalActionModel
+    {
+        #region Properties
 
-		public override EActionType ActionType
-		{
-			get
-			{
-				return EActionType.SetVelocity;
-			}
-		}
+        public override EActionType ActionType
+        {
+            get
+            {
+                return EActionType.SetVelocity;
+            }
+        }
 
-		public DirectionActionModel Direction { get; set; }
+        public DirectionActionModel Direction { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public SetVelocityActionModel()
-		{
-			Direction = new DirectionActionModel();
-		}
+        public SetVelocityActionModel()
+        {
+            Direction = new DirectionActionModel();
+        }
 
-		public SetVelocityActionModel(SetVelocityAction action) : base(action)
-		{
-			Direction = new DirectionActionModel(action.Velocity);
-		}
+        public SetVelocityActionModel(SetVelocityAction action) : base(action)
+        {
+            Direction = new DirectionActionModel(action.Velocity);
+        }
 
-		public SetVelocityActionModel(BaseAction action) : this(action as SetVelocityAction)
-		{
-		}
+        public SetVelocityActionModel(BaseAction action) : this(action as SetVelocityAction)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
+        #region Methods
 
-		public override void ParseXmlNode(XmlNode node)
-		{
-			//what is in this node?
-			var name = node.Name;
-			var value = node.InnerText;
+        public override void ParseXmlNode(XmlNode node)
+        {
+            //what is in this node?
+            var name = node.Name;
+            var value = node.InnerText;
 
-			switch (name)
-			{
-				case "direction":
-				case "Direction":
-					{
-						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
-					}
-					break;
-				default:
-					{
-						base.ParseXmlNode(node);
-					}
-					break;
-			}
-		}
+            switch (name.ToLower())
+            {
+                case "direction":
+                    {
+                        XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
+                    }
+                    break;
+                default:
+                    {
+                        base.ParseXmlNode(node);
+                    }
+                    break;
+            }
+        }
 
-		protected override void WriteActionXml(XmlTextWriter xmlWriter)
-		{
-			Direction.WriteXmlNodes(xmlWriter);
-		}
+        protected override void WriteActionXml(XmlTextWriter xmlWriter)
+        {
+            Direction.WriteXmlNodes(xmlWriter);
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

@@ -7,133 +7,130 @@ using XmlBuddy;
 
 namespace GameDonkeyLib
 {
-	public class ParticleEffectActionModel : BaseActionModel, IDirectionalActionModel
-	{
-		#region Properties
+    public class ParticleEffectActionModel : BaseActionModel, IDirectionalActionModel
+    {
+        #region Properties
 
-		public override EActionType ActionType
-		{
-			get
-			{
-				return EActionType.ParticleEffect;
-			}
-		}
+        public override EActionType ActionType
+        {
+            get
+            {
+                return EActionType.ParticleEffect;
+            }
+        }
 
-		public string Bone { get; set; }
-		public bool UseBoneRotation { get; set; }
+        public string Bone { get; set; }
+        public bool UseBoneRotation { get; set; }
 
-		public bool UsePlayerColor { get; set; }
+        public bool UsePlayerColor { get; set; }
 
-		public Vector2 StartOffset { get; set; }
-		public DirectionActionModel Direction  { get; set; }
-		public EmitterTemplate Emitter { get; set; }
+        public Vector2 StartOffset { get; set; }
+        public DirectionActionModel Direction { get; set; }
+        public EmitterTemplate Emitter { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public ParticleEffectActionModel()
-		{
-			Direction = new DirectionActionModel();
-			StartOffset = Vector2.Zero;
-			Emitter = new EmitterTemplate();
-			UseBoneRotation = false;
-			UsePlayerColor = false;
-		}
+        public ParticleEffectActionModel()
+        {
+            Direction = new DirectionActionModel();
+            StartOffset = Vector2.Zero;
+            Emitter = new EmitterTemplate();
+            UseBoneRotation = false;
+            UsePlayerColor = false;
+        }
 
-		public ParticleEffectActionModel(ParticleEffectAction action) : base(action)
-		{
-			Bone = action.BoneName;
-			UseBoneRotation = action.UseBoneRotation;
-			UsePlayerColor = action.UsePlayerColor;
-			StartOffset = action.StartOffset;
-			Direction = new DirectionActionModel(action.Velocity);
-			Emitter = new EmitterTemplate(action.Emitter);
-		}
+        public ParticleEffectActionModel(ParticleEffectAction action) : base(action)
+        {
+            Bone = action.BoneName;
+            UseBoneRotation = action.UseBoneRotation;
+            UsePlayerColor = action.UsePlayerColor;
+            StartOffset = action.StartOffset;
+            Direction = new DirectionActionModel(action.Velocity);
+            Emitter = new EmitterTemplate(action.Emitter);
+        }
 
-		public ParticleEffectActionModel(BaseAction action) : this(action as ParticleEffectAction)
-		{
-		}
+        public ParticleEffectActionModel(BaseAction action) : this(action as ParticleEffectAction)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
+        #region Methods
 
-		public override void ParseXmlNode(XmlNode node)
-		{
-			//what is in this node?
-			var name = node.Name;
-			var value = node.InnerText;
+        public override void ParseXmlNode(XmlNode node)
+        {
+            //what is in this node?
+            var name = node.Name;
+            var value = node.InnerText;
 
-			switch (name)
-			{
-				case "bone":
-				case "Bone":
-					{
-						Bone = value;
-					}
-					break;
-				case "UseBoneRotation":
-					{
-						UseBoneRotation = Convert.ToBoolean(value);
-					}
-					break;
-				case "UsePlayerColor":
-					{
-						UsePlayerColor = Convert.ToBoolean(value);
-					}
-					break;
-				case "StartOffset":
-					{
-						StartOffset = value.ToVector2();
-					}
-					break;
-				case "direction":
-				case "Direction":
-					{
-						XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
-					}
-					break;
-				case "emitter":
-				case "Emitter":
-					{
-						XmlFileBuddy.ReadChildNodes(node, Emitter.ParseXmlNode);
-					}
-					break;
-				default:
-					{
-						base.ParseXmlNode(node);
-					}
-					break;
-			}
-		}
+            switch (name.ToLower())
+            {
+                case "bone":
+                    {
+                        Bone = value;
+                    }
+                    break;
+                case "usebonerotation":
+                    {
+                        UseBoneRotation = Convert.ToBoolean(value);
+                    }
+                    break;
+                case "useplayercolor":
+                    {
+                        UsePlayerColor = Convert.ToBoolean(value);
+                    }
+                    break;
+                case "startoffset":
+                    {
+                        StartOffset = value.ToVector2();
+                    }
+                    break;
+                case "direction":
+                    {
+                        XmlFileBuddy.ReadChildNodes(node, Direction.ParseXmlNode);
+                    }
+                    break;
+                case "emitter":
+                    {
+                        XmlFileBuddy.ReadChildNodes(node, Emitter.ParseXmlNode);
+                    }
+                    break;
+                default:
+                    {
+                        base.ParseXmlNode(node);
+                    }
+                    break;
+            }
+        }
 
-		protected override void WriteActionXml(XmlTextWriter xmlWriter)
-		{
-			if (null != Bone)
-			{
-				xmlWriter.WriteAttributeString("Bone", Bone);
-			}
-			if (UseBoneRotation)
-			{
-				xmlWriter.WriteAttributeString("UseBoneRotation", UseBoneRotation.ToString());
-			}
-			if (UsePlayerColor)
-			{
-				xmlWriter.WriteAttributeString("UsePlayerColor", UsePlayerColor.ToString());
-			}
-			if (StartOffset.X != 0f || StartOffset.Y != 0f)
-			{
-				xmlWriter.WriteAttributeString("StartOffset", StartOffset.StringFromVector());
-			}
+        protected override void WriteActionXml(XmlTextWriter xmlWriter)
+        {
+            if (null != Bone)
+            {
+                xmlWriter.WriteAttributeString("Bone", Bone);
+            }
+            if (UseBoneRotation)
+            {
+                xmlWriter.WriteAttributeString("UseBoneRotation", UseBoneRotation.ToString());
+            }
+            if (UsePlayerColor)
+            {
+                xmlWriter.WriteAttributeString("UsePlayerColor", UsePlayerColor.ToString());
+            }
+            if (StartOffset.X != 0f || StartOffset.Y != 0f)
+            {
+                xmlWriter.WriteAttributeString("StartOffset", StartOffset.StringFromVector());
+            }
 
-			Direction.WriteXmlNodes(xmlWriter);
+            Direction.WriteXmlNodes(xmlWriter);
 
-			xmlWriter.WriteStartElement("Emitter");
-			Emitter.WriteXmlNodes(xmlWriter);
-			xmlWriter.WriteEndElement();
-		}
+            xmlWriter.WriteStartElement("Emitter");
+            Emitter.WriteXmlNodes(xmlWriter);
+            xmlWriter.WriteEndElement();
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }

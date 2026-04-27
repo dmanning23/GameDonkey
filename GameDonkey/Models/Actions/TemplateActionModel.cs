@@ -35,7 +35,7 @@ namespace GameDonkeyLib
 
         public TemplateActionModel(TemplateAction action) : base(action)
         {
-            TemplateContainer = new TemplateContainerModel(action.FileName);
+            TemplateContainer = new TemplateContainerModel(action.FileName, action.StateActionsList);
         }
 
         public TemplateActionModel(BaseAction action) : this(action as TemplateAction)

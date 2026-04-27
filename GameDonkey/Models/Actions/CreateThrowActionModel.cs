@@ -3,76 +3,76 @@ using System.Xml;
 
 namespace GameDonkeyLib
 {
-	public class CreateThrowActionModel : CreateAttackActionModel
-	{
-		#region Properties
+    public class CreateThrowActionModel : CreateAttackActionModel
+    {
+        #region Properties
 
-		public override EActionType ActionType
-		{
-			get
-			{
-				return EActionType.CreateThrow;
-			}
-		}
+        public override EActionType ActionType
+        {
+            get
+            {
+                return EActionType.CreateThrow;
+            }
+        }
 
-		public string ThrowMessage { get; set; }
-		public float ReleaseTimeDelta { get; set; }
+        public string ThrowMessage { get; set; }
+        public float ReleaseTimeDelta { get; set; }
 
-		#endregion //Properties
+        #endregion //Properties
 
-		#region Initialization
+        #region Initialization
 
-		public CreateThrowActionModel()
-		{
-		}
+        public CreateThrowActionModel()
+        {
+        }
 
-		public CreateThrowActionModel(CreateThrowAction action) : base(action)
-		{
-			ThrowMessage = action.ThrowMessage;
-			ReleaseTimeDelta = action.ReleaseTimeDelta;
-		}
+        public CreateThrowActionModel(CreateThrowAction action) : base(action)
+        {
+            ThrowMessage = action.ThrowMessage;
+            ReleaseTimeDelta = action.ReleaseTimeDelta;
+        }
 
-		public CreateThrowActionModel(BaseAction action) : this(action as CreateThrowAction)
-		{
-		}
+        public CreateThrowActionModel(BaseAction action) : this(action as CreateThrowAction)
+        {
+        }
 
-		#endregion //Initialization
+        #endregion //Initialization
 
-		#region Methods
+        #region Methods
 
-		public override void ParseXmlNode(XmlNode node)
-		{
-			//what is in this node?
-			var name = node.Name;
-			var value = node.InnerText;
+        public override void ParseXmlNode(XmlNode node)
+        {
+            //what is in this node?
+            var name = node.Name;
+            var value = node.InnerText;
 
-			switch (name)
-			{
-				case "ThrowMessage":
-					{
-						ThrowMessage = value;
-					}
-					break;
-				case "ReleaseTimeDelta":
-					{
-						ReleaseTimeDelta = Convert.ToSingle(value);
-					}
-					break;
-				default:
-					{
-						base.ParseXmlNode(node);
-					}
-					break;
-			}
-		}
+            switch (name.ToLower())
+            {
+                case "throwmessage":
+                    {
+                        ThrowMessage = value;
+                    }
+                    break;
+                case "releasetimedelta":
+                    {
+                        ReleaseTimeDelta = Convert.ToSingle(value);
+                    }
+                    break;
+                default:
+                    {
+                        base.ParseXmlNode(node);
+                    }
+                    break;
+            }
+        }
 
-		protected override void WriteActionXml(XmlTextWriter xmlWriter)
-		{
-			xmlWriter.WriteAttributeString("ThrowMessage", ThrowMessage);
-			xmlWriter.WriteAttributeString("ReleaseTimeDelta", ReleaseTimeDelta.ToString());
-			base.WriteActionXml(xmlWriter);
-		}
+        protected override void WriteActionXml(XmlTextWriter xmlWriter)
+        {
+            xmlWriter.WriteAttributeString("ThrowMessage", ThrowMessage);
+            xmlWriter.WriteAttributeString("ReleaseTimeDelta", ReleaseTimeDelta.ToString());
+            base.WriteActionXml(xmlWriter);
+        }
 
-		#endregion //Methods
-	}
+        #endregion //Methods
+    }
 }
