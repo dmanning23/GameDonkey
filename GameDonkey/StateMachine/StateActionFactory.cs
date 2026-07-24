@@ -44,6 +44,7 @@ namespace GameDonkeyLib
                 case EActionType.ScreenShake: { return new ScreenShakeActionModel(); }
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(); }
                 case EActionType.ChromaticSplit: { return new ChromaticSplitActionModel(); }
+                case EActionType.HeatHaze: { return new HeatHazeActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -83,6 +84,7 @@ namespace GameDonkeyLib
                 case EActionType.ScreenShake: { return new ScreenShakeActionModel(actionModel); }
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(actionModel); }
                 case EActionType.ChromaticSplit: { return new ChromaticSplitActionModel(actionModel); }
+                case EActionType.HeatHaze: { return new HeatHazeActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -122,6 +124,7 @@ namespace GameDonkeyLib
                 case EActionType.ScreenShake: { return new ScreenShakeAction(owner, actionModel); }
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner, actionModel); }
                 case EActionType.ChromaticSplit: { return new ChromaticSplitAction(owner, actionModel); }
+                case EActionType.HeatHaze: { return new HeatHazeAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -160,6 +163,7 @@ namespace GameDonkeyLib
                 case EActionType.ScreenShake: { return new ScreenShakeAction(owner); }
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner); }
                 case EActionType.ChromaticSplit: { return new ChromaticSplitAction(owner); }
+                case EActionType.HeatHaze: { return new HeatHazeAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
