@@ -45,6 +45,7 @@ namespace GameDonkeyLib
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(); }
                 case EActionType.ChromaticSplit: { return new ChromaticSplitActionModel(); }
                 case EActionType.HeatHaze: { return new HeatHazeActionModel(); }
+                case EActionType.HitFlash: { return new HitFlashActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -85,6 +86,7 @@ namespace GameDonkeyLib
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(actionModel); }
                 case EActionType.ChromaticSplit: { return new ChromaticSplitActionModel(actionModel); }
                 case EActionType.HeatHaze: { return new HeatHazeActionModel(actionModel); }
+                case EActionType.HitFlash: { return new HitFlashActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -125,6 +127,7 @@ namespace GameDonkeyLib
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner, actionModel); }
                 case EActionType.ChromaticSplit: { return new ChromaticSplitAction(owner, actionModel); }
                 case EActionType.HeatHaze: { return new HeatHazeAction(owner, actionModel); }
+                case EActionType.HitFlash: { return new HitFlashAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -164,6 +167,7 @@ namespace GameDonkeyLib
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner); }
                 case EActionType.ChromaticSplit: { return new ChromaticSplitAction(owner); }
                 case EActionType.HeatHaze: { return new HeatHazeAction(owner); }
+                case EActionType.HitFlash: { return new HitFlashAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
