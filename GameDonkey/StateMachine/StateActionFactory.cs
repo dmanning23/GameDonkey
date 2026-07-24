@@ -51,6 +51,7 @@ namespace GameDonkeyLib
                 case EActionType.FreezeFrame: { return new FreezeFrameActionModel(); }
                 case EActionType.ZoomBlur: { return new ZoomBlurActionModel(); }
                 case EActionType.ScreenTilt: { return new ScreenTiltActionModel(); }
+                case EActionType.Electric: { return new ElectricActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -97,6 +98,7 @@ namespace GameDonkeyLib
                 case EActionType.FreezeFrame: { return new FreezeFrameActionModel(actionModel); }
                 case EActionType.ZoomBlur: { return new ZoomBlurActionModel(actionModel); }
                 case EActionType.ScreenTilt: { return new ScreenTiltActionModel(actionModel); }
+                case EActionType.Electric: { return new ElectricActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -143,6 +145,7 @@ namespace GameDonkeyLib
                 case EActionType.FreezeFrame: { return new FreezeFrameAction(owner, actionModel); }
                 case EActionType.ZoomBlur: { return new ZoomBlurAction(owner, actionModel); }
                 case EActionType.ScreenTilt: { return new ScreenTiltAction(owner, actionModel); }
+                case EActionType.Electric: { return new ElectricAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -188,6 +191,7 @@ namespace GameDonkeyLib
                 case EActionType.FreezeFrame: { return new FreezeFrameAction(owner); }
                 case EActionType.ZoomBlur: { return new ZoomBlurAction(owner); }
                 case EActionType.ScreenTilt: { return new ScreenTiltAction(owner); }
+                case EActionType.Electric: { return new ElectricAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
