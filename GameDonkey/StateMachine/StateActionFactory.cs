@@ -39,6 +39,7 @@ namespace GameDonkeyLib
                 case EActionType.TargetRotation: { return new TargetRotationActionModel(); }
                 case EActionType.TemplateAction: { return new TemplateActionModel(); }
                 case EActionType.Trail: { return new TrailActionModel(); }
+                case EActionType.ForceRipple: { return new ForceRippleActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -73,6 +74,7 @@ namespace GameDonkeyLib
                 case EActionType.TargetRotation: { return new TargetRotationActionModel(actionModel); }
                 case EActionType.TemplateAction: { return new TemplateActionModel(actionModel); }
                 case EActionType.Trail: { return new TrailActionModel(actionModel); }
+                case EActionType.ForceRipple: { return new ForceRippleActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -107,6 +109,7 @@ namespace GameDonkeyLib
                 case EActionType.TargetRotation: { return new TargetRotationAction(owner, actionModel); }
                 case EActionType.TemplateAction: { return new TemplateAction(owner, actionModel, stateContainer); }
                 case EActionType.Trail: { return new TrailAction(owner, actionModel); }
+                case EActionType.ForceRipple: { return new ForceRippleAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -140,6 +143,7 @@ namespace GameDonkeyLib
                 case EActionType.TargetRotation: { return new TargetRotationAction(owner); }
                 case EActionType.TemplateAction: { return new TemplateAction(owner); }
                 case EActionType.Trail: { return new TrailAction(owner); }
+                case EActionType.ForceRipple: { return new ForceRippleAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
