@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using ParticleBuddy;
 using RenderBuddy;
 using ResolutionBuddy;
+using ScreenFXBuddy;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -51,6 +52,8 @@ namespace GameDonkeyLib
         public IRenderer Renderer { get; private set; }
 
         public ParticleEngine ParticleEngine { get; protected set; }
+
+        public IScreenFXService ScreenFX { get; protected set; }
 
         public GameClock MasterClock { get; protected set; }
 
@@ -113,6 +116,7 @@ namespace GameDonkeyLib
             MasterClock = new GameClock();
 
             Game = game;
+            ScreenFX = new ScreenFXComponent(Game);
             SoundContent = new ContentManager(Game.Services, "Content");
 
             Renderer = renderer;
@@ -140,6 +144,7 @@ namespace GameDonkeyLib
         public virtual void LoadContent(GraphicsDevice graphics, ContentManager xmlContent)
         {
             Renderer.LoadContent(graphics);
+            ((ScreenFXComponent)ScreenFX).LoadContent();
         }
 
         public virtual void UnloadContent()
@@ -149,6 +154,9 @@ namespace GameDonkeyLib
 
             Renderer?.UnloadContent();
             Renderer = null;
+
+            (ScreenFX as IDisposable)?.Dispose();
+            ScreenFX = null;
 
             Players = null;
         }
@@ -242,6 +250,7 @@ namespace GameDonkeyLib
             UpdateDrawlists();
 
             ParticleEngine.Update(MasterClock);
+            ((ScreenFXComponent)ScreenFX).Update(MasterClock);
 
             UpdateStuff();
 

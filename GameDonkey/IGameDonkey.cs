@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ParticleBuddy;
 using RenderBuddy;
+using ScreenFXBuddy;
 using System;
 using System.Collections.Generic;
 
@@ -26,6 +27,8 @@ namespace GameDonkeyLib
         IRenderer Renderer { get; }
 
         ParticleEngine ParticleEngine { get; }
+
+        IScreenFXService ScreenFX { get; }
 
         GameClock MasterClock { get; }
 
