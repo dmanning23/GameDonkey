@@ -41,6 +41,7 @@ namespace GameDonkeyLib
                 case EActionType.Trail: { return new TrailActionModel(); }
                 case EActionType.ForceRipple: { return new ForceRippleActionModel(); }
                 case EActionType.GravityWave: { return new GravityWaveActionModel(); }
+                case EActionType.ScreenShake: { return new ScreenShakeActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -77,6 +78,7 @@ namespace GameDonkeyLib
                 case EActionType.Trail: { return new TrailActionModel(actionModel); }
                 case EActionType.ForceRipple: { return new ForceRippleActionModel(actionModel); }
                 case EActionType.GravityWave: { return new GravityWaveActionModel(actionModel); }
+                case EActionType.ScreenShake: { return new ScreenShakeActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -113,6 +115,7 @@ namespace GameDonkeyLib
                 case EActionType.Trail: { return new TrailAction(owner, actionModel); }
                 case EActionType.ForceRipple: { return new ForceRippleAction(owner, actionModel); }
                 case EActionType.GravityWave: { return new GravityWaveAction(owner, actionModel); }
+                case EActionType.ScreenShake: { return new ScreenShakeAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -148,6 +151,7 @@ namespace GameDonkeyLib
                 case EActionType.Trail: { return new TrailAction(owner); }
                 case EActionType.ForceRipple: { return new ForceRippleAction(owner); }
                 case EActionType.GravityWave: { return new GravityWaveAction(owner); }
+                case EActionType.ScreenShake: { return new ScreenShakeAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
