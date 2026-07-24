@@ -32,7 +32,7 @@
 - Modify: `GameDonkey/GameDonkey.cs`
 
 **Interfaces:**
-- Consumes: existing `EActionType` enum, existing `IGameDonkey`/`GameDonkey` structure, `ScreenFXBuddy.IScreenFXService`, `ScreenFXBuddy.ScreenFXComponent(Game game)` (constructor), `.LoadContent()`, `.Update(GameClock)`, and `IDisposable.Dispose()`.
+- Consumes: existing `EActionType` enum, existing `IGameDonkey`/`GameDonkey` structure, `ScreenFXBuddy.IScreenFXService`, `ScreenFXBuddy.ScreenFXComponent(Game game)` (constructor). Note: `IScreenFXService` only declares the `Trigger*` methods, the layer properties, and `BeginCapture`/`EndCapture` — it does **not** declare `LoadContent()` or `Update(GameClock)`. Those are concrete members of `ScreenFXComponent` only, so `GameDonkey.cs` must cast `ScreenFX` to `ScreenFXComponent` to call them (see Step 3).
 - Produces: `EActionType.ForceRipple`, `.GravityWave`, `.ScreenShake`, `.ChromaticAberration`, `.ChromaticSplit`, `.HeatHaze`, `.HitFlash`, `.AnimeSuper`, `.Letterbox`, `.FreezeFrame`, `.ZoomBlur`, `.ScreenTilt`, `.Electric`, `.Frost`, `.Vortex`, `.Smoke`, `.GlassShatter`, `.SpeedLines`. `IGameDonkey.ScreenFX` (type `IScreenFXService`), readable by every later task's `LoadContent(IGameDonkey engine, ContentManager content)`.
 
 - [ ] **Step 1: Add the 18 enum values**
@@ -183,7 +183,7 @@ with:
         public virtual void LoadContent(GraphicsDevice graphics, ContentManager xmlContent)
         {
             Renderer.LoadContent(graphics);
-            ScreenFX.LoadContent();
+            ((ScreenFXComponent)ScreenFX).LoadContent();
         }
 ```
 
@@ -232,7 +232,7 @@ with:
 
 ```csharp
             ParticleEngine.Update(MasterClock);
-            ScreenFX.Update(MasterClock);
+            ((ScreenFXComponent)ScreenFX).Update(MasterClock);
 
             UpdateStuff();
 ```
