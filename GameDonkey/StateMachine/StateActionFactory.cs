@@ -53,6 +53,7 @@ namespace GameDonkeyLib
                 case EActionType.ScreenTilt: { return new ScreenTiltActionModel(); }
                 case EActionType.Electric: { return new ElectricActionModel(); }
                 case EActionType.Frost: { return new FrostActionModel(); }
+                case EActionType.Vortex: { return new VortexActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -101,6 +102,7 @@ namespace GameDonkeyLib
                 case EActionType.ScreenTilt: { return new ScreenTiltActionModel(actionModel); }
                 case EActionType.Electric: { return new ElectricActionModel(actionModel); }
                 case EActionType.Frost: { return new FrostActionModel(actionModel); }
+                case EActionType.Vortex: { return new VortexActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -149,6 +151,7 @@ namespace GameDonkeyLib
                 case EActionType.ScreenTilt: { return new ScreenTiltAction(owner, actionModel); }
                 case EActionType.Electric: { return new ElectricAction(owner, actionModel); }
                 case EActionType.Frost: { return new FrostAction(owner, actionModel); }
+                case EActionType.Vortex: { return new VortexAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -196,6 +199,7 @@ namespace GameDonkeyLib
                 case EActionType.ScreenTilt: { return new ScreenTiltAction(owner); }
                 case EActionType.Electric: { return new ElectricAction(owner); }
                 case EActionType.Frost: { return new FrostAction(owner); }
+                case EActionType.Vortex: { return new VortexAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
