@@ -55,6 +55,7 @@ namespace GameDonkeyLib
                 case EActionType.Frost: { return new FrostActionModel(); }
                 case EActionType.Vortex: { return new VortexActionModel(); }
                 case EActionType.Smoke: { return new SmokeActionModel(); }
+                case EActionType.GlassShatter: { return new GlassShatterActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -105,6 +106,7 @@ namespace GameDonkeyLib
                 case EActionType.Frost: { return new FrostActionModel(actionModel); }
                 case EActionType.Vortex: { return new VortexActionModel(actionModel); }
                 case EActionType.Smoke: { return new SmokeActionModel(actionModel); }
+                case EActionType.GlassShatter: { return new GlassShatterActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -155,6 +157,7 @@ namespace GameDonkeyLib
                 case EActionType.Frost: { return new FrostAction(owner, actionModel); }
                 case EActionType.Vortex: { return new VortexAction(owner, actionModel); }
                 case EActionType.Smoke: { return new SmokeAction(owner, actionModel); }
+                case EActionType.GlassShatter: { return new GlassShatterAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -204,6 +207,7 @@ namespace GameDonkeyLib
                 case EActionType.Frost: { return new FrostAction(owner); }
                 case EActionType.Vortex: { return new VortexAction(owner); }
                 case EActionType.Smoke: { return new SmokeAction(owner); }
+                case EActionType.GlassShatter: { return new GlassShatterAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
