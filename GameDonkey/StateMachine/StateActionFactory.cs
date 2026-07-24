@@ -52,6 +52,7 @@ namespace GameDonkeyLib
                 case EActionType.ZoomBlur: { return new ZoomBlurActionModel(); }
                 case EActionType.ScreenTilt: { return new ScreenTiltActionModel(); }
                 case EActionType.Electric: { return new ElectricActionModel(); }
+                case EActionType.Frost: { return new FrostActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -99,6 +100,7 @@ namespace GameDonkeyLib
                 case EActionType.ZoomBlur: { return new ZoomBlurActionModel(actionModel); }
                 case EActionType.ScreenTilt: { return new ScreenTiltActionModel(actionModel); }
                 case EActionType.Electric: { return new ElectricActionModel(actionModel); }
+                case EActionType.Frost: { return new FrostActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -146,6 +148,7 @@ namespace GameDonkeyLib
                 case EActionType.ZoomBlur: { return new ZoomBlurAction(owner, actionModel); }
                 case EActionType.ScreenTilt: { return new ScreenTiltAction(owner, actionModel); }
                 case EActionType.Electric: { return new ElectricAction(owner, actionModel); }
+                case EActionType.Frost: { return new FrostAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -192,6 +195,7 @@ namespace GameDonkeyLib
                 case EActionType.ZoomBlur: { return new ZoomBlurAction(owner); }
                 case EActionType.ScreenTilt: { return new ScreenTiltAction(owner); }
                 case EActionType.Electric: { return new ElectricAction(owner); }
+                case EActionType.Frost: { return new FrostAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
