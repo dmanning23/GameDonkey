@@ -43,6 +43,7 @@ namespace GameDonkeyLib
                 case EActionType.GravityWave: { return new GravityWaveActionModel(); }
                 case EActionType.ScreenShake: { return new ScreenShakeActionModel(); }
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(); }
+                case EActionType.ChromaticSplit: { return new ChromaticSplitActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -81,6 +82,7 @@ namespace GameDonkeyLib
                 case EActionType.GravityWave: { return new GravityWaveActionModel(actionModel); }
                 case EActionType.ScreenShake: { return new ScreenShakeActionModel(actionModel); }
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(actionModel); }
+                case EActionType.ChromaticSplit: { return new ChromaticSplitActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -119,6 +121,7 @@ namespace GameDonkeyLib
                 case EActionType.GravityWave: { return new GravityWaveAction(owner, actionModel); }
                 case EActionType.ScreenShake: { return new ScreenShakeAction(owner, actionModel); }
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner, actionModel); }
+                case EActionType.ChromaticSplit: { return new ChromaticSplitAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -156,6 +159,7 @@ namespace GameDonkeyLib
                 case EActionType.GravityWave: { return new GravityWaveAction(owner); }
                 case EActionType.ScreenShake: { return new ScreenShakeAction(owner); }
                 case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner); }
+                case EActionType.ChromaticSplit: { return new ChromaticSplitAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
