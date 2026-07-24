@@ -54,6 +54,7 @@ namespace GameDonkeyLib
                 case EActionType.Electric: { return new ElectricActionModel(); }
                 case EActionType.Frost: { return new FrostActionModel(); }
                 case EActionType.Vortex: { return new VortexActionModel(); }
+                case EActionType.Smoke: { return new SmokeActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -103,6 +104,7 @@ namespace GameDonkeyLib
                 case EActionType.Electric: { return new ElectricActionModel(actionModel); }
                 case EActionType.Frost: { return new FrostActionModel(actionModel); }
                 case EActionType.Vortex: { return new VortexActionModel(actionModel); }
+                case EActionType.Smoke: { return new SmokeActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -152,6 +154,7 @@ namespace GameDonkeyLib
                 case EActionType.Electric: { return new ElectricAction(owner, actionModel); }
                 case EActionType.Frost: { return new FrostAction(owner, actionModel); }
                 case EActionType.Vortex: { return new VortexAction(owner, actionModel); }
+                case EActionType.Smoke: { return new SmokeAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -200,6 +203,7 @@ namespace GameDonkeyLib
                 case EActionType.Electric: { return new ElectricAction(owner); }
                 case EActionType.Frost: { return new FrostAction(owner); }
                 case EActionType.Vortex: { return new VortexAction(owner); }
+                case EActionType.Smoke: { return new SmokeAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
