@@ -56,6 +56,7 @@ namespace GameDonkeyLib
                 case EActionType.Vortex: { return new VortexActionModel(); }
                 case EActionType.Smoke: { return new SmokeActionModel(); }
                 case EActionType.GlassShatter: { return new GlassShatterActionModel(); }
+                case EActionType.SpeedLines: { return new SpeedLinesActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -107,6 +108,7 @@ namespace GameDonkeyLib
                 case EActionType.Vortex: { return new VortexActionModel(actionModel); }
                 case EActionType.Smoke: { return new SmokeActionModel(actionModel); }
                 case EActionType.GlassShatter: { return new GlassShatterActionModel(actionModel); }
+                case EActionType.SpeedLines: { return new SpeedLinesActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -158,6 +160,7 @@ namespace GameDonkeyLib
                 case EActionType.Vortex: { return new VortexAction(owner, actionModel); }
                 case EActionType.Smoke: { return new SmokeAction(owner, actionModel); }
                 case EActionType.GlassShatter: { return new GlassShatterAction(owner, actionModel); }
+                case EActionType.SpeedLines: { return new SpeedLinesAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -208,6 +211,7 @@ namespace GameDonkeyLib
                 case EActionType.Vortex: { return new VortexAction(owner); }
                 case EActionType.Smoke: { return new SmokeAction(owner); }
                 case EActionType.GlassShatter: { return new GlassShatterAction(owner); }
+                case EActionType.SpeedLines: { return new SpeedLinesAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
