@@ -39,6 +39,24 @@ namespace GameDonkeyLib
                 case EActionType.TargetRotation: { return new TargetRotationActionModel(); }
                 case EActionType.TemplateAction: { return new TemplateActionModel(); }
                 case EActionType.Trail: { return new TrailActionModel(); }
+                case EActionType.ForceRipple: { return new ForceRippleActionModel(); }
+                case EActionType.GravityWave: { return new GravityWaveActionModel(); }
+                case EActionType.ScreenShake: { return new ScreenShakeActionModel(); }
+                case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(); }
+                case EActionType.ChromaticSplit: { return new ChromaticSplitActionModel(); }
+                case EActionType.HeatHaze: { return new HeatHazeActionModel(); }
+                case EActionType.HitFlash: { return new HitFlashActionModel(); }
+                case EActionType.AnimeSuper: { return new AnimeSuperActionModel(); }
+                case EActionType.Letterbox: { return new LetterboxActionModel(); }
+                case EActionType.FreezeFrame: { return new FreezeFrameActionModel(); }
+                case EActionType.ZoomBlur: { return new ZoomBlurActionModel(); }
+                case EActionType.ScreenTilt: { return new ScreenTiltActionModel(); }
+                case EActionType.Electric: { return new ElectricActionModel(); }
+                case EActionType.Frost: { return new FrostActionModel(); }
+                case EActionType.Vortex: { return new VortexActionModel(); }
+                case EActionType.Smoke: { return new SmokeActionModel(); }
+                case EActionType.GlassShatter: { return new GlassShatterActionModel(); }
+                case EActionType.SpeedLines: { return new SpeedLinesActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -73,6 +91,24 @@ namespace GameDonkeyLib
                 case EActionType.TargetRotation: { return new TargetRotationActionModel(actionModel); }
                 case EActionType.TemplateAction: { return new TemplateActionModel(actionModel); }
                 case EActionType.Trail: { return new TrailActionModel(actionModel); }
+                case EActionType.ForceRipple: { return new ForceRippleActionModel(actionModel); }
+                case EActionType.GravityWave: { return new GravityWaveActionModel(actionModel); }
+                case EActionType.ScreenShake: { return new ScreenShakeActionModel(actionModel); }
+                case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(actionModel); }
+                case EActionType.ChromaticSplit: { return new ChromaticSplitActionModel(actionModel); }
+                case EActionType.HeatHaze: { return new HeatHazeActionModel(actionModel); }
+                case EActionType.HitFlash: { return new HitFlashActionModel(actionModel); }
+                case EActionType.AnimeSuper: { return new AnimeSuperActionModel(actionModel); }
+                case EActionType.Letterbox: { return new LetterboxActionModel(actionModel); }
+                case EActionType.FreezeFrame: { return new FreezeFrameActionModel(actionModel); }
+                case EActionType.ZoomBlur: { return new ZoomBlurActionModel(actionModel); }
+                case EActionType.ScreenTilt: { return new ScreenTiltActionModel(actionModel); }
+                case EActionType.Electric: { return new ElectricActionModel(actionModel); }
+                case EActionType.Frost: { return new FrostActionModel(actionModel); }
+                case EActionType.Vortex: { return new VortexActionModel(actionModel); }
+                case EActionType.Smoke: { return new SmokeActionModel(actionModel); }
+                case EActionType.GlassShatter: { return new GlassShatterActionModel(actionModel); }
+                case EActionType.SpeedLines: { return new SpeedLinesActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -107,6 +143,24 @@ namespace GameDonkeyLib
                 case EActionType.TargetRotation: { return new TargetRotationAction(owner, actionModel); }
                 case EActionType.TemplateAction: { return new TemplateAction(owner, actionModel, stateContainer); }
                 case EActionType.Trail: { return new TrailAction(owner, actionModel); }
+                case EActionType.ForceRipple: { return new ForceRippleAction(owner, actionModel); }
+                case EActionType.GravityWave: { return new GravityWaveAction(owner, actionModel); }
+                case EActionType.ScreenShake: { return new ScreenShakeAction(owner, actionModel); }
+                case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner, actionModel); }
+                case EActionType.ChromaticSplit: { return new ChromaticSplitAction(owner, actionModel); }
+                case EActionType.HeatHaze: { return new HeatHazeAction(owner, actionModel); }
+                case EActionType.HitFlash: { return new HitFlashAction(owner, actionModel); }
+                case EActionType.AnimeSuper: { return new AnimeSuperAction(owner, actionModel); }
+                case EActionType.Letterbox: { return new LetterboxAction(owner, actionModel); }
+                case EActionType.FreezeFrame: { return new FreezeFrameAction(owner, actionModel); }
+                case EActionType.ZoomBlur: { return new ZoomBlurAction(owner, actionModel); }
+                case EActionType.ScreenTilt: { return new ScreenTiltAction(owner, actionModel); }
+                case EActionType.Electric: { return new ElectricAction(owner, actionModel); }
+                case EActionType.Frost: { return new FrostAction(owner, actionModel); }
+                case EActionType.Vortex: { return new VortexAction(owner, actionModel); }
+                case EActionType.Smoke: { return new SmokeAction(owner, actionModel); }
+                case EActionType.GlassShatter: { return new GlassShatterAction(owner, actionModel); }
+                case EActionType.SpeedLines: { return new SpeedLinesAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -140,6 +194,24 @@ namespace GameDonkeyLib
                 case EActionType.TargetRotation: { return new TargetRotationAction(owner); }
                 case EActionType.TemplateAction: { return new TemplateAction(owner); }
                 case EActionType.Trail: { return new TrailAction(owner); }
+                case EActionType.ForceRipple: { return new ForceRippleAction(owner); }
+                case EActionType.GravityWave: { return new GravityWaveAction(owner); }
+                case EActionType.ScreenShake: { return new ScreenShakeAction(owner); }
+                case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner); }
+                case EActionType.ChromaticSplit: { return new ChromaticSplitAction(owner); }
+                case EActionType.HeatHaze: { return new HeatHazeAction(owner); }
+                case EActionType.HitFlash: { return new HitFlashAction(owner); }
+                case EActionType.AnimeSuper: { return new AnimeSuperAction(owner); }
+                case EActionType.Letterbox: { return new LetterboxAction(owner); }
+                case EActionType.FreezeFrame: { return new FreezeFrameAction(owner); }
+                case EActionType.ZoomBlur: { return new ZoomBlurAction(owner); }
+                case EActionType.ScreenTilt: { return new ScreenTiltAction(owner); }
+                case EActionType.Electric: { return new ElectricAction(owner); }
+                case EActionType.Frost: { return new FrostAction(owner); }
+                case EActionType.Vortex: { return new VortexAction(owner); }
+                case EActionType.Smoke: { return new SmokeAction(owner); }
+                case EActionType.GlassShatter: { return new GlassShatterAction(owner); }
+                case EActionType.SpeedLines: { return new SpeedLinesAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }

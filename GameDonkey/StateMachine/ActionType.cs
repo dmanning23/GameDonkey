@@ -28,6 +28,24 @@ namespace GameDonkeyLib
         KillPlayer,
         Random,
         SendToBack,
-        TemplateAction
+        TemplateAction,
+        ForceRipple,
+        GravityWave,
+        ScreenShake,
+        ChromaticAberration,
+        ChromaticSplit,
+        HeatHaze,
+        HitFlash,
+        AnimeSuper,
+        Letterbox,
+        FreezeFrame,
+        ZoomBlur,
+        ScreenTilt,
+        Electric,
+        Frost,
+        Vortex,
+        Smoke,
+        GlassShatter,
+        SpeedLines
     }
 }
