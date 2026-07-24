@@ -48,6 +48,7 @@ namespace GameDonkeyLib
                 case EActionType.HitFlash: { return new HitFlashActionModel(); }
                 case EActionType.AnimeSuper: { return new AnimeSuperActionModel(); }
                 case EActionType.Letterbox: { return new LetterboxActionModel(); }
+                case EActionType.FreezeFrame: { return new FreezeFrameActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -91,6 +92,7 @@ namespace GameDonkeyLib
                 case EActionType.HitFlash: { return new HitFlashActionModel(actionModel); }
                 case EActionType.AnimeSuper: { return new AnimeSuperActionModel(actionModel); }
                 case EActionType.Letterbox: { return new LetterboxActionModel(actionModel); }
+                case EActionType.FreezeFrame: { return new FreezeFrameActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -134,6 +136,7 @@ namespace GameDonkeyLib
                 case EActionType.HitFlash: { return new HitFlashAction(owner, actionModel); }
                 case EActionType.AnimeSuper: { return new AnimeSuperAction(owner, actionModel); }
                 case EActionType.Letterbox: { return new LetterboxAction(owner, actionModel); }
+                case EActionType.FreezeFrame: { return new FreezeFrameAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -176,6 +179,7 @@ namespace GameDonkeyLib
                 case EActionType.HitFlash: { return new HitFlashAction(owner); }
                 case EActionType.AnimeSuper: { return new AnimeSuperAction(owner); }
                 case EActionType.Letterbox: { return new LetterboxAction(owner); }
+                case EActionType.FreezeFrame: { return new FreezeFrameAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
