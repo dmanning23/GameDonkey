@@ -38,5 +38,6 @@
     <PackageReference Include="ParticleBuddy" Version="5.*" />
     <PackageReference Include="StateMachineBuddy" Version="5.*" />
     <PackageReference Include="ParallaxBackgroundBuddy" Version="5.*" />
+    <PackageReference Include="ScreenFxBuddy" Version="5.*" />
   </ItemGroup>
 </Project>
