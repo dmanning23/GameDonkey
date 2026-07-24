@@ -42,6 +42,7 @@ namespace GameDonkeyLib
                 case EActionType.ForceRipple: { return new ForceRippleActionModel(); }
                 case EActionType.GravityWave: { return new GravityWaveActionModel(); }
                 case EActionType.ScreenShake: { return new ScreenShakeActionModel(); }
+                case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(); }
                 default: { throw new Exception($"unknown actionType: {stateActionType.ToString()}"); }
             }
         }
@@ -79,6 +80,7 @@ namespace GameDonkeyLib
                 case EActionType.ForceRipple: { return new ForceRippleActionModel(actionModel); }
                 case EActionType.GravityWave: { return new GravityWaveActionModel(actionModel); }
                 case EActionType.ScreenShake: { return new ScreenShakeActionModel(actionModel); }
+                case EActionType.ChromaticAberration: { return new ChromaticAberrationActionModel(actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType.ToString()}"); }
             }
         }
@@ -116,6 +118,7 @@ namespace GameDonkeyLib
                 case EActionType.ForceRipple: { return new ForceRippleAction(owner, actionModel); }
                 case EActionType.GravityWave: { return new GravityWaveAction(owner, actionModel); }
                 case EActionType.ScreenShake: { return new ScreenShakeAction(owner, actionModel); }
+                case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner, actionModel); }
                 default: { throw new Exception($"unknown actionType: {actionModel.ActionType}"); }
             }
         }
@@ -152,6 +155,7 @@ namespace GameDonkeyLib
                 case EActionType.ForceRipple: { return new ForceRippleAction(owner); }
                 case EActionType.GravityWave: { return new GravityWaveAction(owner); }
                 case EActionType.ScreenShake: { return new ScreenShakeAction(owner); }
+                case EActionType.ChromaticAberration: { return new ChromaticAberrationAction(owner); }
                 default: { throw new Exception($"unknown actionType: {actionType}"); }
             }
         }
