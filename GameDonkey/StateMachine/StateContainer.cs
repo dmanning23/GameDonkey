@@ -3,8 +3,6 @@ using GameTimer;
 using Microsoft.Xna.Framework.Content;
 using StateMachineBuddy;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace GameDonkeyLib
 {
@@ -125,17 +123,17 @@ namespace GameDonkeyLib
             StateMachine.ResetToInitialState();
         }
 
-        public bool SendStateMessage(string message)
+        public virtual bool SendStateMessage(string message)
         {
             return StateMachine.SendStateMessage(message);
         }
 
-        public void ForceStateChange(string state)
+        public virtual void ForceStateChange(string state)
         {
             StateMachine.ForceState(state);
         }
 
-        public void StateChange(object sender, StateChangeEventArgs<string> eventArgs)
+        public virtual void StateChange(object sender, StateChangeEventArgs<string> eventArgs)
         {
             Actions.StateChange(eventArgs.NewState);
 
@@ -145,7 +143,7 @@ namespace GameDonkeyLib
             StateChangedEvent?.Invoke(this, eventArgs);
         }
 
-        public void ExecuteActions(GameClock gameClock)
+        public virtual void ExecuteActions(GameClock gameClock)
         {
             StateClock.Update(gameClock);
 

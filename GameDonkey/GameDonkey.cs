@@ -144,7 +144,7 @@ namespace GameDonkeyLib
         public virtual void LoadContent(GraphicsDevice graphics, ContentManager xmlContent)
         {
             Renderer.LoadContent(graphics);
-            ((ScreenFXComponent)ScreenFX).LoadContent();
+            ScreenFX.LoadContent();
         }
 
         public virtual void UnloadContent()
@@ -155,7 +155,7 @@ namespace GameDonkeyLib
             Renderer?.UnloadContent();
             Renderer = null;
 
-            (ScreenFX as IDisposable)?.Dispose();
+            ScreenFX?.Dispose();
             ScreenFX = null;
 
             Players = null;
@@ -250,7 +250,7 @@ namespace GameDonkeyLib
             UpdateDrawlists();
 
             ParticleEngine.Update(MasterClock);
-            ((ScreenFXComponent)ScreenFX).Update(MasterClock);
+            ScreenFX.Update(MasterClock);
 
             UpdateStuff();
 
