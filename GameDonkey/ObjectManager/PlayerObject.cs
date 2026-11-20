@@ -46,11 +46,9 @@ namespace GameDonkeyLib
 
         protected override void Init()
         {
-            ThumbstickDirection = Vector2.Zero;
-            States = new StateContainer();
-            States.StateChangedEvent += this.StateChanged;
-            Physics = new PlayerPhysicsContainer(this);
+            base.Init();
 
+            ThumbstickDirection = Vector2.Zero;
             Reset();
         }
         public override void Reset()
@@ -545,7 +543,9 @@ namespace GameDonkeyLib
             }
 
             //load player object stuff
-            if ((null != data.Portrait) && (null != engine.Renderer.Content))
+            if ((null != data.Portrait) &&
+                !string.IsNullOrEmpty(data.Portrait.File) &&
+                (null != engine.Renderer.Content))
             {
                 var textureInfo = engine.Renderer.LoadImage(data.Portrait);
                 Portrait = textureInfo.Texture;

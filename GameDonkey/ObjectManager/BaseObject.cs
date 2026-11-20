@@ -280,8 +280,13 @@ namespace GameDonkeyLib
         protected virtual void Init()
         {
             Physics = new PlayerPhysicsContainer(this);
-            States = new StateContainer();
+            States = CreateStateContainer();
             States.StateChangedEvent += this.StateChanged;
+        }
+
+        protected virtual IStateContainer CreateStateContainer()
+        {
+            return new StateContainer();
         }
 
         public virtual void ReplaceOwner(PlayerObject myBot)
