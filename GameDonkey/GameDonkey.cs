@@ -592,13 +592,6 @@ namespace GameDonkeyLib
 
         #region File IO
 
-        public PlayerObjectModel LoadModel(Filename filename, ContentManager xmlContent)
-        {
-            var model = new PlayerObjectModel(filename);
-            model.ReadXmlFile(xmlContent);
-            return model;
-        }
-
         public virtual IPlayerQueue LoadPlayer(Color color,
             Filename characterFile,
             int playerIndex,
@@ -608,15 +601,22 @@ namespace GameDonkeyLib
             bool useKeyboard)
         {
             var player = CreatePlayerQueue(color);
-            player.LoadXmlObject(characterFile, this, playerType, xmlContent);
+
+            //load the model
+            player.ObjectModelFactory(characterFile, playerType, out BaseObjectModel gameObjectModel);
+            var playerObjectModel = gameObjectModel as PlayerObjectModel;
+            playerObjectModel.ReadXmlFile(xmlContent);
+            player.LoadXmlObject(playerObjectModel, this, playerType, xmlContent);
+
             Players.Add(player);
 
             InputWrapper queue = new InputWrapper(new ControllerWrapper(playerIndex), MasterClock.GetCurrentTime)
             {
-                BufferedInputExpire = 0.0f,
-                QueuedInputExpire = 0.05f
+                BufferedInputExpire = playerObjectModel.BufferedInputExpire,
+                QueuedInputExpire = playerObjectModel.QueuedInputExpire
             };
-            queue.ReadXmlFile(new Filename(@"MoveList.xml"), xmlContent);
+            var moveListFile = playerObjectModel.MoveList ?? new Filename(@"MoveList.xml");
+            queue.ReadXmlFile(moveListFile, xmlContent);
             player.InputQueue = queue;
 
             player.PlayerName = playerName;

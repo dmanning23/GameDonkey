@@ -492,7 +492,7 @@ namespace GameDonkeyLib
             }
         }
 
-        protected virtual void ObjectModelFactory(Filename fileName, string objectType, out BaseObjectModel gameObjectModel)
+        public virtual void ObjectModelFactory(Filename fileName, string objectType, out BaseObjectModel gameObjectModel)
         {
             switch (objectType)
             {

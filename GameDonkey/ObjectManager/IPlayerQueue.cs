@@ -41,6 +41,7 @@ namespace GameDonkeyLib
         void DeactivateObjects(string objectType);
         void DrawCameraInfo(IRenderer renderer);
         void GetPlayerInput(List<IPlayerQueue> badGuys, bool ignoreAttackInput);
+        void ObjectModelFactory(Filename fileName, string objectType, out BaseObjectModel gameObjectModel);
         BaseObject LoadXmlObject(Filename fileName, IGameDonkey engine, GameObjectType objectType, int difficulty, ContentManager xmlContent);
         BaseObject LoadXmlObject(Filename fileName, IGameDonkey engine, string objectType, ContentManager xmlContent);
         BaseObject LoadXmlObject(BaseObjectModel gameObjectModel, IGameDonkey engine, string objectType, ContentManager xmlContent);

@@ -38,7 +38,7 @@ namespace GameDonkeyLib
 
         List<IPlayerQueue> Players { get; }
 
-#endregion //Properties
+        #endregion //Properties
 
         #region Methods
 
@@ -65,8 +65,6 @@ namespace GameDonkeyLib
             Color color);
 
         SoundEffect LoadSound(Filename cueName);
-
-        PlayerObjectModel LoadModel(Filename characterFile, ContentManager xmlContent = null);
 
         IPlayerQueue LoadPlayer(Color color,
            Filename characterFile,

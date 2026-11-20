@@ -205,7 +205,7 @@ namespace GameDonkeyLib
         {
             if (null != Moves)
             {
-                player.InputQueue.Moves.AddMoves(Moves);
+                player.InputQueue.AddMoves(Moves);
             }
         }
 
@@ -213,7 +213,7 @@ namespace GameDonkeyLib
         {
             if (null != Moves)
             {
-                player.InputQueue.Moves.RemoveMoves(Moves);
+                player.InputQueue.RemoveMoves(Moves);
             }
         }
 

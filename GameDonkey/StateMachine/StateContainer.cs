@@ -68,7 +68,7 @@ namespace GameDonkeyLib
             LoadContent(baseObjectmodel.States, owner, engine, content);
         }
 
-        public void LoadContent(StatesModel stateContainerModel, BaseObject owner, IGameDonkey engine, ContentManager content)
+        public virtual void LoadContent(StatesModel stateContainerModel, BaseObject owner, IGameDonkey engine, ContentManager content)
         {
             StateContainerFilename = new Filename(stateContainerModel.StateContainerFilename);
             StateMachineFilename = new Filename(stateContainerModel.StateMachineFilename);
