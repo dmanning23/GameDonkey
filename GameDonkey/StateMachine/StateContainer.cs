@@ -118,7 +118,7 @@ namespace GameDonkeyLib
 
         #region Methods
 
-        public void Reset()
+        public virtual void Reset()
         {
             StateMachine.ResetToInitialState();
         }
